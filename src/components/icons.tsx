@@ -19,8 +19,6 @@ export const lockXml = (c = '#c9b5a4') =>
     '0 0 24 24',
     `<rect x="4.5" y="10" width="15" height="11" rx="4" fill="${c}"/><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="${c}" stroke-width="2.8"/>`,
   );
-export const xXml = (c = '#cdb9a7') =>
-  svg('0 0 24 24', `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke="${c}" stroke-width="3.4" stroke-linecap="round"/>`);
 export const sparkXml = (c = '#ffc93c') =>
   svg(
     '0 0 24 24',

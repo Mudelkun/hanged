@@ -97,7 +97,7 @@ A level's difficulty is set by:
 ### Keyboard
 
 - A custom in-game keyboard with **letters only**. Never use the system keyboard during guessing.
-- Letters that have been used become unavailable. The notes say used letters "are gone from the keyboard". The mockup keeps them in place but changes their look: correct letters turn filled mint green, wrong ones turn grey with an ✕, and clue letters are butter yellow. Follow the mockup unless the owner says otherwise.
+- Letters that have been used become unavailable. The notes say used letters "are gone from the keyboard". The mockup keeps them in place but changes their look: correct letters turn filled mint green, wrong ones turn grey with the letter faded (the owner chose the letter over the mockup's ✕), and clue letters are butter yellow. Follow the mockup unless the owner says otherwise.
 
 ---
 

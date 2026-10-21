@@ -30,7 +30,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N`, token pill. |
 | `HangingScene.tsx` | Scene card: sky, sun, drifting clouds, the animated character ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
 | `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `DescriptionCard`, `TokenBar`, `BigButton`. |
-| `LetterKeyboard.tsx` | Letters only, A–Z in 4 rows (7/7/7/5). Used keys **stay in place** and change look: mint = correct, grey ✕ (sunk, no shadow) = wrong, butter = clue. Used keys and finished rounds can't be pressed. |
+| `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue. Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
 | `icons.tsx` | The mockup's SVG icons, copied verbatim as strings. |
@@ -40,8 +40,8 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 - Tiles: words over 8 letters wrap onto **two rows**, so a 15-letter word is 8 + 7
   tiles about 36 pt wide. Tile width = what fits, capped at the mockup's 50.
-- Keys: width from the screen width (max 48), height 46.
-- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys 40 tall,
+- Keys: 10 fit across the widest row, so width = what fits (max 44, about 30 on a phone). Taller than wide like iOS keys: height = 1.45 × width (max 48), radius 30% of width.
+- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys 1.35 × width (max 42) tall,
   tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
   (`flexGrow` between a minimum and the mockup's height), so every layout fits
   without scrolling. Checked at 393×852 and 375×667.

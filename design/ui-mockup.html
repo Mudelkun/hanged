@@ -78,12 +78,12 @@
   .track{flex:1;height:12px;border-radius:7px;background:#f1e5d6;overflow:hidden;box-shadow:inset 0 2px 0 rgba(0,0,0,.04)}
   .fill{height:100%;background:linear-gradient(90deg,var(--butter),#ffbf3a);border-radius:7px;box-shadow:inset 0 -3px 0 rgba(224,150,20,.35)}
   .kb{margin-top:auto;margin-bottom:4px;display:flex;flex-direction:column;gap:7px;align-items:center}
-  .kr{display:flex;gap:6px}
-  .k{width:45px;height:46px;border-radius:14px;background:#fff;border:1.5px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:21px;color:var(--ink)}
+  .kr{display:flex;gap:5px}
+  .k{width:30px;height:44px;border-radius:9px;background:#fff;border:1.5px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:20px;color:var(--ink)}
   .k.ok{background:var(--mint);color:#fff;border-color:var(--mint);box-shadow:0 4px 0 var(--mint-d)}
-  .k.no{background:#f2e8dc;border-color:#f2e8dc;box-shadow:none;transform:translateY(3px)}
+  .k.no{background:#f2e8dc;border-color:#f2e8dc;box-shadow:none;transform:translateY(3px);color:var(--muted);opacity:.75}
   .k.clue{background:var(--butter);border-color:var(--butter);box-shadow:0 4px 0 var(--butter-d);color:#7a5300}
-  .k.wide{width:96px}
+  .k.wide{width:60px}
 
   /* buttons */
   .btn{margin:8px 0;height:56px;border-radius:20px;background:var(--coral);color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 5px 0 var(--coral-d);flex:none;letter-spacing:.2px}
@@ -160,9 +160,9 @@
   .valid{display:flex;justify-content:space-between;font-family:Fredoka,Nunito,sans-serif;font-size:13px;font-weight:600;color:var(--mint-t);margin:0 4px 10px;flex:none}
   .hint{border-radius:18px;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);padding:8px 12px;font-size:13.5px;font-weight:800;flex:none;display:flex;align-items:center;gap:10px}
   .hint small{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.8px;color:var(--sky-t);margin-bottom:1px}
-  .kb.sm .k{width:43px;height:40px;font-size:18px;border-radius:12px}
+  .kb.sm .k{width:30px;height:40px;font-size:18px;border-radius:9px}
   .kb.sm{gap:6px;margin-bottom:4px}
-  .kb.sm .k.wide{width:92px}
+  .kb.sm .k.wide{width:60px}
 
   /* profile */
   .pf-card{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);border-radius:26px;padding:12px 14px;flex:none;margin-top:2px}
@@ -218,7 +218,7 @@
 <div class="row" id="row"></div>
 <div class="h3" id="h3"></div>
 <div class="stages" id="stages"></div>
-<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey ✕ = wrong letter. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 5 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
+<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey faded letter = wrong guess. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 5 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
 
 <script src="characters/rig.js"></script>
 <script src="characters/hanging.js"></script>
@@ -230,7 +230,6 @@ const coin = (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><cir
 const lockI = (s=16,c='#c9b5a4') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="4" fill="${c}"/><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="${c}" stroke-width="2.8"/></svg>`;
 const chev = (d='l', c=INK, s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="${d==='l'?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const checkI = `<svg width="13" height="13" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const xI = (s=18,c='#cdb9a7') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke="${c}" stroke-width="3.4" stroke-linecap="round"/></svg>`;
 const spark = (s=18, c='#ffc93c') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5-.9-5.6-4.9-9.6-10.5-10.5C7.1 11.1 11.1 7.1 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
 const starI = (s=15, c='#38b283') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
 const bulbI = `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.5a7 7 0 0 0-4.2 12.6c.8.6 1.2 1.4 1.2 2.4h6c0-1 .4-1.8 1.2-2.4A7 7 0 0 0 12 2.5z" fill="#ffd667" stroke="#f0b43a" stroke-width="1.6"/><rect x="9" y="18.5" width="6" height="3" rx="1.5" fill="#f0b43a"/><path d="M9.5 9.5a3 3 0 0 1 2.5-2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`;
@@ -285,11 +284,11 @@ const stamp = (text) => `<svg class="stamp" viewBox="0 0 372 156">
 const tokbar = `<div class="tokbar">${coin(18)}<span>Next token</span><div class="track"><div class="fill" style="width:60%"></div></div><span>3 / 5 words</span></div>`;
 
 function keyboard(state, extra=''){
-  const rows = ['ABCDEFG','HIJKLMN','OPQRSTU','VWXYZ'];
+  const rows = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM']; // iPhone letter order
   return `<div class="kb ${extra}">${rows.map((r,i)=>`<div class="kr">${[...r].map(c=>{
       const st = state[c];
-      return `<div class="k ${st||''}">${st==='no'?xI():c}</div>`;
-    }).join('')}${i===3 && extra ? `<div class="k wide"><svg width="26" height="20" viewBox="0 0 26 20"><path d="M8 2h15a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8L1 10z" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 7l6 6M18 7l-6 6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/></svg></div>` : ''}</div>`).join('')}</div>`;
+      return `<div class="k ${st||''}">${c}</div>`;
+    }).join('')}${i===rows.length-1 && extra ? `<div class="k wide"><svg width="26" height="20" viewBox="0 0 26 20"><path d="M8 2h15a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8L1 10z" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 7l6 6M18 7l-6 6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/></svg></div>` : ''}</div>`).join('')}</div>`;
 }
 
 // 1. Play

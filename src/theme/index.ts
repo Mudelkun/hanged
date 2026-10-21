@@ -1,7 +1,7 @@
 /*
  * "Sunny meadow" palette and type, copied from design/ui-mockup.html (:root).
  * Cream paper, sky scenes, coral = actions, mint = correct letter,
- * butter = clue letters and tokens, grey ✕ = wrong letter.
+ * butter = clue letters and tokens, grey faded letter = wrong guess.
  */
 export const colors = {
   paper: '#fffaf1',
