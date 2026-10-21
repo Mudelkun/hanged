@@ -1,6 +1,15 @@
-import { DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT, STARTING_TOKENS, STREAK_BONUS_AT, WORDS_PER_LEVEL } from '../config';
+import {
+  DESCRIPTION_COST,
+  LETTER_BUY_COST,
+  LETTER_BUY_COUNT,
+  LEVEL_GRACE_ROUNDS,
+  LOSSES_TO_DROP,
+  STARTING_TOKENS,
+  STREAK_BONUS_AT,
+  WORDS_PER_LEVEL,
+} from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
-import { LEVELS, levelNumberFor } from '../levels';
+import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
 import { gameReducer, GameState, initialState, lettersForSale, tokenReward } from '../progress';
 import { pickWord, WORDS } from '../words';
 
@@ -20,6 +29,19 @@ function winRound(s: GameState): GameState {
   return state;
 }
 
+function loseRound(s: GameState): GameState {
+  let state = startRound(s);
+  const wrong = decoyLetters(word.word).filter((c) => !usedLetters(state.round!).has(c));
+  for (const c of wrong.slice(0, state.round!.maxWrong)) state = gameReducer(state, { type: 'guess', letter: c });
+  return state;
+}
+
+/** A player on `level`, past the grace, with `extra` overrides on the progress. */
+const atLevel = (level: number, extra: Partial<LevelProgress> = {}): GameState => ({
+  ...initialState(),
+  levelProgress: { ...START_LEVEL, level, rounds: LEVEL_GRACE_ROUNDS, ...extra },
+});
+
 describe('scoring', () => {
   it('counts a won round once, even if more guesses arrive', () => {
     let s = winRound(initialState());
@@ -37,9 +59,7 @@ describe('scoring', () => {
   });
 
   it('does not score a lost round', () => {
-    let s = startRound(initialState());
-    const wrong = decoyLetters(word.word).filter((c) => !usedLetters(s.round!).has(c));
-    for (const c of wrong.slice(0, s.round!.maxWrong)) s = gameReducer(s, { type: 'guess', letter: c });
+    const s = loseRound(initialState());
     expect(roundStatus(s.round!)).toBe('lost');
     expect(s.wordsGuessed).toBe(0);
   });
@@ -56,13 +76,6 @@ describe('scoring', () => {
 });
 
 describe('win streak', () => {
-  function loseRound(s: GameState): GameState {
-    let state = startRound(s);
-    const wrong = decoyLetters(word.word).filter((c) => !usedLetters(state.round!).has(c));
-    for (const c of wrong.slice(0, state.round!.maxWrong)) state = gameReducer(state, { type: 'guess', letter: c });
-    return state;
-  }
-
   const base = LEVELS[0].tokenReward;
 
   it('pays the level reward, plus +1 at each streak step', () => {
@@ -100,11 +113,11 @@ describe('win streak', () => {
 
   it("pays the round's level, not the level the win moves up to", () => {
     const top = LEVELS[LEVELS.length - 1];
-    let s = winRound({ ...initialState(), wordsGuessed: WORDS_PER_LEVEL - 1 });
+    let s = winRound(atLevel(1, { wins: WORDS_PER_LEVEL - 1 }));
     expect(s.round!.level).toBe(1);
-    expect(levelNumberFor(s.wordsGuessed)).toBe(2);
+    expect(s.levelProgress.level).toBe(2);
     expect(s.lastTokensEarned).toBe(base);
-    s = winRound({ ...initialState(), wordsGuessed: WORDS_PER_LEVEL * LEVELS.length });
+    s = winRound(atLevel(top.level));
     expect(s.round!.level).toBe(top.level);
     expect(s.lastTokensEarned).toBe(top.tokenReward);
   });
@@ -164,7 +177,7 @@ describe('description unlock', () => {
 });
 
 describe('buying letters', () => {
-  const lastLevel = { ...initialState(), wordsGuessed: (LEVELS.length - 1) * WORDS_PER_LEVEL, tokens: LETTER_BUY_COST };
+  const lastLevel = { ...atLevel(LEVELS.length), tokens: LETTER_BUY_COST };
 
   it('only the levels that sell letters offer them', () => {
     expect(LEVELS[LEVELS.length - 1].sellsLetters).toBe(true);
@@ -196,12 +209,73 @@ describe('buying letters', () => {
   });
 });
 
-describe('levels and word picking', () => {
-  it('only goes up, and caps at the last level', () => {
-    expect(levelNumberFor(0)).toBe(1);
-    expect(levelNumberFor(10_000)).toBe(LEVELS.length);
+describe('moving up and down levels', () => {
+  const loseTimes = (s: GameState, n: number) => Array.from({ length: n }).reduce<GameState>(loseRound, s);
+
+  it(`moves up after ${WORDS_PER_LEVEL} words guessed on a level, and caps at the last level`, () => {
+    let s = initialState();
+    for (let i = 1; i < WORDS_PER_LEVEL; i++) s = winRound(s);
+    expect(s.levelProgress.level).toBe(1);
+    s = winRound(s);
+    expect(s.levelProgress).toEqual({ level: 2, wins: 0, rounds: 0, losses: 0 });
+    expect(winRound(atLevel(LEVELS.length, { wins: 10_000 })).levelProgress.level).toBe(LEVELS.length);
   });
 
+  it(`drops one level after ${LOSSES_TO_DROP} losses in a row, and the next round uses it`, () => {
+    let s = loseTimes(atLevel(4), LOSSES_TO_DROP - 1);
+    expect(s.levelProgress.level).toBe(4);
+    s = loseRound(s);
+    expect(s.round!.level).toBe(4);
+    expect(s.levelProgress).toEqual({ level: 3, wins: 0, rounds: 0, losses: 0 });
+    expect(startRound(s).round!.level).toBe(3);
+  });
+
+  it('a win in between clears the losses', () => {
+    let s = loseTimes(atLevel(4), LOSSES_TO_DROP - 1);
+    s = winRound(s);
+    expect(s.levelProgress.losses).toBe(0);
+    expect(loseTimes(s, LOSSES_TO_DROP - 1).levelProgress.level).toBe(4);
+  });
+
+  it('losses in the first rounds on a new level never count, so drops never chain', () => {
+    // Just dropped to 3: the grace rounds are free, then it takes the full run again
+    let s = loseTimes(atLevel(3, { rounds: 0 }), LEVEL_GRACE_ROUNDS);
+    expect(s.levelProgress).toMatchObject({ level: 3, losses: 0 });
+    s = loseTimes(s, LOSSES_TO_DROP - 1);
+    expect(s.levelProgress.level).toBe(3);
+    expect(loseRound(s).levelProgress.level).toBe(2);
+  });
+
+  it('never drops below level 1', () => {
+    expect(loseTimes(atLevel(1), LOSSES_TO_DROP * 2).levelProgress.level).toBe(1);
+  });
+
+  it('losing never lowers the score', () => {
+    const s = loseTimes(atLevel(4), LOSSES_TO_DROP);
+    expect(s.levelProgress.level).toBe(3);
+    expect(s.wordsGuessed).toBe(0);
+  });
+
+  it('a loss in the grace counts the round, not the loss', () => {
+    expect(afterRound(START_LEVEL, false)).toEqual({ level: 1, wins: 0, rounds: 1, losses: 0 });
+  });
+
+  it('a save from before levels could drop keeps the level its score earned', () => {
+    const { levelProgress, ...old } = initialState();
+    const saved = { ...old, wordsGuessed: WORDS_PER_LEVEL * 2 + 4 } as GameState;
+    const s = gameReducer(initialState(), { type: 'hydrate', state: saved });
+    expect(s.levelProgress).toEqual({ level: 3, wins: 4, rounds: 4, losses: 0 });
+    const top = gameReducer(initialState(), { type: 'hydrate', state: { ...saved, wordsGuessed: 10_000 } });
+    expect(top.levelProgress.level).toBe(LEVELS.length);
+  });
+
+  it('a save missing newer fields gets their defaults', () => {
+    const { streak, ...old } = initialState();
+    expect(gameReducer(initialState(), { type: 'hydrate', state: old as GameState }).streak).toBe(0);
+  });
+});
+
+describe('word picking', () => {
   it('has words for every level, and avoids recent words', () => {
     for (const level of LEVELS) {
       const w = pickWord(level, 'en', [], () => 0.5);

@@ -43,6 +43,7 @@
   "result.tokenEarned": "+1 token",
   "result.tokensEarned": "+{count} tokens",
   "result.streak": "{count} in a row",
+  "result.levelDown": "Back to level {level}. You've got this!",
   "result.nextWord": "Next word",
 
   "tabs.play": "Play",

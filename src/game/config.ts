@@ -31,8 +31,14 @@ export const LETTER_BUY_COST = 10;
 /** PLACEHOLDER: tokens a brand-new player starts with. */
 export const STARTING_TOKENS = 3;
 
-/** PLACEHOLDER: words guessed per level-up (the player can never drop back down). */
+/** PLACEHOLDER: words guessed on a level that move the player up one. */
 export const WORDS_PER_LEVEL = 10;
+
+/** PLACEHOLDER: rounds lost in a row that move the player down one level (never below level 1). */
+export const LOSSES_TO_DROP = 3;
+
+/** PLACEHOLDER: the first rounds on a new level never count toward a drop. */
+export const LEVEL_GRACE_ROUNDS = 3;
 
 /** Solo mode never repeats any of the last N words. */
 export const RECENT_WORDS_MEMORY = 40;

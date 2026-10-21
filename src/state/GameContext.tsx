@@ -31,7 +31,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((raw) => {
         const saved = raw ? (JSON.parse(raw) as GameState) : null;
-        if (saved?.version === 1) dispatch({ type: 'hydrate', state: { ...initialState(), ...saved } });
+        // hydrate fills in fields an older save lacks, so it must see the save as stored
+        if (saved?.version === 1) dispatch({ type: 'hydrate', state: saved });
       })
       .catch(() => {})
       .finally(() => setReady(true));

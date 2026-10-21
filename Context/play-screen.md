@@ -12,7 +12,8 @@ these components.
 - **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
-  (always unlocked) · **Next word** · tab bar.
+  (always unlocked) · **Next word** · tab bar. A loss that dropped the level adds a sky-blue line,
+  "Back to level N. You've got this!", under the misses line: encouraging, never a penalty message.
 - There is **no "Next token" bar**: words guessed in a row pay more tokens
   ([progression-and-tokens.md](progression-and-tokens.md)), so the win line's badge carries the
   reward: "+N tokens" (`lastTokensEarned`), plus "· N in a row" once the streak is 2 or more. This differs from the mockup, which still shows "1 / 2 words".

@@ -10,7 +10,8 @@ Tests: [src/game/__tests__/progress.test.ts](../src/game/__tests__/progress.test
 
 `gameReducer`'s `guess` case scores in the **same step** that makes the round
 `won`. It adds +1 to `wordsGuessed` and to `streak`, and pays `tokenReward(round.level, streak)` tokens.
-The step that makes a round `lost` resets `streak` to 0. A finished round ignores further guesses (the engine
+The step that makes a round `lost` resets `streak` to 0. Both steps also move the level
+(`afterRound`, see Levels below), so a round can't count toward a level twice either. A finished round ignores further guesses (the engine
 returns the same round), so **a word can never be scored twice**. Don't move
 scoring into an effect or a "round over" screen. Re-renders and app restarts
 would then count it again.
@@ -47,18 +48,34 @@ would then count it again.
 - `unlockDescription` is refused without enough tokens, when it's already unlocked,
   or once the round is over. The result screens always show the description for free.
 
-## Levels: placeholders in one table
+## Levels: up with wins, down with losses in a row
 
-Difficulty is progressive and the player never picks it. `levelFor(wordsGuessed)`
-is `1 + floor(wordsGuessed / WORDS_PER_LEVEL)`, capped at the last level, so it
-**never drops back down**. Each `LEVELS` row sets the word-length range, the
+Difficulty is progressive and the player never picks it. The level is **saved state**,
+`levelProgress` (`level`, `wins`, `rounds`, `losses`), not computed from the score, because
+it can go down while the score never does. `afterRound(levelProgress, won)` in
+[levels.ts](../src/game/levels.ts) is the only thing that moves it:
+
+- **Up**: `WORDS_PER_LEVEL` (10) words guessed **on this level** move the player up one, capped at the last level.
+- **Down (owner's call)**: `LOSSES_TO_DROP` (3) rounds lost **in a row** move the player down one,
+  never below level 1. Any win clears the run.
+- **Grace**: the first `LEVEL_GRACE_ROUNDS` (3) rounds on a level never count toward a drop, so a fresh
+  level-up gets a few tries and drops can't chain.
+- Every count restarts at 0 on a level change, so climbing back after a drop takes the full 10 wins.
+- **Why not drop on every loss**: one unlucky word would yo-yo the level and progress would stop feeling
+  real. **Why a drop at all**: a player stuck on a level that's too hard (6 wrong guesses, 15 letters)
+  would lose forever. The 3-in-a-row + grace + 10-wins-back combination also limits losing on purpose
+  to farm easy words for the leaderboard (an easy word counts the same as a hard one there).
+- The result screen says "Back to level N. You've got this!" when the loss dropped the level
+  (`state.levelProgress.level < round.level`, no extra saved field) ([play-screen.md](play-screen.md)).
+
+Each `LEVELS` row sets the word-length range, the
 `clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the
 keyboard: 0.5 at level 1, minus 0.1 per level, 0 from level 6; a test keeps it
 non-increasing and ending at 0), `maxWrong` (10 until level 7, then 8, then 6),
 `tokenReward` (see Tokens above) and `sellsLetters` (only level 8). `levelByNumber` reads a row by a round's `level`.
 
-**Every number in `LEVELS`, `WORDS_PER_LEVEL` and `STARTING_TOKENS` (3) is a
-PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
+**Every number in `LEVELS`, `WORDS_PER_LEVEL`, `LOSSES_TO_DROP`, `LEVEL_GRACE_ROUNDS` and
+`STARTING_TOKENS` (3) is a PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
 starting-token questions in CLAUDE.md. Change them only in those two files,
 and update this doc when you do.
 
@@ -85,6 +102,10 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`
   sets `[]`. Same key, no bump.
+- A save from before levels could drop has no `levelProgress`. `hydrate` rebuilds it from the score
+  (`levelFromScore`: same level as before, the words past that level's start as `wins`). Same key, no bump.
+- **`hydrate` gets the save exactly as stored** and fills missing fields from `initialState()` itself
+  (`withDefaults`). `GameContext` must not merge first, or `hydrate` can't tell an old save from a new one.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.

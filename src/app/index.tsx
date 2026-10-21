@@ -20,7 +20,7 @@ import { TabBar } from '../components/TabBar';
 import { useTokenOrigin } from '../components/TokenFlight';
 import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
 import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
-import { levelByNumber, levelNumberFor } from '../game/levels';
+import { levelByNumber } from '../game/levels';
 import { lettersForSale } from '../game/progress';
 import { feedback } from '../feedback';
 import { t } from '../i18n';
@@ -81,7 +81,7 @@ export default function PlayScreen() {
         name={playerName}
         character={character}
         wordsGuessed={state.wordsGuessed}
-        level={levelNumberFor(state.wordsGuessed)}
+        level={state.levelProgress.level}
         tokens={state.tokens}
       />
       <View style={styles.body}>
@@ -93,6 +93,7 @@ export default function PlayScreen() {
             character={character}
             tokensEarned={state.lastTokensEarned}
             streak={state.streak}
+            level={state.levelProgress.level}
             available={available}
             compact={compact}
             onNext={startNextRound}
@@ -147,13 +148,15 @@ export default function PlayScreen() {
   );
 }
 
-function ResultView({ round, status, character, characterName, tokensEarned, streak, available, compact, onNext }: {
+function ResultView({ round, status, character, characterName, tokensEarned, streak, level, available, compact, onNext }: {
   round: Round;
   status: 'won' | 'lost';
   character: ReturnType<typeof characterById>;
   characterName: string;
   tokensEarned: number;
   streak: number;
+  /** The player's level now: below the round's level when this loss dropped it. */
+  level: number;
   available: number;
   compact: boolean;
   onNext: () => void;
@@ -206,6 +209,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
           </View>
         )}
       </View>
+      {level < round.level && <Text style={styles.levelDown}>{t('result.levelDown', { level })}</Text>}
       <WordTiles letters={letters} available={available} compact={compact} />
       <DescriptionCard text={round.description} unlocked canAfford={null} compact={compact} />
       <View style={styles.actions}>
@@ -226,5 +230,6 @@ const styles = StyleSheet.create({
   overText: { fontFamily: fonts.display500, fontSize: 15, color: colors.muted, textAlign: 'center' },
   earned: { backgroundColor: colors.butterL, borderColor: '#ffe39a', borderWidth: 2, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 1 },
   earnedText: { fontFamily: fonts.display600, fontSize: 13, color: colors.butterT },
+  levelDown: { marginTop: 6, fontFamily: fonts.display600, fontSize: 14, color: colors.skyT, textAlign: 'center' },
   actions: { marginTop: 'auto', paddingTop: 8 },
 });

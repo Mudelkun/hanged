@@ -1,12 +1,12 @@
 /*
- * Progressive difficulty. The player never picks a level: it rises with the
- * number of words guessed and never drops back down.
+ * Progressive difficulty. The player never picks a level: words guessed move
+ * it up, and rounds lost in a row move it back down (`afterRound`).
  *
  * PLACEHOLDER: the owner has not decided the clue formula, the number of
- * levels or what moves a player up (see "Open questions" in CLAUDE.md).
+ * levels or how many wins move a player up (see "Open questions" in CLAUDE.md).
  * Everything that drives difficulty lives in this one table.
  */
-import { DEFAULT_MAX_WRONG, WORDS_PER_LEVEL } from './config';
+import { DEFAULT_MAX_WRONG, LEVEL_GRACE_ROUNDS, LOSSES_TO_DROP, WORDS_PER_LEVEL } from './config';
 
 export interface Level {
   level: number;
@@ -35,10 +35,44 @@ export const LEVELS: readonly Level[] = [
   { level: 8, minLength: 10, maxLength: 15, clueRatio: 0.12, disabledRatio: 0, maxWrong: 6, tokenReward: 4, sellsLetters: true },
 ];
 
-export const levelNumberFor = (wordsGuessed: number) =>
-  Math.min(LEVELS.length, 1 + Math.floor(wordsGuessed / WORDS_PER_LEVEL));
-
 /** The row for a level number (a round's snapshotted `level`), clamped to the table. */
 export const levelByNumber = (level: number): Level => LEVELS[Math.min(LEVELS.length, Math.max(1, level)) - 1];
 
-export const levelFor = (wordsGuessed: number): Level => levelByNumber(levelNumberFor(wordsGuessed));
+/** Where the player stands on the level ladder. Saved; every count restarts at 0 on a level change. */
+export interface LevelProgress {
+  level: number;
+  /** Words guessed on this level: WORDS_PER_LEVEL of them move the player up. */
+  wins: number;
+  /** Rounds finished on this level: the first LEVEL_GRACE_ROUNDS never count toward a drop. */
+  rounds: number;
+  /** Rounds lost in a row after the grace: LOSSES_TO_DROP of them move the player down. */
+  losses: number;
+}
+
+const onLevel = (level: number): LevelProgress => ({ level, wins: 0, rounds: 0, losses: 0 });
+
+export const START_LEVEL: LevelProgress = onLevel(1);
+
+/** A save from before levels could drop: the level came from the score, which only went up. */
+export function levelFromScore(wordsGuessed: number): LevelProgress {
+  const level = Math.min(LEVELS.length, 1 + Math.floor(wordsGuessed / WORDS_PER_LEVEL));
+  const wins = wordsGuessed - (level - 1) * WORDS_PER_LEVEL;
+  return { level, wins, rounds: wins, losses: 0 };
+}
+
+/**
+ * The level after a finished round. A win clears the losses and may move the
+ * player up; a loss after the grace counts toward a drop. Never below level 1
+ * or above the last one.
+ */
+export function afterRound(p: LevelProgress, won: boolean): LevelProgress {
+  const rounds = p.rounds + 1;
+  if (won) {
+    const wins = p.wins + 1;
+    if (wins >= WORDS_PER_LEVEL && p.level < LEVELS.length) return onLevel(p.level + 1);
+    return { ...p, wins, rounds, losses: 0 };
+  }
+  const losses = p.rounds >= LEVEL_GRACE_ROUNDS ? p.losses + 1 : 0;
+  if (losses >= LOSSES_TO_DROP && p.level > 1) return onLevel(p.level - 1);
+  return { ...p, rounds, losses };
+}

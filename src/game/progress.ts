@@ -15,7 +15,7 @@ import {
   STREAK_BONUS_AT,
 } from './config';
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription } from './engine';
-import { levelByNumber, levelFor } from './levels';
+import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { pickWord, wordById, WordEntry } from './words';
 
 export interface GameState {
@@ -29,6 +29,8 @@ export interface GameState {
   tokens: number;
   /** Words guessed in a row. A lost round resets it to 0. */
   streak: number;
+  /** The level and the counts that move it up or down (levels.afterRound). */
+  levelProgress: LevelProgress;
   recentWordIds: string[];
   round: Round | null;
   /** Tokens paid by the winning guess (0 otherwise), cleared by the next round. */
@@ -43,6 +45,7 @@ export const initialState = (): GameState => ({
   wordsGuessed: 0,
   tokens: STARTING_TOKENS,
   streak: 0,
+  levelProgress: START_LEVEL,
   recentWordIds: [],
   round: null,
   lastTokensEarned: 0,
@@ -64,6 +67,12 @@ export const tokenReward = (level: number, streak: number) =>
 
 type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean };
 
+/** Every save field missing from an older save gets its value from initialState(). */
+const withDefaults = (saved: GameState): GameState => {
+  const fresh = initialState();
+  return (Object.keys(fresh) as (keyof GameState)[]).every((k) => k in saved) ? saved : { ...fresh, ...saved };
+};
+
 export const canUnlockDescription = (s: GameState) =>
   !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
 
@@ -75,6 +84,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'hydrate': {
       let s = action.state;
+      // A save from before levels could drop: its level came from the score.
+      if (!s.levelProgress) s = { ...s, levelProgress: levelFromScore(s.wordsGuessed ?? 0) };
+      s = withDefaults(s);
       // A save from the old "N words per token" rate: its progress was worth a
       // token per word at the last rate (1), so pay it out and drop the old fields.
       if ('wordsTowardToken' in s || 'lastTokenEarned' in s) {
@@ -92,7 +104,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'newRound': {
-      const level = levelFor(state.wordsGuessed);
+      const level = levelByNumber(state.levelProgress.level);
       const round = createRound(
         {
           id: action.roundId,
@@ -120,8 +132,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const round = guess(state.round, action.letter);
       if (round === state.round) return state;
       const status = roundStatus(round);
-      if (status === 'lost') return { ...state, round, streak: 0 };
-      if (status !== 'won') return { ...state, round };
+      if (status === 'playing') return { ...state, round };
+      const levelProgress = afterRound(state.levelProgress, status === 'won');
+      if (status === 'lost') return { ...state, round, streak: 0, levelProgress };
       const streak = state.streak + 1;
       // The round's own level pays, not the level this win may move the player up to.
       const earned = tokenReward(round.level, streak);
@@ -130,6 +143,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         round,
         wordsGuessed: state.wordsGuessed + 1,
         streak,
+        levelProgress,
         tokens: state.tokens + earned,
         lastTokensEarned: earned,
       };
@@ -151,4 +165,4 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
 /** Picks the next solo word for this player. */
 export const nextWord = (s: GameState, rng?: () => number) =>
-  pickWord(levelFor(s.wordsGuessed), s.language, s.recentWordIds, rng);
+  pickWord(levelByNumber(s.levelProgress.level), s.language, s.recentWordIds, rng);

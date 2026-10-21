@@ -88,6 +88,7 @@ A level's difficulty is set by:
 - **word length**
 - **how many clues are given** (fewer clues = harder)
 - for the hardest levels, possibly **fewer wrong guesses allowed** (fewer than 10)
+- **Dropping back down**: losing **3 rounds in a row** moves the player down one level (never below level 1). The first few rounds on a new level never count toward a drop. The result screen says so gently ("Back to level N"), not as a penalty. The leaderboard score never goes down.
 - for the easiest levels, **disabled letters**: some letters that are *not* in the word are taken off the keyboard when the round starts, so there are fewer wrong keys to hit. Each higher level disables fewer, down to the full keyboard. At least one wrong letter always stays pickable.
 
 ### Word descriptions
@@ -200,7 +201,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost?
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level?
-- **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? Can the player drop back down after losing?
+- **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? (Dropping down is decided: 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? The leaderboard, profile, tokens and online play all depend on this.
 - **Player names**: must they be unique? What length limits apply?
