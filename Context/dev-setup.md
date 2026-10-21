@@ -67,6 +67,10 @@ On web, haptics do nothing and `Animated` falls back to JS. Neither is a bug.
 bundle it first built. Use it only for one-off captures, and restart after edits. To check
 what a server serves, `curl` its bundle URL and grep it for the new code.
 The real target is iOS: confirm on a phone with Expo Go.
+**Debugging on the phone without seeing it:** the phone's `console.log` output is forwarded
+to the dev server and written to `.expo/dev/logs/start.log` (JSON lines, `metro:client_log`
+events). Add tagged logs, ask the owner to reload (`r`) and play, then read that file. Its
+`metro:bundling:started` events also show when the phone last fetched code.
 
 ## App identity
 

@@ -42,11 +42,19 @@ const APPEAR_MS = 240;
 /** Gains linger a little at the origin so the player reads them; spends leave quickly. */
 const HOLD_MS = { gain: 300, spend: 120 };
 const FLY_MS = 620;
+/** A measurement that hasn't answered by then counts as failed, so a spend never hangs on it. */
+const MEASURE_TIMEOUT_MS = 300;
+/** The chip's box, centred on the flight's point. */
+const BOX = { w: 160, h: 40 };
 
 const centerOf = (view: View | null) =>
   new Promise<Point | null>((resolve) => {
     if (!view) return resolve(null);
-    view.measureInWindow((x, y, w, h) => resolve(w || h ? { x: x + w / 2, y: y + h / 2 } : null));
+    const timer = setTimeout(() => resolve(null), MEASURE_TIMEOUT_MS);
+    view.measureInWindow((x, y, w, h) => {
+      clearTimeout(timer);
+      resolve(w || h ? { x: x + w / 2, y: y + h / 2 } : null);
+    });
   });
 
 function createHub(setFlights: ((f: (all: FlightData[]) => FlightData[]) => void) | null) {
@@ -182,17 +190,22 @@ function Flight({ from, to, delta, onDone }: FlightData) {
 
   return (
     <Animated.View style={[styles.flight, fx.style]}>
-      <View style={styles.flightCenter}>
-        <TokenChip delta={delta} />
-      </View>
+      <TokenChip delta={delta} />
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  // A zero-size point moved by the transform; the chip is centred on it
-  flight: { position: 'absolute', left: 0, top: 0, width: 0, height: 0 },
-  flightCenter: { position: 'absolute', left: -80, width: 160, top: -20, height: 40, alignItems: 'center', justifyContent: 'center' },
+  // A real box centred on (0, 0), moved by the transform (iOS may drop a zero-size view)
+  flight: {
+    position: 'absolute',
+    left: -BOX.w / 2,
+    top: -BOX.h / 2,
+    width: BOX.w,
+    height: BOX.h,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',

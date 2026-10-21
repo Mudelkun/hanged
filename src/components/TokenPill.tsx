@@ -16,8 +16,8 @@ import { coinXml, Icon, sparkXml } from './icons';
 import { popFrom } from './motion';
 import { useTokenFlights } from './TokenFlight';
 
-/** A change waits this long for its origin (a win's badge appears ~700 ms after the guess). */
-const WAIT_ORIGIN_MS = 1500;
+/** A change waits this long for its origin (a win's badge appears ~700 ms after the guess, later on a slow phone). */
+const WAIT_ORIGIN_MS = 4000;
 /** A count lasts about this long, whatever the amount (each step 45–120 ms). */
 const COUNT_MS = 700;
 const SPARK_SIZE = 12;
