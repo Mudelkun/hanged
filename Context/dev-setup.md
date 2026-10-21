@@ -52,6 +52,11 @@ Run tests, typecheck and lint before calling a task done.
 - **`npm install` failed with ERESOLVE on `react-dom`** until `react-dom` was pinned to
   the SDK's React version (`19.2.3` on SDK 57, via `npx expo install react-dom`). expo-router's
   web dependencies pull it in.
+- **No 3D transforms (`rotateX`, `rotateY`, `perspective`) anywhere.** On iOS a single 3D-tilted view
+  makes Core Animation depth-sort the flat views around it, and it slices them along long diagonal
+  lines (parts of cards, text and characters vanish behind the background). The streak confetti's
+  `rotateX` flutter did this on the owner's iPhone, and the web preview never shows it. Fake a flip
+  with `scaleX`/`scaleY` going through 0 to −1 (the token coin and the confetti both do).
 - On **web**, an `<Svg>` sized only by `style={StyleSheet.absoluteFill}` falls back to
   300×150. Always also pass `width="100%" height="100%"`.
 

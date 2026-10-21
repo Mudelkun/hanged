@@ -10,7 +10,7 @@ import {
 } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
-import { gameReducer, GameState, initialState, lettersForSale, tokenReward } from '../progress';
+import { gameReducer, GameState, initialState, lettersForSale, streakMeter, tokenReward } from '../progress';
 import { pickWord, WORDS } from '../words';
 
 const word = {
@@ -102,6 +102,25 @@ describe('win streak', () => {
 
   it('the streak bonus stops growing after the last step', () => {
     expect(tokenReward(1, 10_000)).toBe(base + STREAK_BONUS_AT.length);
+  });
+
+  it('the meter fills one stretch per bonus step, then laps once the bonus is maxed', () => {
+    const last = STREAK_BONUS_AT[STREAK_BONUS_AT.length - 1];
+    for (let n = 1; n <= last * 3; n++) {
+      const m = streakMeter(n);
+      expect(m.from).toBeLessThan(n);
+      expect(m.to).toBeGreaterThanOrEqual(n);
+      expect(m.full).toBe(n === m.to);
+      expect(m.bonus).toBe(tokenReward(1, n) - base);
+      // A full stretch below the max is exactly a bonus step
+      if (m.tier < STREAK_BONUS_AT.length) expect(m.full).toBe(STREAK_BONUS_AT.includes(n));
+      else expect(n).toBeGreaterThan(last);
+    }
+    expect(streakMeter(1)).toEqual({ tier: 0, from: 0, to: STREAK_BONUS_AT[0], full: false, bonus: 0 });
+    expect(streakMeter(STREAK_BONUS_AT[0] + 1)).toMatchObject({ tier: 1, from: STREAK_BONUS_AT[0], bonus: 1 });
+    const lap = last - STREAK_BONUS_AT[STREAK_BONUS_AT.length - 2];
+    expect(streakMeter(last + 1)).toMatchObject({ tier: STREAK_BONUS_AT.length, from: last, to: last + lap });
+    expect(streakMeter(last + lap + 1)).toMatchObject({ from: last + lap, to: last + 2 * lap });
   });
 
   it('harder levels never pay less, and the hardest pays more than the easiest', () => {

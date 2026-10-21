@@ -47,6 +47,18 @@
   "result.levelDown": "Back to level {level}. You've got this!",
   "result.nextWord": "Next word",
 
+  "streak.title": "Word streak!",
+  "streak.title.bonus": "Streak bonus!",
+  "streak.title.max": "Unstoppable!",
+  "streak.inARow": "in a row",
+  "streak.next.one": "1 more word for a +{bonus} bonus",
+  "streak.next.other": "{count} more words for a +{bonus} bonus",
+  "streak.bonus.one": "+1 bonus token on every word",
+  "streak.bonus.other": "+{bonus} bonus tokens on every word",
+  "streak.max": "Max bonus: +{bonus} on every word",
+  "streak.tap": "Tap to continue",
+  "streak.a11y": "{count} words in a row. {note}. Tap to continue",
+
   "level.up.title": "Level up!",
   "level.up.body": "Welcome to level {level}. The words get a little harder.",
   "level.up.button": "Let's go!",

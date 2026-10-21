@@ -15,5 +15,7 @@ export const feedback = {
   unlock: () => safe(Haptics.selectionAsync()),
   levelUp: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
   levelDown: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
+  streak: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)),
+  streakBonus: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
   refused: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
 };

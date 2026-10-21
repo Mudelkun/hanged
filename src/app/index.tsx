@@ -4,7 +4,9 @@
  *   - result (won or lost): bigger scene with the stamp, the full word,
  *     the description and "Next word" (mockup: Round lost)
  * When the round ends, the play layout stays a moment so the last
- * animation (the fall, or the last tile popping) can be seen first.
+ * animation (the fall, or the last tile popping) can be seen first. A win
+ * that makes a streak plays the streak takeover over it, which dissolves
+ * onto the result.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
@@ -17,6 +19,7 @@ import { LetterKeyboard } from '../components/LetterKeyboard';
 import { LevelChange } from '../components/LevelChange';
 import { PaperBackground } from '../components/PaperBackground';
 import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
+import { STREAK_SHOWN_FROM, StreakTakeover } from '../components/StreakTakeover';
 import { TabBar } from '../components/TabBar';
 import { useTokenOrigin } from '../components/TokenFlight';
 import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
@@ -45,6 +48,16 @@ export default function PlayScreen() {
   const [restoredId] = useState(status === 'playing' ? null : round.id);
   const [resultFor, setResultFor] = useState<string | null>(restoredId);
   const showResult = resultFor === round.id;
+  // A win that makes a streak shows the streak takeover over the round, then dissolves it onto the result.
+  // It stays mounted until it has faded out (`streakGone`), so the result is never cut in.
+  const [streakFor, setStreakFor] = useState<string | null>(null);
+  const [streakGone, setStreakGone] = useState<string | null>(null);
+  const streakShown = streakFor === round.id;
+  const onStreakGone = useCallback(() => setStreakGone(round.id), [round.id]);
+  const revealResult = useCallback(() => {
+    setResultFor(round.id);
+    feedback.stamp();
+  }, [round.id]);
 
   // A round that moved the level plays the level path over its result. Until the
   // character lands on the new stop, the header keeps showing the round's level.
@@ -53,16 +66,15 @@ export default function PlayScreen() {
   const [landedFor, setLandedFor] = useState<string | null>(null);
   const onLevelLanded = useCallback(() => setLandedFor(round.id), [round.id]);
 
+  const streak = state.streak;
   useEffect(() => {
-    if (status === 'playing' || resultFor === round.id) return;
+    if (status === 'playing' || resultFor === round.id || streakFor === round.id) return;
     if (status === 'won') feedback.won();
     else feedback.lost();
-    const id = setTimeout(() => {
-      setResultFor(round.id);
-      feedback.stamp();
-    }, RESULT_DELAY[status]);
+    const celebrate = status === 'won' && streak >= STREAK_SHOWN_FROM;
+    const id = setTimeout(() => (celebrate ? setStreakFor(round.id) : revealResult()), RESULT_DELAY[status]);
     return () => clearTimeout(id);
-  }, [status, round.id, resultFor]);
+  }, [status, round.id, resultFor, streakFor, streak, revealResult]);
 
   const onKey = useCallback(
     (c: Letter) => {
@@ -101,7 +113,8 @@ export default function PlayScreen() {
             characterName={character.name}
             character={character}
             tokensEarned={state.lastTokensEarned}
-            streak={state.streak}
+            rewardFlown={streakShown}
+            streak={streak}
             level={level}
             available={available}
             compact={compact}
@@ -151,6 +164,17 @@ export default function PlayScreen() {
             </View>
           </>
         )}
+        {streakShown && streakGone !== round.id && (
+          <StreakTakeover
+            key={round.id}
+            streak={streak}
+            tokens={state.lastTokensEarned}
+            character={character}
+            compact={compact}
+            onReveal={revealResult}
+            onDone={onStreakGone}
+          />
+        )}
       </View>
       <TabBar active="play" compact={compact} />
       {/* Its button deals the next word, so the new round unmounts it: one tap, not two */}
@@ -170,12 +194,14 @@ export default function PlayScreen() {
   );
 }
 
-function ResultView({ round, status, character, characterName, tokensEarned, streak, level, available, compact, onNext }: {
+function ResultView({ round, status, character, characterName, tokensEarned, rewardFlown, streak, level, available, compact, onNext }: {
   round: Round;
   status: 'won' | 'lost';
   character: ReturnType<typeof characterById>;
   characterName: string;
   tokensEarned: number;
+  /** The streak takeover already flew the reward into the counter. */
+  rewardFlown: boolean;
   streak: number;
   /** The player's level now: not the round's level when this round moved it. */
   level: number;
@@ -190,8 +216,8 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
   // The reward flies from its badge into the token counter (TokenFlight)
   const [badgeRef, sendToken] = useTokenOrigin();
   useEffect(() => {
-    if (paid) sendToken(1);
-  }, [paid, sendToken]);
+    if (paid && !rewardFlown) sendToken(1);
+  }, [paid, rewardFlown, sendToken]);
   const letters = round.word.split('').map((c) => ({
     letter: c,
     // Lost: what was found turns mint, what was missed turns coral (mockup)

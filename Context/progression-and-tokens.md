@@ -28,6 +28,9 @@ would then count it again.
   - A lost round resets `streak` to 0, so the next win pays the base again. Nothing else breaks a
     streak: the round in progress is saved, so restarting the app can't skip a word, and the
     description unlock doesn't count. `streak` is saved; an older save gets 0 from `initialState()`.
+  - `streakMeter(streak)` turns the streak into the stretch it's filling between two bonus steps (and laps
+    past the last one). Only the streak takeover draws it ([play-screen.md](play-screen.md)); it reads
+    `STREAK_BONUS_AT`, so changing the steps changes the meter too.
   - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS** until character prices exist.
 - Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and, later, on characters.
 - **Buying letters (owner's request)**: on a level with `sellsLetters` (only level 8: 10–15 letters,

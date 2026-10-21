@@ -81,3 +81,22 @@ export const levelColors = [
 
 /** A level's colours. If levels are added past the list, it wraps around. */
 export const levelColor = (level: number) => levelColors[(Math.max(1, level) - 1) % levelColors.length];
+
+/**
+ * One look per stretch of the streak meter (progress.streakMeter), warming up
+ * as the streak grows: mint on a sky up to the first bonus, then a gold
+ * sunburst, a berry candy sky, and a starry indigo night once the bonus is maxed.
+ * `bg` is the takeover's sky, top to bottom; `ray` is the sunburst's opacity; `hint` is small text on the sky.
+ */
+export const streakColors = [
+  { main: '#4fcf9c', dark: '#2a9a6e', light: '#dcf7ea', bg: ['#8fd6ff', '#d6f5e3'], ray: 0.28, hint: '#2a86c8' }, // mint
+  { main: '#ffa630', dark: '#d9701a', light: '#fff0dc', bg: ['#ffbf5c', '#fff1c9'], ray: 0.3, hint: '#b0600f' }, // gold
+  { main: '#f2557f', dark: '#c42f5a', light: '#ffe3ee', bg: ['#f78bc9', '#c7a6ff'], ray: 0.26, hint: '#fff' }, // berry
+  { main: '#7b5cff', dark: '#4b33c9', light: '#ece6ff', bg: ['#2f2a7a', '#8a6be6'], ray: 0.12, hint: '#fff' }, // indigo, maxed
+] as const;
+
+/** A meter stretch's look. Every stretch past the list (the maxed laps) keeps the last one. */
+export const streakColor = (tier: number) => streakColors[Math.min(Math.max(0, tier), streakColors.length - 1)];
+
+/** Confetti: every streak colour, plus butter and sky. */
+export const confettiColors = [...streakColors.map((c) => c.main), colors.butter, colors.sky];

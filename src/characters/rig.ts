@@ -73,3 +73,7 @@ export const characterById = (id: string): Character =>
 /** Head-and-shoulders crop, used as the avatar until the player uploads a photo. */
 export const faceXml = (c: Character, expr: Expression = 'happy') =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 4 140 140">${HangedRig.render(c, { bare: true, expr })}</svg>`;
+
+/** The whole character on its own (the rig's VIEWBOX), e.g. cheering on the streak takeover. */
+export const bodyXml = (c: Character, opts?: RenderOptions) =>
+  HangedRig.render(c, opts).replace(' class="hanged-char"', '');

@@ -35,7 +35,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
 | The word database: `data/words.json`, how to add words and hint words, the checks, the PostgreSQL move | [Context/word-database.md](Context/word-database.md) |
 | How the app draws characters **from `design/characters/*.js`**, the animation loop, the won pose, scene cropping, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
-| The Play screen and the round result: layout, components, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
+| The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout

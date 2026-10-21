@@ -17,7 +17,42 @@ these components.
   got this!" (encouraging, never a penalty message).
 - There is **no "Next token" bar**: words guessed in a row pay more tokens
   ([progression-and-tokens.md](progression-and-tokens.md)), so the win line's badge carries the
-  reward: "+N tokens" (`lastTokensEarned`), plus "· N in a row" once the streak is 2 or more. This differs from the mockup, which still shows "1 / 2 words".
+  reward: "+N tokens" (`lastTokensEarned`), plus "· N in a row" once the streak is 2 or more (the streak
+  itself is celebrated just before, by the streak takeover). This differs from the mockup, which still shows "1 / 2 words".
+
+## Words in a row: the streak takeover (owner's idea, not in the mockup)
+
+A win that makes a streak of `STREAK_SHOWN_FROM` (2) or more plays `StreakTakeover` **between the round
+and its result**. It's an overlay on the body (header and tab bar stay, so the reward can fly into the
+counter): after the `RESULT_DELAY` it fades in over the finished round, and as it closes it calls
+`onReveal` (the result, with its stamp, goes in underneath) and dissolves onto it, growing slightly; only
+then `onDone` unmounts it (`streakGone`).
+- **Never swap the body to an empty screen around it.** An earlier version replaced the play layout and
+  showed the result only after its fade-out: the card shrank onto blank paper, then the result and stamp
+  cut in. The owner saw that as a big glitch. Both ends must cross-fade over real content.
+- `onReveal`/`onDone` must stay stable (`useCallback`): the takeover's effects depend on them, and a new
+  identity mid-animation would replay the cell landing.
+- The overlay sits at `bottom: 0` so no keyboard key peeks under the card, and `zIndex: 10` so the result's
+  stamp (`zIndex: 2`) can't draw over it on iOS.
+
+- **The meter** is a tube of cells, one per word, from one streak-bonus step to the next
+  (`streakMeter` in [progress.ts](../src/game/progress.ts): 0→3, 3→6, 6→10, then laps of 4 at the maxed
+  bonus). Past cells are filled; this win's cell fills from the bottom (`scaleY`, `transformOrigin: bottom`),
+  its star pops and the count ticks from N−1 to N. A line says what's next ("2 more words for a +2 bonus").
+- **Each stretch has its own look** (`streakColors` in [src/theme](../src/theme/index.ts)): mint on a sky,
+  gold sunburst, berry candy, starry indigo once the bonus is maxed. Sky, sunburst, cells, sign shadow and
+  hint text all come from it.
+- **The bonus moment**: when the win fills the meter, the goal star on top lights, the card flashes, the meter
+  pulses, two `Confetti` poppers fire from the bottom corners, the title becomes "Streak bonus!" (or
+  "Unstoppable!" on a maxed lap) and a butter ribbon announces the bonus. Success haptic.
+- **Tokens**: the reward flies from the count into the counter when the cell lands (or on skip), so the
+  result's badge doesn't send it again (`rewardFlown`). It lands well inside the pill's 4 s wait.
+- **Timing**: closes by itself 1.15 s after the cell lands, or 2 s after the bonus moment (about 2.5 s / 3.6 s
+  in all). A tap closes it, but not in its first 450 ms (a late tap meant for the last key).
+- **Sizes come from the stage's measured height** (`stageSizes`), so the meter and the cheering character
+  fill a tall phone and still fit an iPhone SE. Checked at 393×852 and 375×667 on every tier.
+- It plays once: a round restored already finished opens on its result. The character is the full rig in the
+  `cheer` pose (`bodyXml`), drawn once and hopped with native transforms, not re-rendered per frame.
 
 ## Level change: the level path (owner's idea, not in the mockup)
 
@@ -62,6 +97,8 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 |---|---|
 | `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes), token pill. |
 | `LevelChange.tsx` | The level path card (see Level change above). |
+| `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |
+| `Confetti.tsx` | A party-popper burst driven by one value, native driver only. `seed` and `aim` per popper. Reuse it for any big celebration. Pieces flutter with a flat `scaleY`, **never `rotateX`** (see the 3D trap in [dev-setup.md](dev-setup.md)). |
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
 | `TokenPill.tsx` | The header's token counter. Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. |
 | `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens (e.g. the Characters shop) only needs an origin. |

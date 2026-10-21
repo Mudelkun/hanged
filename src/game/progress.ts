@@ -62,8 +62,36 @@ export type GameAction =
  * Tokens paid by a win at `level` that brings the streak to `streak`: the
  * level's pay, so harder words pay more, plus +1 per STREAK_BONUS_AT step reached.
  */
-export const tokenReward = (level: number, streak: number) =>
-  levelByNumber(level).tokenReward + STREAK_BONUS_AT.filter((n) => streak >= n).length;
+export const tokenReward = (level: number, streak: number) => levelByNumber(level).tokenReward + streakBonus(streak);
+
+/** Bonus tokens a streak of `streak` adds to each win: +1 per STREAK_BONUS_AT step reached. */
+export const streakBonus = (streak: number) => STREAK_BONUS_AT.filter((n) => streak >= n).length;
+
+/** The streak meter: the stretch of wins between two bonus steps that `streak` is filling. */
+export interface StreakMeter {
+  /** 0 up to the first step, 1 up to the second…; STREAK_BONUS_AT.length once past the last (bonus maxed). */
+  tier: number;
+  from: number;
+  to: number;
+  /** The streak just reached `to`: a bonus step (or, maxed, a lap). */
+  full: boolean;
+  bonus: number;
+}
+
+/**
+ * Where `streak` (≥ 1) sits on the meter. Past the last step the bonus stops
+ * growing, but the meter keeps going in laps the size of the last stretch.
+ */
+export function streakMeter(streak: number): StreakMeter {
+  const bonus = streakBonus(streak);
+  const steps = [0, ...STREAK_BONUS_AT];
+  const i = steps.findIndex((n, k) => k > 0 && streak <= n);
+  if (i > 0) return { tier: i - 1, from: steps[i - 1], to: steps[i], full: streak === steps[i], bonus };
+  const last = steps[steps.length - 1];
+  const lap = last - steps[steps.length - 2];
+  const from = last + Math.floor((streak - last - 1) / lap) * lap;
+  return { tier: STREAK_BONUS_AT.length, from, to: from + lap, full: streak === from + lap, bonus };
+}
 
 type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean };
 
