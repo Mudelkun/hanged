@@ -18,6 +18,9 @@ import {
   validateWord,
   wrongCount,
 } from '../engine';
+import { LONG_WORD_CLUES, LONG_WORD_LENGTH } from '../config';
+import { LEVELS } from '../levels';
+import { WORDS } from '../words';
 
 const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: string[] = []): Round => ({
   id: 'r1',
@@ -57,6 +60,17 @@ describe('clues', () => {
     expect(clueCount('cat', 0)).toBe(1);
     expect(clueCount('cat', 1)).toBe(2);
     expect(clueCount('ab', 0.9)).toBe(1);
+  });
+
+  it('gives long words at least two clues, even on the hardest level', () => {
+    const hardest = LEVELS[LEVELS.length - 1];
+    for (const w of WORDS.filter((e) => e.word.length >= LONG_WORD_LENGTH))
+      expect(clueCount(w.word, hardest.clueRatio)).toBeGreaterThanOrEqual(LONG_WORD_CLUES);
+    expect(clueCount('skyscraper', 0)).toBe(LONG_WORD_CLUES);
+    expect(clueCount('sunflowe', 0)).toBe(LONG_WORD_CLUES);
+    expect(clueCount('sunflow', 0)).toBe(1);
+    // keeping a letter hidden still wins
+    expect(clueCount('aaaaaaab', 0)).toBe(1);
   });
 
   it('gives longer words more clues', () => {

@@ -3,815 +3,889 @@
     "id": "en-cat",
     "word": "cat",
     "language": "en",
-    "description": "A small furry pet that purrs.",
+    "description": "Feline mammal usually having thick soft fur and no ability to roar.",
     "hints": [
       "pet",
       "meow",
       "whiskers"
-    ]
+    ],
+    "sense": "oewn-02124272-n"
   },
   {
     "id": "en-sun",
     "word": "sun",
     "language": "en",
-    "description": "The bright star that lights up our day.",
+    "description": "Any star around which a planetary system revolves.",
     "hints": [
       "hot",
       "sky",
       "bright"
-    ]
+    ],
+    "sense": "oewn-09473603-n"
   },
   {
     "id": "en-owl",
     "word": "owl",
     "language": "en",
-    "description": "A bird that stays awake all night.",
+    "description": "Nocturnal bird of prey with hawk-like beak and claws and large head with front-facing eyes.",
     "hints": [
       "hoot",
       "night",
       "feathers"
-    ]
+    ],
+    "sense": "oewn-01623768-n"
   },
   {
     "id": "en-map",
     "word": "map",
     "language": "en",
-    "description": "A drawing that shows you the way.",
+    "description": "A diagrammatic representation of the earth's surface (or part of it).",
     "hints": [
       "travel",
       "paper",
       "directions"
-    ]
+    ],
+    "sense": "oewn-03725654-n"
   },
   {
     "id": "en-jam",
     "word": "jam",
     "language": "en",
-    "description": "Sweet fruit spread you put on toast.",
+    "description": "Preserve of crushed fruit.",
     "hints": [
       "toast",
       "fruit",
       "sweet"
-    ]
+    ],
+    "sense": "oewn-07658542-n"
   },
   {
     "id": "en-fox",
     "word": "fox",
     "language": "en",
-    "description": "A clever wild animal with a bushy tail.",
+    "description": "Alert carnivorous mammal with pointed muzzle and ears and a bushy tail; most are predators that do not hunt in packs.",
     "hints": [
       "tail",
       "clever",
       "forest"
-    ]
+    ],
+    "sense": "oewn-02120985-n"
   },
   {
     "id": "en-bee",
     "word": "bee",
     "language": "en",
-    "description": "A buzzing insect that makes honey.",
+    "description": "Any of numerous hairy-bodied insects including social and solitary species.",
     "hints": [
       "honey",
       "buzz",
       "hive"
-    ]
+    ],
+    "sense": "oewn-02209508-n"
   },
   {
     "id": "en-cup",
     "word": "cup",
     "language": "en",
-    "description": "You drink cocoa or tea from it.",
+    "description": "A small open container usually used for drinking; usually has a handle.",
     "hints": [
       "drink",
       "tea",
       "mug"
-    ]
+    ],
+    "sense": "oewn-03152175-n"
   },
   {
     "id": "en-hat",
     "word": "hat",
     "language": "en",
-    "description": "You wear it on top of your head.",
+    "description": "Headdress that protects the head from bad weather; has shaped crown and usually a brim.",
     "hints": [
       "head",
       "cap",
       "wear"
-    ]
+    ],
+    "sense": "oewn-03502782-n"
   },
   {
     "id": "en-pig",
     "word": "pig",
     "language": "en",
-    "description": "A pink farm animal that oinks.",
+    "description": "Domestic swine.",
     "hints": [
       "oink",
       "farm",
       "pink"
-    ]
+    ],
+    "sense": "oewn-02398058-n"
   },
   {
     "id": "en-web",
     "word": "web",
     "language": "en",
-    "description": "A spider spins it to catch flies.",
+    "description": "An intricate trap that entangles or ensnares its victim.",
     "hints": [
       "spider",
       "silk",
       "sticky"
-    ]
+    ],
+    "sense": "oewn-04575843-n"
   },
   {
     "id": "en-egg",
     "word": "egg",
     "language": "en",
-    "description": "A hen lays it, and you can fry it.",
+    "description": "Oval reproductive body of a fowl (especially a hen) used as food.",
     "hints": [
       "hen",
       "shell",
       "yolk"
-    ]
+    ],
+    "sense": "oewn-07856780-n"
   },
   {
     "id": "en-bus",
     "word": "bus",
     "language": "en",
-    "description": "A big vehicle that takes kids to school.",
+    "description": "A vehicle carrying many passengers; used for public transport.",
     "hints": [
       "school",
       "wheels",
       "ride"
-    ]
+    ],
+    "sense": "oewn-02927500-n"
   },
   {
     "id": "en-pie",
     "word": "pie",
     "language": "en",
-    "description": "A baked dessert with a crust and a fruit filling.",
+    "description": "Dish baked in pastry-lined pan often with a pastry top.",
     "hints": [
       "crust",
       "dessert",
       "oven"
-    ]
+    ],
+    "sense": "oewn-07641102-n"
   },
   {
     "id": "en-frog",
     "word": "frog",
     "language": "en",
-    "description": "A green jumper that says ribbit.",
+    "description": "Any of various tailless stout-bodied amphibians with long hind limbs for leaping; semiaquatic and terrestrial species.",
     "hints": [
       "green",
       "pond",
       "hop"
-    ]
+    ],
+    "sense": "oewn-01642406-n"
   },
   {
     "id": "en-cake",
     "word": "cake",
     "language": "en",
-    "description": "You blow out candles on it on your birthday.",
+    "description": "Food made from or based on a mixture of flour, sugar, eggs, and fat, typically cooked in an oven.",
     "hints": [
       "birthday",
       "candles",
       "frosting"
-    ]
+    ],
+    "sense": "oewn-07644479-n"
   },
   {
     "id": "en-moon",
     "word": "moon",
     "language": "en",
-    "description": "It glows in the night sky.",
+    "description": "Any natural satellite of a planet.",
     "hints": [
       "night",
       "crescent",
       "space"
-    ]
+    ],
+    "sense": "oewn-09381123-n"
   },
   {
     "id": "en-rain",
     "word": "rain",
     "language": "en",
-    "description": "Water drops falling from the clouds.",
+    "description": "Drops of fresh water that fall as precipitation from clouds.",
     "hints": [
       "wet",
       "clouds",
       "drops"
-    ]
+    ],
+    "sense": "oewn-15033174-n"
   },
   {
     "id": "en-ship",
     "word": "ship",
     "language": "en",
-    "description": "A large boat that sails the sea.",
+    "description": "A vessel that carries passengers or freight.",
     "hints": [
       "sea",
       "sail",
       "captain"
-    ]
+    ],
+    "sense": "oewn-04201332-n"
   },
   {
     "id": "en-nest",
     "word": "nest",
     "language": "en",
-    "description": "A bird's cozy home made of twigs.",
+    "description": "A structure in which animals lay eggs or give birth to their young.",
     "hints": [
       "bird",
       "twigs",
       "eggs"
-    ]
+    ],
+    "sense": "oewn-09392066-n"
   },
   {
     "id": "en-kite",
     "word": "kite",
     "language": "en",
-    "description": "It flies on a string on windy days.",
+    "description": "Plaything consisting of a light frame covered with tissue paper; flown in wind at end of a string.",
     "hints": [
       "wind",
       "string",
       "fly"
-    ]
+    ],
+    "sense": "oewn-03626682-n"
   },
   {
     "id": "en-milk",
     "word": "milk",
     "language": "en",
-    "description": "A white drink that comes from cows.",
+    "description": "A white nutritious liquid secreted by mammals and used as food by human beings.",
     "hints": [
       "cow",
       "white",
       "drink"
-    ]
+    ],
+    "sense": "oewn-07860018-n"
   },
   {
     "id": "en-bell",
     "word": "bell",
     "language": "en",
-    "description": "It rings, ding dong!",
+    "description": "A hollow device made of metal that makes a ringing sound when struck.",
     "hints": [
       "ring",
       "ding",
       "church"
-    ]
+    ],
+    "sense": "oewn-02827590-n"
   },
   {
     "id": "en-star",
     "word": "star",
     "language": "en",
-    "description": "A tiny twinkling light in the night sky.",
+    "description": "A celestial body of hot gases that radiates energy derived from thermonuclear reactions in the interior.",
     "hints": [
       "twinkle",
       "sky",
       "night"
-    ]
+    ],
+    "sense": "oewn-09467004-n"
   },
   {
     "id": "en-lamp",
     "word": "lamp",
     "language": "en",
-    "description": "It lights up your desk at night.",
+    "description": "A piece of furniture holding one or more electric light bulbs.",
     "hints": [
       "light",
       "bulb",
       "desk"
-    ]
+    ],
+    "sense": "oewn-03641940-n"
   },
   {
     "id": "en-sock",
     "word": "sock",
     "language": "en",
-    "description": "You wear it on your foot inside a shoe.",
+    "description": "Hosiery consisting of a cloth covering for the foot; worn inside the shoe; reaches to between the ankle and the knee.",
     "hints": [
       "foot",
       "pair",
       "shoe"
-    ]
+    ],
+    "sense": "oewn-04261887-n"
   },
   {
     "id": "en-snow",
     "word": "snow",
     "language": "en",
-    "description": "Cold white flakes that fall in winter.",
+    "description": "Precipitation falling from clouds in the form of ice crystals.",
     "hints": [
       "cold",
       "white",
       "winter"
-    ]
+    ],
+    "sense": "oewn-11528800-n"
   },
   {
     "id": "en-wolf",
     "word": "wolf",
     "language": "en",
-    "description": "A wild animal that howls at the moon.",
+    "description": "Any of various predatory carnivorous canine mammals of North America and Eurasia that usually hunt in packs.",
     "hints": [
       "howl",
       "pack",
       "wild"
-    ]
+    ],
+    "sense": "oewn-02116752-n"
   },
   {
     "id": "en-duck",
     "word": "duck",
     "language": "en",
-    "description": "A bird that quacks and loves ponds.",
+    "description": "Small wild or domesticated web-footed broad-billed swimming bird usually having a depressed body and short legs.",
     "hints": [
       "quack",
       "pond",
       "bird"
-    ]
+    ],
+    "sense": "oewn-01848972-n"
   },
   {
     "id": "en-rose",
     "word": "rose",
     "language": "en",
-    "description": "A flower with thorns and a sweet smell.",
+    "description": "A dusty pink color.",
     "hints": [
-      "flower",
-      "thorns",
-      "red"
-    ]
+      "pink",
+      "color",
+      "blush"
+    ],
+    "sense": "oewn-04978580-n"
   },
   {
     "id": "en-gift",
     "word": "gift",
     "language": "en",
-    "description": "A present wrapped with a bow.",
+    "description": "Something acquired without compensation.",
     "hints": [
       "present",
       "bow",
       "surprise"
-    ]
+    ],
+    "sense": "oewn-13285910-n"
   },
   {
     "id": "en-boat",
     "word": "boat",
     "language": "en",
-    "description": "It floats on water and carries people.",
+    "description": "A small vessel for travel on water.",
     "hints": [
       "water",
       "sail",
       "float"
-    ]
+    ],
+    "sense": "oewn-02861626-n"
   },
   {
     "id": "en-leaf",
     "word": "leaf",
     "language": "en",
-    "description": "A green part of a tree that falls in autumn.",
+    "description": "The main organ of photosynthesis and transpiration in higher plants.",
     "hints": [
       "tree",
       "green",
       "autumn"
-    ]
+    ],
+    "sense": "oewn-13173519-n"
   },
   {
     "id": "en-apple",
     "word": "apple",
     "language": "en",
-    "description": "A red or green fruit that keeps the doctor away.",
+    "description": "Fruit with red or yellow or green skin and sweet to tart crisp whitish flesh.",
     "hints": [
       "fruit",
       "red",
       "tree"
-    ]
+    ],
+    "sense": "oewn-07755101-n"
   },
   {
     "id": "en-beach",
     "word": "beach",
     "language": "en",
-    "description": "Sand, waves and sunshine by the sea.",
+    "description": "An area of sand sloping down to the water of a sea or lake.",
     "hints": [
       "sand",
       "waves",
       "sea"
-    ]
+    ],
+    "sense": "oewn-09240137-n"
   },
   {
     "id": "en-bread",
     "word": "bread",
     "language": "en",
-    "description": "Baked from flour, you make sandwiches with it.",
+    "description": "Food made from dough of flour or meal and usually raised with yeast or baking powder and then baked.",
     "hints": [
       "toast",
       "loaf",
       "flour"
-    ]
+    ],
+    "sense": "oewn-07695101-n"
   },
   {
     "id": "en-chair",
     "word": "chair",
     "language": "en",
-    "description": "You sit on it at the table.",
+    "description": "A seat for one person, with a support for the back.",
     "hints": [
       "sit",
       "seat",
       "table"
-    ]
+    ],
+    "sense": "oewn-03005231-n"
   },
   {
     "id": "en-cloud",
     "word": "cloud",
     "language": "en",
-    "description": "A fluffy white shape floating in the sky.",
+    "description": "A visible mass of water or ice particles suspended at a considerable altitude.",
     "hints": [
       "sky",
       "fluffy",
       "rain"
-    ]
+    ],
+    "sense": "oewn-09270316-n"
   },
   {
     "id": "en-dance",
     "word": "dance",
     "language": "en",
-    "description": "Moving your body to music.",
+    "description": "Taking a series of rhythmical steps (and movements) in time to music.",
     "hints": [
       "music",
       "steps",
       "party"
-    ]
+    ],
+    "sense": "oewn-00429255-n"
   },
   {
     "id": "en-honey",
     "word": "honey",
     "language": "en",
-    "description": "Sweet and golden, made by bees.",
+    "description": "A sweet yellow liquid produced by bees.",
     "hints": [
       "bee",
       "sweet",
       "golden"
-    ]
+    ],
+    "sense": "oewn-07874954-n"
   },
   {
     "id": "en-house",
     "word": "house",
     "language": "en",
-    "description": "A home where a family lives.",
+    "description": "A dwelling that serves as living quarters for one or more families.",
     "hints": [
       "home",
       "roof",
       "family"
-    ]
+    ],
+    "sense": "oewn-03549540-n"
   },
   {
     "id": "en-lemon",
     "word": "lemon",
     "language": "en",
-    "description": "A sour yellow fruit.",
+    "description": "Yellow oval fruit with juicy acidic flesh.",
     "hints": [
       "sour",
       "yellow",
       "citrus"
-    ]
+    ],
+    "sense": "oewn-07765558-n"
   },
   {
     "id": "en-music",
     "word": "music",
     "language": "en",
-    "description": "Sounds and songs you listen to.",
+    "description": "An artistic form of auditory communication incorporating instrumental or vocal tones in a structured and continuous manner.",
     "hints": [
       "song",
       "sound",
       "melody"
-    ]
+    ],
+    "sense": "oewn-07034009-n"
   },
   {
     "id": "en-night",
     "word": "night",
     "language": "en",
-    "description": "The dark time when you sleep.",
+    "description": "The time after sunset and before sunrise while it is dark outside.",
     "hints": [
       "dark",
       "moon",
       "sleep"
-    ]
+    ],
+    "sense": "oewn-15192074-n"
   },
   {
     "id": "en-ocean",
     "word": "ocean",
     "language": "en",
-    "description": "A huge body of salty water.",
+    "description": "A large body of water constituting a principal part of the hydrosphere.",
     "hints": [
       "sea",
       "waves",
       "salty"
-    ]
+    ],
+    "sense": "oewn-09399110-n"
   },
   {
     "id": "en-pizza",
     "word": "pizza",
     "language": "en",
-    "description": "A round flat bread with cheese and toppings.",
+    "description": "Italian open pie made of thin bread dough spread with a spiced mixture of e.g. tomato sauce and cheese.",
     "hints": [
       "cheese",
       "slice",
       "oven"
-    ]
+    ],
+    "sense": "oewn-07889783-n"
   },
   {
     "id": "en-queen",
     "word": "queen",
     "language": "en",
-    "description": "A royal woman who wears a crown.",
+    "description": "A female sovereign ruler.",
     "hints": [
       "crown",
       "royal",
       "throne"
-    ]
+    ],
+    "sense": "oewn-10518940-n"
   },
   {
     "id": "en-river",
     "word": "river",
     "language": "en",
-    "description": "Fresh water flowing to the sea.",
+    "description": "A large natural stream of water (larger than a creek).",
     "hints": [
       "water",
       "flow",
       "bank"
-    ]
+    ],
+    "sense": "oewn-09434308-n"
   },
   {
     "id": "en-smile",
     "word": "smile",
     "language": "en",
-    "description": "What your face does when you are happy.",
+    "description": "A facial expression characterized by turning up the corners of the mouth; usually shows pleasure or amusement.",
     "hints": [
       "happy",
       "face",
       "grin"
-    ]
+    ],
+    "sense": "oewn-06891121-n"
   },
   {
     "id": "en-tiger",
     "word": "tiger",
     "language": "en",
-    "description": "A big striped wild cat.",
+    "description": "Large feline of forests in most of Asia having a tawny coat with black stripes; endangered.",
     "hints": [
       "stripes",
       "cat",
       "roar"
-    ]
+    ],
+    "sense": "oewn-02132256-n"
   },
   {
     "id": "en-water",
     "word": "water",
     "language": "en",
-    "description": "You drink it when you are thirsty.",
+    "description": "Binary compound that occurs at room temperature as a clear colorless odorless tasteless liquid.",
     "hints": [
       "drink",
       "wet",
       "splash"
-    ]
+    ],
+    "sense": "oewn-14869913-n"
   },
   {
     "id": "en-zebra",
     "word": "zebra",
     "language": "en",
-    "description": "A horse-like animal with black and white stripes.",
+    "description": "Any of several fleet black-and-white striped African equines.",
     "hints": [
       "stripes",
       "horse",
       "safari"
-    ]
+    ],
+    "sense": "oewn-02393701-n"
   },
   {
     "id": "en-ghost",
     "word": "ghost",
     "language": "en",
-    "description": "A spooky see-through spirit that says boo.",
+    "description": "The visible disembodied soul of a dead person.",
     "hints": [
       "boo",
       "spooky",
       "spirit"
-    ]
+    ],
+    "sense": "oewn-09569105-n"
   },
   {
     "id": "en-piano",
     "word": "piano",
     "language": "en",
-    "description": "An instrument with black and white keys.",
+    "description": "A keyboard instrument that is played by depressing keys that cause hammers to strike tuned strings and produce sounds.",
     "hints": [
       "keys",
       "music",
       "play"
-    ]
+    ],
+    "sense": "oewn-03934354-n"
   },
   {
     "id": "en-candy",
     "word": "candy",
     "language": "en",
-    "description": "A sweet treat kids love.",
+    "description": "A rich sweet made of flavored sugar and often combined with fruit or nuts.",
     "hints": [
       "sweet",
       "sugar",
       "treat"
-    ]
+    ],
+    "sense": "oewn-07612936-n"
   },
   {
     "id": "en-train",
     "word": "train",
     "language": "en",
-    "description": "It runs on tracks and goes choo choo.",
+    "description": "Public transport provided by a line of railway cars coupled together and drawn by a locomotive.",
     "hints": [
       "tracks",
       "station",
       "choo"
-    ]
+    ],
+    "sense": "oewn-04475240-n"
   },
   {
     "id": "en-clock",
     "word": "clock",
     "language": "en",
-    "description": "It tells you the time.",
+    "description": "A timepiece that shows the time of day.",
     "hints": [
       "time",
       "tick",
       "hands"
-    ]
+    ],
+    "sense": "oewn-03050242-n"
   },
   {
     "id": "en-grape",
     "word": "grape",
     "language": "en",
-    "description": "A small round fruit that grows in bunches.",
+    "description": "Any of various juicy fruit of the genus Vitis with green or purple skins; grow in clusters.",
     "hints": [
       "purple",
       "vine",
       "bunch"
-    ]
+    ],
+    "sense": "oewn-07774656-n"
   },
   {
     "id": "en-castle",
     "word": "castle",
     "language": "en",
-    "description": "A big stone home for a king.",
+    "description": "A large building formerly occupied by a ruler and fortified against attack.",
     "hints": [
       "king",
       "tower",
       "stone"
-    ]
+    ],
+    "sense": "oewn-02983900-n"
   },
   {
     "id": "en-garden",
     "word": "garden",
     "language": "en",
-    "description": "A place where flowers and vegetables grow.",
+    "description": "A plot of ground where plants are cultivated.",
     "hints": [
       "flowers",
       "plants",
       "grow"
-    ]
+    ],
+    "sense": "oewn-03422255-n"
   },
   {
     "id": "en-rabbit",
     "word": "rabbit",
     "language": "en",
-    "description": "A fluffy animal with long ears that hops.",
+    "description": "Any of various burrowing animals of the family Leporidae having long ears and short tails; some domesticated and raised for pets or food.",
     "hints": [
       "bunny",
       "ears",
       "hop"
-    ]
+    ],
+    "sense": "oewn-02326697-n"
   },
   {
     "id": "en-pencil",
     "word": "pencil",
     "language": "en",
-    "description": "You write and draw with it, then erase.",
+    "description": "A thin cylindrical pointed writing implement; a rod of marking substance encased in wood.",
     "hints": [
       "write",
       "draw",
       "eraser"
-    ]
+    ],
+    "sense": "oewn-03914323-n"
   },
   {
     "id": "en-rocket",
     "word": "rocket",
     "language": "en",
-    "description": "It blasts off into space.",
+    "description": "A jet engine containing its own propellant and driven by reaction propulsion.",
     "hints": [
       "space",
       "launch",
       "fire"
-    ]
+    ],
+    "sense": "oewn-04106269-n"
   },
   {
     "id": "en-cookie",
     "word": "cookie",
     "language": "en",
-    "description": "A small sweet baked treat, often with chocolate chips.",
+    "description": "Any of various small flat sweet cakes.",
     "hints": [
       "chocolate",
       "baked",
       "crumbs"
-    ]
+    ],
+    "sense": "oewn-07650764-n"
   },
   {
     "id": "en-island",
     "word": "island",
     "language": "en",
-    "description": "Land with water all around it.",
+    "description": "A land mass (smaller than a continent) that is surrounded by water.",
     "hints": [
       "sea",
       "beach",
       "palm"
-    ]
+    ],
+    "sense": "oewn-09339360-n"
   },
   {
     "id": "en-jungle",
     "word": "jungle",
     "language": "en",
-    "description": "A thick tropical forest full of animals.",
+    "description": "An impenetrable equatorial forest.",
     "hints": [
       "trees",
       "wild",
       "monkeys"
-    ]
+    ],
+    "sense": "oewn-08456014-n"
   },
   {
     "id": "en-kitten",
     "word": "kitten",
     "language": "en",
-    "description": "A baby cat.",
+    "description": "Young domestic cat.",
     "hints": [
       "cat",
       "baby",
       "meow"
-    ]
+    ],
+    "sense": "oewn-02125600-n"
   },
   {
     "id": "en-monkey",
     "word": "monkey",
     "language": "en",
-    "description": "An animal that swings from trees and loves bananas.",
+    "description": "Any of various long-tailed primates (excluding the prosimians).",
     "hints": [
       "banana",
       "swing",
       "tail"
-    ]
+    ],
+    "sense": "oewn-02486953-n"
   },
   {
     "id": "en-orange",
     "word": "orange",
     "language": "en",
-    "description": "A round citrus fruit, also a color.",
+    "description": "Any of a range of colors between red and yellow.",
     "hints": [
-      "fruit",
-      "citrus",
-      "juice"
-    ]
+      "color",
+      "sunset",
+      "bright"
+    ],
+    "sense": "oewn-04972356-n"
   },
   {
     "id": "en-planet",
     "word": "planet",
     "language": "en",
-    "description": "Earth and Mars are both one of these.",
+    "description": "Any celestial body (other than comets or satellites) that revolves around a star.",
     "hints": [
       "space",
       "earth",
       "orbit"
-    ]
+    ],
+    "sense": "oewn-09417539-n"
   },
   {
     "id": "en-school",
     "word": "school",
     "language": "en",
-    "description": "Where kids go to learn.",
+    "description": "A building where young people receive education.",
     "hints": [
       "class",
       "teacher",
       "learn"
-    ]
+    ],
+    "sense": "oewn-04153115-n"
   },
   {
     "id": "en-spider",
     "word": "spider",
     "language": "en",
-    "description": "It has eight legs and spins webs.",
+    "description": "Predatory arachnid with eight legs, two poison fangs, two feelers, and usually two silk-spinning organs at the back end of the body.",
     "hints": [
       "web",
       "legs",
       "creepy"
-    ]
+    ],
+    "sense": "oewn-01774863-n"
   },
   {
     "id": "en-turtle",
     "word": "turtle",
     "language": "en",
-    "description": "A slow animal that carries its shell.",
+    "description": "Any of various aquatic and land reptiles having a bony shell and flipper-like limbs for swimming.",
     "hints": [
       "shell",
       "slow",
       "sea"
-    ]
+    ],
+    "sense": "oewn-01665425-n"
   },
   {
     "id": "en-window",
     "word": "window",
     "language": "en",
-    "description": "You look outside through its glass.",
+    "description": "An opening in a wall or screen that admits light and air and through which customers can be served.",
     "hints": [
       "glass",
       "view",
       "open"
-    ]
+    ],
+    "sense": "oewn-04596289-n"
   },
   {
     "id": "en-winter",
@@ -822,1271 +896,1291 @@
       "cold",
       "snow",
       "season"
-    ]
+    ],
+    "sense": "oewn-15262579-n"
   },
   {
     "id": "en-bridge",
     "word": "bridge",
     "language": "en",
-    "description": "It lets you cross over a river.",
+    "description": "A structure that allows people or vehicles to cross an obstacle such as a river or canal or railway etc.",
     "hints": [
       "river",
       "cross",
       "road"
-    ]
+    ],
+    "sense": "oewn-02901994-n"
   },
   {
     "id": "en-dragon",
     "word": "dragon",
     "language": "en",
-    "description": "A legendary beast that breathes fire.",
+    "description": "A creature of Teutonic mythology; usually represented as breathing fire and having a reptilian body and sometimes wings.",
     "hints": [
       "fire",
       "wings",
       "scales"
-    ]
+    ],
+    "sense": "oewn-09517519-n"
   },
   {
     "id": "en-flower",
     "word": "flower",
     "language": "en",
-    "description": "A colorful bloom that bees visit.",
+    "description": "Reproductive organ of angiosperm plants especially one having showy or colorful parts.",
     "hints": [
       "bloom",
       "petals",
       "garden"
-    ]
+    ],
+    "sense": "oewn-11689786-n"
   },
   {
     "id": "en-guitar",
     "word": "guitar",
     "language": "en",
-    "description": "An instrument with six strings.",
+    "description": "A stringed instrument usually having six strings; played by strumming or plucking.",
     "hints": [
       "strings",
       "music",
       "strum"
-    ]
+    ],
+    "sense": "oewn-03472449-n"
   },
   {
     "id": "en-puzzle",
     "word": "puzzle",
     "language": "en",
-    "description": "Pieces you fit together to make a picture.",
+    "description": "A game that tests your ingenuity.",
     "hints": [
       "pieces",
       "picture",
       "solve"
-    ]
+    ],
+    "sense": "oewn-04034791-n"
   },
   {
     "id": "en-butter",
     "word": "butter",
     "language": "en",
-    "description": "A yellow spread made from cream.",
+    "description": "An edible emulsion of fat globules made by churning milk or cream; for cooking and table use.",
     "hints": [
       "cream",
       "yellow",
       "toast"
-    ]
+    ],
+    "sense": "oewn-07864314-n"
   },
   {
     "id": "en-carrot",
     "word": "carrot",
     "language": "en",
-    "description": "An orange vegetable that rabbits love.",
+    "description": "Orange root; important source of carotene.",
     "hints": [
       "orange",
       "vegetable",
       "rabbit"
-    ]
+    ],
+    "sense": "oewn-07746183-n"
   },
   {
     "id": "en-pirate",
     "word": "pirate",
     "language": "en",
-    "description": "A sailor who hunts for treasure.",
+    "description": "Someone who robs at sea or plunders the land from the sea without having a commission from any sovereign nation.",
     "hints": [
       "ship",
       "treasure",
       "parrot"
-    ]
+    ],
+    "sense": "oewn-10455134-n"
   },
   {
     "id": "en-balloon",
     "word": "balloon",
     "language": "en",
-    "description": "You fill it with air and it floats away.",
+    "description": "Large tough nonrigid bag filled with gas or heated air.",
     "hints": [
       "air",
       "party",
       "float"
-    ]
+    ],
+    "sense": "oewn-02785116-n"
   },
   {
     "id": "en-blanket",
     "word": "blanket",
     "language": "en",
-    "description": "It keeps you warm in bed.",
+    "description": "Bedding that keeps a person warm in bed.",
     "hints": [
       "warm",
       "bed",
       "cozy"
-    ]
+    ],
+    "sense": "oewn-02852392-n"
   },
   {
     "id": "en-chicken",
     "word": "chicken",
     "language": "en",
-    "description": "A farm bird that lays eggs.",
+    "description": "A domestic fowl bred for flesh or eggs; believed to have been developed from the red jungle fowl.",
     "hints": [
       "hen",
       "eggs",
       "cluck"
-    ]
+    ],
+    "sense": "oewn-01794266-n"
   },
   {
     "id": "en-dolphin",
     "word": "dolphin",
     "language": "en",
-    "description": "A smart sea animal that clicks and jumps.",
+    "description": "Any of various small toothed whales with a beaklike snout; larger than porpoises.",
     "hints": [
       "sea",
       "smart",
       "jump"
-    ]
+    ],
+    "sense": "oewn-02071627-n"
   },
   {
     "id": "en-giraffe",
     "word": "giraffe",
     "language": "en",
-    "description": "The animal with the longest neck.",
+    "description": "Tallest living quadruped; having a spotted coat and small horns and very long neck and legs; of savannahs of tropical Africa.",
     "hints": [
       "neck",
       "tall",
       "spots"
-    ]
+    ],
+    "sense": "oewn-02441664-n"
   },
   {
     "id": "en-holiday",
     "word": "holiday",
     "language": "en",
-    "description": "A special day off to celebrate or travel.",
+    "description": "Leisure time away from work devoted to rest or pleasure.",
     "hints": [
       "vacation",
       "travel",
       "break"
-    ]
+    ],
+    "sense": "oewn-15162842-n"
   },
   {
     "id": "en-lantern",
     "word": "lantern",
     "language": "en",
-    "description": "A lamp you can carry around.",
+    "description": "Light in a transparent protective case.",
     "hints": [
       "light",
       "carry",
       "glow"
-    ]
+    ],
+    "sense": "oewn-03646302-n"
   },
   {
     "id": "en-library",
     "word": "library",
     "language": "en",
-    "description": "A building full of books to borrow.",
+    "description": "A building that houses a collection of books and other materials.",
     "hints": [
       "books",
       "quiet",
       "read"
-    ]
+    ],
+    "sense": "oewn-03666369-n"
   },
   {
     "id": "en-monster",
     "word": "monster",
     "language": "en",
-    "description": "A scary creature from stories.",
+    "description": "An imaginary creature usually having various human and animal parts.",
     "hints": [
       "scary",
       "creature",
       "roar"
-    ]
+    ],
+    "sense": "oewn-09515097-n"
   },
   {
     "id": "en-octopus",
     "word": "octopus",
     "language": "en",
-    "description": "A sea animal with eight arms.",
+    "description": "Bottom-living cephalopod having a soft oval body with eight long tentacles.",
     "hints": [
       "tentacles",
       "sea",
       "ink"
-    ]
+    ],
+    "sense": "oewn-01972805-n"
   },
   {
     "id": "en-pancake",
     "word": "pancake",
     "language": "en",
-    "description": "A flat breakfast treat with syrup on top.",
+    "description": "A flat cake of thin batter fried on both sides on a griddle.",
     "hints": [
       "breakfast",
       "syrup",
       "flat"
-    ]
+    ],
+    "sense": "oewn-07655812-n"
   },
   {
     "id": "en-penguin",
     "word": "penguin",
     "language": "en",
-    "description": "A black and white bird that cannot fly.",
+    "description": "Short-legged flightless birds of cold southern especially Antarctic regions having webbed feet and wings modified as flippers.",
     "hints": [
       "ice",
       "waddle",
       "bird"
-    ]
+    ],
+    "sense": "oewn-02058457-n"
   },
   {
     "id": "en-rainbow",
     "word": "rainbow",
     "language": "en",
-    "description": "Colorful arc in the sky after rain.",
+    "description": "An arc of colored light in the sky caused by refraction of the sun's rays by rain.",
     "hints": [
       "colors",
       "arc",
       "sky"
-    ]
-  },
-  {
-    "id": "en-teacher",
-    "word": "teacher",
-    "language": "en",
-    "description": "The person who helps you learn at school.",
-    "hints": [
-      "school",
-      "class",
-      "lesson"
-    ]
+    ],
+    "sense": "oewn-09426302-n"
   },
   {
     "id": "en-thunder",
     "word": "thunder",
     "language": "en",
-    "description": "The loud boom after lightning.",
+    "description": "A deep prolonged loud noise.",
     "hints": [
       "storm",
       "boom",
       "loud"
-    ]
+    ],
+    "sense": "oewn-07392282-n"
   },
   {
     "id": "en-unicorn",
     "word": "unicorn",
     "language": "en",
-    "description": "A magical horse with one horn.",
+    "description": "An imaginary creature represented as a white horse with a long horn growing from its forehead.",
     "hints": [
       "horn",
       "magic",
       "horse"
-    ]
+    ],
+    "sense": "oewn-10757621-n"
   },
   {
     "id": "en-volcano",
     "word": "volcano",
     "language": "en",
-    "description": "A mountain that can erupt with lava.",
+    "description": "A fissure in the earth's crust (or in the surface of some other planet) through which molten lava and gases erupt.",
     "hints": [
       "lava",
       "erupt",
       "mountain"
-    ]
+    ],
+    "sense": "oewn-09493680-n"
   },
   {
     "id": "en-kitchen",
     "word": "kitchen",
     "language": "en",
-    "description": "The room where meals are cooked.",
+    "description": "A room equipped for preparing meals.",
     "hints": [
       "cook",
       "oven",
       "meals"
-    ]
+    ],
+    "sense": "oewn-03625099-n"
   },
   {
     "id": "en-mermaid",
     "word": "mermaid",
     "language": "en",
-    "description": "Half girl, half fish, lives in the sea.",
+    "description": "Half woman and half fish; lives in the sea.",
     "hints": [
       "tail",
       "sea",
       "fish"
-    ]
+    ],
+    "sense": "oewn-09512731-n"
   },
   {
     "id": "en-popcorn",
     "word": "popcorn",
     "language": "en",
-    "description": "A snack you eat at the movies.",
+    "description": "Small kernels of corn exploded by heat.",
     "hints": [
       "movies",
       "snack",
       "butter"
-    ]
+    ],
+    "sense": "oewn-07748612-n"
   },
   {
     "id": "en-cupcake",
     "word": "cupcake",
     "language": "en",
-    "description": "A small cake with frosting on top.",
+    "description": "Small cake baked in a muffin tin.",
     "hints": [
       "frosting",
       "small",
       "sweet"
-    ]
+    ],
+    "sense": "oewn-07646632-n"
   },
   {
     "id": "en-pumpkin",
     "word": "pumpkin",
     "language": "en",
-    "description": "A big orange vegetable carved at Halloween.",
+    "description": "Usually large pulpy deep-yellow round fruit of the squash family maturing in late summer or early autumn.",
     "hints": [
       "orange",
       "halloween",
       "carve"
-    ]
+    ],
+    "sense": "oewn-07751486-n"
   },
   {
     "id": "en-dinosaur",
     "word": "dinosaur",
     "language": "en",
-    "description": "A giant reptile that lived long ago.",
+    "description": "Any of numerous extinct terrestrial reptiles of the Mesozoic era.",
     "hints": [
       "fossil",
       "reptile",
       "extinct"
-    ]
+    ],
+    "sense": "oewn-01702472-n"
   },
   {
     "id": "en-elephant",
     "word": "elephant",
     "language": "en",
-    "description": "A huge gray animal with a trunk.",
+    "description": "Five-toed pachyderm.",
     "hints": [
       "trunk",
       "gray",
       "big"
-    ]
+    ],
+    "sense": "oewn-02506148-n"
   },
   {
     "id": "en-sandwich",
     "word": "sandwich",
     "language": "en",
-    "description": "Food between two slices of bread.",
+    "description": "Two (or more) slices of bread with a filling between them.",
     "hints": [
       "bread",
       "lunch",
       "filling"
-    ]
+    ],
+    "sense": "oewn-07711710-n"
   },
   {
     "id": "en-umbrella",
     "word": "umbrella",
     "language": "en",
-    "description": "It keeps you dry when it rains.",
+    "description": "A lightweight handheld collapsible canopy.",
     "hints": [
       "rain",
       "dry",
       "open"
-    ]
+    ],
+    "sense": "oewn-04514450-n"
   },
   {
     "id": "en-mushroom",
     "word": "mushroom",
     "language": "en",
-    "description": "A little umbrella-shaped thing that grows in the forest.",
+    "description": "Any of various fleshy fungi of the subdivision Basidiomycota consisting of a cap at the end of a stem arising from an underground mycelium.",
     "hints": [
       "forest",
       "cap",
       "fungus"
-    ]
+    ],
+    "sense": "oewn-13018679-n"
   },
   {
     "id": "en-treasure",
     "word": "treasure",
     "language": "en",
-    "description": "Gold and jewels hidden in a chest.",
+    "description": "Accumulated wealth in the form of money or jewels etc.",
     "hints": [
       "gold",
       "chest",
       "pirate"
-    ]
+    ],
+    "sense": "oewn-13391842-n"
   },
   {
     "id": "en-birthday",
     "word": "birthday",
     "language": "en",
-    "description": "The day you were born, celebrated every year.",
+    "description": "An anniversary of the day on which a person was born (or the celebration of it).",
     "hints": [
       "party",
       "cake",
       "candles"
-    ]
+    ],
+    "sense": "oewn-15274989-n"
   },
   {
     "id": "en-kangaroo",
     "word": "kangaroo",
     "language": "en",
-    "description": "An animal that hops and carries its baby in a pouch.",
+    "description": "Any of several herbivorous leaping marsupials of Australia and New Guinea having large powerful hind legs and a long thick tail.",
     "hints": [
       "pouch",
       "hop",
       "australia"
-    ]
+    ],
+    "sense": "oewn-01879775-n"
   },
   {
     "id": "en-airplane",
     "word": "airplane",
     "language": "en",
-    "description": "It flies people across the sky.",
+    "description": "An aircraft that has a fixed wing and is powered by propellers or jets.",
     "hints": [
       "fly",
       "wings",
       "pilot"
-    ]
+    ],
+    "sense": "oewn-02694015-n"
   },
   {
     "id": "en-football",
     "word": "football",
     "language": "en",
-    "description": "A sport where you kick a ball into a goal.",
+    "description": "Any of various games played with a ball (round or oval) in which two teams try to kick or carry or propel the ball into each other's goal.",
     "hints": [
       "goal",
       "kick",
       "team"
-    ]
+    ],
+    "sense": "oewn-00469555-n"
   },
   {
     "id": "en-mountain",
     "word": "mountain",
     "language": "en",
-    "description": "A very tall hill with a peak.",
+    "description": "A land mass that projects well above its surroundings; higher than a hill.",
     "hints": [
       "peak",
       "tall",
       "climb"
-    ]
+    ],
+    "sense": "oewn-09382700-n"
   },
   {
     "id": "en-snowball",
     "word": "snowball",
     "language": "en",
-    "description": "A cold round thing you throw in winter.",
+    "description": "Snow pressed into a ball for throwing (playfully).",
     "hints": [
       "throw",
       "cold",
       "winter"
-    ]
+    ],
+    "sense": "oewn-04258670-n"
   },
   {
     "id": "en-hospital",
     "word": "hospital",
     "language": "en",
-    "description": "Where doctors and nurses help sick people.",
+    "description": "A medical institution where sick or injured people are given medical or surgical care.",
     "hints": [
       "doctor",
       "nurse",
       "sick"
-    ]
+    ],
+    "sense": "oewn-08071169-n"
   },
   {
     "id": "en-notebook",
     "word": "notebook",
     "language": "en",
-    "description": "Paper pages you write your lessons in.",
+    "description": "A book with blank pages for recording notes or memoranda.",
     "hints": [
       "paper",
       "write",
       "pages"
-    ]
+    ],
+    "sense": "oewn-06427062-n"
   },
   {
     "id": "en-princess",
     "word": "princess",
     "language": "en",
-    "description": "The daughter of a king.",
+    "description": "A female member of a royal family other than the queen (especially the daughter of a sovereign).",
     "hints": [
       "crown",
       "royal",
       "castle"
-    ]
+    ],
+    "sense": "oewn-10493649-n"
   },
   {
     "id": "en-squirrel",
     "word": "squirrel",
     "language": "en",
-    "description": "A small animal with a fluffy tail that collects nuts.",
+    "description": "A kind of arboreal rodent having a long bushy tail.",
     "hints": [
       "nuts",
       "tail",
       "tree"
-    ]
+    ],
+    "sense": "oewn-02357879-n"
   },
   {
     "id": "en-starfish",
     "word": "starfish",
     "language": "en",
-    "description": "A sea creature shaped like a star.",
+    "description": "Echinoderms characterized by five arms extending from a central disk.",
     "hints": [
       "sea",
       "arms",
       "beach"
-    ]
+    ],
+    "sense": "oewn-02319987-n"
   },
   {
     "id": "en-backpack",
     "word": "backpack",
     "language": "en",
-    "description": "A bag you carry on your back.",
+    "description": "A bag carried by a strap on your back or shoulder.",
     "hints": [
       "bag",
       "school",
       "straps"
-    ]
+    ],
+    "sense": "oewn-02772753-n"
   },
   {
     "id": "en-astronaut",
     "word": "astronaut",
     "language": "en",
-    "description": "A person who travels into space.",
+    "description": "A person trained to travel in a spacecraft.",
     "hints": [
       "space",
       "rocket",
       "moon"
-    ]
+    ],
+    "sense": "oewn-09837427-n"
   },
   {
     "id": "en-butterfly",
     "word": "butterfly",
     "language": "en",
-    "description": "An insect with big colorful wings.",
+    "description": "Diurnal insect typically having a slender body with knobbed antennae and broad colorful wings.",
     "hints": [
       "wings",
       "colorful",
       "insect"
-    ]
+    ],
+    "sense": "oewn-02276911-n"
   },
   {
     "id": "en-chocolate",
     "word": "chocolate",
     "language": "en",
-    "description": "A sweet brown treat made from cocoa.",
+    "description": "A food made from roasted ground cacao beans.",
     "hints": [
       "cocoa",
       "sweet",
       "brown"
-    ]
+    ],
+    "sense": "oewn-07617570-n"
   },
   {
     "id": "en-crocodile",
     "word": "crocodile",
     "language": "en",
-    "description": "A big reptile with lots of sharp teeth.",
+    "description": "Large voracious aquatic reptile having a long snout with massive jaws and sharp teeth and a body covered with bony plates.",
     "hints": [
       "teeth",
       "reptile",
       "river"
-    ]
+    ],
+    "sense": "oewn-01699819-n"
   },
   {
     "id": "en-hamburger",
     "word": "hamburger",
     "language": "en",
-    "description": "A meat patty in a round bun.",
+    "description": "A sandwich consisting of a fried cake of minced beef served on a bun, often with other ingredients.",
     "hints": [
       "bun",
       "meat",
       "grill"
-    ]
+    ],
+    "sense": "oewn-07712845-n"
   },
   {
     "id": "en-telescope",
     "word": "telescope",
     "language": "en",
-    "description": "You use it to look at faraway stars.",
+    "description": "A magnifier of images of distant objects.",
     "hints": [
       "stars",
       "lens",
       "look"
-    ]
+    ],
+    "sense": "oewn-04410773-n"
   },
   {
     "id": "en-adventure",
     "word": "adventure",
     "language": "en",
-    "description": "An exciting journey full of surprises.",
+    "description": "A wild and exciting undertaking (not necessarily lawful).",
     "hints": [
       "journey",
       "explore",
       "quest"
-    ]
+    ],
+    "sense": "oewn-00797976-n"
   },
   {
     "id": "en-sunflower",
     "word": "sunflower",
     "language": "en",
-    "description": "A tall yellow bloom that turns to face the sun.",
+    "description": "Any plant of the genus Helianthus having large flower heads with dark disk florets and showy yellow rays.",
     "hints": [
       "yellow",
       "tall",
       "seeds"
-    ]
+    ],
+    "sense": "oewn-11998702-n"
   },
   {
     "id": "en-snowflake",
     "word": "snowflake",
     "language": "en",
-    "description": "Every one of these icy crystals is different.",
+    "description": "A crystal of snow.",
     "hints": [
       "ice",
       "winter",
       "crystal"
-    ]
+    ],
+    "sense": "oewn-11529484-n"
   },
   {
     "id": "en-spaghetti",
     "word": "spaghetti",
     "language": "en",
-    "description": "Long thin pasta, often with tomato sauce.",
+    "description": "Pasta in the form of long strings.",
     "hints": [
       "pasta",
       "noodles",
       "italian"
-    ]
+    ],
+    "sense": "oewn-07715659-n"
   },
   {
     "id": "en-pineapple",
     "word": "pineapple",
     "language": "en",
-    "description": "A spiky tropical fruit with a leafy top.",
+    "description": "Large sweet fleshy tropical fruit with a terminal tuft of stiff leaves; widely cultivated.",
     "hints": [
       "tropical",
       "spiky",
       "fruit"
-    ]
+    ],
+    "sense": "oewn-07769251-n"
   },
   {
     "id": "en-detective",
     "word": "detective",
     "language": "en",
-    "description": "Someone who solves mysteries.",
+    "description": "An investigator engaged or employed in obtaining information not easily available to the public.",
     "hints": [
       "mystery",
       "clues",
       "solve"
-    ]
+    ],
+    "sense": "oewn-10029138-n"
   },
   {
     "id": "en-lightning",
     "word": "lightning",
     "language": "en",
-    "description": "A bright flash in a stormy sky.",
+    "description": "The flash of light that accompanies an electric discharge in the atmosphere (or something resembling such a flash).",
     "hints": [
       "flash",
       "storm",
       "bolt"
-    ]
+    ],
+    "sense": "oewn-07427593-n"
   },
   {
     "id": "en-scarecrow",
     "word": "scarecrow",
     "language": "en",
-    "description": "A straw figure that keeps birds off the field.",
+    "description": "An effigy in the shape of a man to frighten birds away from seeds.",
     "hints": [
       "straw",
       "field",
       "farm"
-    ]
+    ],
+    "sense": "oewn-04150777-n"
   },
   {
     "id": "en-alligator",
     "word": "alligator",
     "language": "en",
-    "description": "A big reptile that lives in swamps.",
+    "description": "Either of two amphibious reptiles related to crocodiles but with shorter broader snouts.",
     "hints": [
       "swamp",
       "reptile",
       "jaws"
-    ]
-  },
-  {
-    "id": "en-blueberry",
-    "word": "blueberry",
-    "language": "en",
-    "description": "A tiny round blue fruit.",
-    "hints": [
-      "fruit",
-      "muffin",
-      "tiny"
-    ]
+    ],
+    "sense": "oewn-01701075-n"
   },
   {
     "id": "en-waterfall",
     "word": "waterfall",
     "language": "en",
-    "description": "A river dropping over a cliff.",
+    "description": "A steep descent of the water of a river.",
     "hints": [
       "cliff",
       "splash",
       "river"
-    ]
-  },
-  {
-    "id": "en-jellyfish",
-    "word": "jellyfish",
-    "language": "en",
-    "description": "A see-through sea creature that can sting.",
-    "hints": [
-      "sting",
-      "sea",
-      "wobbly"
-    ]
+    ],
+    "sense": "oewn-09498422-n"
   },
   {
     "id": "en-fireworks",
     "word": "fireworks",
     "language": "en",
-    "description": "Colorful explosions in the night sky.",
+    "description": "A device with an explosive that burns at a low rate and with colored flames; can be used to illuminate areas or send signals etc.",
     "hints": [
       "boom",
       "sparkle",
       "night"
-    ]
+    ],
+    "sense": "oewn-03353300-n"
   },
   {
     "id": "en-chameleon",
     "word": "chameleon",
     "language": "en",
-    "description": "A lizard that changes color.",
+    "description": "Lizard of Africa and Madagascar able to change skin color and having a projectile tongue.",
     "hints": [
       "lizard",
       "color",
       "hide"
-    ]
+    ],
+    "sense": "oewn-01696424-n"
   },
   {
     "id": "en-strawberry",
     "word": "strawberry",
     "language": "en",
-    "description": "A red fruit with seeds on the outside.",
+    "description": "Sweet fleshy red fruit.",
     "hints": [
       "red",
       "seeds",
       "fruit"
-    ]
+    ],
+    "sense": "oewn-07761916-n"
   },
   {
     "id": "en-skateboard",
     "word": "skateboard",
     "language": "en",
-    "description": "A board with wheels you ride and do tricks on.",
+    "description": "A board with wheels that is ridden in a standing or crouching position and propelled by foot.",
     "hints": [
       "wheels",
       "tricks",
       "ride"
-    ]
+    ],
+    "sense": "oewn-04233049-n"
   },
   {
     "id": "en-motorcycle",
     "word": "motorcycle",
     "language": "en",
-    "description": "A two-wheeled vehicle with an engine.",
+    "description": "A motor vehicle with two wheels and a strong frame.",
     "hints": [
       "engine",
       "wheels",
       "helmet"
-    ]
+    ],
+    "sense": "oewn-03796045-n"
   },
   {
     "id": "en-lighthouse",
     "word": "lighthouse",
     "language": "en",
-    "description": "A tower with a light that guides ships.",
+    "description": "A tower with a light that gives warning of shoals to passing ships.",
     "hints": [
       "tower",
       "ships",
       "coast"
-    ]
+    ],
+    "sense": "oewn-02817995-n"
   },
   {
     "id": "en-toothbrush",
     "word": "toothbrush",
     "language": "en",
-    "description": "You clean your teeth with it.",
+    "description": "Small brush; has long handle; used to clean teeth.",
     "hints": [
       "teeth",
       "clean",
       "paste"
-    ]
+    ],
+    "sense": "oewn-04460427-n"
   },
   {
     "id": "en-watermelon",
     "word": "watermelon",
     "language": "en",
-    "description": "A big green fruit that is red inside.",
+    "description": "Large oblong or roundish melon with a hard green rind and sweet watery red or occasionally yellowish pulp.",
     "hints": [
       "green",
       "juicy",
       "seeds"
-    ]
+    ],
+    "sense": "oewn-07772927-n"
   },
   {
     "id": "en-helicopter",
     "word": "helicopter",
     "language": "en",
-    "description": "An aircraft with spinning blades on top.",
+    "description": "An aircraft without wings that obtains its lift from the rotation of overhead blades.",
     "hints": [
       "blades",
       "fly",
       "pilot"
-    ]
+    ],
+    "sense": "oewn-03517291-n"
   },
   {
     "id": "en-playground",
     "word": "playground",
     "language": "en",
-    "description": "A place with swings and slides.",
+    "description": "Yard consisting of an outdoor area for children's play.",
     "hints": [
       "swings",
       "slide",
       "park"
-    ]
+    ],
+    "sense": "oewn-03969939-n"
   },
   {
     "id": "en-basketball",
     "word": "basketball",
     "language": "en",
-    "description": "A sport where you shoot a ball through a hoop.",
+    "description": "A game played on a court by two opposing teams of 5 players; points are scored by throwing the ball through an elevated horizontal hoop.",
     "hints": [
       "hoop",
       "dribble",
       "team"
-    ]
-  },
-  {
-    "id": "en-friendship",
-    "word": "friendship",
-    "language": "en",
-    "description": "The bond between best pals.",
-    "hints": [
-      "pals",
-      "trust",
-      "together"
-    ]
+    ],
+    "sense": "oewn-00482004-n"
   },
   {
     "id": "en-trampoline",
     "word": "trampoline",
     "language": "en",
-    "description": "You bounce high on it.",
+    "description": "Gymnastic apparatus consisting of a strong canvas sheet attached with springs to a metal frame; used for tumbling.",
     "hints": [
       "bounce",
       "jump",
       "high"
-    ]
+    ],
+    "sense": "oewn-04476749-n"
   },
   {
     "id": "en-skyscraper",
     "word": "skyscraper",
     "language": "en",
-    "description": "A very tall city building.",
+    "description": "A very tall building with many stories.",
     "hints": [
       "tall",
       "city",
       "building"
-    ]
+    ],
+    "sense": "oewn-04240233-n"
   },
   {
     "id": "en-caterpillar",
     "word": "caterpillar",
     "language": "en",
-    "description": "It turns into a butterfly one day.",
+    "description": "A wormlike and often brightly colored and hairy or spiny larva of a butterfly or moth.",
     "hints": [
       "butterfly",
       "crawl",
       "leaf"
-    ]
+    ],
+    "sense": "oewn-02311989-n"
   },
   {
     "id": "en-grasshopper",
     "word": "grasshopper",
     "language": "en",
-    "description": "A green insect that jumps and chirps.",
+    "description": "Terrestrial plant-eating insect with hind legs adapted for leaping.",
     "hints": [
       "jump",
       "green",
       "insect"
-    ]
+    ],
+    "sense": "oewn-02229081-n"
   },
   {
     "id": "en-imagination",
     "word": "imagination",
     "language": "en",
-    "description": "The ability to dream up new ideas.",
+    "description": "The formation of a mental image of something that is not perceived as real and is not present to the senses.",
     "hints": [
       "dream",
       "ideas",
       "create"
-    ]
+    ],
+    "sense": "oewn-05633248-n"
   },
   {
     "id": "en-marshmallow",
     "word": "marshmallow",
     "language": "en",
-    "description": "A soft sweet treat you toast on a campfire.",
+    "description": "Spongy confection made of gelatin and sugar and corn syrup and dusted with powdered sugar.",
     "hints": [
       "campfire",
       "soft",
       "toast"
-    ]
+    ],
+    "sense": "oewn-07623707-n"
   },
   {
     "id": "en-thermometer",
     "word": "thermometer",
     "language": "en",
-    "description": "It tells you how hot or cold it is.",
+    "description": "Measuring instrument for measuring temperature.",
     "hints": [
       "hot",
       "cold",
       "fever"
-    ]
+    ],
+    "sense": "oewn-04429007-n"
   },
   {
     "id": "en-firefighter",
     "word": "firefighter",
     "language": "en",
-    "description": "A hero who puts out fires.",
+    "description": "A member of a fire department who tries to extinguish fires.",
     "hints": [
       "hero",
       "hose",
       "truck"
-    ]
+    ],
+    "sense": "oewn-10111420-n"
   },
   {
     "id": "en-celebration",
     "word": "celebration",
     "language": "en",
-    "description": "A happy party for a special occasion.",
+    "description": "A joyful occasion for special festivities to mark some happy event.",
     "hints": [
       "party",
       "cheer",
       "fun"
-    ]
+    ],
+    "sense": "oewn-07465251-n"
   },
   {
     "id": "en-electricity",
     "word": "electricity",
     "language": "en",
-    "description": "The power that makes lamps light up.",
+    "description": "A physical phenomenon associated with stationary or moving electrons and protons.",
     "hints": [
       "power",
       "plug",
       "spark"
-    ]
+    ],
+    "sense": "oewn-11470244-n"
   },
   {
     "id": "en-wheelbarrow",
     "word": "wheelbarrow",
     "language": "en",
-    "description": "A cart with one wheel you push in the garden.",
+    "description": "A cart for carrying small loads; has handles and one or more wheels.",
     "hints": [
       "garden",
       "push",
       "cart"
-    ]
+    ],
+    "sense": "oewn-02800454-n"
   },
   {
     "id": "en-hummingbird",
     "word": "hummingbird",
     "language": "en",
-    "description": "A tiny bird that hovers and beats its wings very fast.",
+    "description": "Tiny American bird having brilliant iridescent plumage and long slender bills; wings are specialized for vibrating flight.",
     "hints": [
       "tiny",
       "hover",
       "nectar"
-    ]
+    ],
+    "sense": "oewn-01836446-n"
   },
   {
     "id": "en-thunderstorm",
     "word": "thunderstorm",
     "language": "en",
-    "description": "Rain, lightning and loud booms all at once.",
+    "description": "A storm resulting from strong rising air currents; heavy rain or hail along with thunder and lightning.",
     "hints": [
       "rain",
       "lightning",
       "boom"
-    ]
+    ],
+    "sense": "oewn-11539686-n"
   },
   {
     "id": "en-refrigerator",
     "word": "refrigerator",
     "language": "en",
-    "description": "A cold box in the kitchen that keeps food fresh.",
+    "description": "White goods in which food can be stored at low temperatures.",
     "hints": [
       "cold",
       "food",
       "kitchen"
-    ]
+    ],
+    "sense": "oewn-04077839-n"
   },
   {
     "id": "en-kindergarten",
     "word": "kindergarten",
     "language": "en",
-    "description": "The first year of school for little kids.",
+    "description": "A preschool for children age 4 to 6 to prepare them for primary school.",
     "hints": [
       "kids",
       "class",
       "play"
-    ]
+    ],
+    "sense": "oewn-08429093-n"
   },
   {
     "id": "en-butterscotch",
     "word": "butterscotch",
     "language": "en",
-    "description": "A sweet candy made from brown sugar and butter.",
+    "description": "A hard brittle candy made with butter and brown sugar.",
     "hints": [
       "candy",
       "caramel",
       "sweet"
-    ]
-  },
-  {
-    "id": "en-photographer",
-    "word": "photographer",
-    "language": "en",
-    "description": "A person who takes pictures.",
-    "hints": [
-      "camera",
-      "pictures",
-      "flash"
-    ]
-  },
-  {
-    "id": "en-construction",
-    "word": "construction",
-    "language": "en",
-    "description": "Building houses and roads.",
-    "hints": [
-      "build",
-      "crane",
-      "workers"
-    ]
+    ],
+    "sense": "oewn-07615965-n"
   },
   {
     "id": "en-grandparents",
     "word": "grandparents",
     "language": "en",
-    "description": "Your mom's or dad's parents.",
+    "description": "A parent of your father or mother.",
     "hints": [
       "family",
       "elders",
       "love"
-    ]
-  },
-  {
-    "id": "en-encyclopedia",
-    "word": "encyclopedia",
-    "language": "en",
-    "description": "A big book full of facts about everything.",
-    "hints": [
-      "facts",
-      "book",
-      "knowledge"
-    ]
+    ],
+    "sense": "oewn-10162692-n"
   },
   {
     "id": "en-hippopotamus",
     "word": "hippopotamus",
     "language": "en",
-    "description": "A huge animal that loves to sit in rivers.",
+    "description": "Massive thick-skinned herbivorous animal living in or around rivers of tropical Africa.",
     "hints": [
       "river",
       "huge",
       "africa"
-    ]
+    ],
+    "sense": "oewn-02401173-n"
   },
   {
     "id": "en-kaleidoscope",
     "word": "kaleidoscope",
     "language": "en",
-    "description": "A tube that shows changing colorful patterns.",
+    "description": "An optical toy in a tube; it produces symmetrical patterns as bits of colored glass are reflected by mirrors.",
     "hints": [
       "patterns",
       "colors",
       "tube"
-    ]
+    ],
+    "sense": "oewn-03612969-n"
   },
   {
     "id": "en-rollercoaster",
     "word": "rollercoaster",
     "language": "en",
-    "description": "A fast ride with loops and drops.",
+    "description": "Elevated railway in an amusement park (usually with sharp curves and steep inclines).",
     "hints": [
       "ride",
       "loops",
       "thrill"
-    ]
+    ],
+    "sense": "oewn-04109500-n"
   },
   {
     "id": "en-extraordinary",
     "word": "extraordinary",
     "language": "en",
-    "description": "Very special and amazing.",
+    "description": "Beyond what is ordinary or usual; highly unusual or exceptional or remarkable; special.",
     "hints": [
       "amazing",
       "special",
       "unusual"
-    ]
+    ],
+    "sense": "oewn-01679784-a"
   },
   {
     "id": "en-grandchildren",
     "word": "grandchildren",
     "language": "en",
-    "description": "The kids of your kids.",
+    "description": "A child of your son or daughter.",
     "hints": [
       "family",
       "kids",
       "young"
-    ]
+    ],
+    "sense": "oewn-10161110-n"
   },
   {
     "id": "en-entertainment",
     "word": "entertainment",
     "language": "en",
-    "description": "Shows, games and fun things to watch.",
+    "description": "An activity that is diverting and that holds the attention.",
     "hints": [
       "fun",
       "shows",
       "games"
-    ]
+    ],
+    "sense": "oewn-00430033-n"
   },
   {
     "id": "en-tyrannosaurus",
     "word": "tyrannosaurus",
     "language": "en",
-    "description": "A famous dinosaur with tiny arms.",
+    "description": "Large carnivorous bipedal dinosaur having enormous teeth with knifelike serrations.",
     "hints": [
       "dinosaur",
       "rex",
       "teeth"
-    ]
+    ],
+    "sense": "oewn-01716405-n"
   },
   {
     "id": "en-hallucination",
     "word": "hallucination",
     "language": "en",
-    "description": "Seeing something that is not really there.",
+    "description": "Illusory perception; a common symptom of severe mental disorder.",
     "hints": [
       "dream",
       "illusion",
       "imaginary"
-    ]
+    ],
+    "sense": "oewn-14401022-n"
   },
   {
     "id": "en-photosynthesis",
     "word": "photosynthesis",
     "language": "en",
-    "description": "How plants turn sunlight into food.",
+    "description": "Synthesis of compounds with the aid of radiant energy (especially in plants).",
     "hints": [
       "plants",
       "sunlight",
       "leaves"
-    ]
-  },
-  {
-    "id": "en-paleontologist",
-    "word": "paleontologist",
-    "language": "en",
-    "description": "A scientist who digs up dinosaur bones.",
-    "hints": [
-      "fossils",
-      "bones",
-      "scientist"
-    ]
+    ],
+    "sense": "oewn-13558632-n"
   },
   {
     "id": "en-transformation",
     "word": "transformation",
     "language": "en",
-    "description": "A big change from one thing into another.",
+    "description": "The act of changing in form or shape or appearance.",
     "hints": [
       "change",
       "morph",
       "become"
-    ]
+    ],
+    "sense": "oewn-00399512-n"
   },
   {
     "id": "en-constellations",
     "word": "constellations",
     "language": "en",
-    "description": "Groups of stars that make pictures in the sky.",
+    "description": "A configuration of stars as seen from the earth.",
     "hints": [
       "stars",
       "sky",
       "patterns"
-    ]
+    ],
+    "sense": "oewn-09275876-n"
   },
   {
     "id": "en-procrastination",
     "word": "procrastination",
     "language": "en",
-    "description": "Putting things off until later.",
+    "description": "Putting off or delaying or deferring an action to a later time.",
     "hints": [
       "delay",
       "later",
       "lazy"
-    ]
+    ],
+    "sense": "oewn-01069286-n"
   },
   {
     "id": "en-kindheartedness",
     "word": "kindheartedness",
     "language": "en",
-    "description": "Being gentle and caring toward others.",
+    "description": "Sympathy arising from a kind heart.",
     "hints": [
       "caring",
       "gentle",
       "warm"
-    ]
+    ],
+    "sense": "oewn-07569056-n"
   },
   {
     "id": "en-troubleshooting",
     "word": "troubleshooting",
     "language": "en",
-    "description": "Finding and fixing what went wrong.",
+    "description": "Solve problems.",
     "hints": [
       "fix",
       "problem",
       "repair"
-    ]
+    ],
+    "sense": "oewn-00263435-v"
   },
   {
     "id": "en-personification",
     "word": "personification",
     "language": "en",
-    "description": "Giving human traits to things that are not human.",
+    "description": "Representing an abstract quality or idea as a person or creature.",
     "hints": [
       "human",
       "poetry",
       "figurative"
-    ]
+    ],
+    "sense": "oewn-07122808-n"
   },
   {
     "id": "en-characteristics",
     "word": "characteristics",
     "language": "en",
-    "description": "The features that make something what it is.",
+    "description": "A distinguishing quality; a feature that can be used to identify something.",
     "hints": [
       "traits",
       "features",
       "qualities"
-    ]
+    ],
+    "sense": "oewn-04738737-n"
   }
 ]

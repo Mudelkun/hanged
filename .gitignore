@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# word database build: downloaded dictionary (scripts/wordnet.js)
+scripts/.cache/

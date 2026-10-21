@@ -15,6 +15,14 @@ export const MIN_WORD_LENGTH = 1;
 export const MAX_WORD_LENGTH = 15;
 
 /**
+ * Long words always get at least 2 clue letters, even on the hardest levels
+ * (owner's call), so they stay challenging but fair. PLACEHOLDER: the length
+ * that counts as long (8 = the shortest words of level 6 and up).
+ */
+export const LONG_WORD_LENGTH = 8;
+export const LONG_WORD_CLUES = 2;
+
+/**
  * A won word pays its level's tokenReward (levels.ts), plus +1 token for each
  * of these streak lengths reached (progress.tokenReward). A lost round resets
  * the streak. PLACEHOLDER: the steps, and so the bonus cap (+3).
@@ -39,9 +47,6 @@ export const LOSSES_TO_DROP = 3;
 
 /** PLACEHOLDER: the first rounds on a new level never count toward a drop. */
 export const LEVEL_GRACE_ROUNDS = 3;
-
-/** Solo mode never repeats any of the last N words. */
-export const RECENT_WORDS_MEMORY = 40;
 
 /** The MVP is English only (stored with every word from day one). */
 export const DEFAULT_LANGUAGE = 'en';

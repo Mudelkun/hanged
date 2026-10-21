@@ -7,7 +7,14 @@
  * Letters are lowercase a–z internally (like the original "Pendu");
  * the UI uppercases them for display.
  */
-import { DEFAULT_MAX_WRONG, HANGING_STAGES, MAX_WORD_LENGTH, MIN_WORD_LENGTH } from './config';
+import {
+  DEFAULT_MAX_WRONG,
+  HANGING_STAGES,
+  LONG_WORD_CLUES,
+  LONG_WORD_LENGTH,
+  MAX_WORD_LENGTH,
+  MIN_WORD_LENGTH,
+} from './config';
 
 export type Letter = string; // one of a–z
 
@@ -64,17 +71,20 @@ export const uniqueLetters = (word: string): Letter[] => [...new Set(word.split(
 
 // ---- clues (rule 4) ----
 
+/** The fewest clues a word gets on any level: long words get LONG_WORD_CLUES, so a hard level stays fair. */
+export const minClues = (word: string) => (word.length >= LONG_WORD_LENGTH ? LONG_WORD_CLUES : 1);
+
 /**
  * How many distinct letters to reveal at the start.
- * Every word gets at least one clue, longer words get more (`ratio` comes
- * from the level), and at least one letter always stays hidden. When those
- * collide (a word with a single distinct letter, e.g. "a" or "aaa"), keeping
- * a letter hidden wins and the word gets no clue.
+ * Every word gets at least one clue (long words at least two), longer words
+ * get more (`ratio` comes from the level), and at least one letter always
+ * stays hidden. When those collide (a word with a single distinct letter,
+ * e.g. "a" or "aaa"), keeping a letter hidden wins and the word gets no clue.
  */
 export function clueCount(word: string, ratio: number): number {
   const distinct = uniqueLetters(word).length;
   if (distinct < 2) return 0;
-  return Math.min(distinct - 1, Math.max(1, Math.round(distinct * ratio)));
+  return Math.min(distinct - 1, Math.max(minClues(word), Math.round(distinct * ratio)));
 }
 
 /** Fisher–Yates shuffle of a fresh copy. */

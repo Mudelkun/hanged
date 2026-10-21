@@ -88,10 +88,21 @@ changes a round in progress.
 
 ## Word picking
 
-`nextWord(state)` → `pickWord(level, language, recentWordIds)`. It never repeats
-any of the last `RECENT_WORDS_MEMORY` (40) words. If the filters leave nothing, it
-first drops the "recent" filter, then picks the closest length. See
-[word-database.md](word-database.md).
+`nextWord(state)` → `pickWord(level, language, seenWordIds)` in [words.ts](../src/game/words.ts).
+**Owner's rules: the order is random, and a word never comes back before the player has gone
+through every word available to them.**
+- A level deals from its pool, `levelPool(level, language)`: the words in its length range (or the
+  closest lengths if none fit), cached per range.
+- `pickWord` picks at random among the pool words not in `seenWordIds`. Random picks from what's
+  left = a freshly shuffled deck, so every player and every cycle gets a different order.
+- When the whole pool has been seen, the level **starts over**: `pickWord` deals a seen word (never
+  the word just played, the last id of `seenWordIds`), and the reducer's `seenWord` sees the repeat
+  and removes the pool's other ids from the list. So "a seen word was dealt" is the only reset
+  signal and nothing else needs saving.
+- `seenWordIds` is saved, oldest first, and grows to at most the size of the database. Pools of
+  neighbouring levels overlap, so a word seen on level 3 still counts as seen on level 4.
+- A round in progress is saved and restored, so reopening the app shows the same word: that's
+  on purpose (no skipping a hard word), not a repeat.
 
 ## Saving (no backend yet)
 
@@ -106,6 +117,9 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`
   sets `[]`. Same key, no bump.
+- A save from before the seen list has `recentWordIds` (the last 40 words, newest first). `hydrate`
+  turns it into `seenWordIds` (reversed) and drops it. Same key, no bump. Ids of words no longer in the
+  database are pruned from `seenWordIds` on every load.
 - A save from before levels could drop has no `levelProgress`. `hydrate` rebuilds it from the score
   (`levelFromScore`: same level as before, the words past that level's start as `wins`). Same key, no bump.
 - **`hydrate` gets the save exactly as stored** and fills missing fields from `initialState()` itself

@@ -10,8 +10,8 @@ import {
 } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
-import { gameReducer, GameState, initialState, lettersForSale, streakMeter, tokenReward } from '../progress';
-import { pickWord, WORDS } from '../words';
+import { gameReducer, GameState, initialState, lettersForSale, nextWord, streakMeter, tokenReward } from '../progress';
+import { levelPool, pickWord } from '../words';
 
 const word = {
   id: 'en-castle',
@@ -19,6 +19,7 @@ const word = {
   language: 'en',
   description: 'A big stone home for a king.',
   hints: ['king', 'tower', 'stone'],
+  sense: 'oewn-02983900-n',
 };
 
 const startRound = (s: GameState) => gameReducer(s, { type: 'newRound', word, roundId: 'r', rng: () => 0 });
@@ -295,20 +296,56 @@ describe('moving up and down levels', () => {
 });
 
 describe('word picking', () => {
-  it('has words for every level, and avoids recent words', () => {
+  /** Deals `count` rounds in a row and returns the state and the word ids dealt. */
+  function deal(s: GameState, count: number, rng: () => number = Math.random) {
+    const ids: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const w = nextWord(s, rng);
+      ids.push(w.id);
+      s = gameReducer(s, { type: 'newRound', word: w, roundId: `r${i}`, rng });
+    }
+    return { s, ids };
+  }
+
+  it('has words for every level', () => {
     for (const level of LEVELS) {
       const w = pickWord(level, 'en', [], () => 0.5);
       expect(w.word.length).toBeGreaterThanOrEqual(level.minLength);
       expect(w.word.length).toBeLessThanOrEqual(level.maxLength);
     }
-    const level = LEVELS[0];
-    const fitting = WORDS.filter((w) => w.word.length >= level.minLength && w.word.length <= level.maxLength);
-    const recent = fitting.slice(1).map((w) => w.id);
-    expect(pickWord(level, 'en', recent, Math.random).id).toBe(fitting[0].id);
   });
 
-  it('remembers recent words for the next pick', () => {
-    const s = startRound(initialState());
-    expect(s.recentWordIds[0]).toBe('en-castle');
+  it('never repeats a word before the level has dealt them all', () => {
+    const pool = levelPool(LEVELS[0], 'en').map((w) => w.id);
+    const { ids } = deal(initialState(), pool.length);
+    expect(new Set(ids).size).toBe(pool.length);
+    expect([...ids].sort()).toEqual([...pool].sort());
+  });
+
+  it('then starts the level over, never with the word just played', () => {
+    const pool = levelPool(LEVELS[0], 'en');
+    // rng 0 deals the pool in order, so the next cycle's first pick would be the last word without the rule
+    const { s, ids } = deal(initialState(), pool.length, () => 0.9999);
+    const next = deal(s, pool.length - 1, () => 0.9999);
+    expect(next.ids[0]).not.toBe(ids[ids.length - 1]);
+    expect(new Set(next.ids).size).toBe(pool.length - 1);
+    expect(next.ids).not.toContain(ids[ids.length - 1]);
+  });
+
+  it('deals in a different order each time', () => {
+    const pool = levelPool(LEVELS[0], 'en');
+    expect(deal(initialState(), pool.length, () => 0).ids).not.toEqual(deal(initialState(), pool.length, () => 0.5).ids);
+  });
+
+  it('remembers dealt words', () => {
+    expect(startRound(initialState()).seenWordIds).toEqual(['en-castle']);
+  });
+
+  it('a save from the "last 40 words" memory counts those words as seen', () => {
+    const { seenWordIds, ...rest } = initialState();
+    const old = { ...rest, recentWordIds: ['en-cat', 'en-gone', 'en-sun'] } as unknown as GameState;
+    const s = gameReducer(initialState(), { type: 'hydrate', state: old });
+    expect(s.seenWordIds).toEqual(['en-sun', 'en-cat']);
+    expect('recentWordIds' in s).toBe(false);
   });
 });

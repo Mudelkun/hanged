@@ -64,11 +64,12 @@ data/words.json     the word database (generated from scripts/words-source.txt)
 ## Core game rules
 
 1. **A secret word is chosen**: picked at random from the word database (solo), or typed by the other player (two-player mode).
+   - Solo words come in a random order, and a word is **never shown twice** until the player has gone through every word available at their level.
 2. **Word constraints**
    - Letters only, A–Z. No spaces, digits, hyphens or accents. Normalize to one case internally (the original used lowercase).
    - Length: 1 to **15** letters, inclusive.
 3. **Display**: each hidden letter shows as a blank (dash or empty tile), e.g. `h _ l l _`. Revealed letters appear in their positions.
-4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more.
+4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more. **Long words always get at least two**, even on the hardest levels, so they stay challenging but fair.
    - When a letter is revealed as a clue, **all** of its occurrences are shown and that key counts as used.
    - At least one letter must always stay hidden.
 5. **A turn** = the player picks one letter on the in-game keyboard.
@@ -94,7 +95,8 @@ A level's difficulty is set by:
 
 ### Word descriptions
 
-- **Every word** has a short **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
+- **Every word** has a **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
+- Descriptions come from a **trusted dictionary**, never written by hand or by an AI: today Open English WordNet (CC BY 4.0, so the app must credit it). They must not contain the word itself.
 - The description is **always hidden** when a round starts. The player can unlock it by spending **two tokens** (see Tokens below). It never costs a wrong guess.
 
 ### Hint words
@@ -163,6 +165,7 @@ This is the player's own page. It holds personal customization, app settings, an
   - **Privacy policy**: required by the App Store. Apple also needs a public URL for it in App Store Connect.
   - **Terms of use**
   - **Contact / support**
+  - **Credits**: the dictionary the descriptions come from ([data/CREDITS.md](data/CREDITS.md)). Its licence requires it.
   - The app name ("Hanged: word guessing game") and the version.
 - **Delete account**: Apple requires in-app account deletion for any app that lets players create an account (App Store Review Guideline 5.1.1(v)).
 
@@ -201,7 +204,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 
 - **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost?
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
-- **Clue formula**: exactly how many letters are revealed for each word length and difficulty level?
+- **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: long words get at least 2. How long counts as long is a placeholder: 8 letters.)
 - **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? (Dropping down is decided: 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? The leaderboard, profile, tokens and online play all depend on this.

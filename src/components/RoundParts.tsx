@@ -274,7 +274,8 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
       <View style={styles.descBody}>
         <Text style={styles.chip}>{t('description.label')}</Text>
         {unlocked ? (
-          <Text style={styles.descText} numberOfLines={3}>
+          // Dictionary definitions are up to 140 characters (scripts/check-words.js): 4 lines on a 375 pt phone
+          <Text style={styles.descText} numberOfLines={4} adjustsFontSizeToFit minimumFontScale={0.85}>
             {text}
           </Text>
         ) : refused ? (

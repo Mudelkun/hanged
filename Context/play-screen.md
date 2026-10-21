@@ -150,6 +150,10 @@ the button comes and goes. Checked at 393×852 and 375×667 with a 12-letter wor
 
 ## Deliberate differences from the mockup
 
+- **Description length**: descriptions are dictionary definitions of up to 140 characters
+  ([word-database.md](word-database.md)), so the unlocked card shows **4 lines** (the mockup's are one
+  short sentence), with `adjustsFontSizeToFit` (iOS) as a safety net. Checked at 393×852 and 375×667
+  on level 8 (letter shop pill showing) with a 139-character description: no scrolling.
 - **Blurred description**: the locked card shows a *placeholder* sentence drawn as
   blurred text (transparent text + text shadow), **never the real hint**. That way
   it can't be read from a screenshot or with accessibility tools.

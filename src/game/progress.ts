@@ -10,13 +10,12 @@ import {
   DESCRIPTION_COST,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
-  RECENT_WORDS_MEMORY,
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription } from './engine';
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
-import { pickWord, wordById, WordEntry } from './words';
+import { pickWord, seenWord, wordById, WordEntry } from './words';
 
 export interface GameState {
   version: 1;
@@ -31,7 +30,8 @@ export interface GameState {
   streak: number;
   /** The level and the counts that move it up or down (levels.afterRound). */
   levelProgress: LevelProgress;
-  recentWordIds: string[];
+  /** Words dealt since their level last started over, oldest first (words.pickWord). */
+  seenWordIds: string[];
   round: Round | null;
   /** Tokens paid by the winning guess (0 otherwise), cleared by the next round. */
   lastTokensEarned: number;
@@ -46,7 +46,7 @@ export const initialState = (): GameState => ({
   tokens: STARTING_TOKENS,
   streak: 0,
   levelProgress: START_LEVEL,
-  recentWordIds: [],
+  seenWordIds: [],
   round: null,
   lastTokensEarned: 0,
 });
@@ -93,7 +93,7 @@ export function streakMeter(streak: number): StreakMeter {
   return { tier: STREAK_BONUS_AT.length, from, to: from + lap, full: streak === from + lap, bonus };
 }
 
-type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean };
+type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean; recentWordIds?: string[] };
 
 /** Every save field missing from an older save gets its value from initialState(). */
 const withDefaults = (saved: GameState): GameState => {
@@ -114,6 +114,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let s = action.state;
       // A save from before levels could drop: its level came from the score.
       if (!s.levelProgress) s = { ...s, levelProgress: levelFromScore(s.wordsGuessed ?? 0) };
+      // A save from the "last 40 words" memory (newest first): those words count as seen.
+      if (!s.seenWordIds) {
+        const { recentWordIds = [], ...rest } = s as LegacySave;
+        s = { ...rest, seenWordIds: [...recentWordIds].reverse() };
+      }
       s = withDefaults(s);
       // A save from the old "N words per token" rate: its progress was worth a
       // token per word at the last rate (1), so pay it out and drop the old fields.
@@ -128,7 +133,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         const { disabledLetters = [], boughtLetters = [] } = s.round;
         s = { ...s, round: { ...s.round, disabledLetters, boughtLetters } };
       }
-      return s;
+      // Words removed from the database can never be dealt again: forget them.
+      const seenWordIds = s.seenWordIds.filter((id) => wordById(id));
+      return seenWordIds.length === s.seenWordIds.length ? s : { ...s, seenWordIds };
     }
 
     case 'newRound': {
@@ -148,11 +155,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         },
         action.rng,
       );
-      const recentWordIds = [action.word.id, ...state.recentWordIds.filter((id) => id !== action.word.id)].slice(
-        0,
-        RECENT_WORDS_MEMORY,
-      );
-      return { ...state, round, recentWordIds, lastTokensEarned: 0 };
+      return { ...state, round, seenWordIds: seenWord(state.seenWordIds, action.word, level), lastTokensEarned: 0 };
     }
 
     case 'guess': {
@@ -193,4 +196,4 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
 /** Picks the next solo word for this player. */
 export const nextWord = (s: GameState, rng?: () => number) =>
-  pickWord(levelByNumber(s.levelProgress.level), s.language, s.recentWordIds, rng);
+  pickWord(levelByNumber(s.levelProgress.level), s.language, s.seenWordIds, rng);

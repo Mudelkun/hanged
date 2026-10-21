@@ -1,197 +1,191 @@
-# Source for data/words.json (English). One word per line: word | description | hint, hint, hint
-# Run `npm run check:words -- --build` to regenerate data/words.json from this file.
+# Source for data/words.json (English). One word per line: word | sense | hint, hint, hint
+# The sense is an Open English WordNet synset id: the description is that sense's dictionary definition.
+# List a word's senses with `npm run check:words -- --senses <word>`, then
+# run `npm run check:words -- --build` to regenerate data/words.json from this file.
 # Rules: a–z only, 1–15 letters, at least 2 distinct letters (so a clue AND a hidden letter both exist),
-# and the description must not contain the word.
+# and the description must not give the word away (the build drops clauses that do, or rejects the sense).
 # Hints: 2 to 4 single words (a–z), shown for free one at a time. A hint must not contain the word,
 # and the word must not contain a hint (e.g. "sun" for "sunflower" gives letters away).
 
-cat | A small furry pet that purrs. | pet, meow, whiskers
-sun | The bright star that lights up our day. | hot, sky, bright
-owl | A bird that stays awake all night. | hoot, night, feathers
-map | A drawing that shows you the way. | travel, paper, directions
-jam | Sweet fruit spread you put on toast. | toast, fruit, sweet
-fox | A clever wild animal with a bushy tail. | tail, clever, forest
-bee | A buzzing insect that makes honey. | honey, buzz, hive
-cup | You drink cocoa or tea from it. | drink, tea, mug
-hat | You wear it on top of your head. | head, cap, wear
-pig | A pink farm animal that oinks. | oink, farm, pink
-web | A spider spins it to catch flies. | spider, silk, sticky
-egg | A hen lays it, and you can fry it. | hen, shell, yolk
-bus | A big vehicle that takes kids to school. | school, wheels, ride
-pie | A baked dessert with a crust and a fruit filling. | crust, dessert, oven
-frog | A green jumper that says ribbit. | green, pond, hop
-cake | You blow out candles on it on your birthday. | birthday, candles, frosting
-moon | It glows in the night sky. | night, crescent, space
-rain | Water drops falling from the clouds. | wet, clouds, drops
-ship | A large boat that sails the sea. | sea, sail, captain
-nest | A bird's cozy home made of twigs. | bird, twigs, eggs
-kite | It flies on a string on windy days. | wind, string, fly
-milk | A white drink that comes from cows. | cow, white, drink
-bell | It rings, ding dong! | ring, ding, church
-star | A tiny twinkling light in the night sky. | twinkle, sky, night
-lamp | It lights up your desk at night. | light, bulb, desk
-sock | You wear it on your foot inside a shoe. | foot, pair, shoe
-snow | Cold white flakes that fall in winter. | cold, white, winter
-wolf | A wild animal that howls at the moon. | howl, pack, wild
-duck | A bird that quacks and loves ponds. | quack, pond, bird
-rose | A flower with thorns and a sweet smell. | flower, thorns, red
-gift | A present wrapped with a bow. | present, bow, surprise
-boat | It floats on water and carries people. | water, sail, float
-leaf | A green part of a tree that falls in autumn. | tree, green, autumn
-apple | A red or green fruit that keeps the doctor away. | fruit, red, tree
-beach | Sand, waves and sunshine by the sea. | sand, waves, sea
-bread | Baked from flour, you make sandwiches with it. | toast, loaf, flour
-chair | You sit on it at the table. | sit, seat, table
-cloud | A fluffy white shape floating in the sky. | sky, fluffy, rain
-dance | Moving your body to music. | music, steps, party
-honey | Sweet and golden, made by bees. | bee, sweet, golden
-house | A home where a family lives. | home, roof, family
-lemon | A sour yellow fruit. | sour, yellow, citrus
-music | Sounds and songs you listen to. | song, sound, melody
-night | The dark time when you sleep. | dark, moon, sleep
-ocean | A huge body of salty water. | sea, waves, salty
-pizza | A round flat bread with cheese and toppings. | cheese, slice, oven
-queen | A royal woman who wears a crown. | crown, royal, throne
-river | Fresh water flowing to the sea. | water, flow, bank
-smile | What your face does when you are happy. | happy, face, grin
-tiger | A big striped wild cat. | stripes, cat, roar
-water | You drink it when you are thirsty. | drink, wet, splash
-zebra | A horse-like animal with black and white stripes. | stripes, horse, safari
-ghost | A spooky see-through spirit that says boo. | boo, spooky, spirit
-piano | An instrument with black and white keys. | keys, music, play
-candy | A sweet treat kids love. | sweet, sugar, treat
-train | It runs on tracks and goes choo choo. | tracks, station, choo
-clock | It tells you the time. | time, tick, hands
-grape | A small round fruit that grows in bunches. | purple, vine, bunch
-castle | A big stone home for a king. | king, tower, stone
-garden | A place where flowers and vegetables grow. | flowers, plants, grow
-rabbit | A fluffy animal with long ears that hops. | bunny, ears, hop
-pencil | You write and draw with it, then erase. | write, draw, eraser
-rocket | It blasts off into space. | space, launch, fire
-cookie | A small sweet baked treat, often with chocolate chips. | chocolate, baked, crumbs
-island | Land with water all around it. | sea, beach, palm
-jungle | A thick tropical forest full of animals. | trees, wild, monkeys
-kitten | A baby cat. | cat, baby, meow
-monkey | An animal that swings from trees and loves bananas. | banana, swing, tail
-orange | A round citrus fruit, also a color. | fruit, citrus, juice
-planet | Earth and Mars are both one of these. | space, earth, orbit
-school | Where kids go to learn. | class, teacher, learn
-spider | It has eight legs and spins webs. | web, legs, creepy
-turtle | A slow animal that carries its shell. | shell, slow, sea
-window | You look outside through its glass. | glass, view, open
-winter | The coldest season of the year. | cold, snow, season
-bridge | It lets you cross over a river. | river, cross, road
-dragon | A legendary beast that breathes fire. | fire, wings, scales
-flower | A colorful bloom that bees visit. | bloom, petals, garden
-guitar | An instrument with six strings. | strings, music, strum
-puzzle | Pieces you fit together to make a picture. | pieces, picture, solve
-butter | A yellow spread made from cream. | cream, yellow, toast
-carrot | An orange vegetable that rabbits love. | orange, vegetable, rabbit
-pirate | A sailor who hunts for treasure. | ship, treasure, parrot
-balloon | You fill it with air and it floats away. | air, party, float
-blanket | It keeps you warm in bed. | warm, bed, cozy
-chicken | A farm bird that lays eggs. | hen, eggs, cluck
-dolphin | A smart sea animal that clicks and jumps. | sea, smart, jump
-giraffe | The animal with the longest neck. | neck, tall, spots
-holiday | A special day off to celebrate or travel. | vacation, travel, break
-lantern | A lamp you can carry around. | light, carry, glow
-library | A building full of books to borrow. | books, quiet, read
-monster | A scary creature from stories. | scary, creature, roar
-octopus | A sea animal with eight arms. | tentacles, sea, ink
-pancake | A flat breakfast treat with syrup on top. | breakfast, syrup, flat
-penguin | A black and white bird that cannot fly. | ice, waddle, bird
-rainbow | Colorful arc in the sky after rain. | colors, arc, sky
-teacher | The person who helps you learn at school. | school, class, lesson
-thunder | The loud boom after lightning. | storm, boom, loud
-unicorn | A magical horse with one horn. | horn, magic, horse
-volcano | A mountain that can erupt with lava. | lava, erupt, mountain
-kitchen | The room where meals are cooked. | cook, oven, meals
-mermaid | Half girl, half fish, lives in the sea. | tail, sea, fish
-popcorn | A snack you eat at the movies. | movies, snack, butter
-cupcake | A small cake with frosting on top. | frosting, small, sweet
-pumpkin | A big orange vegetable carved at Halloween. | orange, halloween, carve
-dinosaur | A giant reptile that lived long ago. | fossil, reptile, extinct
-elephant | A huge gray animal with a trunk. | trunk, gray, big
-sandwich | Food between two slices of bread. | bread, lunch, filling
-umbrella | It keeps you dry when it rains. | rain, dry, open
-mushroom | A little umbrella-shaped thing that grows in the forest. | forest, cap, fungus
-treasure | Gold and jewels hidden in a chest. | gold, chest, pirate
-birthday | The day you were born, celebrated every year. | party, cake, candles
-kangaroo | An animal that hops and carries its baby in a pouch. | pouch, hop, australia
-airplane | It flies people across the sky. | fly, wings, pilot
-football | A sport where you kick a ball into a goal. | goal, kick, team
-mountain | A very tall hill with a peak. | peak, tall, climb
-snowball | A cold round thing you throw in winter. | throw, cold, winter
-hospital | Where doctors and nurses help sick people. | doctor, nurse, sick
-notebook | Paper pages you write your lessons in. | paper, write, pages
-princess | The daughter of a king. | crown, royal, castle
-squirrel | A small animal with a fluffy tail that collects nuts. | nuts, tail, tree
-starfish | A sea creature shaped like a star. | sea, arms, beach
-backpack | A bag you carry on your back. | bag, school, straps
-astronaut | A person who travels into space. | space, rocket, moon
-butterfly | An insect with big colorful wings. | wings, colorful, insect
-chocolate | A sweet brown treat made from cocoa. | cocoa, sweet, brown
-crocodile | A big reptile with lots of sharp teeth. | teeth, reptile, river
-hamburger | A meat patty in a round bun. | bun, meat, grill
-telescope | You use it to look at faraway stars. | stars, lens, look
-adventure | An exciting journey full of surprises. | journey, explore, quest
-sunflower | A tall yellow bloom that turns to face the sun. | yellow, tall, seeds
-snowflake | Every one of these icy crystals is different. | ice, winter, crystal
-spaghetti | Long thin pasta, often with tomato sauce. | pasta, noodles, italian
-pineapple | A spiky tropical fruit with a leafy top. | tropical, spiky, fruit
-detective | Someone who solves mysteries. | mystery, clues, solve
-lightning | A bright flash in a stormy sky. | flash, storm, bolt
-scarecrow | A straw figure that keeps birds off the field. | straw, field, farm
-alligator | A big reptile that lives in swamps. | swamp, reptile, jaws
-blueberry | A tiny round blue fruit. | fruit, muffin, tiny
-waterfall | A river dropping over a cliff. | cliff, splash, river
-jellyfish | A see-through sea creature that can sting. | sting, sea, wobbly
-fireworks | Colorful explosions in the night sky. | boom, sparkle, night
-chameleon | A lizard that changes color. | lizard, color, hide
-strawberry | A red fruit with seeds on the outside. | red, seeds, fruit
-skateboard | A board with wheels you ride and do tricks on. | wheels, tricks, ride
-motorcycle | A two-wheeled vehicle with an engine. | engine, wheels, helmet
-lighthouse | A tower with a light that guides ships. | tower, ships, coast
-toothbrush | You clean your teeth with it. | teeth, clean, paste
-watermelon | A big green fruit that is red inside. | green, juicy, seeds
-helicopter | An aircraft with spinning blades on top. | blades, fly, pilot
-playground | A place with swings and slides. | swings, slide, park
-basketball | A sport where you shoot a ball through a hoop. | hoop, dribble, team
-friendship | The bond between best pals. | pals, trust, together
-trampoline | You bounce high on it. | bounce, jump, high
-skyscraper | A very tall city building. | tall, city, building
-caterpillar | It turns into a butterfly one day. | butterfly, crawl, leaf
-grasshopper | A green insect that jumps and chirps. | jump, green, insect
-imagination | The ability to dream up new ideas. | dream, ideas, create
-marshmallow | A soft sweet treat you toast on a campfire. | campfire, soft, toast
-thermometer | It tells you how hot or cold it is. | hot, cold, fever
-firefighter | A hero who puts out fires. | hero, hose, truck
-celebration | A happy party for a special occasion. | party, cheer, fun
-electricity | The power that makes lamps light up. | power, plug, spark
-wheelbarrow | A cart with one wheel you push in the garden. | garden, push, cart
-hummingbird | A tiny bird that hovers and beats its wings very fast. | tiny, hover, nectar
-thunderstorm | Rain, lightning and loud booms all at once. | rain, lightning, boom
-refrigerator | A cold box in the kitchen that keeps food fresh. | cold, food, kitchen
-kindergarten | The first year of school for little kids. | kids, class, play
-butterscotch | A sweet candy made from brown sugar and butter. | candy, caramel, sweet
-photographer | A person who takes pictures. | camera, pictures, flash
-construction | Building houses and roads. | build, crane, workers
-grandparents | Your mom's or dad's parents. | family, elders, love
-encyclopedia | A big book full of facts about everything. | facts, book, knowledge
-hippopotamus | A huge animal that loves to sit in rivers. | river, huge, africa
-kaleidoscope | A tube that shows changing colorful patterns. | patterns, colors, tube
-rollercoaster | A fast ride with loops and drops. | ride, loops, thrill
-extraordinary | Very special and amazing. | amazing, special, unusual
-grandchildren | The kids of your kids. | family, kids, young
-entertainment | Shows, games and fun things to watch. | fun, shows, games
-tyrannosaurus | A famous dinosaur with tiny arms. | dinosaur, rex, teeth
-hallucination | Seeing something that is not really there. | dream, illusion, imaginary
-photosynthesis | How plants turn sunlight into food. | plants, sunlight, leaves
-paleontologist | A scientist who digs up dinosaur bones. | fossils, bones, scientist
-transformation | A big change from one thing into another. | change, morph, become
-constellations | Groups of stars that make pictures in the sky. | stars, sky, patterns
-procrastination | Putting things off until later. | delay, later, lazy
-kindheartedness | Being gentle and caring toward others. | caring, gentle, warm
-troubleshooting | Finding and fixing what went wrong. | fix, problem, repair
-personification | Giving human traits to things that are not human. | human, poetry, figurative
-characteristics | The features that make something what it is. | traits, features, qualities
+cat | 02124272-n | pet, meow, whiskers
+sun | 09473603-n | hot, sky, bright
+owl | 01623768-n | hoot, night, feathers
+map | 03725654-n | travel, paper, directions
+jam | 07658542-n | toast, fruit, sweet
+fox | 02120985-n | tail, clever, forest
+bee | 02209508-n | honey, buzz, hive
+cup | 03152175-n | drink, tea, mug
+hat | 03502782-n | head, cap, wear
+pig | 02398058-n | oink, farm, pink
+web | 04575843-n | spider, silk, sticky
+egg | 07856780-n | hen, shell, yolk
+bus | 02927500-n | school, wheels, ride
+pie | 07641102-n | crust, dessert, oven
+frog | 01642406-n | green, pond, hop
+cake | 07644479-n | birthday, candles, frosting
+moon | 09381123-n | night, crescent, space
+rain | 15033174-n | wet, clouds, drops
+ship | 04201332-n | sea, sail, captain
+nest | 09392066-n | bird, twigs, eggs
+kite | 03626682-n | wind, string, fly
+milk | 07860018-n | cow, white, drink
+bell | 02827590-n | ring, ding, church
+star | 09467004-n | twinkle, sky, night
+lamp | 03641940-n | light, bulb, desk
+sock | 04261887-n | foot, pair, shoe
+snow | 11528800-n | cold, white, winter
+wolf | 02116752-n | howl, pack, wild
+duck | 01848972-n | quack, pond, bird
+rose | 04978580-n | pink, color, blush
+gift | 13285910-n | present, bow, surprise
+boat | 02861626-n | water, sail, float
+leaf | 13173519-n | tree, green, autumn
+apple | 07755101-n | fruit, red, tree
+beach | 09240137-n | sand, waves, sea
+bread | 07695101-n | toast, loaf, flour
+chair | 03005231-n | sit, seat, table
+cloud | 09270316-n | sky, fluffy, rain
+dance | 00429255-n | music, steps, party
+honey | 07874954-n | bee, sweet, golden
+house | 03549540-n | home, roof, family
+lemon | 07765558-n | sour, yellow, citrus
+music | 07034009-n | song, sound, melody
+night | 15192074-n | dark, moon, sleep
+ocean | 09399110-n | sea, waves, salty
+pizza | 07889783-n | cheese, slice, oven
+queen | 10518940-n | crown, royal, throne
+river | 09434308-n | water, flow, bank
+smile | 06891121-n | happy, face, grin
+tiger | 02132256-n | stripes, cat, roar
+water | 14869913-n | drink, wet, splash
+zebra | 02393701-n | stripes, horse, safari
+ghost | 09569105-n | boo, spooky, spirit
+piano | 03934354-n | keys, music, play
+candy | 07612936-n | sweet, sugar, treat
+train | 04475240-n | tracks, station, choo
+clock | 03050242-n | time, tick, hands
+grape | 07774656-n | purple, vine, bunch
+castle | 02983900-n | king, tower, stone
+garden | 03422255-n | flowers, plants, grow
+rabbit | 02326697-n | bunny, ears, hop
+pencil | 03914323-n | write, draw, eraser
+rocket | 04106269-n | space, launch, fire
+cookie | 07650764-n | chocolate, baked, crumbs
+island | 09339360-n | sea, beach, palm
+jungle | 08456014-n | trees, wild, monkeys
+kitten | 02125600-n | cat, baby, meow
+monkey | 02486953-n | banana, swing, tail
+orange | 04972356-n | color, sunset, bright
+planet | 09417539-n | space, earth, orbit
+school | 04153115-n | class, teacher, learn
+spider | 01774863-n | web, legs, creepy
+turtle | 01665425-n | shell, slow, sea
+window | 04596289-n | glass, view, open
+winter | 15262579-n | cold, snow, season
+bridge | 02901994-n | river, cross, road
+dragon | 09517519-n | fire, wings, scales
+flower | 11689786-n | bloom, petals, garden
+guitar | 03472449-n | strings, music, strum
+puzzle | 04034791-n | pieces, picture, solve
+butter | 07864314-n | cream, yellow, toast
+carrot | 07746183-n | orange, vegetable, rabbit
+pirate | 10455134-n | ship, treasure, parrot
+balloon | 02785116-n | air, party, float
+blanket | 02852392-n | warm, bed, cozy
+chicken | 01794266-n | hen, eggs, cluck
+dolphin | 02071627-n | sea, smart, jump
+giraffe | 02441664-n | neck, tall, spots
+holiday | 15162842-n | vacation, travel, break
+lantern | 03646302-n | light, carry, glow
+library | 03666369-n | books, quiet, read
+monster | 09515097-n | scary, creature, roar
+octopus | 01972805-n | tentacles, sea, ink
+pancake | 07655812-n | breakfast, syrup, flat
+penguin | 02058457-n | ice, waddle, bird
+rainbow | 09426302-n | colors, arc, sky
+thunder | 07392282-n | storm, boom, loud
+unicorn | 10757621-n | horn, magic, horse
+volcano | 09493680-n | lava, erupt, mountain
+kitchen | 03625099-n | cook, oven, meals
+mermaid | 09512731-n | tail, sea, fish
+popcorn | 07748612-n | movies, snack, butter
+cupcake | 07646632-n | frosting, small, sweet
+pumpkin | 07751486-n | orange, halloween, carve
+dinosaur | 01702472-n | fossil, reptile, extinct
+elephant | 02506148-n | trunk, gray, big
+sandwich | 07711710-n | bread, lunch, filling
+umbrella | 04514450-n | rain, dry, open
+mushroom | 13018679-n | forest, cap, fungus
+treasure | 13391842-n | gold, chest, pirate
+birthday | 15274989-n | party, cake, candles
+kangaroo | 01879775-n | pouch, hop, australia
+airplane | 02694015-n | fly, wings, pilot
+football | 00469555-n | goal, kick, team
+mountain | 09382700-n | peak, tall, climb
+snowball | 04258670-n | throw, cold, winter
+hospital | 08071169-n | doctor, nurse, sick
+notebook | 06427062-n | paper, write, pages
+princess | 10493649-n | crown, royal, castle
+squirrel | 02357879-n | nuts, tail, tree
+starfish | 02319987-n | sea, arms, beach
+backpack | 02772753-n | bag, school, straps
+astronaut | 09837427-n | space, rocket, moon
+butterfly | 02276911-n | wings, colorful, insect
+chocolate | 07617570-n | cocoa, sweet, brown
+crocodile | 01699819-n | teeth, reptile, river
+hamburger | 07712845-n | bun, meat, grill
+telescope | 04410773-n | stars, lens, look
+adventure | 00797976-n | journey, explore, quest
+sunflower | 11998702-n | yellow, tall, seeds
+snowflake | 11529484-n | ice, winter, crystal
+spaghetti | 07715659-n | pasta, noodles, italian
+pineapple | 07769251-n | tropical, spiky, fruit
+detective | 10029138-n | mystery, clues, solve
+lightning | 07427593-n | flash, storm, bolt
+scarecrow | 04150777-n | straw, field, farm
+alligator | 01701075-n | swamp, reptile, jaws
+waterfall | 09498422-n | cliff, splash, river
+fireworks | 03353300-n | boom, sparkle, night
+chameleon | 01696424-n | lizard, color, hide
+strawberry | 07761916-n | red, seeds, fruit
+skateboard | 04233049-n | wheels, tricks, ride
+motorcycle | 03796045-n | engine, wheels, helmet
+lighthouse | 02817995-n | tower, ships, coast
+toothbrush | 04460427-n | teeth, clean, paste
+watermelon | 07772927-n | green, juicy, seeds
+helicopter | 03517291-n | blades, fly, pilot
+playground | 03969939-n | swings, slide, park
+basketball | 00482004-n | hoop, dribble, team
+trampoline | 04476749-n | bounce, jump, high
+skyscraper | 04240233-n | tall, city, building
+caterpillar | 02311989-n | butterfly, crawl, leaf
+grasshopper | 02229081-n | jump, green, insect
+imagination | 05633248-n | dream, ideas, create
+marshmallow | 07623707-n | campfire, soft, toast
+thermometer | 04429007-n | hot, cold, fever
+firefighter | 10111420-n | hero, hose, truck
+celebration | 07465251-n | party, cheer, fun
+electricity | 11470244-n | power, plug, spark
+wheelbarrow | 02800454-n | garden, push, cart
+hummingbird | 01836446-n | tiny, hover, nectar
+thunderstorm | 11539686-n | rain, lightning, boom
+refrigerator | 04077839-n | cold, food, kitchen
+kindergarten | 08429093-n | kids, class, play
+butterscotch | 07615965-n | candy, caramel, sweet
+grandparents | 10162692-n | family, elders, love
+hippopotamus | 02401173-n | river, huge, africa
+kaleidoscope | 03612969-n | patterns, colors, tube
+rollercoaster | 04109500-n | ride, loops, thrill
+extraordinary | 01679784-a | amazing, special, unusual
+grandchildren | 10161110-n | family, kids, young
+entertainment | 00430033-n | fun, shows, games
+tyrannosaurus | 01716405-n | dinosaur, rex, teeth
+hallucination | 14401022-n | dream, illusion, imaginary
+photosynthesis | 13558632-n | plants, sunlight, leaves
+transformation | 00399512-n | change, morph, become
+constellations | 09275876-n | stars, sky, patterns
+procrastination | 01069286-n | delay, later, lazy
+kindheartedness | 07569056-n | caring, gentle, warm
+troubleshooting | 00263435-v | fix, problem, repair
+personification | 07122808-n | human, poetry, figurative
+characteristics | 04738737-n | traits, features, qualities
