@@ -49,10 +49,10 @@ describe('scoring', () => {
   });
 
   it('pays out progress saved under an older, slower token rate', () => {
-    const saved = { ...initialState(), tokens: 5, wordsTowardToken: WORDS_PER_TOKEN * 2 + 1 };
+    const saved = { ...initialState(), tokens: 5, wordsTowardToken: WORDS_PER_TOKEN * 3 - 1 };
     const s = gameReducer(initialState(), { type: 'hydrate', state: saved });
     expect(s.tokens).toBe(7);
-    expect(s.wordsTowardToken).toBe(1);
+    expect(s.wordsTowardToken).toBe(WORDS_PER_TOKEN - 1);
     const fresh = { ...initialState(), wordsTowardToken: WORDS_PER_TOKEN - 1 };
     expect(gameReducer(initialState(), { type: 'hydrate', state: fresh })).toBe(fresh);
   });

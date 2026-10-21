@@ -9,21 +9,22 @@ Tests: [src/game/__tests__/progress.test.ts](../src/game/__tests__/progress.test
 ## Scoring happens inside the winning guess
 
 `gameReducer`'s `guess` case scores in the **same step** that makes the round
-`won`. It adds +1 to `wordsGuessed` and +1 to `wordsTowardToken`, and at `WORDS_PER_TOKEN` (2) it
+`won`. It adds +1 to `wordsGuessed` and +1 to `wordsTowardToken`, and at `WORDS_PER_TOKEN` (1) it
 pays 1 token and resets to 0. A finished round ignores further guesses (the engine
 returns the same round), so **a word can never be scored twice**. Don't move
 scoring into an effect or a "round over" screen. Re-renders and app restarts
 would then count it again.
 
 - **Score = `wordsGuessed`** (the leaderboard number). Spending tokens never lowers it.
-- **Tokens**: earned 1 per `WORDS_PER_TOKEN` (2) words. Spent only on a description
+- **Tokens**: earned 1 per `WORDS_PER_TOKEN` (1) word, so every win shows "+1 token". Spent only on a description
   (`DESCRIPTION_COST` = 1) and, later, on characters. `wordsTowardToken` is stored
   on its own rather than derived from `wordsGuessed % WORDS_PER_TOKEN`. Later, if online words
   count for the score but not for tokens (an open question), the two will diverge.
 - **Changing the rate**: `hydrate` pays out a save that holds more progress than
-  the current rate needs (it was 5 words, now 2): whole tokens go to the balance
+  the current rate needs (it was 5 words, then 2, now 1): whole tokens go to the balance
   and the remainder stays as progress. So a rate change never strands a player at
-  "4 / 2".
+  "4 / 2". The field and the rate stay so the rate can go back up later; while it is 1,
+  `wordsTowardToken` is always 0 and `TokenBar` renders nothing.
 - **Hint words are free**: they never touch tokens or the reducer. Which hint is showing
   is UI state in `HintPill` ([play-screen.md](play-screen.md)), not saved.
 - `lastTokenEarned` flags the win that paid a token (the result screen shows

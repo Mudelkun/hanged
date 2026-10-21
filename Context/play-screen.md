@@ -13,6 +13,9 @@ these components.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · token bar · **Next word** · tab bar.
+- The "Next token" bar only shows while `WORDS_PER_TOKEN` > 1. At the current rate
+  (1 token per word) it is hidden on both layouts, and the win line's "+1 token" badge
+  carries the reward. This differs from the mockup, which still shows "1 / 2 words".
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
 1400 ms so the fall plays, won 700 ms so the last tile pops). Then the result

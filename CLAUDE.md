@@ -114,7 +114,7 @@ A level's difficulty is set by:
 
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
-- **Earning**: the player gets **1 token for every 2 words guessed correctly**.
+- **Earning**: the player gets **1 token for every word guessed correctly**.
 - **Spending**: tokens are used for exactly two things:
   1. unlocking a word's description (1 token)
   2. unlocking characters (each character has a price in tokens)
@@ -175,7 +175,7 @@ Names and photos are public content that players create, so the App Store expect
 ## Data the game needs (from the owner's notes)
 
 - **Words**: word, language, short description, hint words, plus whatever difficulty needs (length can be computed from the word).
-- **Players**: identity, name, profile picture (an image stored on the server), score (words guessed), progress toward the next token (out of 2 words), token balance, current level, and settings (language, sound, music). This is what feeds the leaderboard.
+- **Players**: identity, name, profile picture (an image stored on the server), score (words guessed), token balance, current level, and settings (language, sound, music). This is what feeds the leaderboard.
 - **Characters**: catalogue, token price, which characters the player has unlocked, and their current selection.
 
 ---

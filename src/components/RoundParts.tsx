@@ -231,7 +231,10 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
 
 // ---- next token ----
 
-export function TokenBar({ progress }: { progress: number }) {
+/** Hidden when every word pays a token: there is no progress to show. */
+export const TokenBar = WORDS_PER_TOKEN > 1 ? TokenProgress : () => null;
+
+function TokenProgress({ progress }: { progress: number }) {
   const [width] = useState(() => new Animated.Value(progress / WORDS_PER_TOKEN));
   useEffect(() => {
     Animated.timing(width, { toValue: progress / WORDS_PER_TOKEN, duration: 500, useNativeDriver: false }).start();
