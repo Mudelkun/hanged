@@ -1,0 +1,468 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hanged UI Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* "Sunny meadow" palette: cream paper, sky scenes, coral actions, mint = correct, butter = clues & tokens */
+  :root{
+    --page1:#d7f0ff; --page2:#fff3e3; --paper:#fffaf1; --ink:#4b3a35; --muted:#a8948a;
+    --line:#f3e6d6; --shadow:#ecd9c3;
+    --coral:#ff7b6b; --coral-d:#e85c4d; --coral-l:#ffe5df;
+    --mint:#5fd3a5; --mint-d:#38b283; --mint-l:#dcf7ea; --mint-t:#2a9a6e;
+    --butter:#ffd667; --butter-d:#f0b43a; --butter-l:#fff3cc; --butter-t:#9a6a00;
+    --sky:#6cc4ff; --sky-d:#3ea6ec; --sky-l:#e0f3ff; --sky-t:#2a86c8;
+    --pink:#ff8fb6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(180deg,var(--page1) 0%,#eaf7ff 38%,var(--page2) 100%);font-family:Nunito,"Segoe UI",sans-serif;color:var(--ink);
+    width:2730px;height:1420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;position:relative;overflow:hidden}
+  .deco{position:absolute;inset:0;pointer-events:none}
+  .deco > *{position:absolute}
+  .row,.h3,.stages,.note{position:relative}
+  .row{display:flex;gap:34px}
+  .label{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px;color:#9b847a;text-align:center;margin-top:14px;letter-spacing:.2px}
+  .phone{width:400px;height:860px;border-radius:58px;background:#3a2d29;padding:11px;box-shadow:0 34px 60px -24px rgba(150,95,50,.45),inset 0 0 0 2px #574540}
+  .screen{width:100%;height:100%;border-radius:47px;background:var(--paper);
+    background-image:radial-gradient(#f5e8d6 1.3px,transparent 1.6px);background-size:18px 18px;
+    overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .status{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-weight:800;font-size:15px;flex:none}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:20px;background:#3a2d29}
+  .sicons{display:flex;gap:6px;align-items:center}
+  .head{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;flex:none;height:60px}
+  .hl,.hr{display:flex;align-items:center;gap:9px}
+  .uname{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:27px;line-height:1}
+  .sub{font-size:11.5px;font-weight:800;color:var(--muted);margin-top:3px;letter-spacing:.2px}
+  .title{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:25px}
+  .me-btn{width:46px;height:46px;border-radius:50%;background:#ffeedd;border:3px solid #fff;box-shadow:0 0 0 2.5px var(--coral),0 4px 8px -2px rgba(232,92,77,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+  .back{width:44px;height:44px;border-radius:15px;background:#fff;box-shadow:0 3px 0 var(--shadow);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .pill{display:flex;align-items:center;gap:5px;background:#fff;border:2px solid #ffe39a;box-shadow:0 3px 0 #f6dc9c;border-radius:17px;padding:5px 11px 5px 6px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:19px;color:var(--butter-t)}
+  .lvl{display:flex;align-items:center;gap:4px;background:var(--mint-l);color:var(--mint-t);font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;border-radius:13px;padding:6px 10px 6px 7px;border:2px solid #c3eedb}
+  .body{flex:1;padding:0 16px;display:flex;flex-direction:column;min-height:0}
+
+  /* floating tab bar */
+  .tabs{flex:none;margin:6px 12px 14px;height:68px;border-radius:26px;background:#fff;box-shadow:0 0 0 1.5px var(--line),0 10px 22px -10px rgba(150,95,50,.35);display:flex;justify-content:space-around;align-items:center;padding:0 6px}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:12px;color:#c4b0a0;width:80px}
+  .tab .ib{width:50px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+  .tab.on{color:var(--coral-d)}
+  .tab.on .ib{background:var(--coral-l)}
+
+  /* scenes: the hanging SVG is transparent except the grass, so the sky is CSS */
+  .scene{height:208px;border-radius:28px;background:linear-gradient(180deg,#a9dfff 0%,#d4efff 55%,#eef9ff 100%);position:relative;overflow:hidden;flex:none;
+    border:3px solid #fff;box-shadow:0 4px 0 var(--shadow),0 12px 20px -14px rgba(60,130,190,.6)}
+  .scene > svg{position:relative;z-index:1}
+  .scene .sun{position:absolute;width:46px;height:46px;border-radius:50%;background:#ffe27a;box-shadow:0 0 0 9px rgba(255,226,122,.35),0 0 0 20px rgba(255,226,122,.16)}
+  .scene .cl{position:absolute}
+  .scene.sad{background:linear-gradient(180deg,#c3d1df 0%,#dfe7ef 60%,#f1f5f8 100%)}
+  .misses{display:flex;align-items:center;gap:10px;margin:11px 4px 0;flex:none}
+  .pips{display:flex;gap:4px;flex:1}
+  .pip{flex:1;height:11px;border-radius:6px;background:#f1e5d6}
+  .pip.x{background:var(--coral);box-shadow:inset 0 -2.5px 0 var(--coral-d)}
+  .mtxt{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+  .mtxt b{color:var(--coral-d)}
+  .tiles{display:flex;gap:8px;justify-content:center;margin:13px 0 13px;flex:none}
+  .tile{width:50px;height:58px;border-radius:16px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:30px;color:var(--ink);position:relative}
+  .tile.ok{background:var(--mint-l);border-color:#bdecd6;box-shadow:0 4px 0 #a5dfc4;color:var(--mint-t)}
+  .tile.clue{background:var(--butter-l);border-color:#ffe39a;box-shadow:0 4px 0 #f2d27a;color:var(--butter-t)}
+  .tile.clue .spark{position:absolute;top:-7px;right:-7px}
+  .tile.h{background:rgba(255,255,255,.6);border:2.5px dashed #e6d1b8;box-shadow:none}
+  .tile.h::after{content:"";position:absolute;bottom:10px;width:20px;height:4px;border-radius:2px;background:#ead9c4}
+  .tile.miss{background:var(--coral-l);border-color:#ffcfc5;box-shadow:0 4px 0 #f6b8ab;color:var(--coral-d)}
+  .desc{border-radius:22px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);padding:10px 10px 10px 10px;display:flex;align-items:center;gap:11px;flex:none}
+  .bulb{width:42px;height:42px;border-radius:14px;background:var(--butter-l);display:flex;align-items:center;justify-content:center;flex:none}
+  .chip{font-family:Fredoka,Nunito,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--butter-t)}
+  .blur{filter:blur(4.5px);font-weight:800;font-size:14.5px;margin-top:3px;color:#6d5a52;user-select:none;white-space:nowrap}
+  .unlock{margin-left:auto;flex:none;background:var(--coral);color:#fff;border-radius:15px;padding:9px 11px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;display:flex;align-items:center;gap:5px;box-shadow:0 4px 0 var(--coral-d)}
+  .tokbar{display:flex;align-items:center;gap:8px;margin:13px 4px 0;font-family:Fredoka,Nunito,sans-serif;font-size:13.5px;font-weight:600;color:var(--muted);flex:none}
+  .track{flex:1;height:12px;border-radius:7px;background:#f1e5d6;overflow:hidden;box-shadow:inset 0 2px 0 rgba(0,0,0,.04)}
+  .fill{height:100%;background:linear-gradient(90deg,var(--butter),#ffbf3a);border-radius:7px;box-shadow:inset 0 -3px 0 rgba(224,150,20,.35)}
+  .kb{margin-top:auto;margin-bottom:4px;display:flex;flex-direction:column;gap:7px;align-items:center}
+  .kr{display:flex;gap:6px}
+  .k{width:45px;height:46px;border-radius:14px;background:#fff;border:1.5px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:21px;color:var(--ink)}
+  .k.ok{background:var(--mint);color:#fff;border-color:var(--mint);box-shadow:0 4px 0 var(--mint-d)}
+  .k.no{background:#f2e8dc;border-color:#f2e8dc;box-shadow:none;transform:translateY(3px)}
+  .k.clue{background:var(--butter);border-color:var(--butter);box-shadow:0 4px 0 var(--butter-d);color:#7a5300}
+  .k.wide{width:96px}
+
+  /* buttons */
+  .btn{margin:8px 0;height:56px;border-radius:20px;background:var(--coral);color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 5px 0 var(--coral-d);flex:none;letter-spacing:.2px}
+  .btn.ghost{background:#fff;color:var(--coral-d);box-shadow:0 5px 0 var(--shadow);border:2px solid var(--line)}
+  .btn.sm{height:50px;font-size:18px;margin:6px 0 4px}
+
+  /* segmented control */
+  .seg{display:flex;background:#f6ebdd;border-radius:19px;padding:5px;flex:none}
+  .seg div{flex:1;text-align:center;padding:9px 0;border-radius:15px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15.5px;color:#b29c8c}
+  .seg .on{background:#fff;color:var(--coral-d);box-shadow:0 3px 0 var(--shadow)}
+
+  /* leaderboard */
+  .podium-card{margin-top:10px;border-radius:28px;background:linear-gradient(180deg,#c9ebff 0%,#e9f7ff 60%,#fff7ec 100%);border:3px solid #fff;box-shadow:0 4px 0 var(--shadow);position:relative;overflow:hidden;flex:none;padding:8px 10px 0}
+  .podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;position:relative;z-index:1}
+  .pcol{width:102px;display:flex;flex-direction:column;align-items:center}
+  .pcol .fig{margin-bottom:-6px;position:relative;z-index:1}
+  .pblock{width:100%;border-radius:18px 18px 6px 6px;display:flex;flex-direction:column;align-items:center;padding-top:8px;text-align:center;line-height:1.1}
+  .p1 .pblock{height:112px;background:linear-gradient(#ffe48a,#ffd25c);box-shadow:inset 0 -6px 0 rgba(224,160,20,.3)}
+  .p2 .pblock{height:96px;background:linear-gradient(#e3f1fb,#cfe4f4);box-shadow:inset 0 -6px 0 rgba(90,140,190,.18)}
+  .p3 .pblock{height:84px;background:linear-gradient(#ffd8bf,#ffc4a1);box-shadow:inset 0 -6px 0 rgba(210,120,70,.22)}
+  .medal{width:28px;height:28px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:16px;margin-bottom:3px}
+  .p1 .medal{color:#c48a00}.p2 .medal{color:#5a7d9c}.p3 .medal{color:#c0663a}
+  .pn{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;display:flex;align-items:center;gap:4px}
+  .ps{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:19px;margin-top:1px}
+  .ps small{font-size:11px;font-weight:600;color:rgba(75,58,53,.6)}
+  .you{background:var(--coral);color:#fff;font-family:Fredoka,Nunito,sans-serif;font-size:10.5px;font-weight:600;border-radius:8px;padding:1px 6px;letter-spacing:.4px}
+  .lrows{margin-top:12px}
+  .lrow{display:flex;align-items:center;gap:11px;padding:6px 14px 6px 10px;border-radius:20px;background:#fff;border:1.5px solid var(--line);box-shadow:0 3px 0 var(--shadow);margin-bottom:8px}
+  .rank{width:28px;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:17px;color:#c4ad9b;flex:none}
+  .av{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
+  .nm{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px}
+  .sc{margin-left:auto;text-align:right;line-height:1;font-family:Fredoka,Nunito,sans-serif}
+  .sc b{font-size:21px;font-weight:700}
+  .sc span{font-size:12px;font-weight:600;color:var(--muted);margin-left:3px}
+
+  /* characters */
+  .stage{height:222px;position:relative;display:flex;align-items:flex-end;justify-content:center;flex:none;border-radius:30px;margin-top:4px;
+    background:radial-gradient(circle at 50% 42%,#fff 0%,#fff3e6 45%,#ffe7d2 100%);border:3px solid #fff;box-shadow:0 4px 0 var(--shadow);overflow:hidden}
+  .rays{position:absolute;inset:-60px;background:repeating-conic-gradient(from 0deg at 50% 52%,rgba(255,214,103,.22) 0 10deg,transparent 10deg 20deg)}
+  .rug{position:absolute;bottom:14px;width:190px;height:34px;border-radius:50%;background:#ffd2b8;box-shadow:inset 0 -5px 0 #ffbf9c}
+  .arrow{position:absolute;top:86px;width:42px;height:42px;border-radius:50%;background:#fff;box-shadow:0 3px 0 var(--shadow);display:flex;align-items:center;justify-content:center;z-index:2}
+  .pinfo{display:flex;align-items:center;justify-content:space-between;margin:12px 4px 10px;flex:none}
+  .pinfo .nmb{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px;line-height:1}
+  .pinfo .sp{font-family:Fredoka,Nunito,sans-serif;font-weight:500;font-size:14px;color:var(--muted);margin-top:3px}
+  .tag{display:flex;align-items:center;gap:5px;background:var(--butter-l);border:2px solid #ffe39a;border-radius:14px;padding:5px 11px 5px 7px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;color:var(--butter-t)}
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+  .cc{height:116px;border-radius:19px;border:2px solid #fff;box-shadow:0 3px 0 var(--shadow),0 0 0 1.5px var(--line);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px}
+  .cc.view{box-shadow:0 0 0 3px var(--coral),0 4px 0 3px var(--coral-d)}
+  .cc .n{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:13px}
+  .price{display:flex;align-items:center;gap:2px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:12.5px;color:var(--butter-t);margin-top:1px}
+  .lock{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center}
+  .check{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;border:3px solid #fff;z-index:2}
+  .owned{font-family:Fredoka,Nunito,sans-serif;font-size:11.5px;font-weight:600;color:var(--mint-t);margin-top:1px}
+  .cc.locked .fig{opacity:.5;filter:saturate(.6)}
+
+  /* versus */
+  .match{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#ffe5df 0%,#fff6ea 50%,#e0f3ff 100%);border:3px solid #fff;box-shadow:0 4px 0 var(--shadow);border-radius:26px;padding:10px 14px;flex:none}
+  .pl{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;width:72px}
+  .pl .av{width:58px;height:58px;border-width:3px}
+  .online{width:9px;height:9px;border-radius:50%;background:var(--mint);display:inline-block;margin-right:4px;box-shadow:0 0 0 2px #fff}
+  .score{text-align:center;font-family:Fredoka,Nunito,sans-serif}
+  .score .vs{display:inline-block;background:var(--coral);color:#fff;font-weight:700;font-size:12px;border-radius:9px;padding:1px 8px;letter-spacing:1px}
+  .score b{display:block;font-size:34px;font-weight:700;line-height:1.05}
+  .score span{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+  .bubble-row{display:flex;align-items:center;gap:8px;margin:14px 0 12px;flex:none}
+  .bubble{position:relative;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);border-radius:18px;padding:9px 14px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px}
+  .bubble::before{content:"";position:absolute;left:-9px;top:15px;width:14px;height:14px;background:#fff;border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+  .bubble em{font-style:normal;color:var(--coral-d)}
+  .seg.sm div{padding:8px 0;font-size:14.5px}
+  .typed{display:flex;gap:4px;justify-content:center;margin:13px 0 7px;flex:none}
+  .typed div{width:31px;height:40px;border-radius:11px;background:#fff;border:1.5px solid var(--line);box-shadow:0 3px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:20px}
+  .typed .caret{background:var(--coral-l);border:2px dashed #ffb4a6;box-shadow:none}
+  .typed .caret::after{content:"";width:2.5px;height:20px;border-radius:2px;background:var(--coral)}
+  .valid{display:flex;justify-content:space-between;font-family:Fredoka,Nunito,sans-serif;font-size:13px;font-weight:600;color:var(--mint-t);margin:0 4px 10px;flex:none}
+  .hint{border-radius:18px;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);padding:8px 12px;font-size:13.5px;font-weight:800;flex:none;display:flex;align-items:center;gap:10px}
+  .hint small{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.8px;color:var(--sky-t);margin-bottom:1px}
+  .kb.sm .k{width:43px;height:40px;font-size:18px;border-radius:12px}
+  .kb.sm{gap:6px;margin-bottom:4px}
+  .kb.sm .k.wide{width:92px}
+
+  /* profile */
+  .pf-card{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);border-radius:26px;padding:12px 14px;flex:none;margin-top:2px}
+  .pf-av{width:84px;height:84px;border-radius:50%;background:#ffeedd;border:4px solid #fff;box-shadow:0 0 0 3px var(--coral);position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+  .pf-av .in{width:76px;height:76px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .cam{position:absolute;right:-7px;bottom:-4px;width:32px;height:32px;border-radius:50%;background:var(--coral);border:3px solid #fff;display:flex;align-items:center;justify-content:center}
+  .pf-card small{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.8px;color:var(--muted)}
+  .pf-name{font-family:Fredoka,Nunito,sans-serif;font-size:25px;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.15}
+  .pf-link{margin-top:5px;display:inline-flex;align-items:center;gap:5px;font-family:Fredoka,Nunito,sans-serif;font-size:13.5px;font-weight:600;color:var(--coral-d);background:var(--coral-l);border-radius:11px;padding:4px 10px}
+  .stats{display:flex;gap:8px;margin:12px 0 12px;flex:none}
+  .stat{flex:1;border-radius:18px;padding:7px 0 6px;text-align:center;line-height:1.1;border:2px solid #fff;box-shadow:0 3px 0 var(--shadow)}
+  .stat b{font-family:Fredoka,Nunito,sans-serif;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}
+  .stat span{font-family:Fredoka,Nunito,sans-serif;font-size:12px;font-weight:500;color:var(--muted)}
+  .grp-t{font-family:Fredoka,Nunito,sans-serif;font-size:12.5px;font-weight:600;letter-spacing:1px;color:var(--muted);margin:0 8px 5px;flex:none}
+  .grp{background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);border-radius:20px;overflow:hidden;margin-bottom:12px;flex:none}
+  .it{display:flex;align-items:center;gap:11px;height:43px;padding:0 13px 0 10px;border-top:1.5px dashed #f2e3d1;font-family:Fredoka,Nunito,sans-serif;font-weight:500;font-size:15.5px}
+  .it:first-child{border-top:none}
+  .ic{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+  .it .v{margin-left:auto;color:var(--muted);font-size:14px;display:flex;align-items:center;gap:4px}
+  .tog{margin-left:auto;width:46px;height:27px;border-radius:14px;background:var(--mint);position:relative;box-shadow:inset 0 -2px 0 var(--mint-d)}
+  .tog::after{content:"";position:absolute;right:3px;top:3px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+  .tog.off{background:#eee2d4;box-shadow:inset 0 -2px 0 #e0d0be}.tog.off::after{right:auto;left:3px}
+  .foot{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:800;color:var(--muted);margin:0 8px}
+  .foot .del{color:var(--coral-d);font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:13px}
+
+  /* round lost */
+  .scene.big{height:282px}
+  /* the "HANGED !!" rubber stamp sits over the whole picture, so it lives outside the clipped scene */
+  .stamped{position:relative;flex:none}
+  .stamp{position:absolute;left:50%;top:50%;width:372px;transform:translate(-50%,-50%) rotate(-11deg);z-index:2;opacity:.96;filter:drop-shadow(0 1.5px 0 rgba(255,255,255,.7));pointer-events:none}
+  .over{text-align:center;margin:14px 0 0;flex:none}
+  .over p{font-family:Fredoka,Nunito,sans-serif;font-size:15px;font-weight:500;color:var(--muted)}
+  .reveal{border-radius:20px;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);padding:9px 12px;font-size:14px;font-weight:800;flex:none;display:flex;align-items:center;gap:11px}
+  .reveal small{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--butter-t);margin-bottom:1px}
+
+  /* animation strip */
+  .stages{display:flex;gap:12px}
+  .st{width:212px;background:#fff;border-radius:24px;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);padding:6px 6px 9px;text-align:center}
+  .st .sky{height:208px;border-radius:19px;background:linear-gradient(180deg,#b5e3ff 0%,#dcf2ff 60%,#f1faff 100%);overflow:hidden}
+  .st .sky.sad{background:linear-gradient(180deg,#c3d1df 0%,#dfe7ef 60%,#f1f5f8 100%)}
+  .st svg{display:block;height:208px}
+  .st b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--sky-l);color:var(--sky-t);font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:15px;margin:7px 0 1px}
+  .st span{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:13.5px;font-weight:500;color:#8f7b71}
+  .st.end{border-color:#ffc2b7;box-shadow:0 4px 0 #f6b0a2}
+  .st.end b{background:var(--coral);color:#fff}
+  .h3{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:24px;width:2464px;display:flex;align-items:center;gap:10px}
+  .h3 small{font-weight:500;font-size:17px;color:#9b847a}
+  .note{font-size:12.5px;color:#9b847a;font-weight:700;text-align:center;max-width:1500px}
+</style>
+</head>
+<body>
+<div class="deco" id="deco"></div>
+<div class="row" id="row"></div>
+<div class="h3" id="h3"></div>
+<div class="stages" id="stages"></div>
+<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey ✕ = wrong letter. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 5 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
+
+<script src="characters/rig.js"></script>
+<script src="characters/hanging.js"></script>
+<script>
+const INK = '#4b3a35';
+
+/* ---------- icons ---------- */
+const coin = (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12.6" r="10.4" fill="#f0b43a"/><circle cx="12" cy="11.4" r="10.4" fill="#ffd667"/><circle cx="12" cy="11.4" r="7.4" fill="#ffe593"/><path d="M12 6.4l1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.6l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke="#f0b43a" stroke-width="1" stroke-linejoin="round"/></svg>`;
+const lockI = (s=16,c='#c9b5a4') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="4" fill="${c}"/><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="${c}" stroke-width="2.8"/></svg>`;
+const chev = (d='l', c=INK, s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="${d==='l'?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const checkI = `<svg width="13" height="13" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const xI = (s=18,c='#cdb9a7') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke="${c}" stroke-width="3.4" stroke-linecap="round"/></svg>`;
+const spark = (s=18, c='#ffc93c') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5-.9-5.6-4.9-9.6-10.5-10.5C7.1 11.1 11.1 7.1 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+const starI = (s=15, c='#38b283') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+const bulbI = `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.5a7 7 0 0 0-4.2 12.6c.8.6 1.2 1.4 1.2 2.4h6c0-1 .4-1.8 1.2-2.4A7 7 0 0 0 12 2.5z" fill="#ffd667" stroke="#f0b43a" stroke-width="1.6"/><rect x="9" y="18.5" width="6" height="3" rx="1.5" fill="#f0b43a"/><path d="M9.5 9.5a3 3 0 0 1 2.5-2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`;
+const planeI = `<svg width="20" height="20" viewBox="0 0 24 24"><path d="M3 11.5L21 3l-6 18-3.5-7.5z" fill="#fff"/><path d="M11.5 13.5L21 3" stroke="#e85c4d" stroke-width="1.8"/></svg>`;
+const cloud = (w, fill='#fff', op=1) => `<svg width="${w}" height="${w*0.5}" viewBox="0 0 100 50" style="opacity:${op}"><g fill="${fill}"><circle cx="28" cy="32" r="15"/><circle cx="48" cy="22" r="19"/><circle cx="70" cy="29" r="15"/><rect x="14" y="30" width="72" height="17" rx="8.5"/></g></svg>`;
+const statusIcons = `<div class="sicons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="${INK}"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="${INK}"/><rect x="10" y="3" width="3" height="9" rx="1" fill="${INK}"/><rect x="15" y="0" width="3" height="12" rx="1" fill="${INK}"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.5l2.4-2.9a3.6 3.6 0 0 0-4.8 0zM3.2 5.8a7 7 0 0 1 9.6 0l1.6-1.9a9.6 9.6 0 0 0-12.8 0z" fill="${INK}"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".7" y=".7" width="22" height="11.6" rx="3.6" fill="none" stroke="${INK}" stroke-opacity=".4" stroke-width="1.4"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="2" fill="${INK}"/><rect x="24" y="4.3" width="2" height="4.4" rx="1" fill="${INK}" fill-opacity=".4"/></svg></div>`;
+const tabIcon = {
+  play:(c)=>`<svg width="28" height="24" viewBox="0 0 30 26"><path d="M8 5h14a7 7 0 0 1 6.6 9.3l-1.4 4.2a3.6 3.6 0 0 1-6 1.4L18.3 17h-6.6l-2.9 2.9a3.6 3.6 0 0 1-6-1.4L1.4 14.3A7 7 0 0 1 8 5z" fill="${c}"/><path d="M9 9v5M6.5 11.5h5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="10" r="1.7" fill="#fff"/><circle cx="23" cy="13" r="1.7" fill="#fff"/></svg>`,
+  vs:(c)=>`<svg width="28" height="24" viewBox="0 0 30 26"><circle cx="20.5" cy="11" r="8" fill="${c}" opacity=".5"/><circle cx="10" cy="13" r="8.5" fill="${c}"/><circle cx="7.4" cy="12" r="1.3" fill="#fff"/><circle cx="12.6" cy="12" r="1.3" fill="#fff"/><path d="M7.6 15.4q2.4 2.2 4.8 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+  board:(c)=>`<svg width="26" height="24" viewBox="0 0 28 26"><path d="M7 2h14v7a7 7 0 0 1-14 0z" fill="${c}"/><path d="M7 4H2.5a4.5 4.5 0 0 0 5.2 6.2M21 4h4.5a4.5 4.5 0 0 1-5.2 6.2" fill="none" stroke="${c}" stroke-width="2.4"/><rect x="12" y="15" width="4" height="5" fill="${c}"/><rect x="7.5" y="20" width="13" height="4.5" rx="1.6" fill="${c}"/></svg>`,
+  chars:(c)=>`<svg width="27" height="24" viewBox="0 0 28 26"><path d="M4 4.5l6.2 3.6a10 10 0 0 1 7.6 0L24 4.5l-.6 7.7A10 9.4 0 1 1 4.6 12.2z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10.2" cy="14.5" r="1.5" fill="#fff"/><circle cx="17.8" cy="14.5" r="1.5" fill="#fff"/><path d="M12 18q2 1.6 4 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+};
+const tabs = (on) => `<div class="tabs">${[['play','Play'],['vs','Versus'],['board','Leaderboard'],['chars','Characters']].map(([k,l])=>
+  `<div class="tab ${k===on?'on':''}"><div class="ib">${tabIcon[k](k===on?'#ff7b6b':'#d6c5b7')}</div>${l}</div>`).join('')}</div>`;
+
+/* ---------- characters (shared rig: characters/rig.js + characters/hanging.js) ---------- */
+const CH = Object.fromEntries(HangedRig.CHARACTERS.map(c=>[c.id,c]));
+const ME = 'mochi';   // the player's selected character
+const TOKENS = 12;
+// Pastel backdrop per character (cards and avatar circles)
+const TINT = { bun:'#ffeef4', mochi:'#ffeedd', coco:'#f6e7da', ember:'#ffe6d8', bao:'#eef0f5', ribbit:'#e6f6d9', lolo:'#ffe5ef', rexy:'#dcf5ea', biscuit:'#fff1dc', button:'#ffe6e3' };
+// Head-and-shoulders crop, used as the avatar when no photo is uploaded
+const faceSvg = (id, s, expr='happy') => `<svg class="fig" width="${s}" height="${s}" viewBox="30 4 140 140">${HangedRig.render(CH[id],{bare:true,expr})}</svg>`;
+const charSvg = (id, h, opts={}) => HangedRig.render(CH[id], opts).replace('<svg ', `<svg class="fig" width="${Math.round(h*220/260)}" height="${h}" `);
+// The hanging scene at a given stage (= wrong guesses), cropped to `vb`
+const sceneSvg = (id, stage, vb='0 0 480 470', fit='meet') =>
+  HangedAnim.scene(CH[id], HangedAnim.frame(stage, stage, 1, 0, false))
+    .replace('viewBox="0 0 480 470"', `viewBox="${vb}" preserveAspectRatio="xMidYMax ${fit}" width="100%" height="100%"`);
+const sky = (sad) => sad
+  ? `<div class="cl" style="left:150px;top:12px">${cloud(110,'#aebdcc')}</div><div class="cl" style="left:20px;top:40px">${cloud(70,'#fff',.7)}</div><div class="cl" style="right:24px;top:26px">${cloud(84,'#fff',.8)}</div>`
+  : `<div class="sun" style="right:34px;top:22px"></div><div class="cl" style="left:150px;top:18px">${cloud(84)}</div><div class="cl" style="right:96px;top:62px">${cloud(56,'#fff',.85)}</div><div class="cl" style="left:16px;top:58px">${cloud(48,'#fff',.7)}</div>`;
+
+/* ---------- screens ---------- */
+const meBtn = `<div class="me-btn">${faceSvg(ME,44)}</div>`;
+const frame = (inner, label) => `<div><div class="phone"><div class="screen"><div class="island"></div><div class="status"><span>9:41</span>${statusIcons}</div>${inner}</div></div><div class="label">${label}</div></div>`;
+const tokenPill = (n) => `<div class="pill">${coin(24)}${n}</div>`;
+// The in-game header shows the player's name, not the app name
+const gameHead = `<div class="head"><div class="hl">${meBtn}<div><div class="uname">Roda</div><div class="sub">128 words guessed</div></div></div><div class="hr"><div class="lvl">${starI()}Lv 4</div>${tokenPill(TOKENS)}</div></div>`;
+// Rubber stamp: the noise turns the ink patchy, like a real stamp pressed by hand
+const STAMP_RED = '#e0303a';
+const stamp = (text) => `<svg class="stamp" viewBox="0 0 372 156">
+  <defs><filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="3" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4.5 0 0 0 -1.05" result="m"/>
+    <feComposite in="SourceGraphic" in2="m" operator="in"/>
+  </filter></defs>
+  <g filter="url(#ink)">
+    <rect x="7" y="7" width="358" height="142" rx="20" fill="none" stroke="${STAMP_RED}" stroke-width="8"/>
+    <rect x="20" y="20" width="332" height="116" rx="12" fill="none" stroke="${STAMP_RED}" stroke-width="3"/>
+    <text x="186" y="104" text-anchor="middle" textLength="296" lengthAdjust="spacingAndGlyphs" font-family="Fredoka" font-weight="700" font-size="74" fill="${STAMP_RED}">${text}</text>
+  </g></svg>`;
+const tokbar = `<div class="tokbar">${coin(18)}<span>Next token</span><div class="track"><div class="fill" style="width:60%"></div></div><span>3 / 5 words</span></div>`;
+
+function keyboard(state, extra=''){
+  const rows = ['ABCDEFG','HIJKLMN','OPQRSTU','VWXYZ'];
+  return `<div class="kb ${extra}">${rows.map((r,i)=>`<div class="kr">${[...r].map(c=>{
+      const st = state[c];
+      return `<div class="k ${st||''}">${st==='no'?xI():c}</div>`;
+    }).join('')}${i===3 && extra ? `<div class="k wide"><svg width="26" height="20" viewBox="0 0 26 20"><path d="M8 2h15a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8L1 10z" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 7l6 6M18 7l-6 6" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/></svg></div>` : ''}</div>`).join('')}</div>`;
+}
+
+// 1. Play
+// The Play scene is wider than the hanging scene, so crop it to the box
+const PLAY_VB = '-150 18 780 432';
+const play = frame(`
+  ${gameHead}
+  <div class="body">
+    <div class="scene">${sky(false)}${sceneSvg(ME, 3, PLAY_VB, 'slice')}</div>
+    <div class="misses"><div class="pips">${Array.from({length:10},(_,i)=>`<div class="pip ${i<3?'x':''}"></div>`).join('')}</div><div class="mtxt"><b>3</b> / 10 misses</div></div>
+    <div class="tiles">
+      <div class="tile clue">C<span class="spark">${spark(18)}</span></div><div class="tile ok">A</div><div class="tile h"></div><div class="tile h"></div><div class="tile h"></div><div class="tile ok">E</div>
+    </div>
+    <div class="desc">
+      <div class="bulb">${bulbI}</div>
+      <div style="min-width:0;overflow:hidden"><div class="chip">DESCRIPTION</div><div class="blur">A big stone home for a king</div></div>
+      <div class="unlock">${lockI(15,'#fff')}Unlock · 1 ${coin(18)}</div>
+    </div>
+    ${tokbar}
+    ${keyboard({C:'clue',A:'ok',E:'ok',R:'no',O:'no',I:'no'})}
+  </div>
+  ${tabs('play')}`, 'Play: description locked, unlock costs 1 token');
+
+// 2. Versus
+const versus = frame(`
+  <div class="head"><div class="back">${chev('l')}</div><div class="title">Online match</div>${tokenPill(TOKENS)}</div>
+  <div class="body">
+    <div class="match">
+      <div class="pl"><div class="av" style="background:${TINT[ME]};box-shadow:0 0 0 2.5px var(--coral)">${faceSvg(ME,56)}</div><span><i class="online"></i>Roda</span></div>
+      <div class="score"><span class="vs">VS</span><b>2 – 1</b><span>Round 4 · first to 4</span></div>
+      <div class="pl"><div class="av" style="background:${TINT.ember};box-shadow:0 0 0 2.5px var(--sky)">${faceSvg('ember',56)}</div><span><i class="online"></i>Alex</span></div>
+    </div>
+    <div class="bubble-row"><div class="av" style="background:${TINT[ME]};width:40px;height:40px">${faceSvg(ME,40,'joy')}</div><div class="bubble">Your turn! Pick a word for <em>Alex</em></div></div>
+    <div class="seg sm"><div>From the list</div><div class="on">Write my own</div></div>
+    <div class="typed">${[...'SUNFLOWER'].map(c=>`<div>${c}</div>`).join('')}<div class="caret"></div></div>
+    <div class="valid"><span>✓ Letters only</span><span>9 / 15 letters</span></div>
+    <div class="hint"><div class="bulb" style="background:var(--sky-l);width:36px;height:36px">${bulbI}</div><div><small>DESCRIPTION FOR ALEX</small>A tall yellow flower that turns to face the sun.</div></div>
+    ${keyboard({}, 'sm')}
+    <div class="btn sm">${planeI}Send word to Alex</div>
+  </div>
+  ${tabs('vs')}`, 'Versus: online two-player, take turns choosing words');
+
+// 3. Leaderboard
+const people = [
+  ['Sarah','bun',142],['Roda',ME,128,true],['Alex','ember',117],['Emma','ribbit',96],
+  ['Noah','coco',88],['Mia','lolo',75],['Lucas','rexy',64],['Chloe','bao',59]];
+const pcol = (i) => {
+  const [n,id,s,me] = people[i];
+  const h = [104,92,86][i];
+  const pose = i===0 ? {pose:'cheer',expr:'joy'} : {expr: me ? 'joy' : 'happy'};
+  return `<div class="pcol p${i+1}">${charSvg(id,h,pose)}
+    <div class="pblock"><div class="medal">${i+1}</div><div class="pn">${n}${me?'<span class="you">YOU</span>':''}</div><div class="ps">${s} <small>words</small></div></div></div>`;
+};
+const board = frame(`
+  <div class="head">${meBtn}<div class="title">Leaderboard</div>${tokenPill(TOKENS)}</div>
+  <div class="body">
+    <div class="seg"><div class="on">This week</div><div>All time</div></div>
+    <div class="podium-card">
+      <div class="cl" style="position:absolute;left:14px;top:14px">${cloud(60,'#fff',.9)}</div>
+      <div class="cl" style="position:absolute;right:18px;top:30px">${cloud(46,'#fff',.8)}</div>
+      <div style="position:absolute;left:150px;top:10px">${spark(16)}</div><div style="position:absolute;right:120px;top:8px">${spark(12,'#ff9fbf')}</div>
+      <div class="podium">${pcol(1)}${pcol(0)}${pcol(2)}</div>
+    </div>
+    <div class="lrows">
+    ${people.slice(3).map(([n,a,s],i)=>`
+      <div class="lrow">
+        <div class="rank">${i+4}</div>
+        <div class="av" style="background:${TINT[a]}">${faceSvg(a,44)}</div>
+        <div class="nm">${n}</div>
+        <div class="sc"><b>${s}</b><span>words</span></div>
+      </div>`).join('')}
+    </div>
+  </div>
+  ${tabs('board')}`, 'Leaderboard: top 3 on the podium, ranked by words guessed');
+
+// 4. Characters
+// [id, price in tokens (placeholder), state]; the player is browsing Ember
+const chars = [
+  ['mochi',0,'sel'],['bun',0,'own'],['coco',0,'own'],['ember',10],['bao',15],
+  ['ribbit',20],['lolo',25],['rexy',30],['biscuit',40],['button',50]];
+const VIEW = 'ember';
+const charsScreen = frame(`
+  <div class="head">${meBtn}<div class="title">Characters</div>${tokenPill(TOKENS)}</div>
+  <div class="body">
+    <div class="stage"><div class="rays"></div><div class="rug"></div>
+      <div class="arrow" style="left:10px">${chev('l')}</div><div class="arrow" style="right:10px">${chev('r')}</div>
+      <div style="position:absolute;left:84px;top:34px">${spark(20)}</div><div style="position:absolute;right:86px;top:60px">${spark(14,'#ff9fbf')}</div>
+      <div style="position:relative;margin-bottom:6px">${charSvg(VIEW,206,{pose:'cheer',expr:'joy'})}</div>
+    </div>
+    <div class="pinfo"><div><div class="nmb">${CH[VIEW].name}</div><div class="sp">${CH[VIEW].species} · locked</div></div><div class="tag">${lockI(15,'#d9a530')}10 ${coin(18)}</div></div>
+    <div class="grid">
+      ${chars.map(([id,p,st])=>`
+        <div class="cc ${id===VIEW?'view':''} ${p?'locked':''}" style="background:${TINT[id]}">
+          ${st==='sel'?`<div class="check">${checkI}</div>`:''}
+          ${p?`<div class="lock">${lockI(13)}</div>`:''}
+          ${charSvg(id,72)}
+          <div class="n">${CH[id].name}</div>
+          ${p?`<div class="price">${coin(14)}${p}</div>`:`<div class="owned">${st==='sel'?'Playing':'Owned'}</div>`}
+        </div>`).join('')}
+    </div>
+    <div class="btn" style="margin-top:16px">Unlock ${CH[VIEW].name} · 10 ${coin(24)}</div>
+  </div>
+  ${tabs('chars')}`, 'Characters: browse, then unlock with tokens');
+
+// 5. Profile
+const chevS = chev('r','#cdb9a7',15);
+const ico = {
+  globe:`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>`,
+  sound:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
+  music:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M9 17V5l11-2v12" stroke="#fff" stroke-width="2.4" fill="none" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="3" fill="#fff"/><circle cx="17.5" cy="15.5" r="3" fill="#fff"/></svg>`,
+  rules:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5z" fill="#fff"/><path d="M5 21.5A2.5 2.5 0 0 1 7.5 19H19v3H7.5" fill="none" stroke="#fff" stroke-width="1.8"/></svg>`,
+  privacy:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2l8 3.5v6c0 5-3.4 8.8-8 10.5-4.6-1.7-8-5.5-8-10.5v-6z" fill="#fff"/></svg>`,
+  terms:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z" fill="#fff"/><path d="M9 12h7M9 16h7" stroke="#4fb3e8" stroke-width="2" stroke-linecap="round"/></svg>`,
+  help:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-5 4v-4H4z" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  cam:`<svg width="16" height="16" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3v11H4z" fill="#fff"/><circle cx="12" cy="13" r="3.4" fill="#ff7b6b"/></svg>`,
+  camC:`<svg width="15" height="15" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3v11H4z" fill="#e85c4d"/><circle cx="12" cy="13" r="3.4" fill="#ffe5df"/></svg>`,
+  pen:`<svg width="17" height="17" viewBox="0 0 24 24"><path d="M4 20l1-4.5L15.5 5l3.5 3.5L8.5 19z" fill="#ffe5df" stroke="#e85c4d" stroke-width="2.4" stroke-linejoin="round"/></svg>`,
+};
+const item = (icon, bg, label, right) => `<div class="it"><div class="ic" style="background:${bg}">${ico[icon]}</div>${label}${right}</div>`;
+const profileScreen = frame(`
+  <div class="head"><div class="back">${chev('l')}</div><div class="title">Profile</div>${tokenPill(TOKENS)}</div>
+  <div class="body">
+    <div class="pf-card">
+      <div class="pf-av"><div class="in">${faceSvg(ME,80)}</div><div class="cam">${ico.cam}</div></div>
+      <div><small>PLAYER NAME</small><div class="pf-name">Roda ${ico.pen}</div><div class="pf-link">${ico.camC}Change photo</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat" style="background:var(--mint-l)"><b style="color:var(--mint-t)">128</b><span>words guessed</span></div>
+      <div class="stat" style="background:var(--butter-l)"><b style="color:var(--butter-t)">${coin(20)}${TOKENS}</b><span>tokens</span></div>
+      <div class="stat" style="background:var(--sky-l)"><b style="color:var(--sky-t)">${starI(18,'#3ea6ec')}4</b><span>level</span></div>
+    </div>
+    <div class="grp-t">SETTINGS</div>
+    <div class="grp">
+      ${item('globe','#6cc4ff','Language',`<span class="v">English ${chevS}</span>`)}
+      ${item('sound','#ff7b6b','Sound effects','<div class="tog"></div>')}
+      ${item('music','#ffc23d','Music','<div class="tog off"></div>')}
+    </div>
+    <div class="grp-t">INFO &amp; LEGAL</div>
+    <div class="grp">
+      ${item('rules','#5fd3a5','Game rules',`<span class="v">${chevS}</span>`)}
+      ${item('privacy','#7fb8f0','Privacy policy',`<span class="v">${chevS}</span>`)}
+      ${item('terms','#9ad3f3','Terms of use',`<span class="v">${chevS}</span>`)}
+      ${item('help','#ff8fb6','Contact &amp; support',`<span class="v">${chevS}</span>`)}
+    </div>
+    <div class="foot"><span>Hanged: word guessing game · v1.0.0</span><span class="del">Delete account</span></div>
+  </div>
+  ${tabs('play')}`, 'Profile: opened from the avatar at the top-left');
+
+// 6. Round lost: stage 10, input locked, full word shown
+const word = 'CASTLE', found = 'CAE';
+const lost = frame(`
+  ${gameHead}
+  <div class="body">
+    <div class="stamped"><div class="scene big sad">${sky(true)}${sceneSvg(ME, 10, '-60 18 600 432', 'slice')}</div>${stamp('HANGED !!')}</div>
+    <div class="over"><p>10 / 10 misses · the word was</p></div>
+    <div class="tiles">${[...word].map(c=>`<div class="tile ${found.includes(c)?'ok':'miss'}">${c}</div>`).join('')}</div>
+    <div class="reveal"><div class="bulb">${bulbI}</div><div><small>DESCRIPTION</small>A big stone home for a king.</div></div>
+    ${tokbar}
+    <div style="margin-top:auto"><div class="btn">Next word</div><div class="btn ghost" style="margin-bottom:2px">Change character</div></div>
+  </div>
+  ${tabs('play')}`, 'Round lost: full word revealed, input locked');
+
+document.getElementById('row').innerHTML = play + versus + board + charsScreen + profileScreen + lost;
+document.getElementById('h3').innerHTML = `${spark(22)}Hanging animation <small>one stage per wrong guess · same keyframes for every character</small>`;
+document.getElementById('stages').innerHTML = HangedAnim.STAGES.map((s,i)=>
+  `<div class="st ${i===10?'end':''}"><div class="sky ${i===10?'sad':''}">${sceneSvg(ME, i, '30 0 420 450')}</div><b>${i}</b><span>${s.label}</span></div>`).join('');
+
+// Page backdrop: soft clouds and sparkles behind the phones
+document.getElementById('deco').innerHTML = [
+  [40,24,cloud(180,'#fff',.9)],[560,6,cloud(120,'#fff',.7)],[1240,18,cloud(160,'#fff',.85)],[1980,4,cloud(130,'#fff',.7)],[2500,30,cloud(190,'#fff',.9)],
+  [20,620,cloud(90,'#fff',.6)],[2640,560,cloud(80,'#fff',.6)],
+  [470,40,spark(26)],[1080,30,spark(20,'#ff9fbf')],[1800,44,spark(24)],[2350,20,spark(18,'#7fd4b0')],[2690,260,spark(22,'#ff9fbf')],[14,380,spark(20,'#7fd4b0')],
+].map(([x,y,svg])=>`<div style="left:${x}px;top:${y}px">${svg}</div>`).join('');
+</script>
+</body>
+</html>

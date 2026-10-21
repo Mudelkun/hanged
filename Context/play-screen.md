@@ -1,0 +1,70 @@
+# The Play screen (and the round result)
+
+Route: [src/app/index.tsx](../src/app/index.tsx). It follows the **Play** and
+**Round lost** phones in [design/ui-mockup.png](../design/ui-mockup.png).
+Sizes, radii and colours are copied from the CSS in
+[design/ui-mockup.html](../design/ui-mockup.html), and the palette lives in
+[src/theme](../src/theme/index.ts). When the mockup changes, diff its CSS against
+these components.
+
+## Two layouts on one screen
+
+- **Playing**: header · scene · miss pips · word tiles · description card · "Next token" bar · keyboard · tab bar.
+- **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
+  "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
+  (always unlocked) · token bar · **Next word** · tab bar.
+
+When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
+1400 ms so the fall plays, won 700 ms so the last tile pops). Then the result
+appears and the stamp pops. Input is already locked during that delay because
+the engine refuses guesses. The "which round is showing its result" check is
+by `round.id`, so a round restored already finished opens straight on its result.
+
+On a loss, tiles the player found turn **mint**, and letters they missed turn
+**coral** (mockup). On a win, clue tiles stay butter and guessed ones are mint.
+
+## Components ([src/components](../src/components))
+
+| File | What |
+|---|---|
+| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N`, token pill. |
+| `HangingScene.tsx` | Scene card: sky, sun, drifting clouds, the animated character ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
+| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `DescriptionCard`, `TokenBar`, `BigButton`. |
+| `LetterKeyboard.tsx` | Letters only, A–Z in 4 rows (7/7/7/5). Used keys **stay in place** and change look: mint = correct, grey ✕ (sunk, no shadow) = wrong, butter = clue. Used keys and finished rounds can't be pressed. |
+| `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |
+| `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
+| `icons.tsx` | The mockup's SVG icons, copied verbatim as strings. |
+| `PaperBackground.tsx` | Cream paper with the 18 px dot grid. |
+
+## Sizing
+
+- Tiles: words over 8 letters wrap onto **two rows**, so a 15-letter word is 8 + 7
+  tiles about 36 pt wide. Tile width = what fits, capped at the mockup's 50.
+- Keys: width from the screen width (max 48), height 46.
+- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys 40 tall,
+  tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
+  (`flexGrow` between a minimum and the mockup's height), so every layout fits
+  without scrolling. Checked at 393×852 and 375×667.
+- Result scene max height is **340**, taller than the mockup's 282. The mockup also
+  has a "Change character" button there, which is left out until the Characters
+  page exists.
+
+## Deliberate differences from the mockup
+
+- **Blurred description**: the locked card shows a *placeholder* sentence drawn as
+  blurred text (transparent text + text shadow), **never the real hint**. That way
+  it can't be read from a screenshot or with accessibility tools.
+- **Stamp ink**: the mockup roughens the stamp with an `feTurbulence` filter, which
+  react-native-svg can't draw. The app knocks out a fixed set of specks with a mask instead.
+- **Not enough tokens**: the Unlock button turns beige. Pressing it shows "Not enough
+  tokens yet" in the card for 2 s. It never goes negative.
+- No sound yet: [src/feedback.ts](../src/feedback.ts) is the single hook for game
+  events (correct, wrong, won, lost, stamp, unlock). Haptics only for now; add sound
+  effects and music there.
+
+## UI text
+
+Every string is in [src/i18n/en.json](../src/i18n/en.json), read with `t(key, params)`
+([src/i18n/index.ts](../src/i18n/index.ts)). Never hard-code UI text in a component.
+Accessibility labels are translated too. A new language = a new JSON file with
+the same keys, registered in `TRANSLATIONS`.
