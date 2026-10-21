@@ -1,7 +1,7 @@
-import { STARTING_TOKENS, WORDS_PER_TOKEN } from '../config';
+import { MAX_STREAK_REWARD, STARTING_TOKENS } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { LEVELS, levelNumberFor } from '../levels';
-import { gameReducer, GameState, initialState } from '../progress';
+import { gameReducer, GameState, initialState, tokenReward } from '../progress';
 import { pickWord, WORDS } from '../words';
 
 const word = {
@@ -29,16 +29,11 @@ describe('scoring', () => {
     expect(s.wordsGuessed).toBe(1);
   });
 
-  it('awards 1 token for every WORDS_PER_TOKEN words guessed', () => {
-    let s = initialState();
-    for (let i = 0; i < WORDS_PER_TOKEN - 1; i++) s = winRound(s);
-    expect(s.tokens).toBe(STARTING_TOKENS);
-    expect(s.wordsTowardToken).toBe(WORDS_PER_TOKEN - 1);
-    s = winRound(s);
+  it('pays tokens on the winning guess, and the next round clears the badge', () => {
+    const s = winRound(initialState());
     expect(s.tokens).toBe(STARTING_TOKENS + 1);
-    expect(s.wordsTowardToken).toBe(0);
-    expect(s.lastTokenEarned).toBe(true);
-    expect(startRound(s).lastTokenEarned).toBe(false);
+    expect(s.lastTokensEarned).toBe(1);
+    expect(startRound(s).lastTokensEarned).toBe(0);
   });
 
   it('does not score a lost round', () => {
@@ -49,13 +44,50 @@ describe('scoring', () => {
     expect(s.wordsGuessed).toBe(0);
   });
 
-  it('pays out progress saved under an older, slower token rate', () => {
-    const saved = { ...initialState(), tokens: 5, wordsTowardToken: WORDS_PER_TOKEN * 3 - 1 };
+  it('pays out progress saved under the old "words per token" rate', () => {
+    const saved = { ...initialState(), tokens: 5, wordsTowardToken: 1, lastTokenEarned: true };
     const s = gameReducer(initialState(), { type: 'hydrate', state: saved });
-    expect(s.tokens).toBe(7);
-    expect(s.wordsTowardToken).toBe(WORDS_PER_TOKEN - 1);
-    const fresh = { ...initialState(), wordsTowardToken: WORDS_PER_TOKEN - 1 };
+    expect(s.tokens).toBe(6);
+    expect(s.lastTokensEarned).toBe(1);
+    expect('wordsTowardToken' in s || 'lastTokenEarned' in s).toBe(false);
+    const fresh = initialState();
     expect(gameReducer(initialState(), { type: 'hydrate', state: fresh })).toBe(fresh);
+  });
+});
+
+describe('win streak', () => {
+  function loseRound(s: GameState): GameState {
+    let state = startRound(s);
+    const wrong = decoyLetters(word.word).filter((c) => !usedLetters(state.round!).has(c));
+    for (const c of wrong.slice(0, state.round!.maxWrong)) state = gameReducer(state, { type: 'guess', letter: c });
+    return state;
+  }
+
+  it('pays 1, 2, 3… tokens for words guessed in a row', () => {
+    let s = initialState();
+    for (let n = 1; n <= 3; n++) {
+      const before = s.tokens;
+      s = winRound(s);
+      expect(s.streak).toBe(n);
+      expect(s.lastTokensEarned).toBe(n);
+      expect(s.tokens).toBe(before + n);
+    }
+  });
+
+  it('a lost round resets the streak, so the next win pays 1 again', () => {
+    let s = winRound(winRound(initialState()));
+    s = loseRound(s);
+    expect(roundStatus(s.round!)).toBe('lost');
+    expect(s.streak).toBe(0);
+    s = winRound(s);
+    expect(s.lastTokensEarned).toBe(1);
+  });
+
+  it('stops growing at MAX_STREAK_REWARD', () => {
+    expect(tokenReward(MAX_STREAK_REWARD + 5)).toBe(MAX_STREAK_REWARD);
+    const s = winRound({ ...initialState(), streak: MAX_STREAK_REWARD + 5 });
+    expect(s.streak).toBe(MAX_STREAK_REWARD + 6);
+    expect(s.lastTokensEarned).toBe(MAX_STREAK_REWARD);
   });
 });
 

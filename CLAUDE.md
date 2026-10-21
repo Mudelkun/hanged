@@ -115,7 +115,7 @@ A level's difficulty is set by:
 
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
-- **Earning**: the player gets **1 token for every word guessed correctly**.
+- **Earning**: every word guessed correctly pays tokens, and **words guessed in a row pay more**: the 1st win of a streak pays 1 token, the 2nd pays 2, the 3rd pays 3, and so on. Losing a round resets the streak, so the next win pays 1 again.
 - **Spending**: tokens are used for exactly two things:
   1. unlocking a word's description (1 token)
   2. unlocking characters (each character has a price in tokens)
@@ -197,6 +197,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 ## Open questions (ask the owner, don't guess)
 
 - **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost?
+- **Streak reward**: should it stop growing at some point? It's capped at 10 tokens per word for now (placeholder).
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level?
 - **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? Can the player drop back down after losing?
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?

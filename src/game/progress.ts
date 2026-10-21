@@ -8,9 +8,9 @@
 import {
   DEFAULT_LANGUAGE,
   DESCRIPTION_COST,
+  MAX_STREAK_REWARD,
   RECENT_WORDS_MEMORY,
   STARTING_TOKENS,
-  WORDS_PER_TOKEN,
 } from './config';
 import { createRound, guess, Round, roundStatus, unlockDescription } from './engine';
 import { levelFor } from './levels';
@@ -24,13 +24,13 @@ export interface GameState {
   language: string;
   /** Leaderboard score: words guessed. Spending tokens never lowers it. */
   wordsGuessed: number;
-  /** Progress toward the next token, 0..WORDS_PER_TOKEN-1. */
-  wordsTowardToken: number;
   tokens: number;
+  /** Words guessed in a row. A lost round resets it to 0. */
+  streak: number;
   recentWordIds: string[];
   round: Round | null;
-  /** Set on the winning guess that earned a token, cleared by the next round. */
-  lastTokenEarned: boolean;
+  /** Tokens paid by the winning guess (0 otherwise), cleared by the next round. */
+  lastTokensEarned: number;
 }
 
 export const initialState = (): GameState => ({
@@ -39,11 +39,11 @@ export const initialState = (): GameState => ({
   characterId: 'mochi',
   language: DEFAULT_LANGUAGE,
   wordsGuessed: 0,
-  wordsTowardToken: 0,
   tokens: STARTING_TOKENS,
+  streak: 0,
   recentWordIds: [],
   round: null,
-  lastTokenEarned: false,
+  lastTokensEarned: 0,
 });
 
 export type GameAction =
@@ -52,17 +52,24 @@ export type GameAction =
   | { type: 'guess'; letter: string }
   | { type: 'unlockDescription' };
 
+/** Tokens paid by the win that brings the streak to `streak`: 1, 2, 3… up to MAX_STREAK_REWARD. */
+export const tokenReward = (streak: number) => Math.min(streak, MAX_STREAK_REWARD);
+
+type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean };
+
 export const canUnlockDescription = (s: GameState) =>
   !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'hydrate': {
-      // A save from an older, slower token rate can hold more progress than
-      // one token needs: pay out whole tokens and keep the remainder.
       let s = action.state;
-      const paid = Math.floor(s.wordsTowardToken / WORDS_PER_TOKEN);
-      if (paid) s = { ...s, tokens: s.tokens + paid, wordsTowardToken: s.wordsTowardToken % WORDS_PER_TOKEN };
+      // A save from the old "N words per token" rate: its progress was worth a
+      // token per word at the last rate (1), so pay it out and drop the old fields.
+      if ('wordsTowardToken' in s || 'lastTokenEarned' in s) {
+        const { wordsTowardToken = 0, lastTokenEarned, ...rest } = s as LegacySave;
+        s = { ...rest, tokens: rest.tokens + wordsTowardToken, lastTokensEarned: lastTokenEarned ? 1 : 0 };
+      }
       // A round saved before hint words existed gets them from the word database.
       if (s.round && !s.round.hints) s = { ...s, round: { ...s.round, hints: wordById(s.round.wordId)?.hints ?? [] } };
       // A round saved before disabled keys existed keeps its full keyboard.
@@ -91,23 +98,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         0,
         RECENT_WORDS_MEMORY,
       );
-      return { ...state, round, recentWordIds, lastTokenEarned: false };
+      return { ...state, round, recentWordIds, lastTokensEarned: 0 };
     }
 
     case 'guess': {
       if (!state.round) return state;
       const round = guess(state.round, action.letter);
       if (round === state.round) return state;
-      if (roundStatus(round) !== 'won') return { ...state, round };
-      const toward = state.wordsTowardToken + 1;
-      const earned = toward >= WORDS_PER_TOKEN;
+      const status = roundStatus(round);
+      if (status === 'lost') return { ...state, round, streak: 0 };
+      if (status !== 'won') return { ...state, round };
+      const streak = state.streak + 1;
+      const earned = tokenReward(streak);
       return {
         ...state,
         round,
         wordsGuessed: state.wordsGuessed + 1,
-        wordsTowardToken: earned ? 0 : toward,
-        tokens: state.tokens + (earned ? 1 : 0),
-        lastTokenEarned: earned,
+        streak,
+        tokens: state.tokens + earned,
+        lastTokensEarned: earned,
       };
     }
 

@@ -9,26 +9,29 @@ Tests: [src/game/__tests__/progress.test.ts](../src/game/__tests__/progress.test
 ## Scoring happens inside the winning guess
 
 `gameReducer`'s `guess` case scores in the **same step** that makes the round
-`won`. It adds +1 to `wordsGuessed` and +1 to `wordsTowardToken`, and at `WORDS_PER_TOKEN` (1) it
-pays 1 token and resets to 0. A finished round ignores further guesses (the engine
+`won`. It adds +1 to `wordsGuessed` and to `streak`, and pays `tokenReward(streak)` tokens.
+The step that makes a round `lost` resets `streak` to 0. A finished round ignores further guesses (the engine
 returns the same round), so **a word can never be scored twice**. Don't move
 scoring into an effect or a "round over" screen. Re-renders and app restarts
 would then count it again.
 
 - **Score = `wordsGuessed`** (the leaderboard number). Spending tokens never lowers it.
-- **Tokens**: earned 1 per `WORDS_PER_TOKEN` (1) word, so every win shows "+1 token". Spent only on a description
-  (`DESCRIPTION_COST` = 1) and, later, on characters. `wordsTowardToken` is stored
-  on its own rather than derived from `wordsGuessed % WORDS_PER_TOKEN`. Later, if online words
-  count for the score but not for tokens (an open question), the two will diverge.
-- **Changing the rate**: `hydrate` pays out a save that holds more progress than
-  the current rate needs (it was 5 words, then 2, now 1): whole tokens go to the balance
-  and the remainder stays as progress. So a rate change never strands a player at
-  "4 / 2". The field and the rate stay so the rate can go back up later; while it is 1,
-  `wordsTowardToken` is always 0 and `TokenBar` renders nothing.
+- **Tokens: words in a row pay more.** The Nth win of a streak pays N tokens
+  (`tokenReward(streak)` = `min(streak, MAX_STREAK_REWARD)`), so 1, 2, 3… A lost round
+  resets `streak` to 0 and the next win pays 1 again. Nothing else breaks a streak: the round in
+  progress is saved, so restarting the app can't skip a word, and the description unlock doesn't count.
+  **`MAX_STREAK_REWARD` (10) is a PLACEHOLDER** cap so a long streak on easy words can't flood
+  the economy before character prices exist. `streak` is saved; an older save gets 0 from
+  `initialState()` when it loads.
+- Tokens are spent only on a description (`DESCRIPTION_COST` = 1) and, later, on characters.
+- **Old saves**: the "N words per token" rate (5, then 2, then 1) and its `wordsTowardToken`
+  field and "Next token" bar are gone, because a progress bar can't show payouts that vary.
+  `hydrate` pays a leftover `wordsTowardToken` as 1 token per word (the last rate), maps the old
+  boolean `lastTokenEarned` to `lastTokensEarned`, and drops both fields. Same key, no bump.
 - **Hint words are free**: they never touch tokens or the reducer. Which hint is showing
   is UI state in `HintPill` ([play-screen.md](play-screen.md)), not saved.
-- `lastTokenEarned` flags the win that paid a token (the result screen shows
-  "+1 token"). The next `newRound` clears it.
+- `lastTokensEarned` is what the winning guess paid (the result screen shows
+  "+N tokens"). The next `newRound` sets it back to 0.
 - `unlockDescription` is refused without enough tokens, when it's already unlocked,
   or once the round is over. The result screens always show the description for free.
 

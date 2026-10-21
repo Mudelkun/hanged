@@ -1,8 +1,8 @@
 /*
  * The Play screen. It shows one of two layouts for the current round:
- *   - playing: scene, misses, word, hint words, description, token bar, keyboard
+ *   - playing: scene, misses, word, hint words, description, keyboard
  *   - result (won or lost): bigger scene with the stamp, the full word,
- *     the description, token bar and "Next word" (mockup: Round lost)
+ *     the description and "Next word" (mockup: Round lost)
  * When the round ends, the play layout stays a moment so the last
  * animation (the fall, or the last tile popping) can be seen first.
  */
@@ -15,7 +15,7 @@ import { GameHeader } from '../components/GameHeader';
 import { HangingScene, PLAY_VIEWBOX, RESULT_VIEWBOX, Stamp } from '../components/HangingScene';
 import { LetterKeyboard } from '../components/LetterKeyboard';
 import { PaperBackground } from '../components/PaperBackground';
-import { BigButton, DescriptionCard, HintPill, MissesBar, TileLook, TokenBar, WordTiles } from '../components/RoundParts';
+import { BigButton, DescriptionCard, HintPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
 import { TabBar } from '../components/TabBar';
 import { DESCRIPTION_COST } from '../game/config';
 import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
@@ -84,8 +84,8 @@ export default function PlayScreen() {
             status={status === 'won' ? 'won' : 'lost'}
             characterName={character.name}
             character={character}
-            tokenProgress={state.wordsTowardToken}
-            tokenEarned={state.lastTokenEarned}
+            tokensEarned={state.lastTokensEarned}
+            streak={state.streak}
             available={available}
             compact={compact}
             onNext={startNextRound}
@@ -115,7 +115,6 @@ export default function PlayScreen() {
               onUnlock={onUnlock}
               compact={compact}
             />
-            <TokenBar progress={state.wordsTowardToken} />
             <View style={[styles.keyboardWrap, { paddingTop: compact ? 8 : 12 }]}>
               <LetterKeyboard
                 keyState={(c) => keyState(round, c)}
@@ -133,13 +132,13 @@ export default function PlayScreen() {
   );
 }
 
-function ResultView({ round, status, character, characterName, tokenProgress, tokenEarned, available, compact, onNext }: {
+function ResultView({ round, status, character, characterName, tokensEarned, streak, available, compact, onNext }: {
   round: Round;
   status: 'won' | 'lost';
   character: ReturnType<typeof characterById>;
   characterName: string;
-  tokenProgress: number;
-  tokenEarned: boolean;
+  tokensEarned: number;
+  streak: number;
   available: number;
   compact: boolean;
   onNext: () => void;
@@ -177,15 +176,17 @@ function ResultView({ round, status, character, characterName, tokenProgress, to
             ? t('result.won.line', { name: characterName, wrong, max: round.maxWrong })
             : t('result.lost.line', { wrong, max: round.maxWrong })}
         </Text>
-        {won && tokenEarned && (
+        {won && tokensEarned > 0 && (
           <View style={styles.earned}>
-            <Text style={styles.earnedText}>{t('result.tokenEarned')}</Text>
+            <Text style={styles.earnedText}>
+              {tokensEarned === 1 ? t('result.tokenEarned') : t('result.tokensEarned', { count: tokensEarned })}
+              {streak > 1 && ` · ${t('result.streak', { count: streak })}`}
+            </Text>
           </View>
         )}
       </View>
       <WordTiles letters={letters} available={available} compact={compact} />
       <DescriptionCard text={round.description} unlocked canAfford={null} compact={compact} />
-      <TokenBar progress={tokenProgress} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
       </View>

@@ -1,12 +1,12 @@
 /*
  * The pieces between the scene and the keyboard: miss pips, word tiles,
- * the hint pill, the description card and the "Next token" bar. Sizes and colours follow
- * design/ui-mockup.html (.misses, .tiles, .desc, .tokbar).
+ * the hint pill and the description card. Sizes and colours follow
+ * design/ui-mockup.html (.misses, .tiles, .desc).
  */
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { DESCRIPTION_COST, WORDS_PER_TOKEN } from '../game/config';
+import { DESCRIPTION_COST } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
 import { bulbXml, coinXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
@@ -223,30 +223,6 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
   );
 }
 
-// ---- next token ----
-
-/** Hidden when every word pays a token: there is no progress to show. */
-export const TokenBar = WORDS_PER_TOKEN > 1 ? TokenProgress : () => null;
-
-function TokenProgress({ progress }: { progress: number }) {
-  const [width] = useState(() => new Animated.Value(progress / WORDS_PER_TOKEN));
-  useEffect(() => {
-    Animated.timing(width, { toValue: progress / WORDS_PER_TOKEN, duration: 500, useNativeDriver: false }).start();
-  }, [progress, width]);
-  return (
-    <View style={styles.tokbar}>
-      <Icon xml={coinXml} size={18} />
-      <Text style={styles.tokText}>{t('tokens.next')}</Text>
-      <View style={styles.track}>
-        <Animated.View
-          style={[styles.fill, { width: width.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]}
-        />
-      </View>
-      <Text style={styles.tokText}>{t('tokens.progress', { count: progress, total: WORDS_PER_TOKEN })}</Text>
-    </View>
-  );
-}
-
 // ---- big button ----
 
 export function BigButton({ label, onPress, ghost }: { label: string; onPress: () => void; ghost?: boolean }) {
@@ -349,11 +325,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
   },
   unlockText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
-
-  tokbar: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 13, marginHorizontal: 4 },
-  tokText: { fontFamily: fonts.display600, fontSize: 13.5, color: colors.muted },
-  track: { flex: 1, height: 12, borderRadius: 7, backgroundColor: colors.track, overflow: 'hidden' },
-  fill: { height: '100%', backgroundColor: colors.butter, borderRadius: 7, borderBottomWidth: 3, borderBottomColor: '#f5c94a' },
 
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
