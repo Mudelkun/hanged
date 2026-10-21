@@ -31,7 +31,8 @@ happened.
 | Bought letters (owner's request, hardest level) | `buyLetters(r, count, rng)` reveals `count` random letters from `hiddenLetters(r)` into `boughtLetters`. `canBuyLetters` allows it once per round, while playing, and only if **more than `count`** distinct letters are hidden, so one always stays hidden (rule 4) and the player always gets all they paid for. Bought letters are in `usedLetters`, and `keyState` / `tileState` show them as `clue`. Price and which levels sell: [progression-and-tokens.md](progression-and-tokens.md). |
 | No repeat guesses | `guess()` returns the **same object** for a used letter, a clue letter, a non a–z character, or a finished round. Callers can compare by reference (`next === prev`) to know nothing happened. |
 | Lose at `maxWrong`, and input locks | `roundStatus` says `lost` exactly when `wrongCount >= maxWrong`; `guess()` refuses once status isn't `playing` (rule 9). |
-| Stage = `round(wrong × 10 / maxWrong)` (balloons popped) | `sceneStage`. With `maxWrong` 6 the stages go 0, 2, 3, 5, 7, 8, 10, so the last miss always lands on 10. |
+| Balloons: one per allowed miss, each miss pops exactly one | `balloonsGone` (out of 10: `10 − maxWrong + wrong`) and `balloonsLeft` (= misses left). |
+| Pose stage = `round(wrong × 10 / maxWrong)` | `sceneStage`. With `maxWrong` 6 the stages go 0, 2, 3, 5, 7, 8, 10, so the last miss always lands on 10. |
 
 ## The one conflict in the rules
 

@@ -188,6 +188,17 @@ export function roundStatus(r: Round): RoundStatus {
 export const sceneStage = (r: Round) =>
   Math.min(SCENE_STAGES, Math.round((wrongCount(r) * SCENE_STAGES) / r.maxWrong));
 
+/**
+ * Balloons gone from the full bunch of 10. A round starts with one balloon
+ * per allowed miss (the 10 − maxWrong others are never there), and every
+ * wrong guess pops exactly one, so the balloons left always match the misses left.
+ */
+export const balloonsGone = (r: Round) =>
+  Math.max(0, Math.min(SCENE_STAGES, SCENE_STAGES - r.maxWrong + wrongCount(r)));
+
+/** Balloons still up: the same as the misses the player has left. */
+export const balloonsLeft = (r: Round) => SCENE_STAGES - balloonsGone(r);
+
 export function keyState(r: Round, c: Letter): KeyState {
   if (isClue(r, c)) return 'clue';
   if (r.disabledLetters.includes(c)) return 'off';

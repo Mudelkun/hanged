@@ -7,6 +7,8 @@ import {
   disabledCount,
   guess,
   sceneStage,
+  balloonsGone,
+  balloonsLeft,
   hiddenLetters,
   keyState,
   pickClueLetters,
@@ -183,6 +185,25 @@ describe('win and loss', () => {
     const r = play(round('ab'), 'ab');
     expect(roundStatus(r)).toBe('won');
     expect(guess(r, 'z')).toBe(r);
+  });
+});
+
+describe('balloons', () => {
+  it('pops one balloon per wrong guess out of 10 at the default limit', () => {
+    const r = round('quiz');
+    expect(balloonsLeft(r)).toBe(10);
+    expect(balloonsGone(play(r, 'abc'))).toBe(3);
+    expect(balloonsLeft(play(r, 'abc'))).toBe(7);
+  });
+
+  it('starts with one balloon per allowed miss, so each miss still pops exactly one', () => {
+    const r = round('quiz', [], 6);
+    expect(balloonsLeft(r)).toBe(6);
+    expect(balloonsGone(r)).toBe(4);
+    expect(balloonsLeft(play(r, 'a'))).toBe(5);
+    const lost = play(r, 'abcdef');
+    expect(roundStatus(lost)).toBe('lost');
+    expect(balloonsLeft(lost)).toBe(0);
   });
 });
 

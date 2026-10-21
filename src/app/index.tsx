@@ -23,7 +23,7 @@ import { STREAK_SHOWN_FROM, StreakTakeover } from '../components/StreakTakeover'
 import { TabBar } from '../components/TabBar';
 import { useTokenOrigin } from '../components/TokenFlight';
 import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
-import { sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
+import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
 import { levelByNumber } from '../game/levels';
 import { lettersForSale } from '../game/progress';
 import { feedback } from '../feedback';
@@ -127,9 +127,10 @@ export default function PlayScreen() {
               key={round.id}
               character={character}
               stage={sceneStage(round)}
+              gone={balloonsGone(round)}
               mode="play"
               style={[styles.playScene, { minHeight: compact ? 96 : 130 }]}
-              accessibilityLabel={t('play.a11y.scene', { name: character.name, stage: sceneStage(round) })}
+              accessibilityLabel={t('play.a11y.scene', { name: character.name, left: balloonsLeft(round) })}
             />
             <MissesBar wrong={wrongCount(round)} max={round.maxWrong} />
             <WordTiles
@@ -230,6 +231,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         <GameScene
           character={character}
           stage={sceneStage(round)}
+          gone={balloonsGone(round)}
           mode={status}
           style={{ flex: 1 }}
           accessibilityLabel={won ? t('result.won.stamp') : t('result.lost.stamp')}

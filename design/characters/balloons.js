@@ -14,10 +14,19 @@
  * it keeps the API of hanging.js (STAGES, frame, scene, SCENE, DURATION) so
  * the app can swap one for the other.
  *
- * The app shows the scene through a camera (CAMERA, f.cam): a window 440
- * units tall that follows the character down, a little slower than it sinks,
- * so the character stays big in a short scene card. scene() also takes
- * { sky: false } (the app draws its own sky and sun) and { clouds: false }.
+ * The app shows the scene through a camera ({ camera: true }): a fixed
+ * viewBox 440 units tall, with the content moved up by f.cam, which follows
+ * the character down a little slower than it sinks, so the character stays
+ * big in a short scene card. scene() also takes { sky: false } (the app draws
+ * its own sky and sun) and { clouds: false }.
+ *
+ * Balloons are counted apart from the pose stage: frame()'s `gone` pair says
+ * how many balloons (in POP_ORDER) are gone before and after the step. A round
+ * with fewer allowed misses starts with fewer balloons, so each miss still
+ * pops exactly one; the pose stage is scaled to 0..10 as before.
+ *
+ * Frames are rebuilt ~30 times a second on a phone, so keep them light: one
+ * element per cloud, nothing drawn off camera, decimals cut to one place.
  *
  * Every forward step: the balloon swells and pops (the first POP of the
  * transition), then the character drops with a springy bounce. A stage can
@@ -33,7 +42,7 @@
   const PAW = 21; // shoulder -> paw, in character units (armShape in rig.js)
   const LAND_X = 200; // where the character hits the ground
   const HOP = 0.3; // share of the landing spent on the bounce after the first hit
-  const CAMERA = { x: -400, w: SCENE.w + 800, h: 440 }; // the app's window; the grass runs 400 past each side
+  const CAMERA = { x: -400, w: SCENE.w + 800, h: 440, top: -24 }; // the app's window; the grass runs 400 past each side
   const POP = 0.16; // share of a forward transition spent on the pop, before the drop
 
   const SKY = '#dff1ff';
@@ -70,7 +79,9 @@
     { label: 'Hmm…', expr: 'nervous', tx: 206, ty: alt(3), a: A({ armL: 20, head: 8 }), loop: 'float' },
     { label: 'Holds on tight', tx: 204, ty: alt(4), a: A({ armL: -24, head: 4 }) },
     { label: 'Sinking', expr: 'worried', tx: 200, ty: alt(5), a: A({ armL: 60 }), loop: 'kick' },
-    { label: 'Flaps to stay up', tx: 196, ty: alt(6), a: A({ armL: 100, head: -4 }), loop: 'flap' },
+    // armL stays under 100 (rig ARM_FRONT_AT) while flapping: crossing it moves the arm in front of the
+    // head, which changes the drawing's structure and makes the app remount it
+    { label: 'Flaps to stay up', tx: 196, ty: alt(6), a: A({ armL: 70, head: -4 }), loop: 'flap' },
     { label: 'Uh-oh', expr: 'scared', tx: 200, ty: alt(7), a: A({ armL: 125, head: 4 }), loop: 'panic' },
     { label: 'Two left', tx: 198, ty: alt(8), a: A({ armL: 135, head: -4 }) },
     { label: 'The last balloon', tx: 200, ty: alt(9), a: A({ armL: 150, armR: -150, head: 4 }), loop: 'cling' },
@@ -121,19 +132,21 @@
     fall: (p) => Math.pow(p, 2.4),
   };
 
-  // Camera top: follows the character down at 60% of its speed, from the sky to the ground
-  const camAt = (ty) => Math.max(0, Math.min(SCENE.h - CAMERA.h, (ty - alt(0)) * 0.6));
+  // Camera top: follows the character down at 70% of its speed, from a little above the
+  // bunch (room for the bounce when won) to the ground
+  const camAt = (ty) => Math.max(CAMERA.top, Math.min(SCENE.h - CAMERA.h, CAMERA.top + (ty - alt(0)) * 0.7));
 
   // Keyframes a transition passes through, each with the p at which it is reached
   function keysFor(from, to) {
     const S0 = STAGES[from], S1 = STAGES[to];
-    if (to === from + 1 && S1.beats) return [{ at: 0, k: S0 }, ...S1.beats];
+    if (to > from && S1.beats) return [{ at: 0, k: S0 }, ...S1.beats];
     if (to > from) return [{ at: 0, k: S0 }, { at: POP, k: S0 }, { at: 1, k: S1, ease: 'spring' }];
     return [{ at: 0, k: S0 }, { at: 1, k: S1 }];
   }
 
   // The pose at a point between stage `from` and stage `to` (p: 0..1), plus loops at time t.
-  function frame(from, to, p, t, loops = true) {
+  // gone: balloons gone before and after this step (defaults to the stages: 10 balloons, one per stage).
+  function frame(from, to, p, t, loops = true, gone = [from, to]) {
     const keys = keysFor(from, to);
     let i = 1;
     while (i < keys.length - 1 && p > keys[i].at) i++;
@@ -141,14 +154,14 @@
     const lp = clamp((p - keys[i - 1].at) / (keys[i].at - keys[i - 1].at || 1));
     const e = (EASE[keys[i].ease] || EASE.default)(lp);
     const f = {
-      from, to, p, t,
+      from, to, p, t, gone,
       expr: lp < (k1.exprAt || 0) ? k0.expr : k1.expr,
       tx: lerp(k0.tx, k1.tx, e),
       ty: lerp(k0.ty, k1.ty, e),
       rot: lerp(k0.rot, k1.rot, e),
       stars: clamp(lerp(k0.stars, k1.stars, e)),
       limp: !!k1.limp,
-      impact: k1.impact && to === from + 1 ? lp : -1, // 0..1 after hitting the ground, else -1
+      impact: k1.impact && to > from ? lp : -1, // 0..1 after hitting the ground, else -1
       a: {},
     };
     for (const k in k1.a) f.a[k] = lerp(k0.a[k], k1.a[k], e);
@@ -191,8 +204,7 @@
   function balloon(x, y, col, st, t) {
     const wob = st.shake ? Math.sin(t * 70) * 6 : 0;
     return `<g transform="translate(${x} ${y}) rotate(${wob}) scale(${st.scale})">` +
-      `<path d="M-5,${KNOT_Y} L0,27 L5,${KNOT_Y} Z" fill="${col}" stroke="${OUTLINE}" stroke-width="2.5" stroke-linejoin="round"/>` +
-      `<path d="${BALLOON}" fill="${col}" stroke="${OUTLINE}" stroke-width="${SW}"/>` +
+      `<path d="${BALLOON} M-5,${KNOT_Y} L0,27 L5,${KNOT_Y} Z" fill="${col}" stroke="${OUTLINE}" stroke-width="${SW}" stroke-linejoin="round"/>` +
       `<ellipse cx="-9" cy="-12" rx="4.5" ry="8" transform="rotate(28 -9 -12)" fill="#fff" opacity=".6"/>` +
       `</g>`;
   }
@@ -214,7 +226,7 @@
 
   // Present, popping (swell then burst), gone, or re-inflating when stepping back
   function balloonState(k, f) {
-    const was = k >= f.from, is = k >= f.to;
+    const was = k >= f.gone[0], is = k >= f.gone[1];
     if (was && is) return { scale: 1 };
     if (!was && !is) return null;
     if (!was) return { scale: EASE.default(f.p) };
@@ -236,17 +248,16 @@
 
   // ---- scenery ----
   let uid = 0;
-  const cloud = (x, y, sc) => {
-    const puffs = [[-22, 0, 14], [0, -10, 20], [22, -2, 15], [36, 6, 10], [-36, 6, 10]];
-    const shape = (extra) => puffs.map(([cx, cy, r]) => `<circle cx="${cx}" cy="${cy}" r="${r}" ${extra}/>`).join('') +
-      `<rect x="-46" y="4" width="92" height="12" rx="6" ${extra}/>`;
-    return `<g transform="translate(${x} ${y}) scale(${sc})">${shape('fill="#c9e2f5" stroke="#c9e2f5" stroke-width="6"')}${shape('fill="#fff"')}</g>`;
-  };
+  // One outlined path per cloud: puffs on top, a flat bottom
+  const CLOUD = 'M-44,16 A11,11 0 0 1 -36,-4 A15,15 0 0 1 -12,-14 A20,20 0 0 1 20,-12 A14,14 0 0 1 38,2 A9,9 0 0 1 40,16 Z';
+  const cloud = (x, y, sc) =>
+    `<path transform="translate(${x} ${y}) scale(${sc})" d="${CLOUD}" fill="#fff" stroke="#c9e2f5" stroke-width="3" stroke-linejoin="round"/>`;
   // x, y, scale, drift speed. Spread over the camera's width, so they also scroll past as it pans down.
   const CLOUDS = [[40, 70, 1, 6], [250, 150, 0.8, 4], [140, 300, 0.65, 3], [-250, 190, 0.9, 5],
     [560, 80, 0.75, 4], [620, 330, 0.7, 3], [-180, 400, 0.6, 4], [330, 440, 0.7, 5]];
-  const clouds = (t) =>
-    CLOUDS.map(([x, y, sc, v]) => cloud((((x + t * v - CAMERA.x) % CAMERA.w) + CAMERA.w) % CAMERA.w + CAMERA.x, y, sc)).join('');
+  const clouds = (t, [top, bottom]) =>
+    CLOUDS.filter(([, y]) => y + 30 > top && y - 30 < bottom)
+      .map(([x, y, sc, v]) => cloud((((x + t * v - CAMERA.x) % CAMERA.w) + CAMERA.w) % CAMERA.w + CAMERA.x, y, sc)).join('');
 
   function sky() {
     const id = `bsky${++uid}`;
@@ -287,7 +298,10 @@
     return [x - PAW * Math.sin(r), y + PAW * Math.cos(r)];
   }
 
-  function scene(c, f, { sky: withSky = true, clouds: withClouds = true } = {}) {
+  // Cut decimals to one place (and tiny values written as 1e-7 to 0): the phone parses every frame
+  const trim = (svg) => svg.replace(/-?\d+(\.\d+)?e-\d+/g, '0').replace(/(\.\d)\d+/g, '$1');
+
+  function scene(c, f, { sky: withSky = true, clouds: withClouds = true, camera = false } = {}) {
     const [px, py] = pawAt(f.a.armR);
     const t = f.t || 0;
     let strings = '', bunch = '';
@@ -316,11 +330,15 @@
       render(c, { bare: true, expr: f.expr, angles: f.a, over: f.stars > 0.01 ? dazed(f) : '' }) +
       `</g></g>`;
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SCENE.w} ${SCENE.h}" class="balloon-scene">` +
-      `<g transform="translate(0 ${f.shake.toFixed(2)})">` +
-      (withSky ? sky() : '') + (withClouds ? clouds(t) : '') + hills() + ground() + (f.stars > 0.01 ? cracks() : '') + character +
+    // What the view can see, in scene units: skip the rest
+    const view = camera ? [f.cam, f.cam + CAMERA.h] : [0, SCENE.h];
+    const box = camera ? `${CAMERA.x} 0 ${CAMERA.w} ${CAMERA.h}` : `0 0 ${SCENE.w} ${SCENE.h}`;
+    return trim(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${box}" class="balloon-scene">` +
+      `<g transform="translate(0 ${(camera ? -f.cam : 0) + f.shake})">` +
+      (withSky ? sky() : '') + (withClouds ? clouds(t, view) : '') +
+      (view[1] > GROUND - 60 ? hills() + ground() : '') + (f.stars > 0.01 ? cracks() : '') + character +
       (f.impact >= 0 && f.impact < 1 ? dust(f.impact) : '') +
-      `</g></svg>`;
+      `</g></svg>`);
   }
 
   const DURATION = 900; // ms per stage transition, unless the stage sets `dur`

@@ -7,8 +7,11 @@
  * second: when the stage changes it tweens between the two keyframes (the
  * pop, then the drop), and every stage has its own looping motion (bob,
  * kick, flap, panic...). Each frame is an SVG string drawn by <SvgXml>,
- * cheap to build and parse. The viewBox follows the frame's camera, which
- * pans down as the character sinks.
+ * kept light (see balloons.js). The scene pans down with the character
+ * inside the drawing; the viewBox itself never changes.
+ *
+ * The loop runs on a timer, not requestAnimationFrame: on React Native that
+ * is a setTimeout(0), so a rAF loop would keep the JS thread busy non-stop.
  */
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
@@ -23,10 +26,20 @@ export type SceneMode = 'play' | 'won' | 'lost';
 
 const FRAME_MS = 33;
 const { CAMERA } = BalloonAnim;
+const VIEWBOX = `${CAMERA.x} 0 ${CAMERA.w} ${CAMERA.h}`;
+
+/** The step being animated: pose stages and balloons gone, before and after. */
+interface Step {
+  from: number;
+  to: number;
+  goneFrom: number;
+  goneTo: number;
+  start: number;
+}
 
 // The winning pose: still floating under the balloons that are left, cheering and bouncing.
-function wonFrame(stage: number, t: number): Frame {
-  const f = BalloonAnim.frame(stage, stage, 1, t, false);
+function wonFrame(stage: number, gone: number, t: number): Frame {
+  const f = BalloonAnim.frame(stage, stage, 1, t, false, [gone, gone]);
   const cheer = HangedRig.POSES.cheer;
   return {
     ...f,
@@ -43,41 +56,48 @@ function wonFrame(stage: number, t: number): Frame {
   };
 }
 
-// One frame of the scene: the tween from stage `from` to `to` at p (0..1), plus the loops at time t.
-function sceneFrame(c: Character, mode: SceneMode, from: number, to: number, p: number, t: number) {
-  const f = mode === 'won' ? wonFrame(to, t) : BalloonAnim.frame(from, to, p, t);
-  return {
-    // The design scripts tag the root <svg> with a CSS class; React DOM rejects `class` on web.
-    // Lost keeps the grey native clouds of the sad sky instead of the scene's white ones.
-    xml: BalloonAnim.scene(c, f, { sky: false, clouds: mode !== 'lost' }).replace(' class="balloon-scene"', ''),
-    viewBox: `${CAMERA.x} ${f.cam.toFixed(1)} ${CAMERA.w} ${CAMERA.h}`,
-  };
+// react-native-svg on iOS keeps an attribute that a reused element no longer has: when a pop's
+// burst star (a path with a transform) went away, the next balloon's body path took its place,
+// kept its transform and was drawn far from the bunch (the browser was fine). So the drawing is
+// remounted whenever its structure changes (tags and attribute names, values aside); otherwise
+// React only updates values in place, which every platform gets right.
+function structureKey(xml: string) {
+  const shape = xml.replace(/="[^"]*"/g, '');
+  let h = 5381;
+  for (let i = 0; i < shape.length; i++) h = ((h << 5) + h + shape.charCodeAt(i)) | 0;
+  return h;
 }
 
-function AnimatedCharacter({ character, stage, mode }: { character: Character; stage: number; mode: SceneMode }) {
-  const tween = useRef({ from: stage, to: stage, start: 0 });
-  const [view, setView] = useState(() => sceneFrame(character, mode, stage, stage, 1, 0));
+// One frame of the scene: the step at p (0..1), plus the loops at time t.
+function sceneFrame(c: Character, mode: SceneMode, s: Step, p: number, t: number) {
+  const f = mode === 'won' ? wonFrame(s.to, s.goneTo, t) : BalloonAnim.frame(s.from, s.to, p, t, true, [s.goneFrom, s.goneTo]);
+  // The design scripts tag the root <svg> with a CSS class; React DOM rejects `class` on web.
+  // Lost keeps the grey native clouds of the sad sky instead of the scene's white ones.
+  const xml = BalloonAnim.scene(c, f, { sky: false, clouds: mode !== 'lost', camera: true }).replace(' class="balloon-scene"', '');
+  return { xml, key: structureKey(xml) };
+}
+
+function AnimatedCharacter({ character, stage, gone, mode }: { character: Character; stage: number; gone: number; mode: SceneMode }) {
+  const step = useRef<Step>({ from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 });
+  const [view, setView] = useState(() =>
+    sceneFrame(character, mode, { from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 }, 1, 0));
 
   useEffect(() => {
-    if (stage !== tween.current.to) tween.current = { from: tween.current.to, to: stage, start: performance.now() };
-  }, [stage]);
+    const s = step.current;
+    if (stage !== s.to || gone !== s.goneTo)
+      step.current = { from: s.to, to: stage, goneFrom: s.goneTo, goneTo: gone, start: performance.now() };
+  }, [stage, gone]);
 
   useEffect(() => {
     const t0 = performance.now();
-    let raf = 0;
-    let last = 0;
-    const tick = (now: number) => {
-      if (now - last >= FRAME_MS) {
-        last = now;
-        const { from, to, start } = tween.current;
-        const dur = BalloonAnim.STAGES[to].dur ?? BalloonAnim.DURATION;
-        const p = Math.min(1, Math.max(0, (now - start) / dur));
-        setView(sceneFrame(character, mode, from, to, p, (now - t0) / 1000));
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    const id = setInterval(() => {
+      const now = performance.now();
+      const s = step.current;
+      const dur = BalloonAnim.STAGES[s.to].dur ?? BalloonAnim.DURATION;
+      const p = Math.min(1, Math.max(0, (now - s.start) / dur));
+      setView(sceneFrame(character, mode, s, p, (now - t0) / 1000));
+    }, FRAME_MS);
+    return () => clearInterval(id);
   }, [character, mode]);
 
   // Fit the camera's height: crop the sides when the box is narrower than the window,
@@ -90,7 +110,7 @@ function AnimatedCharacter({ character, stage, mode }: { character: Character; s
 
   return (
     <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
-      <SvgXml xml={view.xml} width="100%" height="100%" viewBox={view.viewBox} preserveAspectRatio={`xMidYMax ${fit}`} />
+      <SvgXml key={view.key} xml={view.xml} width="100%" height="100%" viewBox={VIEWBOX} preserveAspectRatio={`xMidYMax ${fit}`} />
     </View>
   );
 }
@@ -154,17 +174,19 @@ function Sky({ sad }: { sad: boolean }) {
 interface Props {
   character: Character;
   stage: number;
+  /** Balloons gone out of 10 (balloonsGone): one pops per miss. */
+  gone: number;
   mode: SceneMode;
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
 }
 
-export function GameScene({ character, stage, mode, style, accessibilityLabel }: Props) {
+export function GameScene({ character, stage, gone, mode, style, accessibilityLabel }: Props) {
   return (
     <Raised shadowColor={colors.shadow} radius={28} outerStyle={style} style={styles.scene}>
       <View style={StyleSheet.absoluteFill} accessible accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
         <Sky sad={mode === 'lost'} />
-        <AnimatedCharacter character={character} stage={stage} mode={mode} />
+        <AnimatedCharacter character={character} stage={stage} gone={gone} mode={mode} />
       </View>
     </Raised>
   );

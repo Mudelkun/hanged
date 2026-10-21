@@ -13,7 +13,7 @@
   "tokens.notEnough": "Not enough tokens yet",
 
   "play.misses": "/ {max} misses",
-  "play.a11y.scene": "{name}, {stage} of 10 balloons popped",
+  "play.a11y.scene": "{name}, {left} balloons left",
   "play.a11y.tile.hidden": "hidden letter",
   "play.a11y.key": "Letter {letter}",
   "play.a11y.key.used": "Letter {letter}, already used",

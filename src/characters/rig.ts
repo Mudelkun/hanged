@@ -32,8 +32,6 @@ export interface Frame {
   expr: Expression;
   tx: number;
   ty: number;
-  /** Top of the camera window, in scene units. */
-  cam: number;
   a: Required<Angles>;
 }
 
@@ -51,10 +49,11 @@ interface HangedRigApi {
 interface BalloonAnimApi {
   STAGES: Stage[];
   DURATION: number;
-  /** The app's window on the scene: x and width are fixed, the top is Frame.cam. */
+  /** The app's window on the scene ({ camera: true } draws into this viewBox). */
   CAMERA: { x: number; w: number; h: number };
-  frame(from: number, to: number, p: number, t: number, loops?: boolean): Frame;
-  scene(c: Character, f: Frame, opts?: { sky?: boolean; clouds?: boolean }): string;
+  /** gone: balloons gone before and after the step (out of 10). */
+  frame(from: number, to: number, p: number, t: number, loops?: boolean, gone?: [number, number]): Frame;
+  scene(c: Character, f: Frame, opts?: { sky?: boolean; clouds?: boolean; camera?: boolean }): string;
 }
 
 const g = globalThis as unknown as { HangedRig: HangedRigApi; BalloonAnim: BalloonAnimApi };
