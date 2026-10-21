@@ -1,6 +1,6 @@
 /*
  * The Play screen. It shows one of two layouts for the current round:
- *   - playing: scene, misses, word, description, token bar, keyboard
+ *   - playing: scene, misses, word, hint words, description, token bar, keyboard
  *   - result (won or lost): bigger scene with the stamp, the full word,
  *     the description, token bar and "Next word" (mockup: Round lost)
  * When the round ends, the play layout stays a moment so the last
@@ -15,7 +15,7 @@ import { GameHeader } from '../components/GameHeader';
 import { HangingScene, PLAY_VIEWBOX, RESULT_VIEWBOX, Stamp } from '../components/HangingScene';
 import { LetterKeyboard } from '../components/LetterKeyboard';
 import { PaperBackground } from '../components/PaperBackground';
-import { BigButton, DescriptionCard, MissesBar, TileLook, TokenBar, WordTiles } from '../components/RoundParts';
+import { BigButton, DescriptionCard, HintPill, MissesBar, TileLook, TokenBar, WordTiles } from '../components/RoundParts';
 import { TabBar } from '../components/TabBar';
 import { DESCRIPTION_COST } from '../game/config';
 import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
@@ -107,6 +107,7 @@ export default function PlayScreen() {
               available={available}
               compact={compact}
             />
+            <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
             <DescriptionCard
               text={round.description}
               unlocked={round.descriptionUnlocked}

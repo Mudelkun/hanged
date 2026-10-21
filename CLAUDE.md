@@ -33,7 +33,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 |---|---|
 | The round rules in code: word validation, clues, guesses, win/loss, hanging stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
 | Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
-| The word database: `data/words.json`, how to add words, the checks, the PostgreSQL move | [Context/word-database.md](Context/word-database.md) |
+| The word database: `data/words.json`, how to add words and hint words, the checks, the PostgreSQL move | [Context/word-database.md](Context/word-database.md) |
 | How the app draws characters **from `design/characters/*.js`**, the animation loop, the won pose, scene cropping, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
 | The Play screen and the round result: layout, components, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
@@ -93,6 +93,12 @@ A level's difficulty is set by:
 
 - **Every word** has a short **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
 - The description is **always hidden** when a round starts. The player can unlock it by spending **one token** (see Tokens below). It never costs a wrong guess.
+
+### Hint words
+
+- **Every word** also has a short, limited list of **hint words** (2 to 4, each a single word, e.g. *castle* → king, tower, stone).
+- They're **free**, but hidden when a round starts: the player taps to show the first one, and each further tap **loops** to the next (back to the first after the last). They never cost a token or a wrong guess.
+- A hint word must not give letters away: it can't contain the word, and the word can't contain it.
 
 ### Keyboard
 
@@ -168,7 +174,7 @@ Names and photos are public content that players create, so the App Store expect
 
 ## Data the game needs (from the owner's notes)
 
-- **Words**: word, language, short description, plus whatever difficulty needs (length can be computed from the word).
+- **Words**: word, language, short description, hint words, plus whatever difficulty needs (length can be computed from the word).
 - **Players**: identity, name, profile picture (an image stored on the server), score (words guessed), progress toward the next token (out of 2 words), token balance, current level, and settings (language, sound, music). This is what feeds the leaderboard.
 - **Characters**: catalogue, token price, which characters the player has unlocked, and their current selection.
 

@@ -9,7 +9,7 @@ these components.
 
 ## Two layouts on one screen
 
-- **Playing**: header · scene · miss pips · word tiles · description card · "Next token" bar · keyboard · tab bar.
+- **Playing**: header · scene · miss pips · word tiles · hint pill · description card · "Next token" bar · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · token bar · **Next word** · tab bar.
@@ -29,7 +29,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 |---|---|
 | `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N`, token pill. |
 | `HangingScene.tsx` | Scene card: sky, sun, drifting clouds, the animated character ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
-| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `DescriptionCard`, `TokenBar`, `BigButton`. |
+| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `DescriptionCard`, `TokenBar`, `BigButton`. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue. Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
@@ -48,6 +48,19 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 - Result scene max height is **340**, taller than the mockup's 282. The mockup also
   has a "Change character" button there, which is left out until the Characters
   page exists.
+
+## Hint pill (not in the mockup)
+
+The free hint words (CLAUDE.md, Hint words). A white pill, 40 tall (36 compact), with a
+**sky blue** "HINT" chip and button. Sky means *free*, unlike coral (costs/actions),
+butter (tokens, clue letters) and mint (correct). Hidden it reads "Tap to show a free
+hint word" with an eye button. **The hint is not rendered until tapped.** Then it shows
+the word, `1 / 3` and a next arrow, and every tap anywhere on the pill loops to the next
+hint with a small pop. The index is component state, reset by a per-round `key`
+(`hint-<round.id>`; not `round.id`, which the scene already uses as a sibling key). It
+isn't saved, so a restart hides it again, which costs nothing. It's left off the result
+screen. A round with no hints renders nothing. Checked at 393×852 and 375×667: still
+no scrolling, the scene absorbs the height.
 
 ## Deliberate differences from the mockup
 

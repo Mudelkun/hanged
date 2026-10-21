@@ -4,7 +4,13 @@ import { LEVELS, levelNumberFor } from '../levels';
 import { gameReducer, GameState, initialState } from '../progress';
 import { pickWord, WORDS } from '../words';
 
-const word = { id: 'en-castle', word: 'castle', language: 'en', description: 'A big stone home for a king.' };
+const word = {
+  id: 'en-castle',
+  word: 'castle',
+  language: 'en',
+  description: 'A big stone home for a king.',
+  hints: ['king', 'tower', 'stone'],
+};
 
 const startRound = (s: GameState) => gameReducer(s, { type: 'newRound', word, roundId: 'r', rng: () => 0 });
 
@@ -49,6 +55,20 @@ describe('scoring', () => {
     expect(s.wordsTowardToken).toBe(1);
     const fresh = { ...initialState(), wordsTowardToken: WORDS_PER_TOKEN - 1 };
     expect(gameReducer(initialState(), { type: 'hydrate', state: fresh })).toBe(fresh);
+  });
+});
+
+describe('hint words', () => {
+  it('a new round carries the word hints, for free', () => {
+    const s = startRound(initialState());
+    expect(s.round!.hints).toEqual(word.hints);
+    expect(s.tokens).toBe(STARTING_TOKENS);
+  });
+
+  it('a round saved before hints existed gets them from the word database', () => {
+    const { hints, ...oldRound } = startRound(initialState()).round!;
+    const saved = { ...initialState(), round: oldRound as typeof oldRound & { hints: string[] } };
+    expect(gameReducer(initialState(), { type: 'hydrate', state: saved }).round!.hints).toEqual(hints);
   });
 });
 

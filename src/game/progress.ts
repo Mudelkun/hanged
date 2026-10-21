@@ -14,7 +14,7 @@ import {
 } from './config';
 import { createRound, guess, Round, roundStatus, unlockDescription } from './engine';
 import { levelFor } from './levels';
-import { pickWord, WordEntry } from './words';
+import { pickWord, wordById, WordEntry } from './words';
 
 export interface GameState {
   version: 1;
@@ -60,9 +60,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'hydrate': {
       // A save from an older, slower token rate can hold more progress than
       // one token needs: pay out whole tokens and keep the remainder.
-      const s = action.state;
+      let s = action.state;
       const paid = Math.floor(s.wordsTowardToken / WORDS_PER_TOKEN);
-      return paid ? { ...s, tokens: s.tokens + paid, wordsTowardToken: s.wordsTowardToken % WORDS_PER_TOKEN } : s;
+      if (paid) s = { ...s, tokens: s.tokens + paid, wordsTowardToken: s.wordsTowardToken % WORDS_PER_TOKEN };
+      // A round saved before hint words existed gets them from the word database.
+      if (s.round && !s.round.hints) s = { ...s, round: { ...s.round, hints: wordById(s.round.wordId)?.hints ?? [] } };
+      return s;
     }
 
     case 'newRound': {
@@ -74,6 +77,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           word: action.word.word,
           language: action.word.language,
           description: action.word.description,
+          hints: action.word.hints,
           level: level.level,
           clueRatio: level.clueRatio,
           maxWrong: level.maxWrong,

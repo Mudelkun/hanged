@@ -24,6 +24,8 @@ would then count it again.
   the current rate needs (it was 5 words, now 2): whole tokens go to the balance
   and the remainder stays as progress. So a rate change never strands a player at
   "4 / 2".
+- **Hint words are free**: they never touch tokens or the reducer. Which hint is showing
+  is UI state in `HintPill` ([play-screen.md](play-screen.md)), not saved.
 - `lastTokenEarned` flags the win that paid a token (the result screen shows
   "+1 token"). The next `newRound` clears it.
 - `unlockDescription` is refused without enough tokens, when it's already unlocked,
@@ -58,6 +60,8 @@ in **AsyncStorage**, key `hanged.game.v1`, written after every state change.
 `version: 1` is checked on load. A breaking shape change must bump the key or
 migrate, never silently reuse it. An unreadable save starts a fresh player.
 
+- A save from before hint words existed has rounds without `hints`. `hydrate` fills them
+  in from the word database (`wordById`), or `[]` if the word is gone. Same key, no bump.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.

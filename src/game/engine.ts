@@ -19,6 +19,8 @@ export interface Round {
   word: string;
   language: string;
   description: string;
+  /** One-word hints the player can show for free and loop through (UI only, never a rule). */
+  hints: string[];
   level: number;
   maxWrong: number;
   /** Letters revealed when the round starts. Their keys count as used. */
@@ -88,6 +90,7 @@ export interface NewRoundInput {
   word: string;
   language: string;
   description: string;
+  hints: readonly string[];
   level: number;
   clueRatio: number;
   maxWrong?: number;
@@ -102,6 +105,7 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     word: checked.word,
     language: input.language,
     description: input.description,
+    hints: [...input.hints],
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
     clueLetters: pickClueLetters(checked.word, input.clueRatio, rng),

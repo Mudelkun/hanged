@@ -3,7 +3,7 @@
 For now the database is a JSON file bundled with the app. It will move to PostgreSQL.
 
 - Data: [data/words.json](../data/words.json) (generated, don't hand-edit).
-- Source: [scripts/words-source.txt](../scripts/words-source.txt), one `word | description` per line.
+- Source: [scripts/words-source.txt](../scripts/words-source.txt), one `word | description | hint, hint, hint` per line.
 - Checker/builder: [scripts/check-words.js](../scripts/check-words.js).
 - Access: [src/game/words.ts](../src/game/words.ts), the **only** module that reads the
   file, so the PostgreSQL move touches one place.
@@ -11,7 +11,7 @@ For now the database is a JSON file bundled with the app. It will move to Postgr
 ## Shape
 
 ```json
-{ "id": "en-castle", "word": "castle", "language": "en", "description": "A big stone home for a king." }
+{ "id": "en-castle", "word": "castle", "language": "en", "description": "A big stone home for a king.", "hints": ["king", "tower", "stone"] }
 ```
 
 - `id` = `<language>-<word>`, stable. `recentWordIds` in the saved game refers to it,
@@ -19,6 +19,8 @@ For now the database is a JSON file bundled with the app. It will move to Postgr
 - `word` is lowercase a–z. Length isn't stored: it's computed (CLAUDE.md).
 - `language` is on **every** word from day one, even though the MVP is English only.
 - `description` is the hint the player can unlock for a token. It's required.
+- `hints` are the free one-word hints the player loops through (CLAUDE.md, Hint words).
+  2–4 per word, required. Every word has 3 today.
 
 ## Adding or changing words
 
@@ -30,6 +32,10 @@ The check fails on any word that:
 - isn't 1–15 lowercase a–z,
 - has fewer than **2 distinct letters**, so no clue would fit (see [game-engine.md](game-engine.md)),
 - has a missing description, or **a description that contains the word itself**,
+- has fewer than 2 or more than 4 hints, a duplicate hint, or a hint that isn't one
+  word of 2–12 letters a–z,
+- has a hint that **contains the word or is contained in it** ("sun" for "sunflower",
+  "hippo" for "hippopotamus"). Those give letters away,
 - has a duplicate id.
 
 It also prints how many words there are at each length. **Every level in
@@ -39,7 +45,7 @@ at 13–15 letters (4–6 each). Add long words before adding harder levels.
 
 ## Migrating to PostgreSQL (later)
 
-The table maps 1:1: `id text pk, word text, language text, description text`. Add
+The table maps 1:1: `id text pk, word text, language text, description text, hints text[]`. Add
 a check constraint for `^[a-z]{1,15}$`, plus whatever difficulty data the owner
 decides on. `pickWord`'s signature (level, language, recent ids) is what the query
 has to answer. The server must never send the word to a guesser in two-player mode

@@ -3,1140 +3,2090 @@
     "id": "en-cat",
     "word": "cat",
     "language": "en",
-    "description": "A small furry pet that purrs."
+    "description": "A small furry pet that purrs.",
+    "hints": [
+      "pet",
+      "meow",
+      "whiskers"
+    ]
   },
   {
     "id": "en-sun",
     "word": "sun",
     "language": "en",
-    "description": "The bright star that lights up our day."
+    "description": "The bright star that lights up our day.",
+    "hints": [
+      "hot",
+      "sky",
+      "bright"
+    ]
   },
   {
     "id": "en-owl",
     "word": "owl",
     "language": "en",
-    "description": "A bird that stays awake all night."
+    "description": "A bird that stays awake all night.",
+    "hints": [
+      "hoot",
+      "night",
+      "feathers"
+    ]
   },
   {
     "id": "en-map",
     "word": "map",
     "language": "en",
-    "description": "A drawing that shows you the way."
+    "description": "A drawing that shows you the way.",
+    "hints": [
+      "travel",
+      "paper",
+      "directions"
+    ]
   },
   {
     "id": "en-jam",
     "word": "jam",
     "language": "en",
-    "description": "Sweet fruit spread you put on toast."
+    "description": "Sweet fruit spread you put on toast.",
+    "hints": [
+      "toast",
+      "fruit",
+      "sweet"
+    ]
   },
   {
     "id": "en-fox",
     "word": "fox",
     "language": "en",
-    "description": "A clever wild animal with a bushy tail."
+    "description": "A clever wild animal with a bushy tail.",
+    "hints": [
+      "tail",
+      "clever",
+      "forest"
+    ]
   },
   {
     "id": "en-bee",
     "word": "bee",
     "language": "en",
-    "description": "A buzzing insect that makes honey."
+    "description": "A buzzing insect that makes honey.",
+    "hints": [
+      "honey",
+      "buzz",
+      "hive"
+    ]
   },
   {
     "id": "en-cup",
     "word": "cup",
     "language": "en",
-    "description": "You drink cocoa or tea from it."
+    "description": "You drink cocoa or tea from it.",
+    "hints": [
+      "drink",
+      "tea",
+      "mug"
+    ]
   },
   {
     "id": "en-hat",
     "word": "hat",
     "language": "en",
-    "description": "You wear it on top of your head."
+    "description": "You wear it on top of your head.",
+    "hints": [
+      "head",
+      "cap",
+      "wear"
+    ]
   },
   {
     "id": "en-pig",
     "word": "pig",
     "language": "en",
-    "description": "A pink farm animal that oinks."
+    "description": "A pink farm animal that oinks.",
+    "hints": [
+      "oink",
+      "farm",
+      "pink"
+    ]
   },
   {
     "id": "en-web",
     "word": "web",
     "language": "en",
-    "description": "A spider spins it to catch flies."
+    "description": "A spider spins it to catch flies.",
+    "hints": [
+      "spider",
+      "silk",
+      "sticky"
+    ]
   },
   {
     "id": "en-egg",
     "word": "egg",
     "language": "en",
-    "description": "A hen lays it, and you can fry it."
+    "description": "A hen lays it, and you can fry it.",
+    "hints": [
+      "hen",
+      "shell",
+      "yolk"
+    ]
   },
   {
     "id": "en-bus",
     "word": "bus",
     "language": "en",
-    "description": "A big vehicle that takes kids to school."
+    "description": "A big vehicle that takes kids to school.",
+    "hints": [
+      "school",
+      "wheels",
+      "ride"
+    ]
   },
   {
     "id": "en-pie",
     "word": "pie",
     "language": "en",
-    "description": "A baked dessert with a crust and a fruit filling."
+    "description": "A baked dessert with a crust and a fruit filling.",
+    "hints": [
+      "crust",
+      "dessert",
+      "oven"
+    ]
   },
   {
     "id": "en-frog",
     "word": "frog",
     "language": "en",
-    "description": "A green jumper that says ribbit."
+    "description": "A green jumper that says ribbit.",
+    "hints": [
+      "green",
+      "pond",
+      "hop"
+    ]
   },
   {
     "id": "en-cake",
     "word": "cake",
     "language": "en",
-    "description": "You blow out candles on it on your birthday."
+    "description": "You blow out candles on it on your birthday.",
+    "hints": [
+      "birthday",
+      "candles",
+      "frosting"
+    ]
   },
   {
     "id": "en-moon",
     "word": "moon",
     "language": "en",
-    "description": "It glows in the night sky."
+    "description": "It glows in the night sky.",
+    "hints": [
+      "night",
+      "crescent",
+      "space"
+    ]
   },
   {
     "id": "en-rain",
     "word": "rain",
     "language": "en",
-    "description": "Water drops falling from the clouds."
+    "description": "Water drops falling from the clouds.",
+    "hints": [
+      "wet",
+      "clouds",
+      "drops"
+    ]
   },
   {
     "id": "en-ship",
     "word": "ship",
     "language": "en",
-    "description": "A large boat that sails the sea."
+    "description": "A large boat that sails the sea.",
+    "hints": [
+      "sea",
+      "sail",
+      "captain"
+    ]
   },
   {
     "id": "en-nest",
     "word": "nest",
     "language": "en",
-    "description": "A bird's cozy home made of twigs."
+    "description": "A bird's cozy home made of twigs.",
+    "hints": [
+      "bird",
+      "twigs",
+      "eggs"
+    ]
   },
   {
     "id": "en-kite",
     "word": "kite",
     "language": "en",
-    "description": "It flies on a string on windy days."
+    "description": "It flies on a string on windy days.",
+    "hints": [
+      "wind",
+      "string",
+      "fly"
+    ]
   },
   {
     "id": "en-milk",
     "word": "milk",
     "language": "en",
-    "description": "A white drink that comes from cows."
+    "description": "A white drink that comes from cows.",
+    "hints": [
+      "cow",
+      "white",
+      "drink"
+    ]
   },
   {
     "id": "en-bell",
     "word": "bell",
     "language": "en",
-    "description": "It rings, ding dong!"
+    "description": "It rings, ding dong!",
+    "hints": [
+      "ring",
+      "ding",
+      "church"
+    ]
   },
   {
     "id": "en-star",
     "word": "star",
     "language": "en",
-    "description": "A tiny twinkling light in the night sky."
+    "description": "A tiny twinkling light in the night sky.",
+    "hints": [
+      "twinkle",
+      "sky",
+      "night"
+    ]
   },
   {
     "id": "en-lamp",
     "word": "lamp",
     "language": "en",
-    "description": "It lights up your desk at night."
+    "description": "It lights up your desk at night.",
+    "hints": [
+      "light",
+      "bulb",
+      "desk"
+    ]
   },
   {
     "id": "en-sock",
     "word": "sock",
     "language": "en",
-    "description": "You wear it on your foot inside a shoe."
+    "description": "You wear it on your foot inside a shoe.",
+    "hints": [
+      "foot",
+      "pair",
+      "shoe"
+    ]
   },
   {
     "id": "en-snow",
     "word": "snow",
     "language": "en",
-    "description": "Cold white flakes that fall in winter."
+    "description": "Cold white flakes that fall in winter.",
+    "hints": [
+      "cold",
+      "white",
+      "winter"
+    ]
   },
   {
     "id": "en-wolf",
     "word": "wolf",
     "language": "en",
-    "description": "A wild animal that howls at the moon."
+    "description": "A wild animal that howls at the moon.",
+    "hints": [
+      "howl",
+      "pack",
+      "wild"
+    ]
   },
   {
     "id": "en-duck",
     "word": "duck",
     "language": "en",
-    "description": "A bird that quacks and loves ponds."
+    "description": "A bird that quacks and loves ponds.",
+    "hints": [
+      "quack",
+      "pond",
+      "bird"
+    ]
   },
   {
     "id": "en-rose",
     "word": "rose",
     "language": "en",
-    "description": "A flower with thorns and a sweet smell."
+    "description": "A flower with thorns and a sweet smell.",
+    "hints": [
+      "flower",
+      "thorns",
+      "red"
+    ]
   },
   {
     "id": "en-gift",
     "word": "gift",
     "language": "en",
-    "description": "A present wrapped with a bow."
+    "description": "A present wrapped with a bow.",
+    "hints": [
+      "present",
+      "bow",
+      "surprise"
+    ]
   },
   {
     "id": "en-boat",
     "word": "boat",
     "language": "en",
-    "description": "It floats on water and carries people."
+    "description": "It floats on water and carries people.",
+    "hints": [
+      "water",
+      "sail",
+      "float"
+    ]
   },
   {
     "id": "en-leaf",
     "word": "leaf",
     "language": "en",
-    "description": "A green part of a tree that falls in autumn."
+    "description": "A green part of a tree that falls in autumn.",
+    "hints": [
+      "tree",
+      "green",
+      "autumn"
+    ]
   },
   {
     "id": "en-apple",
     "word": "apple",
     "language": "en",
-    "description": "A red or green fruit that keeps the doctor away."
+    "description": "A red or green fruit that keeps the doctor away.",
+    "hints": [
+      "fruit",
+      "red",
+      "tree"
+    ]
   },
   {
     "id": "en-beach",
     "word": "beach",
     "language": "en",
-    "description": "Sand, waves and sunshine by the sea."
+    "description": "Sand, waves and sunshine by the sea.",
+    "hints": [
+      "sand",
+      "waves",
+      "sea"
+    ]
   },
   {
     "id": "en-bread",
     "word": "bread",
     "language": "en",
-    "description": "Baked from flour, you make sandwiches with it."
+    "description": "Baked from flour, you make sandwiches with it.",
+    "hints": [
+      "toast",
+      "loaf",
+      "flour"
+    ]
   },
   {
     "id": "en-chair",
     "word": "chair",
     "language": "en",
-    "description": "You sit on it at the table."
+    "description": "You sit on it at the table.",
+    "hints": [
+      "sit",
+      "seat",
+      "table"
+    ]
   },
   {
     "id": "en-cloud",
     "word": "cloud",
     "language": "en",
-    "description": "A fluffy white shape floating in the sky."
+    "description": "A fluffy white shape floating in the sky.",
+    "hints": [
+      "sky",
+      "fluffy",
+      "rain"
+    ]
   },
   {
     "id": "en-dance",
     "word": "dance",
     "language": "en",
-    "description": "Moving your body to music."
+    "description": "Moving your body to music.",
+    "hints": [
+      "music",
+      "steps",
+      "party"
+    ]
   },
   {
     "id": "en-honey",
     "word": "honey",
     "language": "en",
-    "description": "Sweet and golden, made by bees."
+    "description": "Sweet and golden, made by bees.",
+    "hints": [
+      "bee",
+      "sweet",
+      "golden"
+    ]
   },
   {
     "id": "en-house",
     "word": "house",
     "language": "en",
-    "description": "A home where a family lives."
+    "description": "A home where a family lives.",
+    "hints": [
+      "home",
+      "roof",
+      "family"
+    ]
   },
   {
     "id": "en-lemon",
     "word": "lemon",
     "language": "en",
-    "description": "A sour yellow fruit."
+    "description": "A sour yellow fruit.",
+    "hints": [
+      "sour",
+      "yellow",
+      "citrus"
+    ]
   },
   {
     "id": "en-music",
     "word": "music",
     "language": "en",
-    "description": "Sounds and songs you listen to."
+    "description": "Sounds and songs you listen to.",
+    "hints": [
+      "song",
+      "sound",
+      "melody"
+    ]
   },
   {
     "id": "en-night",
     "word": "night",
     "language": "en",
-    "description": "The dark time when you sleep."
+    "description": "The dark time when you sleep.",
+    "hints": [
+      "dark",
+      "moon",
+      "sleep"
+    ]
   },
   {
     "id": "en-ocean",
     "word": "ocean",
     "language": "en",
-    "description": "A huge body of salty water."
+    "description": "A huge body of salty water.",
+    "hints": [
+      "sea",
+      "waves",
+      "salty"
+    ]
   },
   {
     "id": "en-pizza",
     "word": "pizza",
     "language": "en",
-    "description": "A round flat bread with cheese and toppings."
+    "description": "A round flat bread with cheese and toppings.",
+    "hints": [
+      "cheese",
+      "slice",
+      "oven"
+    ]
   },
   {
     "id": "en-queen",
     "word": "queen",
     "language": "en",
-    "description": "A royal woman who wears a crown."
+    "description": "A royal woman who wears a crown.",
+    "hints": [
+      "crown",
+      "royal",
+      "throne"
+    ]
   },
   {
     "id": "en-river",
     "word": "river",
     "language": "en",
-    "description": "Fresh water flowing to the sea."
+    "description": "Fresh water flowing to the sea.",
+    "hints": [
+      "water",
+      "flow",
+      "bank"
+    ]
   },
   {
     "id": "en-smile",
     "word": "smile",
     "language": "en",
-    "description": "What your face does when you are happy."
+    "description": "What your face does when you are happy.",
+    "hints": [
+      "happy",
+      "face",
+      "grin"
+    ]
   },
   {
     "id": "en-tiger",
     "word": "tiger",
     "language": "en",
-    "description": "A big striped wild cat."
+    "description": "A big striped wild cat.",
+    "hints": [
+      "stripes",
+      "cat",
+      "roar"
+    ]
   },
   {
     "id": "en-water",
     "word": "water",
     "language": "en",
-    "description": "You drink it when you are thirsty."
+    "description": "You drink it when you are thirsty.",
+    "hints": [
+      "drink",
+      "wet",
+      "splash"
+    ]
   },
   {
     "id": "en-zebra",
     "word": "zebra",
     "language": "en",
-    "description": "A horse-like animal with black and white stripes."
+    "description": "A horse-like animal with black and white stripes.",
+    "hints": [
+      "stripes",
+      "horse",
+      "safari"
+    ]
   },
   {
     "id": "en-ghost",
     "word": "ghost",
     "language": "en",
-    "description": "A spooky see-through spirit that says boo."
+    "description": "A spooky see-through spirit that says boo.",
+    "hints": [
+      "boo",
+      "spooky",
+      "spirit"
+    ]
   },
   {
     "id": "en-piano",
     "word": "piano",
     "language": "en",
-    "description": "An instrument with black and white keys."
+    "description": "An instrument with black and white keys.",
+    "hints": [
+      "keys",
+      "music",
+      "play"
+    ]
   },
   {
     "id": "en-candy",
     "word": "candy",
     "language": "en",
-    "description": "A sweet treat kids love."
+    "description": "A sweet treat kids love.",
+    "hints": [
+      "sweet",
+      "sugar",
+      "treat"
+    ]
   },
   {
     "id": "en-train",
     "word": "train",
     "language": "en",
-    "description": "It runs on tracks and goes choo choo."
+    "description": "It runs on tracks and goes choo choo.",
+    "hints": [
+      "tracks",
+      "station",
+      "choo"
+    ]
   },
   {
     "id": "en-clock",
     "word": "clock",
     "language": "en",
-    "description": "It tells you the time."
+    "description": "It tells you the time.",
+    "hints": [
+      "time",
+      "tick",
+      "hands"
+    ]
   },
   {
     "id": "en-grape",
     "word": "grape",
     "language": "en",
-    "description": "A small round fruit that grows in bunches."
+    "description": "A small round fruit that grows in bunches.",
+    "hints": [
+      "purple",
+      "vine",
+      "bunch"
+    ]
   },
   {
     "id": "en-castle",
     "word": "castle",
     "language": "en",
-    "description": "A big stone home for a king."
+    "description": "A big stone home for a king.",
+    "hints": [
+      "king",
+      "tower",
+      "stone"
+    ]
   },
   {
     "id": "en-garden",
     "word": "garden",
     "language": "en",
-    "description": "A place where flowers and vegetables grow."
+    "description": "A place where flowers and vegetables grow.",
+    "hints": [
+      "flowers",
+      "plants",
+      "grow"
+    ]
   },
   {
     "id": "en-rabbit",
     "word": "rabbit",
     "language": "en",
-    "description": "A fluffy animal with long ears that hops."
+    "description": "A fluffy animal with long ears that hops.",
+    "hints": [
+      "bunny",
+      "ears",
+      "hop"
+    ]
   },
   {
     "id": "en-pencil",
     "word": "pencil",
     "language": "en",
-    "description": "You write and draw with it, then erase."
+    "description": "You write and draw with it, then erase.",
+    "hints": [
+      "write",
+      "draw",
+      "eraser"
+    ]
   },
   {
     "id": "en-rocket",
     "word": "rocket",
     "language": "en",
-    "description": "It blasts off into space."
+    "description": "It blasts off into space.",
+    "hints": [
+      "space",
+      "launch",
+      "fire"
+    ]
   },
   {
     "id": "en-cookie",
     "word": "cookie",
     "language": "en",
-    "description": "A small sweet baked treat, often with chocolate chips."
+    "description": "A small sweet baked treat, often with chocolate chips.",
+    "hints": [
+      "chocolate",
+      "baked",
+      "crumbs"
+    ]
   },
   {
     "id": "en-island",
     "word": "island",
     "language": "en",
-    "description": "Land with water all around it."
+    "description": "Land with water all around it.",
+    "hints": [
+      "sea",
+      "beach",
+      "palm"
+    ]
   },
   {
     "id": "en-jungle",
     "word": "jungle",
     "language": "en",
-    "description": "A thick tropical forest full of animals."
+    "description": "A thick tropical forest full of animals.",
+    "hints": [
+      "trees",
+      "wild",
+      "monkeys"
+    ]
   },
   {
     "id": "en-kitten",
     "word": "kitten",
     "language": "en",
-    "description": "A baby cat."
+    "description": "A baby cat.",
+    "hints": [
+      "cat",
+      "baby",
+      "meow"
+    ]
   },
   {
     "id": "en-monkey",
     "word": "monkey",
     "language": "en",
-    "description": "An animal that swings from trees and loves bananas."
+    "description": "An animal that swings from trees and loves bananas.",
+    "hints": [
+      "banana",
+      "swing",
+      "tail"
+    ]
   },
   {
     "id": "en-orange",
     "word": "orange",
     "language": "en",
-    "description": "A round citrus fruit, also a color."
+    "description": "A round citrus fruit, also a color.",
+    "hints": [
+      "fruit",
+      "citrus",
+      "juice"
+    ]
   },
   {
     "id": "en-planet",
     "word": "planet",
     "language": "en",
-    "description": "Earth and Mars are both one of these."
+    "description": "Earth and Mars are both one of these.",
+    "hints": [
+      "space",
+      "earth",
+      "orbit"
+    ]
   },
   {
     "id": "en-school",
     "word": "school",
     "language": "en",
-    "description": "Where kids go to learn."
+    "description": "Where kids go to learn.",
+    "hints": [
+      "class",
+      "teacher",
+      "learn"
+    ]
   },
   {
     "id": "en-spider",
     "word": "spider",
     "language": "en",
-    "description": "It has eight legs and spins webs."
+    "description": "It has eight legs and spins webs.",
+    "hints": [
+      "web",
+      "legs",
+      "creepy"
+    ]
   },
   {
     "id": "en-turtle",
     "word": "turtle",
     "language": "en",
-    "description": "A slow animal that carries its shell."
+    "description": "A slow animal that carries its shell.",
+    "hints": [
+      "shell",
+      "slow",
+      "sea"
+    ]
   },
   {
     "id": "en-window",
     "word": "window",
     "language": "en",
-    "description": "You look outside through its glass."
+    "description": "You look outside through its glass.",
+    "hints": [
+      "glass",
+      "view",
+      "open"
+    ]
   },
   {
     "id": "en-winter",
     "word": "winter",
     "language": "en",
-    "description": "The coldest season of the year."
+    "description": "The coldest season of the year.",
+    "hints": [
+      "cold",
+      "snow",
+      "season"
+    ]
   },
   {
     "id": "en-bridge",
     "word": "bridge",
     "language": "en",
-    "description": "It lets you cross over a river."
+    "description": "It lets you cross over a river.",
+    "hints": [
+      "river",
+      "cross",
+      "road"
+    ]
   },
   {
     "id": "en-dragon",
     "word": "dragon",
     "language": "en",
-    "description": "A legendary beast that breathes fire."
+    "description": "A legendary beast that breathes fire.",
+    "hints": [
+      "fire",
+      "wings",
+      "scales"
+    ]
   },
   {
     "id": "en-flower",
     "word": "flower",
     "language": "en",
-    "description": "A colorful bloom that bees visit."
+    "description": "A colorful bloom that bees visit.",
+    "hints": [
+      "bloom",
+      "petals",
+      "garden"
+    ]
   },
   {
     "id": "en-guitar",
     "word": "guitar",
     "language": "en",
-    "description": "An instrument with six strings."
+    "description": "An instrument with six strings.",
+    "hints": [
+      "strings",
+      "music",
+      "strum"
+    ]
   },
   {
     "id": "en-puzzle",
     "word": "puzzle",
     "language": "en",
-    "description": "Pieces you fit together to make a picture."
+    "description": "Pieces you fit together to make a picture.",
+    "hints": [
+      "pieces",
+      "picture",
+      "solve"
+    ]
   },
   {
     "id": "en-butter",
     "word": "butter",
     "language": "en",
-    "description": "A yellow spread made from cream."
+    "description": "A yellow spread made from cream.",
+    "hints": [
+      "cream",
+      "yellow",
+      "toast"
+    ]
   },
   {
     "id": "en-carrot",
     "word": "carrot",
     "language": "en",
-    "description": "An orange vegetable that rabbits love."
+    "description": "An orange vegetable that rabbits love.",
+    "hints": [
+      "orange",
+      "vegetable",
+      "rabbit"
+    ]
   },
   {
     "id": "en-pirate",
     "word": "pirate",
     "language": "en",
-    "description": "A sailor who hunts for treasure."
+    "description": "A sailor who hunts for treasure.",
+    "hints": [
+      "ship",
+      "treasure",
+      "parrot"
+    ]
   },
   {
     "id": "en-balloon",
     "word": "balloon",
     "language": "en",
-    "description": "You fill it with air and it floats away."
+    "description": "You fill it with air and it floats away.",
+    "hints": [
+      "air",
+      "party",
+      "float"
+    ]
   },
   {
     "id": "en-blanket",
     "word": "blanket",
     "language": "en",
-    "description": "It keeps you warm in bed."
+    "description": "It keeps you warm in bed.",
+    "hints": [
+      "warm",
+      "bed",
+      "cozy"
+    ]
   },
   {
     "id": "en-chicken",
     "word": "chicken",
     "language": "en",
-    "description": "A farm bird that lays eggs."
+    "description": "A farm bird that lays eggs.",
+    "hints": [
+      "hen",
+      "eggs",
+      "cluck"
+    ]
   },
   {
     "id": "en-dolphin",
     "word": "dolphin",
     "language": "en",
-    "description": "A smart sea animal that clicks and jumps."
+    "description": "A smart sea animal that clicks and jumps.",
+    "hints": [
+      "sea",
+      "smart",
+      "jump"
+    ]
   },
   {
     "id": "en-giraffe",
     "word": "giraffe",
     "language": "en",
-    "description": "The animal with the longest neck."
+    "description": "The animal with the longest neck.",
+    "hints": [
+      "neck",
+      "tall",
+      "spots"
+    ]
   },
   {
     "id": "en-holiday",
     "word": "holiday",
     "language": "en",
-    "description": "A special day off to celebrate or travel."
+    "description": "A special day off to celebrate or travel.",
+    "hints": [
+      "vacation",
+      "travel",
+      "break"
+    ]
   },
   {
     "id": "en-lantern",
     "word": "lantern",
     "language": "en",
-    "description": "A lamp you can carry around."
+    "description": "A lamp you can carry around.",
+    "hints": [
+      "light",
+      "carry",
+      "glow"
+    ]
   },
   {
     "id": "en-library",
     "word": "library",
     "language": "en",
-    "description": "A building full of books to borrow."
+    "description": "A building full of books to borrow.",
+    "hints": [
+      "books",
+      "quiet",
+      "read"
+    ]
   },
   {
     "id": "en-monster",
     "word": "monster",
     "language": "en",
-    "description": "A scary creature from stories."
+    "description": "A scary creature from stories.",
+    "hints": [
+      "scary",
+      "creature",
+      "roar"
+    ]
   },
   {
     "id": "en-octopus",
     "word": "octopus",
     "language": "en",
-    "description": "A sea animal with eight arms."
+    "description": "A sea animal with eight arms.",
+    "hints": [
+      "tentacles",
+      "sea",
+      "ink"
+    ]
   },
   {
     "id": "en-pancake",
     "word": "pancake",
     "language": "en",
-    "description": "A flat breakfast treat with syrup on top."
+    "description": "A flat breakfast treat with syrup on top.",
+    "hints": [
+      "breakfast",
+      "syrup",
+      "flat"
+    ]
   },
   {
     "id": "en-penguin",
     "word": "penguin",
     "language": "en",
-    "description": "A black and white bird that cannot fly."
+    "description": "A black and white bird that cannot fly.",
+    "hints": [
+      "ice",
+      "waddle",
+      "bird"
+    ]
   },
   {
     "id": "en-rainbow",
     "word": "rainbow",
     "language": "en",
-    "description": "Colorful arc in the sky after rain."
+    "description": "Colorful arc in the sky after rain.",
+    "hints": [
+      "colors",
+      "arc",
+      "sky"
+    ]
   },
   {
     "id": "en-teacher",
     "word": "teacher",
     "language": "en",
-    "description": "The person who helps you learn at school."
+    "description": "The person who helps you learn at school.",
+    "hints": [
+      "school",
+      "class",
+      "lesson"
+    ]
   },
   {
     "id": "en-thunder",
     "word": "thunder",
     "language": "en",
-    "description": "The loud boom after lightning."
+    "description": "The loud boom after lightning.",
+    "hints": [
+      "storm",
+      "boom",
+      "loud"
+    ]
   },
   {
     "id": "en-unicorn",
     "word": "unicorn",
     "language": "en",
-    "description": "A magical horse with one horn."
+    "description": "A magical horse with one horn.",
+    "hints": [
+      "horn",
+      "magic",
+      "horse"
+    ]
   },
   {
     "id": "en-volcano",
     "word": "volcano",
     "language": "en",
-    "description": "A mountain that can erupt with lava."
+    "description": "A mountain that can erupt with lava.",
+    "hints": [
+      "lava",
+      "erupt",
+      "mountain"
+    ]
   },
   {
     "id": "en-kitchen",
     "word": "kitchen",
     "language": "en",
-    "description": "The room where meals are cooked."
+    "description": "The room where meals are cooked.",
+    "hints": [
+      "cook",
+      "oven",
+      "meals"
+    ]
   },
   {
     "id": "en-mermaid",
     "word": "mermaid",
     "language": "en",
-    "description": "Half girl, half fish, lives in the sea."
+    "description": "Half girl, half fish, lives in the sea.",
+    "hints": [
+      "tail",
+      "sea",
+      "fish"
+    ]
   },
   {
     "id": "en-popcorn",
     "word": "popcorn",
     "language": "en",
-    "description": "A snack you eat at the movies."
+    "description": "A snack you eat at the movies.",
+    "hints": [
+      "movies",
+      "snack",
+      "butter"
+    ]
   },
   {
     "id": "en-cupcake",
     "word": "cupcake",
     "language": "en",
-    "description": "A small cake with frosting on top."
+    "description": "A small cake with frosting on top.",
+    "hints": [
+      "frosting",
+      "small",
+      "sweet"
+    ]
   },
   {
     "id": "en-pumpkin",
     "word": "pumpkin",
     "language": "en",
-    "description": "A big orange vegetable carved at Halloween."
+    "description": "A big orange vegetable carved at Halloween.",
+    "hints": [
+      "orange",
+      "halloween",
+      "carve"
+    ]
   },
   {
     "id": "en-dinosaur",
     "word": "dinosaur",
     "language": "en",
-    "description": "A giant reptile that lived long ago."
+    "description": "A giant reptile that lived long ago.",
+    "hints": [
+      "fossil",
+      "reptile",
+      "extinct"
+    ]
   },
   {
     "id": "en-elephant",
     "word": "elephant",
     "language": "en",
-    "description": "A huge gray animal with a trunk."
+    "description": "A huge gray animal with a trunk.",
+    "hints": [
+      "trunk",
+      "gray",
+      "big"
+    ]
   },
   {
     "id": "en-sandwich",
     "word": "sandwich",
     "language": "en",
-    "description": "Food between two slices of bread."
+    "description": "Food between two slices of bread.",
+    "hints": [
+      "bread",
+      "lunch",
+      "filling"
+    ]
   },
   {
     "id": "en-umbrella",
     "word": "umbrella",
     "language": "en",
-    "description": "It keeps you dry when it rains."
+    "description": "It keeps you dry when it rains.",
+    "hints": [
+      "rain",
+      "dry",
+      "open"
+    ]
   },
   {
     "id": "en-mushroom",
     "word": "mushroom",
     "language": "en",
-    "description": "A little umbrella-shaped thing that grows in the forest."
+    "description": "A little umbrella-shaped thing that grows in the forest.",
+    "hints": [
+      "forest",
+      "cap",
+      "fungus"
+    ]
   },
   {
     "id": "en-treasure",
     "word": "treasure",
     "language": "en",
-    "description": "Gold and jewels hidden in a chest."
+    "description": "Gold and jewels hidden in a chest.",
+    "hints": [
+      "gold",
+      "chest",
+      "pirate"
+    ]
   },
   {
     "id": "en-birthday",
     "word": "birthday",
     "language": "en",
-    "description": "The day you were born, celebrated every year."
+    "description": "The day you were born, celebrated every year.",
+    "hints": [
+      "party",
+      "cake",
+      "candles"
+    ]
   },
   {
     "id": "en-kangaroo",
     "word": "kangaroo",
     "language": "en",
-    "description": "An animal that hops and carries its baby in a pouch."
+    "description": "An animal that hops and carries its baby in a pouch.",
+    "hints": [
+      "pouch",
+      "hop",
+      "australia"
+    ]
   },
   {
     "id": "en-airplane",
     "word": "airplane",
     "language": "en",
-    "description": "It flies people across the sky."
+    "description": "It flies people across the sky.",
+    "hints": [
+      "fly",
+      "wings",
+      "pilot"
+    ]
   },
   {
     "id": "en-football",
     "word": "football",
     "language": "en",
-    "description": "A sport where you kick a ball into a goal."
+    "description": "A sport where you kick a ball into a goal.",
+    "hints": [
+      "goal",
+      "kick",
+      "team"
+    ]
   },
   {
     "id": "en-mountain",
     "word": "mountain",
     "language": "en",
-    "description": "A very tall hill with a peak."
+    "description": "A very tall hill with a peak.",
+    "hints": [
+      "peak",
+      "tall",
+      "climb"
+    ]
   },
   {
     "id": "en-snowball",
     "word": "snowball",
     "language": "en",
-    "description": "A cold round thing you throw in winter."
+    "description": "A cold round thing you throw in winter.",
+    "hints": [
+      "throw",
+      "cold",
+      "winter"
+    ]
   },
   {
     "id": "en-hospital",
     "word": "hospital",
     "language": "en",
-    "description": "Where doctors and nurses help sick people."
+    "description": "Where doctors and nurses help sick people.",
+    "hints": [
+      "doctor",
+      "nurse",
+      "sick"
+    ]
   },
   {
     "id": "en-notebook",
     "word": "notebook",
     "language": "en",
-    "description": "Paper pages you write your lessons in."
+    "description": "Paper pages you write your lessons in.",
+    "hints": [
+      "paper",
+      "write",
+      "pages"
+    ]
   },
   {
     "id": "en-princess",
     "word": "princess",
     "language": "en",
-    "description": "The daughter of a king."
+    "description": "The daughter of a king.",
+    "hints": [
+      "crown",
+      "royal",
+      "castle"
+    ]
   },
   {
     "id": "en-squirrel",
     "word": "squirrel",
     "language": "en",
-    "description": "A small animal with a fluffy tail that collects nuts."
+    "description": "A small animal with a fluffy tail that collects nuts.",
+    "hints": [
+      "nuts",
+      "tail",
+      "tree"
+    ]
   },
   {
     "id": "en-starfish",
     "word": "starfish",
     "language": "en",
-    "description": "A sea creature shaped like a star."
+    "description": "A sea creature shaped like a star.",
+    "hints": [
+      "sea",
+      "arms",
+      "beach"
+    ]
   },
   {
     "id": "en-backpack",
     "word": "backpack",
     "language": "en",
-    "description": "A bag you carry on your back."
+    "description": "A bag you carry on your back.",
+    "hints": [
+      "bag",
+      "school",
+      "straps"
+    ]
   },
   {
     "id": "en-astronaut",
     "word": "astronaut",
     "language": "en",
-    "description": "A person who travels into space."
+    "description": "A person who travels into space.",
+    "hints": [
+      "space",
+      "rocket",
+      "moon"
+    ]
   },
   {
     "id": "en-butterfly",
     "word": "butterfly",
     "language": "en",
-    "description": "An insect with big colorful wings."
+    "description": "An insect with big colorful wings.",
+    "hints": [
+      "wings",
+      "colorful",
+      "insect"
+    ]
   },
   {
     "id": "en-chocolate",
     "word": "chocolate",
     "language": "en",
-    "description": "A sweet brown treat made from cocoa."
+    "description": "A sweet brown treat made from cocoa.",
+    "hints": [
+      "cocoa",
+      "sweet",
+      "brown"
+    ]
   },
   {
     "id": "en-crocodile",
     "word": "crocodile",
     "language": "en",
-    "description": "A big reptile with lots of sharp teeth."
+    "description": "A big reptile with lots of sharp teeth.",
+    "hints": [
+      "teeth",
+      "reptile",
+      "river"
+    ]
   },
   {
     "id": "en-hamburger",
     "word": "hamburger",
     "language": "en",
-    "description": "A meat patty in a round bun."
+    "description": "A meat patty in a round bun.",
+    "hints": [
+      "bun",
+      "meat",
+      "grill"
+    ]
   },
   {
     "id": "en-telescope",
     "word": "telescope",
     "language": "en",
-    "description": "You use it to look at faraway stars."
+    "description": "You use it to look at faraway stars.",
+    "hints": [
+      "stars",
+      "lens",
+      "look"
+    ]
   },
   {
     "id": "en-adventure",
     "word": "adventure",
     "language": "en",
-    "description": "An exciting journey full of surprises."
+    "description": "An exciting journey full of surprises.",
+    "hints": [
+      "journey",
+      "explore",
+      "quest"
+    ]
   },
   {
     "id": "en-sunflower",
     "word": "sunflower",
     "language": "en",
-    "description": "A tall yellow bloom that turns to face the sun."
+    "description": "A tall yellow bloom that turns to face the sun.",
+    "hints": [
+      "yellow",
+      "tall",
+      "seeds"
+    ]
   },
   {
     "id": "en-snowflake",
     "word": "snowflake",
     "language": "en",
-    "description": "Every one of these icy crystals is different."
+    "description": "Every one of these icy crystals is different.",
+    "hints": [
+      "ice",
+      "winter",
+      "crystal"
+    ]
   },
   {
     "id": "en-spaghetti",
     "word": "spaghetti",
     "language": "en",
-    "description": "Long thin pasta, often with tomato sauce."
+    "description": "Long thin pasta, often with tomato sauce.",
+    "hints": [
+      "pasta",
+      "noodles",
+      "italian"
+    ]
   },
   {
     "id": "en-pineapple",
     "word": "pineapple",
     "language": "en",
-    "description": "A spiky tropical fruit with a leafy top."
+    "description": "A spiky tropical fruit with a leafy top.",
+    "hints": [
+      "tropical",
+      "spiky",
+      "fruit"
+    ]
   },
   {
     "id": "en-detective",
     "word": "detective",
     "language": "en",
-    "description": "Someone who solves mysteries."
+    "description": "Someone who solves mysteries.",
+    "hints": [
+      "mystery",
+      "clues",
+      "solve"
+    ]
   },
   {
     "id": "en-lightning",
     "word": "lightning",
     "language": "en",
-    "description": "A bright flash in a stormy sky."
+    "description": "A bright flash in a stormy sky.",
+    "hints": [
+      "flash",
+      "storm",
+      "bolt"
+    ]
   },
   {
     "id": "en-scarecrow",
     "word": "scarecrow",
     "language": "en",
-    "description": "A straw figure that keeps birds off the field."
+    "description": "A straw figure that keeps birds off the field.",
+    "hints": [
+      "straw",
+      "field",
+      "farm"
+    ]
   },
   {
     "id": "en-alligator",
     "word": "alligator",
     "language": "en",
-    "description": "A big reptile that lives in swamps."
+    "description": "A big reptile that lives in swamps.",
+    "hints": [
+      "swamp",
+      "reptile",
+      "jaws"
+    ]
   },
   {
     "id": "en-blueberry",
     "word": "blueberry",
     "language": "en",
-    "description": "A tiny round blue fruit."
+    "description": "A tiny round blue fruit.",
+    "hints": [
+      "fruit",
+      "muffin",
+      "tiny"
+    ]
   },
   {
     "id": "en-waterfall",
     "word": "waterfall",
     "language": "en",
-    "description": "A river dropping over a cliff."
+    "description": "A river dropping over a cliff.",
+    "hints": [
+      "cliff",
+      "splash",
+      "river"
+    ]
   },
   {
     "id": "en-jellyfish",
     "word": "jellyfish",
     "language": "en",
-    "description": "A see-through sea creature that can sting."
+    "description": "A see-through sea creature that can sting.",
+    "hints": [
+      "sting",
+      "sea",
+      "wobbly"
+    ]
   },
   {
     "id": "en-fireworks",
     "word": "fireworks",
     "language": "en",
-    "description": "Colorful explosions in the night sky."
+    "description": "Colorful explosions in the night sky.",
+    "hints": [
+      "boom",
+      "sparkle",
+      "night"
+    ]
   },
   {
     "id": "en-chameleon",
     "word": "chameleon",
     "language": "en",
-    "description": "A lizard that changes color."
+    "description": "A lizard that changes color.",
+    "hints": [
+      "lizard",
+      "color",
+      "hide"
+    ]
   },
   {
     "id": "en-strawberry",
     "word": "strawberry",
     "language": "en",
-    "description": "A red fruit with seeds on the outside."
+    "description": "A red fruit with seeds on the outside.",
+    "hints": [
+      "red",
+      "seeds",
+      "fruit"
+    ]
   },
   {
     "id": "en-skateboard",
     "word": "skateboard",
     "language": "en",
-    "description": "A board with wheels you ride and do tricks on."
+    "description": "A board with wheels you ride and do tricks on.",
+    "hints": [
+      "wheels",
+      "tricks",
+      "ride"
+    ]
   },
   {
     "id": "en-motorcycle",
     "word": "motorcycle",
     "language": "en",
-    "description": "A two-wheeled vehicle with an engine."
+    "description": "A two-wheeled vehicle with an engine.",
+    "hints": [
+      "engine",
+      "wheels",
+      "helmet"
+    ]
   },
   {
     "id": "en-lighthouse",
     "word": "lighthouse",
     "language": "en",
-    "description": "A tower with a light that guides ships."
+    "description": "A tower with a light that guides ships.",
+    "hints": [
+      "tower",
+      "ships",
+      "coast"
+    ]
   },
   {
     "id": "en-toothbrush",
     "word": "toothbrush",
     "language": "en",
-    "description": "You clean your teeth with it."
+    "description": "You clean your teeth with it.",
+    "hints": [
+      "teeth",
+      "clean",
+      "paste"
+    ]
   },
   {
     "id": "en-watermelon",
     "word": "watermelon",
     "language": "en",
-    "description": "A big green fruit that is red inside."
+    "description": "A big green fruit that is red inside.",
+    "hints": [
+      "green",
+      "juicy",
+      "seeds"
+    ]
   },
   {
     "id": "en-helicopter",
     "word": "helicopter",
     "language": "en",
-    "description": "An aircraft with spinning blades on top."
+    "description": "An aircraft with spinning blades on top.",
+    "hints": [
+      "blades",
+      "fly",
+      "pilot"
+    ]
   },
   {
     "id": "en-playground",
     "word": "playground",
     "language": "en",
-    "description": "A place with swings and slides."
+    "description": "A place with swings and slides.",
+    "hints": [
+      "swings",
+      "slide",
+      "park"
+    ]
   },
   {
     "id": "en-basketball",
     "word": "basketball",
     "language": "en",
-    "description": "A sport where you shoot a ball through a hoop."
+    "description": "A sport where you shoot a ball through a hoop.",
+    "hints": [
+      "hoop",
+      "dribble",
+      "team"
+    ]
   },
   {
     "id": "en-friendship",
     "word": "friendship",
     "language": "en",
-    "description": "The bond between best pals."
+    "description": "The bond between best pals.",
+    "hints": [
+      "pals",
+      "trust",
+      "together"
+    ]
   },
   {
     "id": "en-trampoline",
     "word": "trampoline",
     "language": "en",
-    "description": "You bounce high on it."
+    "description": "You bounce high on it.",
+    "hints": [
+      "bounce",
+      "jump",
+      "high"
+    ]
   },
   {
     "id": "en-skyscraper",
     "word": "skyscraper",
     "language": "en",
-    "description": "A very tall city building."
+    "description": "A very tall city building.",
+    "hints": [
+      "tall",
+      "city",
+      "building"
+    ]
   },
   {
     "id": "en-caterpillar",
     "word": "caterpillar",
     "language": "en",
-    "description": "It turns into a butterfly one day."
+    "description": "It turns into a butterfly one day.",
+    "hints": [
+      "butterfly",
+      "crawl",
+      "leaf"
+    ]
   },
   {
     "id": "en-grasshopper",
     "word": "grasshopper",
     "language": "en",
-    "description": "A green insect that jumps and chirps."
+    "description": "A green insect that jumps and chirps.",
+    "hints": [
+      "jump",
+      "green",
+      "insect"
+    ]
   },
   {
     "id": "en-imagination",
     "word": "imagination",
     "language": "en",
-    "description": "The ability to dream up new ideas."
+    "description": "The ability to dream up new ideas.",
+    "hints": [
+      "dream",
+      "ideas",
+      "create"
+    ]
   },
   {
     "id": "en-marshmallow",
     "word": "marshmallow",
     "language": "en",
-    "description": "A soft sweet treat you toast on a campfire."
+    "description": "A soft sweet treat you toast on a campfire.",
+    "hints": [
+      "campfire",
+      "soft",
+      "toast"
+    ]
   },
   {
     "id": "en-thermometer",
     "word": "thermometer",
     "language": "en",
-    "description": "It tells you how hot or cold it is."
+    "description": "It tells you how hot or cold it is.",
+    "hints": [
+      "hot",
+      "cold",
+      "fever"
+    ]
   },
   {
     "id": "en-firefighter",
     "word": "firefighter",
     "language": "en",
-    "description": "A hero who puts out fires."
+    "description": "A hero who puts out fires.",
+    "hints": [
+      "hero",
+      "hose",
+      "truck"
+    ]
   },
   {
     "id": "en-celebration",
     "word": "celebration",
     "language": "en",
-    "description": "A happy party for a special occasion."
+    "description": "A happy party for a special occasion.",
+    "hints": [
+      "party",
+      "cheer",
+      "fun"
+    ]
   },
   {
     "id": "en-electricity",
     "word": "electricity",
     "language": "en",
-    "description": "The power that makes lamps light up."
+    "description": "The power that makes lamps light up.",
+    "hints": [
+      "power",
+      "plug",
+      "spark"
+    ]
   },
   {
     "id": "en-wheelbarrow",
     "word": "wheelbarrow",
     "language": "en",
-    "description": "A cart with one wheel you push in the garden."
+    "description": "A cart with one wheel you push in the garden.",
+    "hints": [
+      "garden",
+      "push",
+      "cart"
+    ]
   },
   {
     "id": "en-hummingbird",
     "word": "hummingbird",
     "language": "en",
-    "description": "A tiny bird that hovers and beats its wings very fast."
+    "description": "A tiny bird that hovers and beats its wings very fast.",
+    "hints": [
+      "tiny",
+      "hover",
+      "nectar"
+    ]
   },
   {
     "id": "en-thunderstorm",
     "word": "thunderstorm",
     "language": "en",
-    "description": "Rain, lightning and loud booms all at once."
+    "description": "Rain, lightning and loud booms all at once.",
+    "hints": [
+      "rain",
+      "lightning",
+      "boom"
+    ]
   },
   {
     "id": "en-refrigerator",
     "word": "refrigerator",
     "language": "en",
-    "description": "A cold box in the kitchen that keeps food fresh."
+    "description": "A cold box in the kitchen that keeps food fresh.",
+    "hints": [
+      "cold",
+      "food",
+      "kitchen"
+    ]
   },
   {
     "id": "en-kindergarten",
     "word": "kindergarten",
     "language": "en",
-    "description": "The first year of school for little kids."
+    "description": "The first year of school for little kids.",
+    "hints": [
+      "kids",
+      "class",
+      "play"
+    ]
   },
   {
     "id": "en-butterscotch",
     "word": "butterscotch",
     "language": "en",
-    "description": "A sweet candy made from brown sugar and butter."
+    "description": "A sweet candy made from brown sugar and butter.",
+    "hints": [
+      "candy",
+      "caramel",
+      "sweet"
+    ]
   },
   {
     "id": "en-photographer",
     "word": "photographer",
     "language": "en",
-    "description": "A person who takes pictures."
+    "description": "A person who takes pictures.",
+    "hints": [
+      "camera",
+      "pictures",
+      "flash"
+    ]
   },
   {
     "id": "en-construction",
     "word": "construction",
     "language": "en",
-    "description": "Building houses and roads."
+    "description": "Building houses and roads.",
+    "hints": [
+      "build",
+      "crane",
+      "workers"
+    ]
   },
   {
     "id": "en-grandparents",
     "word": "grandparents",
     "language": "en",
-    "description": "Your mom's or dad's parents."
+    "description": "Your mom's or dad's parents.",
+    "hints": [
+      "family",
+      "elders",
+      "love"
+    ]
   },
   {
     "id": "en-encyclopedia",
     "word": "encyclopedia",
     "language": "en",
-    "description": "A big book full of facts about everything."
+    "description": "A big book full of facts about everything.",
+    "hints": [
+      "facts",
+      "book",
+      "knowledge"
+    ]
   },
   {
     "id": "en-hippopotamus",
     "word": "hippopotamus",
     "language": "en",
-    "description": "A huge animal that loves to sit in rivers."
+    "description": "A huge animal that loves to sit in rivers.",
+    "hints": [
+      "river",
+      "huge",
+      "africa"
+    ]
   },
   {
     "id": "en-kaleidoscope",
     "word": "kaleidoscope",
     "language": "en",
-    "description": "A tube that shows changing colorful patterns."
+    "description": "A tube that shows changing colorful patterns.",
+    "hints": [
+      "patterns",
+      "colors",
+      "tube"
+    ]
   },
   {
     "id": "en-rollercoaster",
     "word": "rollercoaster",
     "language": "en",
-    "description": "A fast ride with loops and drops."
+    "description": "A fast ride with loops and drops.",
+    "hints": [
+      "ride",
+      "loops",
+      "thrill"
+    ]
   },
   {
     "id": "en-extraordinary",
     "word": "extraordinary",
     "language": "en",
-    "description": "Very special and amazing."
+    "description": "Very special and amazing.",
+    "hints": [
+      "amazing",
+      "special",
+      "unusual"
+    ]
   },
   {
     "id": "en-grandchildren",
     "word": "grandchildren",
     "language": "en",
-    "description": "The kids of your kids."
+    "description": "The kids of your kids.",
+    "hints": [
+      "family",
+      "kids",
+      "young"
+    ]
   },
   {
     "id": "en-entertainment",
     "word": "entertainment",
     "language": "en",
-    "description": "Shows, games and fun things to watch."
+    "description": "Shows, games and fun things to watch.",
+    "hints": [
+      "fun",
+      "shows",
+      "games"
+    ]
   },
   {
     "id": "en-tyrannosaurus",
     "word": "tyrannosaurus",
     "language": "en",
-    "description": "A famous dinosaur with tiny arms."
+    "description": "A famous dinosaur with tiny arms.",
+    "hints": [
+      "dinosaur",
+      "rex",
+      "teeth"
+    ]
   },
   {
     "id": "en-hallucination",
     "word": "hallucination",
     "language": "en",
-    "description": "Seeing something that is not really there."
+    "description": "Seeing something that is not really there.",
+    "hints": [
+      "dream",
+      "illusion",
+      "imaginary"
+    ]
   },
   {
     "id": "en-photosynthesis",
     "word": "photosynthesis",
     "language": "en",
-    "description": "How plants turn sunlight into food."
+    "description": "How plants turn sunlight into food.",
+    "hints": [
+      "plants",
+      "sunlight",
+      "leaves"
+    ]
   },
   {
     "id": "en-paleontologist",
     "word": "paleontologist",
     "language": "en",
-    "description": "A scientist who digs up dinosaur bones."
+    "description": "A scientist who digs up dinosaur bones.",
+    "hints": [
+      "fossils",
+      "bones",
+      "scientist"
+    ]
   },
   {
     "id": "en-transformation",
     "word": "transformation",
     "language": "en",
-    "description": "A big change from one thing into another."
+    "description": "A big change from one thing into another.",
+    "hints": [
+      "change",
+      "morph",
+      "become"
+    ]
   },
   {
     "id": "en-constellations",
     "word": "constellations",
     "language": "en",
-    "description": "Groups of stars that make pictures in the sky."
+    "description": "Groups of stars that make pictures in the sky.",
+    "hints": [
+      "stars",
+      "sky",
+      "patterns"
+    ]
   },
   {
     "id": "en-procrastination",
     "word": "procrastination",
     "language": "en",
-    "description": "Putting things off until later."
+    "description": "Putting things off until later.",
+    "hints": [
+      "delay",
+      "later",
+      "lazy"
+    ]
   },
   {
     "id": "en-kindheartedness",
     "word": "kindheartedness",
     "language": "en",
-    "description": "Being gentle and caring toward others."
+    "description": "Being gentle and caring toward others.",
+    "hints": [
+      "caring",
+      "gentle",
+      "warm"
+    ]
   },
   {
     "id": "en-troubleshooting",
     "word": "troubleshooting",
     "language": "en",
-    "description": "Finding and fixing what went wrong."
+    "description": "Finding and fixing what went wrong.",
+    "hints": [
+      "fix",
+      "problem",
+      "repair"
+    ]
   },
   {
     "id": "en-personification",
     "word": "personification",
     "language": "en",
-    "description": "Giving human traits to things that are not human."
+    "description": "Giving human traits to things that are not human.",
+    "hints": [
+      "human",
+      "poetry",
+      "figurative"
+    ]
   },
   {
     "id": "en-characteristics",
     "word": "characteristics",
     "language": "en",
-    "description": "The features that make something what it is."
+    "description": "The features that make something what it is.",
+    "hints": [
+      "traits",
+      "features",
+      "qualities"
+    ]
   }
 ]

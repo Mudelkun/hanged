@@ -1,195 +1,197 @@
-# Source for data/words.json (English). One word per line: word | description
+# Source for data/words.json (English). One word per line: word | description | hint, hint, hint
 # Run `npm run check:words -- --build` to regenerate data/words.json from this file.
 # Rules: a–z only, 1–15 letters, at least 2 distinct letters (so a clue AND a hidden letter both exist),
 # and the description must not contain the word.
+# Hints: 2 to 4 single words (a–z), shown for free one at a time. A hint must not contain the word,
+# and the word must not contain a hint (e.g. "sun" for "sunflower" gives letters away).
 
-cat | A small furry pet that purrs.
-sun | The bright star that lights up our day.
-owl | A bird that stays awake all night.
-map | A drawing that shows you the way.
-jam | Sweet fruit spread you put on toast.
-fox | A clever wild animal with a bushy tail.
-bee | A buzzing insect that makes honey.
-cup | You drink cocoa or tea from it.
-hat | You wear it on top of your head.
-pig | A pink farm animal that oinks.
-web | A spider spins it to catch flies.
-egg | A hen lays it, and you can fry it.
-bus | A big vehicle that takes kids to school.
-pie | A baked dessert with a crust and a fruit filling.
-frog | A green jumper that says ribbit.
-cake | You blow out candles on it on your birthday.
-moon | It glows in the night sky.
-rain | Water drops falling from the clouds.
-ship | A large boat that sails the sea.
-nest | A bird's cozy home made of twigs.
-kite | It flies on a string on windy days.
-milk | A white drink that comes from cows.
-bell | It rings, ding dong!
-star | A tiny twinkling light in the night sky.
-lamp | It lights up your desk at night.
-sock | You wear it on your foot inside a shoe.
-snow | Cold white flakes that fall in winter.
-wolf | A wild animal that howls at the moon.
-duck | A bird that quacks and loves ponds.
-rose | A flower with thorns and a sweet smell.
-gift | A present wrapped with a bow.
-boat | It floats on water and carries people.
-leaf | A green part of a tree that falls in autumn.
-apple | A red or green fruit that keeps the doctor away.
-beach | Sand, waves and sunshine by the sea.
-bread | Baked from flour, you make sandwiches with it.
-chair | You sit on it at the table.
-cloud | A fluffy white shape floating in the sky.
-dance | Moving your body to music.
-honey | Sweet and golden, made by bees.
-house | A home where a family lives.
-lemon | A sour yellow fruit.
-music | Sounds and songs you listen to.
-night | The dark time when you sleep.
-ocean | A huge body of salty water.
-pizza | A round flat bread with cheese and toppings.
-queen | A royal woman who wears a crown.
-river | Fresh water flowing to the sea.
-smile | What your face does when you are happy.
-tiger | A big striped wild cat.
-water | You drink it when you are thirsty.
-zebra | A horse-like animal with black and white stripes.
-ghost | A spooky see-through spirit that says boo.
-piano | An instrument with black and white keys.
-candy | A sweet treat kids love.
-train | It runs on tracks and goes choo choo.
-clock | It tells you the time.
-grape | A small round fruit that grows in bunches.
-castle | A big stone home for a king.
-garden | A place where flowers and vegetables grow.
-rabbit | A fluffy animal with long ears that hops.
-pencil | You write and draw with it, then erase.
-rocket | It blasts off into space.
-cookie | A small sweet baked treat, often with chocolate chips.
-island | Land with water all around it.
-jungle | A thick tropical forest full of animals.
-kitten | A baby cat.
-monkey | An animal that swings from trees and loves bananas.
-orange | A round citrus fruit, also a color.
-planet | Earth and Mars are both one of these.
-school | Where kids go to learn.
-spider | It has eight legs and spins webs.
-turtle | A slow animal that carries its shell.
-window | You look outside through its glass.
-winter | The coldest season of the year.
-bridge | It lets you cross over a river.
-dragon | A legendary beast that breathes fire.
-flower | A colorful bloom that bees visit.
-guitar | An instrument with six strings.
-puzzle | Pieces you fit together to make a picture.
-butter | A yellow spread made from cream.
-carrot | An orange vegetable that rabbits love.
-pirate | A sailor who hunts for treasure.
-balloon | You fill it with air and it floats away.
-blanket | It keeps you warm in bed.
-chicken | A farm bird that lays eggs.
-dolphin | A smart sea animal that clicks and jumps.
-giraffe | The animal with the longest neck.
-holiday | A special day off to celebrate or travel.
-lantern | A lamp you can carry around.
-library | A building full of books to borrow.
-monster | A scary creature from stories.
-octopus | A sea animal with eight arms.
-pancake | A flat breakfast treat with syrup on top.
-penguin | A black and white bird that cannot fly.
-rainbow | Colorful arc in the sky after rain.
-teacher | The person who helps you learn at school.
-thunder | The loud boom after lightning.
-unicorn | A magical horse with one horn.
-volcano | A mountain that can erupt with lava.
-kitchen | The room where meals are cooked.
-mermaid | Half girl, half fish, lives in the sea.
-popcorn | A snack you eat at the movies.
-cupcake | A small cake with frosting on top.
-pumpkin | A big orange vegetable carved at Halloween.
-dinosaur | A giant reptile that lived long ago.
-elephant | A huge gray animal with a trunk.
-sandwich | Food between two slices of bread.
-umbrella | It keeps you dry when it rains.
-mushroom | A little umbrella-shaped thing that grows in the forest.
-treasure | Gold and jewels hidden in a chest.
-birthday | The day you were born, celebrated every year.
-kangaroo | An animal that hops and carries its baby in a pouch.
-airplane | It flies people across the sky.
-football | A sport where you kick a ball into a goal.
-mountain | A very tall hill with a peak.
-snowball | A cold round thing you throw in winter.
-hospital | Where doctors and nurses help sick people.
-notebook | Paper pages you write your lessons in.
-princess | The daughter of a king.
-squirrel | A small animal with a fluffy tail that collects nuts.
-starfish | A sea creature shaped like a star.
-backpack | A bag you carry on your back.
-astronaut | A person who travels into space.
-butterfly | An insect with big colorful wings.
-chocolate | A sweet brown treat made from cocoa.
-crocodile | A big reptile with lots of sharp teeth.
-hamburger | A meat patty in a round bun.
-telescope | You use it to look at faraway stars.
-adventure | An exciting journey full of surprises.
-sunflower | A tall yellow bloom that turns to face the sun.
-snowflake | Every one of these icy crystals is different.
-spaghetti | Long thin pasta, often with tomato sauce.
-pineapple | A spiky tropical fruit with a leafy top.
-detective | Someone who solves mysteries.
-lightning | A bright flash in a stormy sky.
-scarecrow | A straw figure that keeps birds off the field.
-alligator | A big reptile that lives in swamps.
-blueberry | A tiny round blue fruit.
-waterfall | A river dropping over a cliff.
-jellyfish | A see-through sea creature that can sting.
-fireworks | Colorful explosions in the night sky.
-chameleon | A lizard that changes color.
-strawberry | A red fruit with seeds on the outside.
-skateboard | A board with wheels you ride and do tricks on.
-motorcycle | A two-wheeled vehicle with an engine.
-lighthouse | A tower with a light that guides ships.
-toothbrush | You clean your teeth with it.
-watermelon | A big green fruit that is red inside.
-helicopter | An aircraft with spinning blades on top.
-playground | A place with swings and slides.
-basketball | A sport where you shoot a ball through a hoop.
-friendship | The bond between best pals.
-trampoline | You bounce high on it.
-skyscraper | A very tall city building.
-caterpillar | It turns into a butterfly one day.
-grasshopper | A green insect that jumps and chirps.
-imagination | The ability to dream up new ideas.
-marshmallow | A soft sweet treat you toast on a campfire.
-thermometer | It tells you how hot or cold it is.
-firefighter | A hero who puts out fires.
-celebration | A happy party for a special occasion.
-electricity | The power that makes lamps light up.
-wheelbarrow | A cart with one wheel you push in the garden.
-hummingbird | A tiny bird that hovers and beats its wings very fast.
-thunderstorm | Rain, lightning and loud booms all at once.
-refrigerator | A cold box in the kitchen that keeps food fresh.
-kindergarten | The first year of school for little kids.
-butterscotch | A sweet candy made from brown sugar and butter.
-photographer | A person who takes pictures.
-construction | Building houses and roads.
-grandparents | Your mom's or dad's parents.
-encyclopedia | A big book full of facts about everything.
-hippopotamus | A huge animal that loves to sit in rivers.
-kaleidoscope | A tube that shows changing colorful patterns.
-rollercoaster | A fast ride with loops and drops.
-extraordinary | Very special and amazing.
-grandchildren | The kids of your kids.
-entertainment | Shows, games and fun things to watch.
-tyrannosaurus | A famous dinosaur with tiny arms.
-hallucination | Seeing something that is not really there.
-photosynthesis | How plants turn sunlight into food.
-paleontologist | A scientist who digs up dinosaur bones.
-transformation | A big change from one thing into another.
-constellations | Groups of stars that make pictures in the sky.
-procrastination | Putting things off until later.
-kindheartedness | Being gentle and caring toward others.
-troubleshooting | Finding and fixing what went wrong.
-personification | Giving human traits to things that are not human.
-characteristics | The features that make something what it is.
+cat | A small furry pet that purrs. | pet, meow, whiskers
+sun | The bright star that lights up our day. | hot, sky, bright
+owl | A bird that stays awake all night. | hoot, night, feathers
+map | A drawing that shows you the way. | travel, paper, directions
+jam | Sweet fruit spread you put on toast. | toast, fruit, sweet
+fox | A clever wild animal with a bushy tail. | tail, clever, forest
+bee | A buzzing insect that makes honey. | honey, buzz, hive
+cup | You drink cocoa or tea from it. | drink, tea, mug
+hat | You wear it on top of your head. | head, cap, wear
+pig | A pink farm animal that oinks. | oink, farm, pink
+web | A spider spins it to catch flies. | spider, silk, sticky
+egg | A hen lays it, and you can fry it. | hen, shell, yolk
+bus | A big vehicle that takes kids to school. | school, wheels, ride
+pie | A baked dessert with a crust and a fruit filling. | crust, dessert, oven
+frog | A green jumper that says ribbit. | green, pond, hop
+cake | You blow out candles on it on your birthday. | birthday, candles, frosting
+moon | It glows in the night sky. | night, crescent, space
+rain | Water drops falling from the clouds. | wet, clouds, drops
+ship | A large boat that sails the sea. | sea, sail, captain
+nest | A bird's cozy home made of twigs. | bird, twigs, eggs
+kite | It flies on a string on windy days. | wind, string, fly
+milk | A white drink that comes from cows. | cow, white, drink
+bell | It rings, ding dong! | ring, ding, church
+star | A tiny twinkling light in the night sky. | twinkle, sky, night
+lamp | It lights up your desk at night. | light, bulb, desk
+sock | You wear it on your foot inside a shoe. | foot, pair, shoe
+snow | Cold white flakes that fall in winter. | cold, white, winter
+wolf | A wild animal that howls at the moon. | howl, pack, wild
+duck | A bird that quacks and loves ponds. | quack, pond, bird
+rose | A flower with thorns and a sweet smell. | flower, thorns, red
+gift | A present wrapped with a bow. | present, bow, surprise
+boat | It floats on water and carries people. | water, sail, float
+leaf | A green part of a tree that falls in autumn. | tree, green, autumn
+apple | A red or green fruit that keeps the doctor away. | fruit, red, tree
+beach | Sand, waves and sunshine by the sea. | sand, waves, sea
+bread | Baked from flour, you make sandwiches with it. | toast, loaf, flour
+chair | You sit on it at the table. | sit, seat, table
+cloud | A fluffy white shape floating in the sky. | sky, fluffy, rain
+dance | Moving your body to music. | music, steps, party
+honey | Sweet and golden, made by bees. | bee, sweet, golden
+house | A home where a family lives. | home, roof, family
+lemon | A sour yellow fruit. | sour, yellow, citrus
+music | Sounds and songs you listen to. | song, sound, melody
+night | The dark time when you sleep. | dark, moon, sleep
+ocean | A huge body of salty water. | sea, waves, salty
+pizza | A round flat bread with cheese and toppings. | cheese, slice, oven
+queen | A royal woman who wears a crown. | crown, royal, throne
+river | Fresh water flowing to the sea. | water, flow, bank
+smile | What your face does when you are happy. | happy, face, grin
+tiger | A big striped wild cat. | stripes, cat, roar
+water | You drink it when you are thirsty. | drink, wet, splash
+zebra | A horse-like animal with black and white stripes. | stripes, horse, safari
+ghost | A spooky see-through spirit that says boo. | boo, spooky, spirit
+piano | An instrument with black and white keys. | keys, music, play
+candy | A sweet treat kids love. | sweet, sugar, treat
+train | It runs on tracks and goes choo choo. | tracks, station, choo
+clock | It tells you the time. | time, tick, hands
+grape | A small round fruit that grows in bunches. | purple, vine, bunch
+castle | A big stone home for a king. | king, tower, stone
+garden | A place where flowers and vegetables grow. | flowers, plants, grow
+rabbit | A fluffy animal with long ears that hops. | bunny, ears, hop
+pencil | You write and draw with it, then erase. | write, draw, eraser
+rocket | It blasts off into space. | space, launch, fire
+cookie | A small sweet baked treat, often with chocolate chips. | chocolate, baked, crumbs
+island | Land with water all around it. | sea, beach, palm
+jungle | A thick tropical forest full of animals. | trees, wild, monkeys
+kitten | A baby cat. | cat, baby, meow
+monkey | An animal that swings from trees and loves bananas. | banana, swing, tail
+orange | A round citrus fruit, also a color. | fruit, citrus, juice
+planet | Earth and Mars are both one of these. | space, earth, orbit
+school | Where kids go to learn. | class, teacher, learn
+spider | It has eight legs and spins webs. | web, legs, creepy
+turtle | A slow animal that carries its shell. | shell, slow, sea
+window | You look outside through its glass. | glass, view, open
+winter | The coldest season of the year. | cold, snow, season
+bridge | It lets you cross over a river. | river, cross, road
+dragon | A legendary beast that breathes fire. | fire, wings, scales
+flower | A colorful bloom that bees visit. | bloom, petals, garden
+guitar | An instrument with six strings. | strings, music, strum
+puzzle | Pieces you fit together to make a picture. | pieces, picture, solve
+butter | A yellow spread made from cream. | cream, yellow, toast
+carrot | An orange vegetable that rabbits love. | orange, vegetable, rabbit
+pirate | A sailor who hunts for treasure. | ship, treasure, parrot
+balloon | You fill it with air and it floats away. | air, party, float
+blanket | It keeps you warm in bed. | warm, bed, cozy
+chicken | A farm bird that lays eggs. | hen, eggs, cluck
+dolphin | A smart sea animal that clicks and jumps. | sea, smart, jump
+giraffe | The animal with the longest neck. | neck, tall, spots
+holiday | A special day off to celebrate or travel. | vacation, travel, break
+lantern | A lamp you can carry around. | light, carry, glow
+library | A building full of books to borrow. | books, quiet, read
+monster | A scary creature from stories. | scary, creature, roar
+octopus | A sea animal with eight arms. | tentacles, sea, ink
+pancake | A flat breakfast treat with syrup on top. | breakfast, syrup, flat
+penguin | A black and white bird that cannot fly. | ice, waddle, bird
+rainbow | Colorful arc in the sky after rain. | colors, arc, sky
+teacher | The person who helps you learn at school. | school, class, lesson
+thunder | The loud boom after lightning. | storm, boom, loud
+unicorn | A magical horse with one horn. | horn, magic, horse
+volcano | A mountain that can erupt with lava. | lava, erupt, mountain
+kitchen | The room where meals are cooked. | cook, oven, meals
+mermaid | Half girl, half fish, lives in the sea. | tail, sea, fish
+popcorn | A snack you eat at the movies. | movies, snack, butter
+cupcake | A small cake with frosting on top. | frosting, small, sweet
+pumpkin | A big orange vegetable carved at Halloween. | orange, halloween, carve
+dinosaur | A giant reptile that lived long ago. | fossil, reptile, extinct
+elephant | A huge gray animal with a trunk. | trunk, gray, big
+sandwich | Food between two slices of bread. | bread, lunch, filling
+umbrella | It keeps you dry when it rains. | rain, dry, open
+mushroom | A little umbrella-shaped thing that grows in the forest. | forest, cap, fungus
+treasure | Gold and jewels hidden in a chest. | gold, chest, pirate
+birthday | The day you were born, celebrated every year. | party, cake, candles
+kangaroo | An animal that hops and carries its baby in a pouch. | pouch, hop, australia
+airplane | It flies people across the sky. | fly, wings, pilot
+football | A sport where you kick a ball into a goal. | goal, kick, team
+mountain | A very tall hill with a peak. | peak, tall, climb
+snowball | A cold round thing you throw in winter. | throw, cold, winter
+hospital | Where doctors and nurses help sick people. | doctor, nurse, sick
+notebook | Paper pages you write your lessons in. | paper, write, pages
+princess | The daughter of a king. | crown, royal, castle
+squirrel | A small animal with a fluffy tail that collects nuts. | nuts, tail, tree
+starfish | A sea creature shaped like a star. | sea, arms, beach
+backpack | A bag you carry on your back. | bag, school, straps
+astronaut | A person who travels into space. | space, rocket, moon
+butterfly | An insect with big colorful wings. | wings, colorful, insect
+chocolate | A sweet brown treat made from cocoa. | cocoa, sweet, brown
+crocodile | A big reptile with lots of sharp teeth. | teeth, reptile, river
+hamburger | A meat patty in a round bun. | bun, meat, grill
+telescope | You use it to look at faraway stars. | stars, lens, look
+adventure | An exciting journey full of surprises. | journey, explore, quest
+sunflower | A tall yellow bloom that turns to face the sun. | yellow, tall, seeds
+snowflake | Every one of these icy crystals is different. | ice, winter, crystal
+spaghetti | Long thin pasta, often with tomato sauce. | pasta, noodles, italian
+pineapple | A spiky tropical fruit with a leafy top. | tropical, spiky, fruit
+detective | Someone who solves mysteries. | mystery, clues, solve
+lightning | A bright flash in a stormy sky. | flash, storm, bolt
+scarecrow | A straw figure that keeps birds off the field. | straw, field, farm
+alligator | A big reptile that lives in swamps. | swamp, reptile, jaws
+blueberry | A tiny round blue fruit. | fruit, muffin, tiny
+waterfall | A river dropping over a cliff. | cliff, splash, river
+jellyfish | A see-through sea creature that can sting. | sting, sea, wobbly
+fireworks | Colorful explosions in the night sky. | boom, sparkle, night
+chameleon | A lizard that changes color. | lizard, color, hide
+strawberry | A red fruit with seeds on the outside. | red, seeds, fruit
+skateboard | A board with wheels you ride and do tricks on. | wheels, tricks, ride
+motorcycle | A two-wheeled vehicle with an engine. | engine, wheels, helmet
+lighthouse | A tower with a light that guides ships. | tower, ships, coast
+toothbrush | You clean your teeth with it. | teeth, clean, paste
+watermelon | A big green fruit that is red inside. | green, juicy, seeds
+helicopter | An aircraft with spinning blades on top. | blades, fly, pilot
+playground | A place with swings and slides. | swings, slide, park
+basketball | A sport where you shoot a ball through a hoop. | hoop, dribble, team
+friendship | The bond between best pals. | pals, trust, together
+trampoline | You bounce high on it. | bounce, jump, high
+skyscraper | A very tall city building. | tall, city, building
+caterpillar | It turns into a butterfly one day. | butterfly, crawl, leaf
+grasshopper | A green insect that jumps and chirps. | jump, green, insect
+imagination | The ability to dream up new ideas. | dream, ideas, create
+marshmallow | A soft sweet treat you toast on a campfire. | campfire, soft, toast
+thermometer | It tells you how hot or cold it is. | hot, cold, fever
+firefighter | A hero who puts out fires. | hero, hose, truck
+celebration | A happy party for a special occasion. | party, cheer, fun
+electricity | The power that makes lamps light up. | power, plug, spark
+wheelbarrow | A cart with one wheel you push in the garden. | garden, push, cart
+hummingbird | A tiny bird that hovers and beats its wings very fast. | tiny, hover, nectar
+thunderstorm | Rain, lightning and loud booms all at once. | rain, lightning, boom
+refrigerator | A cold box in the kitchen that keeps food fresh. | cold, food, kitchen
+kindergarten | The first year of school for little kids. | kids, class, play
+butterscotch | A sweet candy made from brown sugar and butter. | candy, caramel, sweet
+photographer | A person who takes pictures. | camera, pictures, flash
+construction | Building houses and roads. | build, crane, workers
+grandparents | Your mom's or dad's parents. | family, elders, love
+encyclopedia | A big book full of facts about everything. | facts, book, knowledge
+hippopotamus | A huge animal that loves to sit in rivers. | river, huge, africa
+kaleidoscope | A tube that shows changing colorful patterns. | patterns, colors, tube
+rollercoaster | A fast ride with loops and drops. | ride, loops, thrill
+extraordinary | Very special and amazing. | amazing, special, unusual
+grandchildren | The kids of your kids. | family, kids, young
+entertainment | Shows, games and fun things to watch. | fun, shows, games
+tyrannosaurus | A famous dinosaur with tiny arms. | dinosaur, rex, teeth
+hallucination | Seeing something that is not really there. | dream, illusion, imaginary
+photosynthesis | How plants turn sunlight into food. | plants, sunlight, leaves
+paleontologist | A scientist who digs up dinosaur bones. | fossils, bones, scientist
+transformation | A big change from one thing into another. | change, morph, become
+constellations | Groups of stars that make pictures in the sky. | stars, sky, patterns
+procrastination | Putting things off until later. | delay, later, lazy
+kindheartedness | Being gentle and caring toward others. | caring, gentle, warm
+troubleshooting | Finding and fixing what went wrong. | fix, problem, repair
+personification | Giving human traits to things that are not human. | human, poetry, figurative
+characteristics | The features that make something what it is. | traits, features, qualities

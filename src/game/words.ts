@@ -11,9 +11,15 @@ export interface WordEntry {
   word: string;
   language: string;
   description: string;
+  /** 2–4 one-word hints, free to show (checked by scripts/check-words.js). */
+  hints: string[];
 }
 
 export const WORDS: readonly WordEntry[] = rawWords as WordEntry[];
+
+const BY_ID = new Map(WORDS.map((w) => [w.id, w]));
+
+export const wordById = (id: string): WordEntry | undefined => BY_ID.get(id);
 
 /**
  * A random word for the level, avoiding the recently played ones. If the

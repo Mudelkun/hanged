@@ -1,6 +1,6 @@
 /*
  * The pieces between the scene and the keyboard: miss pips, word tiles,
- * the description card and the "Next token" bar. Sizes and colours follow
+ * the hint pill, the description card and the "Next token" bar. Sizes and colours follow
  * design/ui-mockup.html (.misses, .tiles, .desc, .tokbar).
  */
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +9,7 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { DESCRIPTION_COST, WORDS_PER_TOKEN } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
-import { bulbXml, coinXml, Icon, lockXml, sparkXml } from './icons';
+import { bulbXml, coinXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
 import { Raised } from './Raised';
 
 // ---- misses ----
@@ -101,6 +101,62 @@ export function WordTiles({ letters, available, compact }: { letters: { letter: 
         </View>
       ))}
     </View>
+  );
+}
+
+// ---- hint words ----
+
+/**
+ * Free one-word hints (not in the mockup). Hidden until the player taps;
+ * then each tap shows the next one, looping back to the first. Give it a
+ * key per round so it hides again for every new word.
+ */
+export function HintPill({ hints, compact }: { hints: readonly string[]; compact?: boolean }) {
+  const [index, setIndex] = useState<number | null>(null);
+  const [pop] = useState(() => new Animated.Value(1));
+  if (hints.length === 0) return null;
+
+  const total = hints.length;
+  const shown = index !== null;
+  const press = () => {
+    setIndex((i) => (i === null ? 0 : (i + 1) % total));
+    pop.setValue(0.6);
+    Animated.spring(pop, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }).start();
+  };
+
+  return (
+    <Pressable
+      onPress={press}
+      accessibilityRole="button"
+      accessibilityLabel={
+        shown ? t('hint.a11y.word', { index: index + 1, total, word: hints[index] }) : t('hint.a11y.show')
+      }
+    >
+      {({ pressed }) => (
+        <Raised
+          shadowColor={colors.shadow}
+          radius={16}
+          pressed={pressed}
+          outerStyle={{ marginBottom: compact ? 7 : 10 }}
+          style={[styles.hint, compact && { height: 36 }]}
+        >
+          <Text style={styles.hintChip}>{t('hint.label')}</Text>
+          {shown ? (
+            <Animated.Text style={[styles.hintWord, { transform: [{ scale: pop }] }]} numberOfLines={1}>
+              {hints[index].toUpperCase()}
+            </Animated.Text>
+          ) : (
+            <Text style={styles.hintTap} numberOfLines={1}>
+              {t('hint.tapToShow')}
+            </Text>
+          )}
+          {shown && total > 1 && <Text style={styles.hintCount}>{t('hint.count', { index: index + 1, total })}</Text>}
+          <View style={styles.hintBtn}>
+            <Icon xml={shown ? nextXml() : eyeXml()} size={16} />
+          </View>
+        </Raised>
+      )}
+    </Pressable>
   );
 }
 
@@ -236,6 +292,33 @@ const styles = StyleSheet.create({
   },
   tileDash: { position: 'absolute', height: 4, borderRadius: 2, backgroundColor: '#ead9c4' },
   spark: { position: 'absolute', top: -7, right: -7 },
+
+  hint: {
+    height: 40,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: colors.line,
+    paddingLeft: 6,
+    paddingRight: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  hintChip: {
+    fontFamily: fonts.display600,
+    fontSize: 12,
+    letterSpacing: 1,
+    color: colors.skyT,
+    backgroundColor: colors.skyL,
+    borderRadius: 10,
+    overflow: 'hidden',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  hintWord: { flex: 1, fontFamily: fonts.display700, fontSize: 18, letterSpacing: 1.5, color: colors.ink },
+  hintTap: { flex: 1, fontFamily: fonts.body800, fontSize: 14, color: colors.muted },
+  hintCount: { fontFamily: fonts.display600, fontSize: 13.5, color: colors.muted },
+  hintBtn: { width: 28, height: 28, borderRadius: 10, backgroundColor: colors.sky, alignItems: 'center', justifyContent: 'center' },
 
   desc: {
     backgroundColor: '#fff',

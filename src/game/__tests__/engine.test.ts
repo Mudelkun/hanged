@@ -19,6 +19,7 @@ const round = (word: string, clues: string[] = [], maxWrong = 10): Round => ({
   word,
   language: 'en',
   description: 'test',
+  hints: ['hint'],
   level: 1,
   maxWrong,
   clueLetters: clues,
@@ -61,7 +62,7 @@ describe('clues', () => {
 
   it('reveals every occurrence of a clue letter and marks its key used', () => {
     const r = createRound(
-      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', level: 1, clueRatio: 0.3 },
+      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', hints: [], level: 1, clueRatio: 0.3 },
       () => 0,
     );
     expect(r.clueLetters).toHaveLength(1);

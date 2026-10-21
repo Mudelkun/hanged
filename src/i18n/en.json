@@ -14,6 +14,12 @@
   "play.a11y.key": "Letter {letter}",
   "play.a11y.key.used": "Letter {letter}, already used",
 
+  "hint.label": "HINT",
+  "hint.tapToShow": "Tap to show a free hint word",
+  "hint.count": "{index} / {total}",
+  "hint.a11y.show": "Show a free hint word",
+  "hint.a11y.word": "Hint {index} of {total}: {word}. Tap for the next one",
+
   "description.label": "DESCRIPTION",
   "description.hiddenPlaceholder": "A little secret hint for you",
   "description.unlock": "Unlock · {cost}",
