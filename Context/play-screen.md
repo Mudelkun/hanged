@@ -59,8 +59,9 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 - **Not enough tokens**: the Unlock button turns beige. Pressing it shows "Not enough
   tokens yet" in the card for 2 s. It never goes negative.
 - No sound yet: [src/feedback.ts](../src/feedback.ts) is the single hook for game
-  events (correct, wrong, won, lost, stamp, unlock). Haptics only for now; add sound
-  effects and music there.
+  events (won, lost, stamp, unlock). Haptics only for now; add sound effects and music
+  there. **Key presses don't buzz**: the owner found a vibration on every letter
+  annoying. A correct/wrong key *sound* can come back with the sound effects.
 
 ## UI text
 

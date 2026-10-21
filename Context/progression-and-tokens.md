@@ -9,17 +9,21 @@ Tests: [src/game/__tests__/progress.test.ts](../src/game/__tests__/progress.test
 ## Scoring happens inside the winning guess
 
 `gameReducer`'s `guess` case scores in the **same step** that makes the round
-`won`. It adds +1 to `wordsGuessed` and +1 to `wordsTowardToken`, and at 5 it pays
-1 token and resets to 0. A finished round ignores further guesses (the engine
+`won`. It adds +1 to `wordsGuessed` and +1 to `wordsTowardToken`, and at `WORDS_PER_TOKEN` (2) it
+pays 1 token and resets to 0. A finished round ignores further guesses (the engine
 returns the same round), so **a word can never be scored twice**. Don't move
 scoring into an effect or a "round over" screen. Re-renders and app restarts
 would then count it again.
 
 - **Score = `wordsGuessed`** (the leaderboard number). Spending tokens never lowers it.
-- **Tokens**: earned 1 per `WORDS_PER_TOKEN` (5) words. Spent only on a description
+- **Tokens**: earned 1 per `WORDS_PER_TOKEN` (2) words. Spent only on a description
   (`DESCRIPTION_COST` = 1) and, later, on characters. `wordsTowardToken` is stored
-  on its own rather than derived from `wordsGuessed % 5`. Later, if online words
+  on its own rather than derived from `wordsGuessed % WORDS_PER_TOKEN`. Later, if online words
   count for the score but not for tokens (an open question), the two will diverge.
+- **Changing the rate**: `hydrate` pays out a save that holds more progress than
+  the current rate needs (it was 5 words, now 2): whole tokens go to the balance
+  and the remainder stays as progress. So a rate change never strands a player at
+  "4 / 2".
 - `lastTokenEarned` flags the win that paid a token (the result screen shows
   "+1 token"). The next `newRound` clears it.
 - `unlockDescription` is refused without enough tokens, when it's already unlocked,

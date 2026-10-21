@@ -218,7 +218,7 @@
 <div class="row" id="row"></div>
 <div class="h3" id="h3"></div>
 <div class="stages" id="stages"></div>
-<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey faded letter = wrong guess. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 5 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
+<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey faded letter = wrong guess. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 2 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
 
 <script src="characters/rig.js"></script>
 <script src="characters/hanging.js"></script>
@@ -281,7 +281,7 @@ const stamp = (text) => `<svg class="stamp" viewBox="0 0 372 156">
     <rect x="20" y="20" width="332" height="116" rx="12" fill="none" stroke="${STAMP_RED}" stroke-width="3"/>
     <text x="186" y="104" text-anchor="middle" textLength="296" lengthAdjust="spacingAndGlyphs" font-family="Fredoka" font-weight="700" font-size="74" fill="${STAMP_RED}">${text}</text>
   </g></svg>`;
-const tokbar = `<div class="tokbar">${coin(18)}<span>Next token</span><div class="track"><div class="fill" style="width:60%"></div></div><span>3 / 5 words</span></div>`;
+const tokbar = `<div class="tokbar">${coin(18)}<span>Next token</span><div class="track"><div class="fill" style="width:50%"></div></div><span>1 / 2 words</span></div>`;
 
 function keyboard(state, extra=''){
   const rows = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM']; // iPhone letter order

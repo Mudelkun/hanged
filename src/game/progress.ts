@@ -57,8 +57,13 @@ export const canUnlockDescription = (s: GameState) =>
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'hydrate':
-      return action.state;
+    case 'hydrate': {
+      // A save from an older, slower token rate can hold more progress than
+      // one token needs: pay out whole tokens and keep the remainder.
+      const s = action.state;
+      const paid = Math.floor(s.wordsTowardToken / WORDS_PER_TOKEN);
+      return paid ? { ...s, tokens: s.tokens + paid, wordsTowardToken: s.wordsTowardToken % WORDS_PER_TOKEN } : s;
+    }
 
     case 'newRound': {
       const level = levelFor(state.wordsGuessed);

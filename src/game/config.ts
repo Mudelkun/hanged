@@ -14,8 +14,8 @@ export const HANGING_STAGES = 10;
 export const MIN_WORD_LENGTH = 1;
 export const MAX_WORD_LENGTH = 15;
 
-/** 1 token for every 5 words guessed. */
-export const WORDS_PER_TOKEN = 5;
+/** 1 token for every 2 words guessed. */
+export const WORDS_PER_TOKEN = 2;
 
 /** Unlocking a word's description costs 1 token. */
 export const DESCRIPTION_COST = 1;

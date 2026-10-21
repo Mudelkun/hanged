@@ -56,8 +56,6 @@ export default function PlayScreen() {
   const onKey = useCallback(
     (c: Letter) => {
       if (roundStatus(round) !== 'playing' || usedLetters(round).has(c)) return;
-      if (round.word.includes(c)) feedback.correct();
-      else feedback.wrong();
       dispatch({ type: 'guess', letter: c });
     },
     [round, dispatch],

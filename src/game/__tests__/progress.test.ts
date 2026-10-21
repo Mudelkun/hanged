@@ -23,7 +23,7 @@ describe('scoring', () => {
     expect(s.wordsGuessed).toBe(1);
   });
 
-  it('awards 1 token for every 5 words guessed', () => {
+  it('awards 1 token for every WORDS_PER_TOKEN words guessed', () => {
     let s = initialState();
     for (let i = 0; i < WORDS_PER_TOKEN - 1; i++) s = winRound(s);
     expect(s.tokens).toBe(STARTING_TOKENS);
@@ -40,6 +40,15 @@ describe('scoring', () => {
     for (const c of 'bdfghijkmn') s = gameReducer(s, { type: 'guess', letter: c });
     expect(roundStatus(s.round!)).toBe('lost');
     expect(s.wordsGuessed).toBe(0);
+  });
+
+  it('pays out progress saved under an older, slower token rate', () => {
+    const saved = { ...initialState(), tokens: 5, wordsTowardToken: WORDS_PER_TOKEN * 2 + 1 };
+    const s = gameReducer(initialState(), { type: 'hydrate', state: saved });
+    expect(s.tokens).toBe(7);
+    expect(s.wordsTowardToken).toBe(1);
+    const fresh = { ...initialState(), wordsTowardToken: WORDS_PER_TOKEN - 1 };
+    expect(gameReducer(initialState(), { type: 'hydrate', state: fresh })).toBe(fresh);
   });
 });
 
