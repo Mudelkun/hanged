@@ -1,60 +1,62 @@
 /*
- * The scene card: sky (CSS in the mockup, an SVG gradient here), drifting
- * clouds, and the hanging scene from design/characters/hanging.js.
+ * The scene card: sky (CSS in the mockup, an SVG gradient here), the sun,
+ * and the balloon scene from design/characters/balloons.js (with its own
+ * drifting clouds, hills and ground).
  *
- * The hanging scene is re-rendered from HangedAnim.frame() about 30 times a
- * second: when the stage changes it tweens between the two keyframes, and
- * every stage has its own looping motion (wave, shiver, wobble, sway...).
- * Each frame is an SVG string drawn by <SvgXml>; a frame is ~7 KB and
- * cheap to build and parse.
+ * The scene is re-rendered from BalloonAnim.frame() about 30 times a
+ * second: when the stage changes it tweens between the two keyframes (the
+ * pop, then the drop), and every stage has its own looping motion (bob,
+ * kick, flap, panic...). Each frame is an SVG string drawn by <SvgXml>,
+ * cheap to build and parse. The viewBox follows the frame's camera, which
+ * pans down as the character sinks.
  */
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Svg, { Circle, Defs, G, LinearGradient, Mask, Rect, Stop, SvgXml, Text as SvgText } from 'react-native-svg';
 
-import { Character, Frame, HangedAnim, HangedRig } from '../characters/rig';
+import { BalloonAnim, Character, Frame, HangedRig } from '../characters/rig';
 import { colors } from '../theme';
 import { cloudXml, Icon } from './icons';
 import { Raised } from './Raised';
 
 export type SceneMode = 'play' | 'won' | 'lost';
 
-/** Crops of the 480×470 scene, from the mockup (PLAY_VB and the Round lost crop). */
-export const PLAY_VIEWBOX = '-150 18 780 432';
-export const RESULT_VIEWBOX = '-60 18 600 432';
-
 const FRAME_MS = 33;
+const { CAMERA } = BalloonAnim;
 
-// The design scripts tag the root <svg> with a CSS class; React DOM rejects `class` on web.
-const sceneXml = (c: Character, f: Frame) => HangedAnim.scene(c, f).replace(' class="hanged-scene"', '');
-
-// The winning pose: back on the grass at the stage-0 spot, cheering and hopping.
-function wonFrame(t: number): Frame {
-  const f = HangedAnim.frame(0, 0, 1, t, false);
+// The winning pose: still floating under the balloons that are left, cheering and bouncing.
+function wonFrame(stage: number, t: number): Frame {
+  const f = BalloonAnim.frame(stage, stage, 1, t, false);
   const cheer = HangedRig.POSES.cheer;
   return {
     ...f,
     expr: 'joy',
-    coil: 'none',
-    ty: f.ty - Math.abs(Math.sin(t * 4)) * 14,
+    ty: f.ty - Math.abs(Math.sin(t * 4)) * 8,
     a: {
       ...f.a,
-      ...cheer,
-      armL: cheer.armL + Math.sin(t * 8) * 12,
-      armR: cheer.armR - Math.sin(t * 8) * 12,
+      armL: cheer.armL + Math.sin(t * 8) * 14,
+      armR: f.a.armR - Math.sin(t * 8) * 6, // keeps holding the strings
+      legL: cheer.legL + Math.sin(t * 8) * 8,
+      legR: cheer.legR - Math.sin(t * 8) * 8,
       tail: cheer.tail + Math.sin(t * 6) * 14,
     },
   };
 }
 
 // One frame of the scene: the tween from stage `from` to `to` at p (0..1), plus the loops at time t.
-function frameXml(c: Character, mode: SceneMode, from: number, to: number, p: number, t: number) {
-  return sceneXml(c, mode === 'won' ? wonFrame(t) : HangedAnim.frame(from, to, p, t));
+function sceneFrame(c: Character, mode: SceneMode, from: number, to: number, p: number, t: number) {
+  const f = mode === 'won' ? wonFrame(to, t) : BalloonAnim.frame(from, to, p, t);
+  return {
+    // The design scripts tag the root <svg> with a CSS class; React DOM rejects `class` on web.
+    // Lost keeps the grey native clouds of the sad sky instead of the scene's white ones.
+    xml: BalloonAnim.scene(c, f, { sky: false, clouds: mode !== 'lost' }).replace(' class="balloon-scene"', ''),
+    viewBox: `${CAMERA.x} ${f.cam.toFixed(1)} ${CAMERA.w} ${CAMERA.h}`,
+  };
 }
 
-function AnimatedCharacter({ character, stage, mode, viewBox }: { character: Character; stage: number; mode: SceneMode; viewBox: string }) {
+function AnimatedCharacter({ character, stage, mode }: { character: Character; stage: number; mode: SceneMode }) {
   const tween = useRef({ from: stage, to: stage, start: 0 });
-  const [xml, setXml] = useState(() => frameXml(character, mode, stage, stage, 1, 0));
+  const [view, setView] = useState(() => sceneFrame(character, mode, stage, stage, 1, 0));
 
   useEffect(() => {
     if (stage !== tween.current.to) tween.current = { from: tween.current.to, to: stage, start: performance.now() };
@@ -68,9 +70,9 @@ function AnimatedCharacter({ character, stage, mode, viewBox }: { character: Cha
       if (now - last >= FRAME_MS) {
         last = now;
         const { from, to, start } = tween.current;
-        const dur = HangedAnim.STAGES[to].dur ?? HangedAnim.DURATION;
+        const dur = BalloonAnim.STAGES[to].dur ?? BalloonAnim.DURATION;
         const p = Math.min(1, Math.max(0, (now - start) / dur));
-        setXml(frameXml(character, mode, from, to, p, (now - t0) / 1000));
+        setView(sceneFrame(character, mode, from, to, p, (now - t0) / 1000));
       }
       raf = requestAnimationFrame(tick);
     };
@@ -78,18 +80,17 @@ function AnimatedCharacter({ character, stage, mode, viewBox }: { character: Cha
     return () => cancelAnimationFrame(raf);
   }, [character, mode]);
 
-  // Fill the box (crop the sides) unless the box is wider than the crop:
-  // then fit the height, so a short scene never cuts off the beam or a head.
+  // Fit the camera's height: crop the sides when the box is narrower than the window,
+  // letterbox them (the grass runs on) when it is wider, so no balloon or head is ever cut.
   const [fit, setFit] = useState<'slice' | 'meet'>('slice');
-  const [, , vbW, vbH] = viewBox.split(' ').map(Number);
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
-    setFit(height > 0 && width / height > vbW / vbH ? 'meet' : 'slice');
+    setFit(height > 0 && width / height > CAMERA.w / CAMERA.h ? 'meet' : 'slice');
   };
 
   return (
     <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
-      <SvgXml xml={xml} width="100%" height="100%" viewBox={viewBox} preserveAspectRatio={`xMidYMax ${fit}`} />
+      <SvgXml xml={view.xml} width="100%" height="100%" viewBox={view.viewBox} preserveAspectRatio={`xMidYMax ${fit}`} />
     </View>
   );
 }
@@ -138,18 +139,13 @@ function Sky({ sad }: { sad: boolean }) {
           <Cloud right={24} top={26} width={84} opacity={0.8} drift={8000} />
         </>
       ) : (
-        <>
-          <View style={styles.sunWrap} pointerEvents="none">
-            <Svg width={88} height={88}>
-              <Circle cx={44} cy={44} r={43} fill="rgba(255,226,122,0.16)" />
-              <Circle cx={44} cy={44} r={32} fill="rgba(255,226,122,0.35)" />
-              <Circle cx={44} cy={44} r={23} fill="#ffe27a" />
-            </Svg>
-          </View>
-          <Cloud left={150} top={18} width={84} drift={8000} />
-          <Cloud right={96} top={62} width={56} opacity={0.85} drift={6500} />
-          <Cloud left={16} top={58} width={48} opacity={0.7} drift={9500} />
-        </>
+        <View style={styles.sunWrap} pointerEvents="none">
+          <Svg width={88} height={88}>
+            <Circle cx={44} cy={44} r={43} fill="rgba(255,226,122,0.16)" />
+            <Circle cx={44} cy={44} r={32} fill="rgba(255,226,122,0.35)" />
+            <Circle cx={44} cy={44} r={23} fill="#ffe27a" />
+          </Svg>
+        </View>
       )}
     </>
   );
@@ -159,23 +155,22 @@ interface Props {
   character: Character;
   stage: number;
   mode: SceneMode;
-  viewBox: string;
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
 }
 
-export function HangingScene({ character, stage, mode, viewBox, style, accessibilityLabel }: Props) {
+export function GameScene({ character, stage, mode, style, accessibilityLabel }: Props) {
   return (
     <Raised shadowColor={colors.shadow} radius={28} outerStyle={style} style={styles.scene}>
       <View style={StyleSheet.absoluteFill} accessible accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
         <Sky sad={mode === 'lost'} />
-        <AnimatedCharacter character={character} stage={stage} mode={mode} viewBox={viewBox} />
+        <AnimatedCharacter character={character} stage={stage} mode={mode} />
       </View>
     </Raised>
   );
 }
 
-// ---- the rubber stamp ("HANGED !!" / "SAVED !!") ----
+// ---- the rubber stamp ("POPPED !!" / "SAVED !!") ----
 
 // Deterministic specks knocked out of the ink, like a stamp pressed by hand
 // (the mockup uses an feTurbulence filter, which react-native-svg cannot draw).

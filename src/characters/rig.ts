@@ -1,15 +1,15 @@
 /*
- * The app draws the characters with the SAME code as the design mockup:
- * design/characters/rig.js (shared rig + the 10 skins) and hanging.js (the
- * 10-stage hanging animation). Both are plain scripts that attach
- * `HangedRig` / `HangedAnim` to the global object and return SVG strings,
+ * The app draws the characters with the SAME code as the design previews:
+ * design/characters/rig.js (shared rig + the 10 skins) and balloons.js (the
+ * 10-stage balloon animation). Both are plain scripts that attach
+ * `HangedRig` / `BalloonAnim` to the global object and return SVG strings,
  * which react-native-svg's <SvgXml> renders. Change a character there and
- * the mockup and the app both pick it up. Do not fork a copy into src/.
+ * the previews and the app both pick it up. Do not fork a copy into src/.
  *
- * Import order matters: hanging.js reads HangedRig while it loads.
+ * Import order matters: balloons.js reads HangedRig while it loads.
  */
 import '../../design/characters/rig.js';
-import '../../design/characters/hanging.js';
+import '../../design/characters/balloons.js';
 
 export type Expression = 'happy' | 'joy' | 'nervous' | 'worried' | 'scared' | 'ko';
 export type Angles = Partial<Record<'head' | 'armL' | 'armR' | 'legL' | 'legR' | 'tail', number>>;
@@ -27,18 +27,13 @@ export interface RenderOptions {
   bare?: boolean;
 }
 
-/** One animation frame, as returned by HangedAnim.frame. */
+/** One animation frame, as returned by BalloonAnim.frame. Only the fields the app reads are typed. */
 export interface Frame {
   expr: Expression;
-  coil: 'ground' | 'held' | 'none';
-  rope: 'none' | 'thrown' | 'noose' | 'worn';
-  pivot: [number, number];
   tx: number;
   ty: number;
-  rot: number;
-  swing: number;
-  stoolX: number;
-  stoolRot: number;
+  /** Top of the camera window, in scene units. */
+  cam: number;
   a: Required<Angles>;
 }
 
@@ -53,17 +48,19 @@ interface HangedRigApi {
   POSES: Record<string, Required<Angles>>;
 }
 
-interface HangedAnimApi {
+interface BalloonAnimApi {
   STAGES: Stage[];
   DURATION: number;
+  /** The app's window on the scene: x and width are fixed, the top is Frame.cam. */
+  CAMERA: { x: number; w: number; h: number };
   frame(from: number, to: number, p: number, t: number, loops?: boolean): Frame;
-  scene(c: Character, f: Frame): string;
+  scene(c: Character, f: Frame, opts?: { sky?: boolean; clouds?: boolean }): string;
 }
 
-const g = globalThis as unknown as { HangedRig: HangedRigApi; HangedAnim: HangedAnimApi };
+const g = globalThis as unknown as { HangedRig: HangedRigApi; BalloonAnim: BalloonAnimApi };
 
 export const HangedRig = g.HangedRig;
-export const HangedAnim = g.HangedAnim;
+export const BalloonAnim = g.BalloonAnim;
 
 export const CHARACTERS = HangedRig.CHARACTERS;
 

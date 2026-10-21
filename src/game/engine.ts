@@ -1,7 +1,7 @@
 /*
  * The round rules from CLAUDE.md, as pure functions with no React and no
  * storage. A round is plain serializable data; everything else (revealed
- * letters, wrong count, status, hanging stage) is derived from it, so the
+ * letters, wrong count, status, scene stage) is derived from it, so the
  * derived values can never fall out of sync with what was guessed.
  *
  * Letters are lowercase a–z internally (like the original "Pendu");
@@ -9,7 +9,7 @@
  */
 import {
   DEFAULT_MAX_WRONG,
-  HANGING_STAGES,
+  SCENE_STAGES,
   LONG_WORD_CLUES,
   LONG_WORD_LENGTH,
   MAX_WORD_LENGTH,
@@ -182,11 +182,11 @@ export function roundStatus(r: Round): RoundStatus {
 }
 
 /**
- * The hanging stage to show (0 = start, 10 = hanged). With fewer allowed
+ * The balloon stage to show (0 = all 10 balloons, 10 = the last one popped). With fewer allowed
  * wrong guesses the count is scaled, so the last miss always lands on 10.
  */
-export const hangingStage = (r: Round) =>
-  Math.min(HANGING_STAGES, Math.round((wrongCount(r) * HANGING_STAGES) / r.maxWrong));
+export const sceneStage = (r: Round) =>
+  Math.min(SCENE_STAGES, Math.round((wrongCount(r) * SCENE_STAGES) / r.maxWrong));
 
 export function keyState(r: Round, c: Letter): KeyState {
   if (isClue(r, c)) return 'clue';

@@ -4,12 +4,13 @@ Act as an expert software engineer. When writing code, strictly prioritize high 
 
 **Official name:** "Hanged: word guessing game". This is the name for the game, the App Store listing and the app's display name. Use the short form **"Hanged"** where space is tight, such as the home-screen icon label. The in-game header (Play and Round lost) shows the **player's name**, not the app name. Never call the app "Hangman" in the UI or in store text.
 
-An iOS mobile game built with **Expo (React Native)**. It's a cute, animated take on the classic hangman word game.
+An iOS mobile game built with **Expo (React Native)**. It's a cute, animated take on the classic hangman word game, with **balloons instead of a gallows**: the character floats under 10 balloons, each wrong guess pops one, and after the last one they land hard on the ground (funny, never hurt). The owner changed the concept from hanging to balloons; the app's name may change too (not decided).
 
 - `idea.md` — the owner's original notes. They are the source of truth for the rules.
-- `design/ui-mockup.png` — the current UI mockup (Play, Versus, Leaderboard, Characters, Profile and Round lost screens, plus a strip of the 11 hanging stages). It's rendered from `design/ui-mockup.html` at 2730x1420: edit the HTML, then screenshot it again with headless Chrome. The mockup draws every character from `design/characters/rig.js` and `hanging.js`, so changes to the characters show up there automatically.
-- `design/characters/`: the 10 character designs. `rig.js` holds the shared rig (joints, parts, poses, expressions) and every character's skin. `characters.html` previews them, and `characters.png` is its headless-Chrome screenshot. All characters must keep the same rig, so one hanging animation works for all of them.
-- `design/characters/hanging.js` + `hanging.html`: the 10-stage hanging animation (stage N = N wrong guesses), built on the shared rig. The gallows is already there when the round starts. The character does one step per stage: wave, rope, throw, noose, stool, climb, stand, noose on, wobble, tip. They stay on the stool until stage 10, which is the only stage where they fall and hang. With fewer allowed wrong guesses, show stage `round(wrong * 10 / maxWrong)`.
+- `design/ui-mockup.png` — the current UI mockup (Play, Versus, Leaderboard, Characters, Profile and Round lost screens, plus a strip of the 11 old hanging stages: the mockup has not been redrawn for the balloons yet). It's rendered from `design/ui-mockup.html` at 2730x1420: edit the HTML, then screenshot it again with headless Chrome. The mockup draws every character from `design/characters/rig.js` and `hanging.js`, so changes to the characters show up there automatically.
+- `design/characters/`: the 10 character designs. `rig.js` holds the shared rig (joints, parts, poses, expressions) and every character's skin. `characters.html` previews them, and `characters.png` is its headless-Chrome screenshot. All characters must keep the same rig, so one animation works for all of them.
+- `design/characters/balloons.js` + `balloons.html` (+ `balloons.png`): **the animation the app uses**. 10 stages (stage N = N wrong guesses = N balloons popped), built on the shared rig. Each pop sinks the character a little more; at stage 10 the last balloon pops, they hang in the air for a beat, fall, and land hard on their bottom (squash, shake, bounce, dust, cracks), then sit dazed with stars. With fewer allowed wrong guesses, show stage `round(wrong * 10 / maxWrong)`.
+- `design/characters/hanging.js` + `hanging.html`: the **old** 10-stage hanging animation, kept only because the mockup still draws it. The gallows is already there when the round starts. The character does one step per stage: wave, rope, throw, noose, stool, climb, stand, noose on, wobble, tip. They stay on the stool until stage 10, which is the only stage where they fall and hang. With fewer allowed wrong guesses, show stage `round(wrong * 10 / maxWrong)`.
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
@@ -31,10 +32,10 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 
 | Read this before working on… | File |
 |---|---|
-| The round rules in code: word validation, clues, guesses, win/loss, hanging stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
+| The round rules in code: word validation, clues, guesses, win/loss, scene stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
 | Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
 | The word database: `data/words.json`, how to add words and hint words, the checks, the PostgreSQL move | [Context/word-database.md](Context/word-database.md) |
-| How the app draws characters **from `design/characters/*.js`**, the animation loop, the won pose, scene cropping, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
+| How the app draws characters **from `design/characters/*.js`**, the balloon stages, the animation loop, the won pose, the scene camera, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
 | The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
@@ -44,7 +45,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), index.tsx (Play)
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
 src/state/          GameContext: the reducer + AsyncStorage
-src/characters/     rig.ts: imports design/characters/rig.js + hanging.js (one source for both app and mockup)
+src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/components/     UI pieces of the Play screen
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
@@ -74,9 +75,9 @@ data/words.json     the word database (generated from scripts/words-source.txt)
    - At least one letter must always stay hidden.
 5. **A turn** = the player picks one letter on the in-game keyboard.
    - If the letter is in the word, **every** occurrence is revealed.
-   - If it isn't, the wrong-guess counter goes up by 1 and the character moves one stage closer to being hanged.
+   - If it isn't, the wrong-guess counter goes up by 1 and one of the character's balloons pops.
 6. **No repeat guesses**: once a letter has been tried, it can't be picked again. Its key is taken out of play (see Keyboard).
-7. **Max wrong guesses**: **10** by default. The character is fully hanged at 10 wrong guesses, and the hanging animation has 10 stages plus the starting state. The hardest difficulty levels may allow fewer wrong guesses.
+7. **Max wrong guesses**: **10** by default. The last balloon pops at 10 wrong guesses, and the balloon animation has 10 stages plus the starting state. The hardest difficulty levels may allow fewer wrong guesses.
 8. **Win**: every letter of the word is revealed before the limit is reached.
    **Lose**: the wrong-guess limit is reached. Show the full word when the player loses.
 9. Input locks as soon as the round is won or lost.
@@ -115,7 +116,7 @@ A level's difficulty is set by:
 ## Meta-game
 
 ### Unlimited play
-- There is **no lives/energy system**. The player can play as many rounds as they want, and getting hanged only ends that round.
+- There is **no lives/energy system**. The player can play as many rounds as they want, and losing all the balloons only ends that round.
 
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
@@ -133,7 +134,7 @@ A level's difficulty is set by:
 - Each row shows the player's name and profile picture, or their character's face if they haven't uploaded one (see Profile page).
 
 ### Characters
-- The player can choose between several cute, animated characters. The hanged figure *is* the character the player selected.
+- The player can choose between several cute, animated characters. The figure under the balloons *is* the character the player selected.
 - Some characters are free. The others are locked and are unlocked by spending **tokens**.
 
 ### Two-player mode (online)

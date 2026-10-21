@@ -10,7 +10,7 @@ these components.
 ## Two layouts on one screen
 
 - **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
-- **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
+- **Result** (won or lost): header · bigger scene + rubber stamp ("POPPED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · **Next word** · tab bar. A round that moved the level adds a line under the
   misses line, in the new level's colour: "Level up! Welcome to level N." or "Back to level N. You've
@@ -83,7 +83,7 @@ next word**, so the player taps once, not "Let's go!" and then "Next word" (owne
 - Checked on web at 393×852 and 375×667 (both directions); the card fits without scrolling.
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
-1400 ms so the fall plays, won 700 ms so the last tile pops). Then the result
+2600 ms so the last pop, the fall and the landing play (stage 10 lasts 2200 ms), won 700 ms so the last tile pops). Then the result
 appears and the stamp pops. Input is already locked during that delay because
 the engine refuses guesses. The "which round is showing its result" check is
 by `round.id`, so a round restored already finished opens straight on its result.
@@ -103,7 +103,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `TokenPill.tsx` | The header's token counter. Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. |
 | `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens (e.g. the Characters shop) only needs an origin. |
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, hint word, token pill). Use it for any new pop so they all feel the same. |
-| `HangingScene.tsx` | Scene card: sky, sun, drifting clouds, the animated character ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
+| `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
 | `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton`. `PayButton` (private) is the coral "label + coin" button that spends tokens: the description's Unlock and the shop's "10". It sends the token flight, then pays, and turns beige and refuses ("Not enough tokens yet", `useRefusal`) without enough tokens. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |

@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../characters/rig';
 import { GameHeader } from '../components/GameHeader';
-import { HangingScene, PLAY_VIEWBOX, RESULT_VIEWBOX, Stamp } from '../components/HangingScene';
+import { GameScene, Stamp } from '../components/GameScene';
 import { LetterKeyboard } from '../components/LetterKeyboard';
 import { LevelChange } from '../components/LevelChange';
 import { PaperBackground } from '../components/PaperBackground';
@@ -23,7 +23,7 @@ import { STREAK_SHOWN_FROM, StreakTakeover } from '../components/StreakTakeover'
 import { TabBar } from '../components/TabBar';
 import { useTokenOrigin } from '../components/TokenFlight';
 import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
-import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
+import { sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
 import { levelByNumber } from '../game/levels';
 import { lettersForSale } from '../game/progress';
 import { feedback } from '../feedback';
@@ -31,7 +31,8 @@ import { t } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { colors, fonts, levelColor } from '../theme';
 
-const RESULT_DELAY = { lost: 1400, won: 700 };
+// Lost waits for the last balloon to pop and the character to hit the ground (stage 10 is 2200 ms)
+const RESULT_DELAY = { lost: 2600, won: 700 };
 
 export default function PlayScreen() {
   const { state, dispatch, startNextRound } = useGame();
@@ -122,14 +123,13 @@ export default function PlayScreen() {
           />
         ) : (
           <>
-            <HangingScene
+            <GameScene
               key={round.id}
               character={character}
-              stage={hangingStage(round)}
+              stage={sceneStage(round)}
               mode="play"
-              viewBox={PLAY_VIEWBOX}
               style={[styles.playScene, { minHeight: compact ? 96 : 130 }]}
-              accessibilityLabel={t('play.a11y.scene', { name: character.name, stage: hangingStage(round) })}
+              accessibilityLabel={t('play.a11y.scene', { name: character.name, stage: sceneStage(round) })}
             />
             <MissesBar wrong={wrongCount(round)} max={round.maxWrong} />
             <WordTiles
@@ -227,11 +227,10 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
   return (
     <>
       <View style={[styles.resultScene, { minHeight: compact ? 140 : 180 }]}>
-        <HangingScene
+        <GameScene
           character={character}
-          stage={hangingStage(round)}
+          stage={sceneStage(round)}
           mode={status}
-          viewBox={RESULT_VIEWBOX}
           style={{ flex: 1 }}
           accessibilityLabel={won ? t('result.won.stamp') : t('result.lost.stamp')}
         />

@@ -4,11 +4,11 @@
  * Context/game-rules.md when you do.
  */
 
-/** The character is fully hanged at this many wrong guesses (rule 7). */
+/** The last balloon pops at this many wrong guesses (rule 7). */
 export const DEFAULT_MAX_WRONG = 10;
 
-/** The hanging animation has this many stages after the starting state. */
-export const HANGING_STAGES = 10;
+/** The balloon animation has this many stages after the starting state (one balloon each). */
+export const SCENE_STAGES = 10;
 
 /** Word constraints (rule 2). */
 export const MIN_WORD_LENGTH = 1;

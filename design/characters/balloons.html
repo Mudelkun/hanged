@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balloon Animation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #fbf6ff; --card: #ffffff; --ink: #3a2b4d; --muted: #8a7a9e; --accent: #8b5cf6; --line: #ece3f7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Fredoka', system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { margin: 0; font-size: 34px; font-weight: 700; }
+  .sub { color: var(--muted); margin: 6px 0 22px; font-size: 16px; }
+  .top { display: grid; grid-template-columns: minmax(0, 420px) 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 900px) { .top { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 2px solid var(--line); border-radius: 24px; padding: 12px; overflow: hidden; }
+  .card svg { width: 100%; height: auto; display: block; border-radius: 14px; }
+  .stage { font-size: 15px; color: var(--muted); }
+  .stage b { display: block; font-size: 28px; color: var(--ink); font-weight: 700; margin: 2px 0 14px; }
+  .meter { display: flex; gap: 8px; margin-bottom: 18px; }
+  .meter i { width: 22px; height: 26px; border-radius: 50% 50% 48% 48%; border: 2.5px solid var(--ink); transition: transform .2s, opacity .2s; }
+  .meter i.off { transform: scale(.5); opacity: .25; background: var(--line) !important; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  button { font: inherit; font-size: 15px; border: 2px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+  button.on, button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .label { font-size: 14px; color: var(--muted); margin: 6px 0 8px; }
+  h2 { margin: 36px 0 6px; font-size: 22px; }
+  .strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  @media (max-width: 900px) { .strip { grid-template-columns: repeat(3, 1fr); } }
+  .strip .card { padding: 6px 6px 10px; text-align: center; cursor: pointer; }
+  .strip .card.on { border-color: var(--accent); }
+  .strip .n { font-weight: 700; font-size: 15px; }
+  .strip .t { font-size: 12.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Balloons · Animation</h1>
+  <p class="sub">Concept: each wrong guess pops a balloon and the character sinks. After 10, they fall and land hard on the ground, dazed but fine.</p>
+
+  <div class="top">
+    <div class="card" id="scene"></div>
+    <div>
+      <div class="stage" id="stage"></div>
+      <div class="meter" id="meter"></div>
+      <div class="row">
+        <button class="primary" id="next">Wrong guess ▶</button>
+        <button id="prev">◀ Back</button>
+        <button id="play">Play all</button>
+        <button id="reset">Reset</button>
+      </div>
+      <div class="label">Character</div>
+      <div class="row" id="chars"></div>
+    </div>
+  </div>
+
+  <h2>All stages</h2>
+  <p class="sub">Keyframes without the looping motion. Click one to jump to it.</p>
+  <div class="strip" id="strip"></div>
+</main>
+<script src="rig.js"></script>
+<script src="balloons.js"></script>
+<script>
+  const { CHARACTERS } = HangedRig;
+  const { STAGES, BALLOONS, POP_ORDER, frame, scene } = BalloonAnim;
+  const dur = () => STAGES[to].dur || BalloonAnim.DURATION;
+  const params = new URLSearchParams(location.search);
+
+  let char = CHARACTERS.find((c) => c.id === params.get('char')) || CHARACTERS[1];
+  let from = +(params.get('stage') || 0), to = from, started = -1e9, playing = null;
+
+  function go(n) {
+    n = Math.max(0, Math.min(10, n));
+    if (n === to) return;
+    from = current(); to = n; started = performance.now();
+    drawUi();
+  }
+  // The stage we are visually closest to, so interrupting a tween looks right
+  function current() { return performance.now() - started < dur() / 2 ? from : to; }
+
+  document.getElementById('next').onclick = () => { stopPlay(); go(to + 1); };
+  document.getElementById('prev').onclick = () => { stopPlay(); go(to - 1); };
+  document.getElementById('reset').onclick = () => { stopPlay(); from = to = 0; started = -1e9; drawUi(); };
+  document.getElementById('play').onclick = () => {
+    if (playing) return stopPlay();
+    from = to = 0; started = -1e9;
+    playing = setInterval(() => { if (to >= 10) stopPlay(); else go(to + 1); }, 1600);
+    drawUi();
+  };
+  function stopPlay() { clearInterval(playing); playing = null; drawUi(); }
+
+  const charsEl = document.getElementById('chars');
+  CHARACTERS.forEach((c) => {
+    const b = document.createElement('button');
+    b.textContent = c.name; b.dataset.id = c.id;
+    b.onclick = () => { char = c; drawUi(); drawStrip(); };
+    charsEl.appendChild(b);
+  });
+
+  function drawUi() {
+    document.getElementById('stage').innerHTML = `Stage ${to} of 10 · ${10 - to} balloon${to === 9 ? '' : 's'} left<b>${STAGES[to].label}</b>`;
+    // Last balloon to pop on the left, first on the right
+    document.getElementById('meter').innerHTML = [...POP_ORDER].reverse().map((b) =>
+      `<i class="${POP_ORDER.indexOf(b) < to ? 'off' : ''}" style="background:${BALLOONS[b][2]}"></i>`).join('');
+    document.getElementById('play').textContent = playing ? 'Stop' : 'Play all';
+    document.querySelectorAll('#chars button').forEach((b) => b.classList.toggle('on', b.dataset.id === char.id));
+    document.querySelectorAll('#strip .card').forEach((el, i) => el.classList.toggle('on', i === to));
+  }
+
+  function drawStrip() {
+    const el = document.getElementById('strip');
+    el.innerHTML = STAGES.map((s, i) =>
+      `<div class="card">${scene(char, frame(i, i, 1, 0, false))}<div class="n">${i}</div><div class="t">${s.label}</div></div>`).join('');
+    el.querySelectorAll('.card').forEach((card, i) => card.onclick = () => { stopPlay(); go(i); });
+    drawUi();
+  }
+
+  const sceneEl = document.getElementById('scene');
+  function tick(now) {
+    const p = Math.min(1, (now - started) / dur());
+    sceneEl.innerHTML = scene(char, frame(from, to, p, now / 1000));
+    requestAnimationFrame(tick);
+  }
+
+  drawStrip();
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>

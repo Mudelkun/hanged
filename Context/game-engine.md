@@ -9,9 +9,9 @@ The core rules of CLAUDE.md, as pure TypeScript with no React and no storage:
 `Round` holds the word, its description, its `hints` (free hint words, snapshotted like
 the description so a database change never alters a round in progress), `maxWrong`, the `clueLetters` given at the
 start, the `disabledLetters` taken off the keyboard at the start, the `boughtLetters` paid for with tokens, the `guessed` letters in order, and `descriptionUnlocked`. That's all.
-**Revealed letters, wrong count, status (`playing` / `won` / `lost`), hanging stage,
+**Revealed letters, wrong count, status (`playing` / `won` / `lost`), scene stage,
 key looks and tile looks are all computed from it** (`usedLetters`, `wrongCount`,
-`roundStatus`, `hangingStage`, `keyState`, `tileState`).
+`roundStatus`, `sceneStage`, `keyState`, `tileState`).
 
 Never add a stored `status`, `wrongCount` or `revealed` field. A derived value
 that is also stored can disagree with the guesses. The C# original kept a separate
@@ -31,7 +31,7 @@ happened.
 | Bought letters (owner's request, hardest level) | `buyLetters(r, count, rng)` reveals `count` random letters from `hiddenLetters(r)` into `boughtLetters`. `canBuyLetters` allows it once per round, while playing, and only if **more than `count`** distinct letters are hidden, so one always stays hidden (rule 4) and the player always gets all they paid for. Bought letters are in `usedLetters`, and `keyState` / `tileState` show them as `clue`. Price and which levels sell: [progression-and-tokens.md](progression-and-tokens.md). |
 | No repeat guesses | `guess()` returns the **same object** for a used letter, a clue letter, a non a–z character, or a finished round. Callers can compare by reference (`next === prev`) to know nothing happened. |
 | Lose at `maxWrong`, and input locks | `roundStatus` says `lost` exactly when `wrongCount >= maxWrong`; `guess()` refuses once status isn't `playing` (rule 9). |
-| Stage = `round(wrong × 10 / maxWrong)` | `hangingStage`. With `maxWrong` 6 the stages go 0, 2, 3, 5, 7, 8, 10, so the last miss always lands on 10. |
+| Stage = `round(wrong × 10 / maxWrong)` (balloons popped) | `sceneStage`. With `maxWrong` 6 the stages go 0, 2, 3, 5, 7, 8, 10, so the last miss always lands on 10. |
 
 ## The one conflict in the rules
 

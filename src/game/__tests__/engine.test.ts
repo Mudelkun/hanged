@@ -6,7 +6,7 @@ import {
   decoyLetters,
   disabledCount,
   guess,
-  hangingStage,
+  sceneStage,
   hiddenLetters,
   keyState,
   pickClueLetters,
@@ -175,7 +175,7 @@ describe('win and loss', () => {
     expect(roundStatus(r)).toBe('playing');
     r = guess(r, 'k');
     expect(roundStatus(r)).toBe('lost');
-    expect(hangingStage(r)).toBe(10);
+    expect(sceneStage(r)).toBe(10);
     expect(guess(r, 'q')).toBe(r);
   });
 
@@ -186,18 +186,18 @@ describe('win and loss', () => {
   });
 });
 
-describe('hanging stage', () => {
+describe('scene stage', () => {
   it('is one stage per wrong guess at the default limit', () => {
-    expect(hangingStage(play(round('quiz'), 'abc'))).toBe(3);
+    expect(sceneStage(play(round('quiz'), 'abc'))).toBe(3);
   });
 
   it('scales with fewer allowed wrong guesses and ends on stage 10', () => {
     const r = round('quiz', [], 6);
-    expect(hangingStage(play(r, 'a'))).toBe(2); // round(10/6)
-    expect(hangingStage(play(r, 'abc'))).toBe(5);
+    expect(sceneStage(play(r, 'a'))).toBe(2); // round(10/6)
+    expect(sceneStage(play(r, 'abc'))).toBe(5);
     const lost = play(r, 'abcdef');
     expect(roundStatus(lost)).toBe('lost');
-    expect(hangingStage(lost)).toBe(10);
+    expect(sceneStage(lost)).toBe(10);
   });
 });
 
