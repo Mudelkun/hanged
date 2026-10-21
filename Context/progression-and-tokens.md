@@ -9,21 +9,26 @@ Tests: [src/game/__tests__/progress.test.ts](../src/game/__tests__/progress.test
 ## Scoring happens inside the winning guess
 
 `gameReducer`'s `guess` case scores in the **same step** that makes the round
-`won`. It adds +1 to `wordsGuessed` and to `streak`, and pays `tokenReward(streak)` tokens.
+`won`. It adds +1 to `wordsGuessed` and to `streak`, and pays `tokenReward(round.level, streak)` tokens.
 The step that makes a round `lost` resets `streak` to 0. A finished round ignores further guesses (the engine
 returns the same round), so **a word can never be scored twice**. Don't move
 scoring into an effect or a "round over" screen. Re-renders and app restarts
 would then count it again.
 
 - **Score = `wordsGuessed`** (the leaderboard number). Spending tokens never lowers it.
-- **Tokens: words in a row pay more.** The Nth win of a streak pays N tokens
-  (`tokenReward(streak)` = `min(streak, MAX_STREAK_REWARD)`), so 1, 2, 3… A lost round
-  resets `streak` to 0 and the next win pays 1 again. Nothing else breaks a streak: the round in
-  progress is saved, so restarting the app can't skip a word, and the description unlock doesn't count.
-  **`MAX_STREAK_REWARD` (10) is a PLACEHOLDER** cap so a long streak on easy words can't flood
-  the economy before character prices exist. `streak` is saved; an older save gets 0 from
-  `initialState()` when it loads.
-- Tokens are spent only on a description (`DESCRIPTION_COST` = 1) and, later, on characters.
+- **Tokens: harder words pay more, and a streak adds a small bonus.** A win pays its level's
+  `tokenReward` (the `LEVELS` column: 1, 1, 2, 2, 3, 3, 4, 4), plus +1 for each `STREAK_BONUS_AT`
+  step the streak has reached (3, 6, 10 in a row, so the bonus is capped at +3).
+  **Why:** the old "Nth win in a row pays N" ignored difficulty. Easy levels are easy to streak on,
+  so a new player hit the cap on level-1 words while a level-8 player (6 wrong guesses) rarely
+  could. That made easy words worth more than hard ones. Keep both rules: the level pay never
+  shrinks as levels rise, and the streak bonus stays small next to it (tests check the first).
+  - The **round's** snapshotted `level` pays, not the level the win moves the player up to.
+  - A lost round resets `streak` to 0, so the next win pays the base again. Nothing else breaks a
+    streak: the round in progress is saved, so restarting the app can't skip a word, and the
+    description unlock doesn't count. `streak` is saved; an older save gets 0 from `initialState()`.
+  - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS** until character prices exist.
+- Tokens are spent only on a description (`DESCRIPTION_COST` = 2) and, later, on characters.
 - **Old saves**: the "N words per token" rate (5, then 2, then 1) and its `wordsTowardToken`
   field and "Next token" bar are gone, because a progress bar can't show payouts that vary.
   `hydrate` pays a leftover `wordsTowardToken` as 1 token per word (the last rate), maps the old
@@ -42,7 +47,8 @@ is `1 + floor(wordsGuessed / WORDS_PER_LEVEL)`, capped at the last level, so it
 **never drops back down**. Each `LEVELS` row sets the word-length range, the
 `clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the
 keyboard: 0.5 at level 1, minus 0.1 per level, 0 from level 6; a test keeps it
-non-increasing and ending at 0) and `maxWrong` (10 until level 7, then 8, then 6).
+non-increasing and ending at 0), `maxWrong` (10 until level 7, then 8, then 6) and
+`tokenReward` (see Tokens above). `levelByNumber` reads a row by a round's `level`.
 
 **Every number in `LEVELS`, `WORDS_PER_LEVEL` and `STARTING_TOKENS` (3) is a
 PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and

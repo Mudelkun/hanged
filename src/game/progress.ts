@@ -8,12 +8,12 @@
 import {
   DEFAULT_LANGUAGE,
   DESCRIPTION_COST,
-  MAX_STREAK_REWARD,
   RECENT_WORDS_MEMORY,
   STARTING_TOKENS,
+  STREAK_BONUS_AT,
 } from './config';
 import { createRound, guess, Round, roundStatus, unlockDescription } from './engine';
-import { levelFor } from './levels';
+import { levelByNumber, levelFor } from './levels';
 import { pickWord, wordById, WordEntry } from './words';
 
 export interface GameState {
@@ -52,8 +52,12 @@ export type GameAction =
   | { type: 'guess'; letter: string }
   | { type: 'unlockDescription' };
 
-/** Tokens paid by the win that brings the streak to `streak`: 1, 2, 3… up to MAX_STREAK_REWARD. */
-export const tokenReward = (streak: number) => Math.min(streak, MAX_STREAK_REWARD);
+/**
+ * Tokens paid by a win at `level` that brings the streak to `streak`: the
+ * level's pay, so harder words pay more, plus +1 per STREAK_BONUS_AT step reached.
+ */
+export const tokenReward = (level: number, streak: number) =>
+  levelByNumber(level).tokenReward + STREAK_BONUS_AT.filter((n) => streak >= n).length;
 
 type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boolean };
 
@@ -109,7 +113,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (status === 'lost') return { ...state, round, streak: 0 };
       if (status !== 'won') return { ...state, round };
       const streak = state.streak + 1;
-      const earned = tokenReward(streak);
+      // The round's own level pays, not the level this win may move the player up to.
+      const earned = tokenReward(round.level, streak);
       return {
         ...state,
         round,

@@ -1,4 +1,4 @@
-import { MAX_STREAK_REWARD, STARTING_TOKENS } from '../config';
+import { DESCRIPTION_COST, STARTING_TOKENS, STREAK_BONUS_AT, WORDS_PER_LEVEL } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { LEVELS, levelNumberFor } from '../levels';
 import { gameReducer, GameState, initialState, tokenReward } from '../progress';
@@ -63,31 +63,50 @@ describe('win streak', () => {
     return state;
   }
 
-  it('pays 1, 2, 3… tokens for words guessed in a row', () => {
+  const base = LEVELS[0].tokenReward;
+
+  it('pays the level reward, plus +1 at each streak step', () => {
     let s = initialState();
-    for (let n = 1; n <= 3; n++) {
+    for (let n = 1; n <= STREAK_BONUS_AT[STREAK_BONUS_AT.length - 1]; n++) {
       const before = s.tokens;
       s = winRound(s);
+      const bonus = STREAK_BONUS_AT.filter((k) => n >= k).length;
       expect(s.streak).toBe(n);
-      expect(s.lastTokensEarned).toBe(n);
-      expect(s.tokens).toBe(before + n);
+      expect(s.lastTokensEarned).toBe(base + bonus);
+      expect(s.tokens).toBe(before + base + bonus);
     }
   });
 
-  it('a lost round resets the streak, so the next win pays 1 again', () => {
-    let s = winRound(winRound(initialState()));
+  it('a lost round resets the streak, so the next win pays no bonus', () => {
+    let s = initialState();
+    for (let i = 0; i < STREAK_BONUS_AT[0]; i++) s = winRound(s);
     s = loseRound(s);
     expect(roundStatus(s.round!)).toBe('lost');
     expect(s.streak).toBe(0);
     s = winRound(s);
-    expect(s.lastTokensEarned).toBe(1);
+    expect(s.lastTokensEarned).toBe(base);
   });
 
-  it('stops growing at MAX_STREAK_REWARD', () => {
-    expect(tokenReward(MAX_STREAK_REWARD + 5)).toBe(MAX_STREAK_REWARD);
-    const s = winRound({ ...initialState(), streak: MAX_STREAK_REWARD + 5 });
-    expect(s.streak).toBe(MAX_STREAK_REWARD + 6);
-    expect(s.lastTokensEarned).toBe(MAX_STREAK_REWARD);
+  it('the streak bonus stops growing after the last step', () => {
+    expect(tokenReward(1, 10_000)).toBe(base + STREAK_BONUS_AT.length);
+  });
+
+  it('harder levels never pay less, and the hardest pays more than the easiest', () => {
+    for (let i = 1; i < LEVELS.length; i++) {
+      expect(LEVELS[i].tokenReward).toBeGreaterThanOrEqual(LEVELS[i - 1].tokenReward);
+    }
+    expect(LEVELS[LEVELS.length - 1].tokenReward).toBeGreaterThan(base);
+  });
+
+  it("pays the round's level, not the level the win moves up to", () => {
+    const top = LEVELS[LEVELS.length - 1];
+    let s = winRound({ ...initialState(), wordsGuessed: WORDS_PER_LEVEL - 1 });
+    expect(s.round!.level).toBe(1);
+    expect(levelNumberFor(s.wordsGuessed)).toBe(2);
+    expect(s.lastTokensEarned).toBe(base);
+    s = winRound({ ...initialState(), wordsGuessed: WORDS_PER_LEVEL * LEVELS.length });
+    expect(s.round!.level).toBe(top.level);
+    expect(s.lastTokensEarned).toBe(top.tokenReward);
   });
 });
 
@@ -128,18 +147,18 @@ describe('disabled keys', () => {
 });
 
 describe('description unlock', () => {
-  it('costs one token and never lowers the score', () => {
+  it('costs DESCRIPTION_COST tokens and never lowers the score', () => {
     let s = startRound({ ...initialState(), wordsGuessed: 7 });
     s = gameReducer(s, { type: 'unlockDescription' });
     expect(s.round!.descriptionUnlocked).toBe(true);
-    expect(s.tokens).toBe(STARTING_TOKENS - 1);
+    expect(s.tokens).toBe(STARTING_TOKENS - DESCRIPTION_COST);
     expect(s.wordsGuessed).toBe(7);
     // Unlocking twice is free and does nothing
     expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
   });
 
-  it('is refused without tokens', () => {
-    const s = startRound({ ...initialState(), tokens: 0 });
+  it('is refused without enough tokens', () => {
+    const s = startRound({ ...initialState(), tokens: DESCRIPTION_COST - 1 });
     expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
   });
 });

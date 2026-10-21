@@ -28,7 +28,7 @@
   "description.hiddenPlaceholder": "A little secret hint for you",
   "description.unlock": "Unlock · {cost}",
   "description.notEnough": "Not enough tokens yet",
-  "description.a11y.unlock": "Unlock the description for {cost} token",
+  "description.a11y.unlock": "Unlock the description for {cost} tokens",
 
   "result.lost.stamp": "HANGED !!",
   "result.lost.line": "{wrong} / {max} misses · the word was",

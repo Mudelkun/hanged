@@ -15,14 +15,14 @@ export const MIN_WORD_LENGTH = 1;
 export const MAX_WORD_LENGTH = 15;
 
 /**
- * Words guessed in a row pay more: the Nth win of a streak pays N tokens
- * (progress.tokenReward), and a lost round resets the streak.
- * PLACEHOLDER: the reward stops growing at this many tokens.
+ * A won word pays its level's tokenReward (levels.ts), plus +1 token for each
+ * of these streak lengths reached (progress.tokenReward). A lost round resets
+ * the streak. PLACEHOLDER: the steps, and so the bonus cap (+3).
  */
-export const MAX_STREAK_REWARD = 10;
+export const STREAK_BONUS_AT: readonly number[] = [3, 6, 10];
 
-/** Unlocking a word's description costs 1 token. */
-export const DESCRIPTION_COST = 1;
+/** Unlocking a word's description costs 2 tokens. */
+export const DESCRIPTION_COST = 2;
 
 /** PLACEHOLDER: tokens a brand-new player starts with. */
 export const STARTING_TOKENS = 3;

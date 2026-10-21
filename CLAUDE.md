@@ -93,7 +93,7 @@ A level's difficulty is set by:
 ### Word descriptions
 
 - **Every word** has a short **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
-- The description is **always hidden** when a round starts. The player can unlock it by spending **one token** (see Tokens below). It never costs a wrong guess.
+- The description is **always hidden** when a round starts. The player can unlock it by spending **two tokens** (see Tokens below). It never costs a wrong guess.
 
 ### Hint words
 
@@ -115,9 +115,9 @@ A level's difficulty is set by:
 
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
-- **Earning**: every word guessed correctly pays tokens, and **words guessed in a row pay more**: the 1st win of a streak pays 1 token, the 2nd pays 2, the 3rd pays 3, and so on. Losing a round resets the streak, so the next win pays 1 again.
+- **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
 - **Spending**: tokens are used for exactly two things:
-  1. unlocking a word's description (1 token)
+  1. unlocking a word's description (2 tokens)
   2. unlocking characters (each character has a price in tokens)
 - There are **no gems** in the game. The mockup shows gems, but ignore them.
 - The mockup puts a heart counter in the top bar. That spot becomes the token counter, with a **different symbol, not a heart**. Don't use hearts for it, because hearts suggest lives.
@@ -197,7 +197,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 ## Open questions (ask the owner, don't guess)
 
 - **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost?
-- **Streak reward**: should it stop growing at some point? It's capped at 10 tokens per word for now (placeholder).
+- **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level?
 - **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? Can the player drop back down after losing?
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?

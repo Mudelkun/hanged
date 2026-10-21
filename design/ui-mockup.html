@@ -218,7 +218,7 @@
 <div class="row" id="row"></div>
 <div class="h3" id="h3"></div>
 <div class="stages" id="stages"></div>
-<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey faded letter = wrong guess. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned at 1 token per 2 words guessed. Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
+<div class="note">Mockup v4 "Sunny meadow": cream paper, sky scenes, coral actions, mint = correct letter, butter = clue letters and tokens, grey faded letter = wrong guess. The 10 characters share one rig (design/characters). No lives or gems. One token currency (placeholder symbol) unlocks descriptions and characters, earned for every word guessed (harder levels pay more, words in a row add a small bonus). Character prices are placeholders. Leaderboard score = words guessed. Online two-player mode. Max 4 bottom tabs; the avatar at the top-left opens the Profile page.</div>
 
 <script src="characters/rig.js"></script>
 <script src="characters/hanging.js"></script>
@@ -305,12 +305,12 @@ const play = frame(`
     <div class="desc">
       <div class="bulb">${bulbI}</div>
       <div style="min-width:0;overflow:hidden"><div class="chip">DESCRIPTION</div><div class="blur">A big stone home for a king</div></div>
-      <div class="unlock">${lockI(15,'#fff')}Unlock · 1 ${coin(18)}</div>
+      <div class="unlock">${lockI(15,'#fff')}Unlock · 2 ${coin(18)}</div>
     </div>
     ${tokbar}
     ${keyboard({C:'clue',A:'ok',E:'ok',R:'no',O:'no',I:'no'})}
   </div>
-  ${tabs('play')}`, 'Play: description locked, unlock costs 1 token');
+  ${tabs('play')}`, 'Play: description locked, unlock costs 2 tokens');
 
 // 2. Versus
 const versus = frame(`
