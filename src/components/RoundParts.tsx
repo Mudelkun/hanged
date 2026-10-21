@@ -64,14 +64,16 @@ function Tile({ letter, look, w, h }: { letter: string; look: TileLook; w: numbe
     );
   }
   const c = TILE_LOOK[look];
+  // The sparkle scales down with small tiles so it doesn't cover the letter
+  const spark = Math.min(18, Math.round(w * 0.45));
   return (
     <Animated.View style={{ transform: [{ scale: pop }] }}>
       <Raised shadowColor={c.shadow} radius={radius} style={[styles.tile, { width: w, height: h, backgroundColor: c.bg, borderColor: c.border }]}>
         <Text style={[styles.tileText, { fontSize: Math.round(w * 0.6), color: c.text }]}>{letter.toUpperCase()}</Text>
       </Raised>
       {look === 'clue' && (
-        <View style={styles.spark} pointerEvents="none">
-          <Icon xml={sparkXml()} size={18} />
+        <View style={[styles.spark, { top: -spark * 0.4, right: -spark * 0.4 }]} pointerEvents="none">
+          <Icon xml={sparkXml()} size={spark} />
         </View>
       )}
     </Animated.View>
@@ -79,26 +81,18 @@ function Tile({ letter, look, w, h }: { letter: string; look: TileLook; w: numbe
 }
 
 /**
- * The word as tiles. Words over 8 letters wrap onto two rows so a 15-letter
- * word stays readable on a phone.
+ * The word as tiles, always on one row: long words shrink the tiles (and the
+ * gap) instead of wrapping, so a 15-letter word still reads as one word.
  */
 export function WordTiles({ letters, available, compact }: { letters: { letter: string; look: TileLook }[]; available: number; compact: boolean }) {
   const n = letters.length;
-  const rows = n > 8 ? 2 : 1;
-  const perRow = Math.ceil(n / rows);
-  const gap = perRow > 6 ? 6 : 8;
-  const w = Math.floor(Math.min(50, (available - gap * (perRow - 1)) / perRow));
-  const maxH = compact || rows > 1 ? 48 : 58;
-  const h = Math.min(maxH, Math.round(w * 1.16));
-  const chunks = rows === 1 ? [letters] : [letters.slice(0, perRow), letters.slice(perRow)];
+  const gap = n > 10 ? 3 : n > 6 ? 6 : 8;
+  const w = Math.floor(Math.min(50, (available - gap * (n - 1)) / n));
+  const h = Math.min(compact ? 48 : 58, Math.round(w * 1.16));
   return (
-    <View style={[styles.tiles, compact && { marginVertical: 9 }]}>
-      {chunks.map((row, r) => (
-        <View key={r} style={[styles.tileRow, { gap }]}>
-          {row.map((l, i) => (
-            <Tile key={i} letter={l.letter} look={l.look} w={w} h={h} />
-          ))}
-        </View>
+    <View style={[styles.tiles, styles.tileRow, { gap }, compact && { marginVertical: 9 }]}>
+      {letters.map((l, i) => (
+        <Tile key={i} letter={l.letter} look={l.look} w={w} h={h} />
       ))}
     </View>
   );
@@ -294,7 +288,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tileDash: { position: 'absolute', height: 4, borderRadius: 2, backgroundColor: '#ead9c4' },
-  spark: { position: 'absolute', top: -7, right: -7 },
+  spark: { position: 'absolute' },
 
   hint: {
     height: 40,

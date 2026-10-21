@@ -41,8 +41,10 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 ## Sizing
 
-- Tiles: words over 8 letters wrap onto **two rows**, so a 15-letter word is 8 + 7
-  tiles about 36 pt wide. Tile width = what fits, capped at the mockup's 50.
+- Tiles: the word is **always one row, never wrapped** (owner's call: a split word
+  reads as two words). Tile width = what fits, capped at the mockup's 50; the gap
+  shrinks too (8 → 6 over 6 letters → 3 over 10). A 15-letter word is about 20 pt
+  tiles on a 375 pt phone. Font and the clue sparkle scale with the tile width.
 - Keys: 10 fit across the widest row, so width = what fits (max 44, about 30 on a phone). Taller than wide like iOS keys: height = 1.45 × width (max 48), radius 30% of width.
 - **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys 1.35 × width (max 42) tall,
   tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
