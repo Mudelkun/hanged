@@ -8,7 +8,7 @@ The core rules of CLAUDE.md, as pure TypeScript with no React and no storage:
 
 `Round` holds the word, its description, its `hints` (free hint words, snapshotted like
 the description so a database change never alters a round in progress), `maxWrong`, the `clueLetters` given at the
-start, the `guessed` letters in order, and `descriptionUnlocked`. That's all.
+start, the `disabledLetters` taken off the keyboard at the start, the `guessed` letters in order, and `descriptionUnlocked`. That's all.
 **Revealed letters, wrong count, status (`playing` / `won` / `lost`), hanging stage,
 key looks and tile looks are all computed from it** (`usedLetters`, `wrongCount`,
 `roundStatus`, `hangingStage`, `keyState`, `tileState`).
@@ -26,6 +26,7 @@ happened.
 | One case internally | **lowercase** a–z everywhere in data and logic (like "Pendu"); the UI uppercases for display only. |
 | Clues: at least one, more for longer words, at least one letter stays hidden | `clueCount(word, ratio)` = `clamp(round(distinct × ratio), 1, distinct − 1)`. `ratio` comes from the level. |
 | A clue reveals every occurrence and its key counts as used | Clues are stored as **letters**, not positions, so all occurrences follow automatically. `usedLetters = clues ∪ guessed`. |
+| Easy levels disable some keys (owner's request) | `disabledCount(word, ratio)` = `clamp(round(decoys × ratio), 0, decoys − 1)`, where decoys = the letters **not** in the word (`decoyLetters`). `ratio` is the level's `disabledRatio`, 0 when omitted. A disabled letter is never in the word, so it can't change win/loss; it's in `usedLetters`, `keyState` says `off`, and `guess()` refuses it. At least one decoy always stays, so a miss is still possible. |
 | No repeat guesses | `guess()` returns the **same object** for a used letter, a clue letter, a non a–z character, or a finished round. Callers can compare by reference (`next === prev`) to know nothing happened. |
 | Lose at `maxWrong`, and input locks | `roundStatus` says `lost` exactly when `wrongCount >= maxWrong`; `guess()` refuses once status isn't `playing` (rule 9). |
 | Stage = `round(wrong × 10 / maxWrong)` | `hangingStage`. With `maxWrong` 6 the stages go 0, 2, 3, 5, 7, 8, 10, so the last miss always lands on 10. |
@@ -48,6 +49,6 @@ still matters for two-player typed words, which only need to pass `validateWord`
 
 ## Randomness is injectable
 
-`pickClueLetters`, `createRound` and `pickWord` take an `rng` (default
+`pickClueLetters`, `pickDisabledLetters`, `createRound` and `pickWord` take an `rng` (default
 `Math.random`) so tests can pin the result. Keep that parameter when you
 change them.

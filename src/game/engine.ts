@@ -25,13 +25,15 @@ export interface Round {
   maxWrong: number;
   /** Letters revealed when the round starts. Their keys count as used. */
   clueLetters: Letter[];
+  /** Letters not in the word, taken off the keyboard at the start (easy levels). Their keys count as used. */
+  disabledLetters: Letter[];
   /** Letters the player picked, in order. Never contains a clue letter or a repeat. */
   guessed: Letter[];
   descriptionUnlocked: boolean;
 }
 
 export type RoundStatus = 'playing' | 'won' | 'lost';
-export type KeyState = 'idle' | 'clue' | 'ok' | 'no';
+export type KeyState = 'idle' | 'clue' | 'ok' | 'no' | 'off';
 export type TileState = 'hidden' | 'clue' | 'ok';
 
 // ---- word constraints (rule 2) ----
@@ -73,13 +75,38 @@ export function clueCount(word: string, ratio: number): number {
   return Math.min(distinct - 1, Math.max(1, Math.round(distinct * ratio)));
 }
 
-export function pickClueLetters(word: string, ratio: number, rng: () => number = Math.random): Letter[] {
-  const pool = uniqueLetters(word);
+/** Fisher–Yates shuffle of a fresh copy. */
+function shuffled<T>(items: readonly T[], rng: () => number): T[] {
+  const pool = [...items];
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  return pool.slice(0, clueCount(word, ratio));
+  return pool;
+}
+
+export function pickClueLetters(word: string, ratio: number, rng: () => number = Math.random): Letter[] {
+  return shuffled(uniqueLetters(word), rng).slice(0, clueCount(word, ratio));
+}
+
+// ---- disabled keys (easy levels) ----
+
+/** Letters of the alphabet that are not in the word: the only ones a level may disable. */
+export const decoyLetters = (word: string): Letter[] => ALPHABET.filter((c) => !word.includes(c));
+
+/**
+ * How many decoy letters to take off the keyboard (`ratio` comes from the
+ * level and shrinks as levels rise). At least one decoy always stays, so a
+ * wrong guess is still possible.
+ */
+export function disabledCount(word: string, ratio: number): number {
+  const decoys = decoyLetters(word).length;
+  return Math.max(0, Math.min(decoys - 1, Math.round(decoys * ratio)));
+}
+
+export function pickDisabledLetters(word: string, ratio: number, rng: () => number = Math.random): Letter[] {
+  const count = disabledCount(word, ratio);
+  return count ? shuffled(decoyLetters(word), rng).slice(0, count) : [];
 }
 
 // ---- rounds ----
@@ -93,6 +120,8 @@ export interface NewRoundInput {
   hints: readonly string[];
   level: number;
   clueRatio: number;
+  /** Share of the decoy letters disabled on the keyboard (0 = full keyboard). */
+  disabledRatio?: number;
   maxWrong?: number;
 }
 
@@ -109,13 +138,14 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
     clueLetters: pickClueLetters(checked.word, input.clueRatio, rng),
+    disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
     guessed: [],
     descriptionUnlocked: false,
   };
 }
 
-/** Every letter that is out of play: clues + guesses. */
-export const usedLetters = (r: Round): Set<Letter> => new Set([...r.clueLetters, ...r.guessed]);
+/** Every letter that is out of play: clues + disabled keys + guesses. */
+export const usedLetters = (r: Round): Set<Letter> => new Set([...r.clueLetters, ...r.disabledLetters, ...r.guessed]);
 
 export const wrongLetters = (r: Round): Letter[] => r.guessed.filter((c) => !r.word.includes(c));
 
@@ -137,6 +167,7 @@ export const hangingStage = (r: Round) =>
 
 export function keyState(r: Round, c: Letter): KeyState {
   if (r.clueLetters.includes(c)) return 'clue';
+  if (r.disabledLetters.includes(c)) return 'off';
   if (!r.guessed.includes(c)) return 'idle';
   return r.word.includes(c) ? 'ok' : 'no';
 }
@@ -149,7 +180,7 @@ export function tileState(r: Round, c: Letter): TileState {
 /**
  * One turn (rule 5). Returns the same object when the guess is not allowed:
  * the round is over (rule 9), the letter was already tried or given as a clue
- * (rule 6), or it is not a–z.
+ * (rule 6), its key was disabled at the start, or it is not a–z.
  */
 export function guess(r: Round, raw: string): Round {
   const c = raw.toLowerCase();

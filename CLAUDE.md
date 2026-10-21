@@ -88,6 +88,7 @@ A level's difficulty is set by:
 - **word length**
 - **how many clues are given** (fewer clues = harder)
 - for the hardest levels, possibly **fewer wrong guesses allowed** (fewer than 10)
+- for the easiest levels, **disabled letters**: some letters that are *not* in the word are taken off the keyboard when the round starts, so there are fewer wrong keys to hit. Each higher level disables fewer, down to the full keyboard. At least one wrong letter always stays pickable.
 
 ### Word descriptions
 
@@ -103,7 +104,7 @@ A level's difficulty is set by:
 ### Keyboard
 
 - A custom in-game keyboard with **letters only**. Never use the system keyboard during guessing.
-- Letters that have been used become unavailable. The notes say used letters "are gone from the keyboard". The mockup keeps them in place but changes their look: correct letters turn filled mint green, wrong ones turn grey with the letter faded (the owner chose the letter over the mockup's ✕), and clue letters are butter yellow. Follow the mockup unless the owner says otherwise.
+- Letters that have been used become unavailable. The notes say used letters "are gone from the keyboard". The mockup keeps them in place but changes their look: correct letters turn filled mint green, wrong ones turn grey with the letter faded (the owner chose the letter over the mockup's ✕), and clue letters are butter yellow. Letters disabled by an easy level show as an empty dashed slot, so the layout doesn't shift. Follow the mockup unless the owner says otherwise.
 
 ---
 

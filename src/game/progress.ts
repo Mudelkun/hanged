@@ -65,6 +65,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (paid) s = { ...s, tokens: s.tokens + paid, wordsTowardToken: s.wordsTowardToken % WORDS_PER_TOKEN };
       // A round saved before hint words existed gets them from the word database.
       if (s.round && !s.round.hints) s = { ...s, round: { ...s.round, hints: wordById(s.round.wordId)?.hints ?? [] } };
+      // A round saved before disabled keys existed keeps its full keyboard.
+      if (s.round && !s.round.disabledLetters) s = { ...s, round: { ...s.round, disabledLetters: [] } };
       return s;
     }
 
@@ -80,6 +82,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           hints: action.word.hints,
           level: level.level,
           clueRatio: level.clueRatio,
+          disabledRatio: level.disabledRatio,
           maxWrong: level.maxWrong,
         },
         action.rng,

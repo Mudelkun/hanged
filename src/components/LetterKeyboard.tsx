@@ -2,8 +2,10 @@
  * The in-game keyboard: letters only, never the system keyboard.
  * Used keys stay in place but change look (mockup): correct = mint,
  * wrong = grey, sunk, no shadow, letter faded (owner: show the letter, not a ✕,
- * so the player sees what they already tried), clue = butter. A used key, or any
- * key once the round is over, cannot be pressed.
+ * so the player sees what they already tried), clue = butter. Easy levels
+ * disable some letters that are not in the word: their key is an empty dashed
+ * slot, so the QWERTY layout doesn't shift. A used key, or any key once the
+ * round is over, cannot be pressed.
  */
 import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -18,7 +20,7 @@ const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
 const PER_ROW = ROWS[0].length;
 const GAP = 5;
 
-const LOOK: Record<Exclude<KeyState, 'no'>, { bg: string; border: string; shadow: string; text: string }> = {
+const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string; shadow: string; text: string }> = {
   idle: { bg: '#fff', border: colors.line, shadow: colors.shadow, text: colors.ink },
   ok: { bg: colors.mint, border: colors.mint, shadow: colors.mintD, text: '#fff' },
   clue: { bg: colors.butter, border: colors.butter, shadow: colors.butterD, text: '#7a5300' },
@@ -30,7 +32,14 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
   const used = state !== 'idle';
   const radius = Math.min(14, Math.round(w * 0.3));
   const fontSize = Math.round(Math.min(h * 0.46, w * 0.68));
-  const label = used ? t('play.a11y.key.used', { letter: letter.toUpperCase() }) : t('play.a11y.key', { letter: letter.toUpperCase() });
+  const label = t(state === 'off' ? 'play.a11y.key.off' : used ? 'play.a11y.key.used' : 'play.a11y.key', {
+    letter: letter.toUpperCase(),
+  });
+  if (state === 'off') {
+    return (
+      <View accessible accessibilityLabel={label} style={[styles.key, styles.keyOff, { width: w, height: h, borderRadius: radius, marginTop: 4 }]} />
+    );
+  }
   if (state === 'no') {
     return (
       <View accessible accessibilityLabel={label} style={[styles.key, styles.keyNo, { width: w, height: h, borderRadius: radius, marginTop: 4 }]}>
@@ -92,6 +101,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: GAP },
   key: { borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   keyNo: { backgroundColor: colors.keyUsed, borderColor: colors.keyUsed },
+  keyOff: { borderStyle: 'dashed', borderColor: colors.line },
   keyNoText: { color: colors.muted, opacity: 0.75 },
   keyText: { fontFamily: fonts.display600 },
 });

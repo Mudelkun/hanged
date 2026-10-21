@@ -1,5 +1,5 @@
 import { STARTING_TOKENS, WORDS_PER_TOKEN } from '../config';
-import { roundStatus } from '../engine';
+import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { LEVELS, levelNumberFor } from '../levels';
 import { gameReducer, GameState, initialState } from '../progress';
 import { pickWord, WORDS } from '../words';
@@ -43,7 +43,8 @@ describe('scoring', () => {
 
   it('does not score a lost round', () => {
     let s = startRound(initialState());
-    for (const c of 'bdfghijkmn') s = gameReducer(s, { type: 'guess', letter: c });
+    const wrong = decoyLetters(word.word).filter((c) => !usedLetters(s.round!).has(c));
+    for (const c of wrong.slice(0, s.round!.maxWrong)) s = gameReducer(s, { type: 'guess', letter: c });
     expect(roundStatus(s.round!)).toBe('lost');
     expect(s.wordsGuessed).toBe(0);
   });
@@ -69,6 +70,28 @@ describe('hint words', () => {
     const { hints, ...oldRound } = startRound(initialState()).round!;
     const saved = { ...initialState(), round: oldRound as typeof oldRound & { hints: string[] } };
     expect(gameReducer(initialState(), { type: 'hydrate', state: saved }).round!.hints).toEqual(hints);
+  });
+});
+
+describe('disabled keys', () => {
+  it('disable fewer letters as levels rise, down to a full keyboard', () => {
+    for (let i = 1; i < LEVELS.length; i++) {
+      expect(LEVELS[i].disabledRatio).toBeLessThanOrEqual(LEVELS[i - 1].disabledRatio);
+    }
+    expect(LEVELS[0].disabledRatio).toBeGreaterThan(0);
+    expect(LEVELS[LEVELS.length - 1].disabledRatio).toBe(0);
+  });
+
+  it('a level 1 round starts with letters not in the word disabled', () => {
+    const off = startRound(initialState()).round!.disabledLetters;
+    expect(off.length).toBeGreaterThan(0);
+    expect(off.some((c) => word.word.includes(c))).toBe(false);
+  });
+
+  it('a round saved before disabled keys existed keeps a full keyboard', () => {
+    const { disabledLetters, ...oldRound } = startRound(initialState()).round!;
+    const saved = { ...initialState(), round: oldRound as typeof oldRound & { disabledLetters: string[] } };
+    expect(gameReducer(initialState(), { type: 'hydrate', state: saved }).round!.disabledLetters).toEqual([]);
   });
 });
 

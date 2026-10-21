@@ -13,6 +13,7 @@
   "play.a11y.tile.hidden": "hidden letter",
   "play.a11y.key": "Letter {letter}",
   "play.a11y.key.used": "Letter {letter}, already used",
+  "play.a11y.key.off": "Letter {letter}, not in this word",
 
   "hint.label": "HINT",
   "hint.tapToShow": "Tap to show a free hint word",

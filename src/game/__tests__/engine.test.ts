@@ -1,10 +1,13 @@
 import {
   clueCount,
   createRound,
+  decoyLetters,
+  disabledCount,
   guess,
   hangingStage,
   keyState,
   pickClueLetters,
+  pickDisabledLetters,
   Round,
   roundStatus,
   tileState,
@@ -13,7 +16,7 @@ import {
   wrongCount,
 } from '../engine';
 
-const round = (word: string, clues: string[] = [], maxWrong = 10): Round => ({
+const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: string[] = []): Round => ({
   id: 'r1',
   wordId: `en-${word}`,
   word,
@@ -23,6 +26,7 @@ const round = (word: string, clues: string[] = [], maxWrong = 10): Round => ({
   level: 1,
   maxWrong,
   clueLetters: clues,
+  disabledLetters: disabled,
   guessed: [],
   descriptionUnlocked: false,
 });
@@ -77,6 +81,36 @@ describe('clues', () => {
     const letters = pickClueLetters('strawberry', 0.5);
     expect(new Set(letters).size).toBe(letters.length);
     letters.forEach((c) => expect('strawberry').toContain(c));
+  });
+});
+
+describe('disabled keys (easy levels)', () => {
+  it('disables a share of the letters not in the word, never one in it', () => {
+    expect(decoyLetters('hello')).toHaveLength(22);
+    expect(disabledCount('hello', 0.5)).toBe(11);
+    expect(disabledCount('hello', 0)).toBe(0);
+    for (let seed = 0; seed < 20; seed++) {
+      const off = pickDisabledLetters('hello', 0.5, () => (seed * 0.049) % 1);
+      expect(new Set(off).size).toBe(11);
+      expect(off.some((c) => 'helo'.includes(c))).toBe(false);
+    }
+  });
+
+  it('always leaves at least one wrong letter to guess', () => {
+    expect(disabledCount('hello', 1)).toBe(21);
+  });
+
+  it('gives a full keyboard when the level has no ratio', () => {
+    const r = createRound({ id: 'r', wordId: 'w', word: 'castle', language: 'en', description: '', hints: [], level: 6, clueRatio: 0.2 });
+    expect(r.disabledLetters).toEqual([]);
+  });
+
+  it('shows a disabled key as off, counts it as used and refuses it as a guess', () => {
+    const r = round('cat', [], 10, ['z', 'q']);
+    expect(keyState(r, 'z')).toBe('off');
+    expect(usedLetters(r).has('q')).toBe(true);
+    expect(guess(r, 'z')).toBe(r);
+    expect(wrongCount(play(r, 'zqx'))).toBe(1);
   });
 });
 

@@ -37,14 +37,16 @@ would then count it again.
 Difficulty is progressive and the player never picks it. `levelFor(wordsGuessed)`
 is `1 + floor(wordsGuessed / WORDS_PER_LEVEL)`, capped at the last level, so it
 **never drops back down**. Each `LEVELS` row sets the word-length range, the
-`clueRatio` and `maxWrong` (10 until level 7, then 8, then 6).
+`clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the
+keyboard: 0.5 at level 1, minus 0.1 per level, 0 from level 6; a test keeps it
+non-increasing and ending at 0) and `maxWrong` (10 until level 7, then 8, then 6).
 
 **Every number in `LEVELS`, `WORDS_PER_LEVEL` and `STARTING_TOKENS` (3) is a
 PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
 starting-token questions in CLAUDE.md. Change them only in those two files,
 and update this doc when you do.
 
-A round snapshots its `level` and `maxWrong` when it starts, so a level-up never
+A round snapshots its `level`, `maxWrong` and disabled letters when it starts, so a level-up never
 changes a round in progress.
 
 ## Word picking
@@ -63,6 +65,8 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
 
 - A save from before hint words existed has rounds without `hints`. `hydrate` fills them
   in from the word database (`wordById`), or `[]` if the word is gone. Same key, no bump.
+- A save from before disabled keys existed has rounds without `disabledLetters`. `hydrate`
+  sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.
