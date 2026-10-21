@@ -12,11 +12,40 @@ these components.
 - **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
-  (always unlocked) · **Next word** · tab bar. A loss that dropped the level adds a sky-blue line,
-  "Back to level N. You've got this!", under the misses line: encouraging, never a penalty message.
+  (always unlocked) · **Next word** · tab bar. A round that moved the level adds a line under the
+  misses line, in the new level's colour: "Level up! Welcome to level N." or "Back to level N. You've
+  got this!" (encouraging, never a penalty message).
 - There is **no "Next token" bar**: words guessed in a row pay more tokens
   ([progression-and-tokens.md](progression-and-tokens.md)), so the win line's badge carries the
   reward: "+N tokens" (`lastTokensEarned`), plus "· N in a row" once the streak is 2 or more. This differs from the mockup, which still shows "1 / 2 words".
+
+## Level change: the level path (owner's idea, not in the mockup)
+
+**Each level has its own colour** (`levelColors` in [src/theme](../src/theme/index.ts), calm to hot:
+mint, sky, lilac, gold, tangerine, coral, berry, indigo). The header's `Lv N` pill, the path and the
+result's level line use it.
+
+When a round moves the level, `LevelChange` pops a card over the result, `APPEAR_MS` (1100 ms) after
+it shows, so the stamp and the token flight come first. The card holds the **level path**: a winding
+road of numbered stops, level 1 at the bottom, drawn in react-native-svg. Reached stops are filled
+and raised in their colour; stops ahead are pale and dashed. The player's **character avatar** stands
+on its stop and travels to the new one: it hops up (the road fills in the new level's colour, the stop
+pops, sparkles burst, success haptic) or slides down (the road empties, the old stop turns pale again,
+a light tap). The window's "camera" follows the character, so all 8 levels fit any phone; its top and
+bottom fade into the paper. The button ("Let's go!" / "Keep going") fades the card out and **deals the
+next word**, so the player taps once, not "Let's go!" and then "Next word" (owner's call).
+
+- **The header waits for it**: until the character lands, the header keeps the round's level, then
+  `Lv N` changes colour and pops (`onLanded`), the same idea as tokens waiting for their flight.
+- **It plays once**: not for a round restored already finished (`restoredId`). The new round its
+  button deals unmounts it. "Next word" before the card appears skips it.
+- **The card has `zIndex: 10`.** On iOS, `zIndex` becomes a native layer depth that ignores the
+  parent's stacking order, so the stamp's `zIndex: 2` drew over the card on a phone even though the
+  card comes later in the tree. Anything drawn over the result needs a zIndex above 2.
+- Positions come from one `geometry()`: each stretch is an S-curve leaving and entering stops straight
+  up, and the character and camera follow 8 samples of it. The road's fill is an SVG dash offset,
+  which can't use the native driver, so it runs as its own JS-driven value in step with the travel.
+- Checked on web at 393×852 and 375×667 (both directions); the card fits without scrolling.
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
 1400 ms so the fall plays, won 700 ms so the last tile pops). Then the result
@@ -31,7 +60,9 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 | File | What |
 |---|---|
-| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N`, token pill. |
+| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes), token pill. |
+| `LevelChange.tsx` | The level path card (see Level change above). |
+| `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
 | `TokenPill.tsx` | The header's token counter. Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. |
 | `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens (e.g. the Characters shop) only needs an origin. |
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, hint word, token pill). Use it for any new pop so they all feel the same. |

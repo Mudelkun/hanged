@@ -14,6 +14,7 @@ import { characterById } from '../characters/rig';
 import { GameHeader } from '../components/GameHeader';
 import { HangingScene, PLAY_VIEWBOX, RESULT_VIEWBOX, Stamp } from '../components/HangingScene';
 import { LetterKeyboard } from '../components/LetterKeyboard';
+import { LevelChange } from '../components/LevelChange';
 import { PaperBackground } from '../components/PaperBackground';
 import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
 import { TabBar } from '../components/TabBar';
@@ -25,7 +26,7 @@ import { lettersForSale } from '../game/progress';
 import { feedback } from '../feedback';
 import { t } from '../i18n';
 import { useGame } from '../state/GameContext';
-import { colors, fonts } from '../theme';
+import { colors, fonts, levelColor } from '../theme';
 
 const RESULT_DELAY = { lost: 1400, won: 700 };
 
@@ -40,9 +41,17 @@ export default function PlayScreen() {
   const character = characterById(state.characterId);
   const playerName = state.playerName ?? t('player.defaultName');
 
-  // A round restored already finished goes straight to its result.
-  const [resultFor, setResultFor] = useState<string | null>(status === 'playing' ? null : round.id);
+  // A round restored already finished goes straight to its result, with no level animation.
+  const [restoredId] = useState(status === 'playing' ? null : round.id);
+  const [resultFor, setResultFor] = useState<string | null>(restoredId);
   const showResult = resultFor === round.id;
+
+  // A round that moved the level plays the level path over its result. Until the
+  // character lands on the new stop, the header keeps showing the round's level.
+  const level = state.levelProgress.level;
+  const levelMoved = status !== 'playing' && level !== round.level && round.id !== restoredId;
+  const [landedFor, setLandedFor] = useState<string | null>(null);
+  const onLevelLanded = useCallback(() => setLandedFor(round.id), [round.id]);
 
   useEffect(() => {
     if (status === 'playing' || resultFor === round.id) return;
@@ -81,7 +90,7 @@ export default function PlayScreen() {
         name={playerName}
         character={character}
         wordsGuessed={state.wordsGuessed}
-        level={state.levelProgress.level}
+        level={levelMoved && landedFor !== round.id ? round.level : level}
         tokens={state.tokens}
       />
       <View style={styles.body}>
@@ -93,7 +102,7 @@ export default function PlayScreen() {
             character={character}
             tokensEarned={state.lastTokensEarned}
             streak={state.streak}
-            level={state.levelProgress.level}
+            level={level}
             available={available}
             compact={compact}
             onNext={startNextRound}
@@ -144,6 +153,19 @@ export default function PlayScreen() {
         )}
       </View>
       <TabBar active="play" compact={compact} />
+      {/* Its button deals the next word, so the new round unmounts it: one tap, not two */}
+      {showResult && levelMoved && (
+        <LevelChange
+          key={round.id}
+          from={round.level}
+          to={level}
+          character={character}
+          width={available}
+          compact={compact}
+          onLanded={onLevelLanded}
+          onClose={startNextRound}
+        />
+      )}
     </View>
   );
 }
@@ -155,7 +177,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
   characterName: string;
   tokensEarned: number;
   streak: number;
-  /** The player's level now: below the round's level when this loss dropped it. */
+  /** The player's level now: not the round's level when this round moved it. */
   level: number;
   available: number;
   compact: boolean;
@@ -209,7 +231,11 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
           </View>
         )}
       </View>
-      {level < round.level && <Text style={styles.levelDown}>{t('result.levelDown', { level })}</Text>}
+      {level !== round.level && (
+        <Text style={[styles.levelLine, { color: levelColor(level).dark }]}>
+          {t(level > round.level ? 'result.levelUp' : 'result.levelDown', { level })}
+        </Text>
+      )}
       <WordTiles letters={letters} available={available} compact={compact} />
       <DescriptionCard text={round.description} unlocked canAfford={null} compact={compact} />
       <View style={styles.actions}>
@@ -230,6 +256,6 @@ const styles = StyleSheet.create({
   overText: { fontFamily: fonts.display500, fontSize: 15, color: colors.muted, textAlign: 'center' },
   earned: { backgroundColor: colors.butterL, borderColor: '#ffe39a', borderWidth: 2, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 1 },
   earnedText: { fontFamily: fonts.display600, fontSize: 13, color: colors.butterT },
-  levelDown: { marginTop: 6, fontFamily: fonts.display600, fontSize: 14, color: colors.skyT, textAlign: 'center' },
+  levelLine: { marginTop: 6, fontFamily: fonts.display600, fontSize: 14, textAlign: 'center' },
   actions: { marginTop: 'auto', paddingTop: 8 },
 });

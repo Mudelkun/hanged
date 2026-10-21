@@ -43,8 +43,17 @@
   "result.tokenEarned": "+1 token",
   "result.tokensEarned": "+{count} tokens",
   "result.streak": "{count} in a row",
+  "result.levelUp": "Level up! Welcome to level {level}.",
   "result.levelDown": "Back to level {level}. You've got this!",
   "result.nextWord": "Next word",
+
+  "level.up.title": "Level up!",
+  "level.up.body": "Welcome to level {level}. The words get a little harder.",
+  "level.up.button": "Let's go!",
+  "level.down.title": "Back to level {level}",
+  "level.down.body": "Take a breath. You've got this!",
+  "level.down.button": "Keep going",
+  "level.a11y.path": "Level path: from level {from} to level {to}",
 
   "tabs.play": "Play",
   "tabs.versus": "Versus",

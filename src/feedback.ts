@@ -13,5 +13,7 @@ export const feedback = {
   lost: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)),
   stamp: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)),
   unlock: () => safe(Haptics.selectionAsync()),
+  levelUp: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
+  levelDown: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
   refused: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
 };

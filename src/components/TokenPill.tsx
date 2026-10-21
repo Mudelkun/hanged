@@ -12,20 +12,15 @@ import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
-import { coinXml, Icon, sparkXml } from './icons';
+import { coinXml, Icon } from './icons';
 import { popFrom } from './motion';
+import { SparkBurst } from './SparkBurst';
 import { useTokenFlights } from './TokenFlight';
 
 /** A change waits this long for its origin (a win's badge appears ~700 ms after the guess, later on a slow phone). */
 const WAIT_ORIGIN_MS = 4000;
 /** A count lasts about this long, whatever the amount (each step 45–120 ms). */
 const COUNT_MS = 700;
-const SPARK_SIZE = 12;
-const SPARKS = Array.from({ length: 6 }, (_, i) => {
-  const angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
-  const reach = i % 2 ? 20 : 27;
-  return { x: Math.cos(angle) * reach, y: Math.sin(angle) * reach };
-});
 
 interface Change {
   /** Number on screen when the balance changed (mid-count if one was running). */
@@ -55,14 +50,6 @@ function createFx() {
         { rotate: spin.interpolate({ inputRange: [0, 0.2, 0.45, 0.7, 1], outputRange: ['0deg', '-20deg', '14deg', '-7deg', '0deg'] }) },
       ],
     },
-    sparks: SPARKS.map(({ x, y }) => ({
-      opacity: burst.interpolate({ inputRange: [0, 0.1, 0.6, 1], outputRange: [0, 1, 1, 0] }),
-      transform: [
-        { translateX: burst.interpolate({ inputRange: [0, 1], outputRange: [0, x] }) },
-        { translateY: burst.interpolate({ inputRange: [0, 1], outputRange: [0, y] }) },
-        { scale: burst.interpolate({ inputRange: [0, 0.35, 1], outputRange: [0.2, 1, 0.3] }) },
-      ],
-    })),
   };
 }
 
@@ -138,13 +125,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
       <Animated.View style={[styles.pillShadow, fx.pill]}>
         <View style={styles.pill}>
           <View ref={flights.setTarget} collapsable={false} style={styles.coin}>
-            {change &&
-              !spending &&
-              fx.sparks.map((style, i) => (
-                <Animated.View key={i} style={[styles.spark, style]}>
-                  <Icon xml={sparkXml()} size={SPARK_SIZE} />
-                </Animated.View>
-              ))}
+            {change && !spending && <SparkBurst burst={fx.burst} reach={27} />}
             <Animated.View style={spending ? fx.coinSpend : fx.coinGain}>
               <Icon xml={coinXml} size={24} />
             </Animated.View>
@@ -172,5 +153,4 @@ const styles = StyleSheet.create({
   },
   pillText: { fontFamily: fonts.display700, fontSize: 19, color: colors.butterT },
   coin: { width: 24, height: 24 },
-  spark: { position: 'absolute', left: (24 - SPARK_SIZE) / 2, top: (24 - SPARK_SIZE) / 2 },
 });

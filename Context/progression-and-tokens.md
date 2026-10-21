@@ -65,8 +65,9 @@ it can go down while the score never does. `afterRound(levelProgress, won)` in
   real. **Why a drop at all**: a player stuck on a level that's too hard (6 wrong guesses, 15 letters)
   would lose forever. The 3-in-a-row + grace + 10-wins-back combination also limits losing on purpose
   to farm easy words for the leaderboard (an easy word counts the same as a hard one there).
-- The result screen says "Back to level N. You've got this!" when the loss dropped the level
-  (`state.levelProgress.level < round.level`, no extra saved field) ([play-screen.md](play-screen.md)).
+- A round that moved the level plays the level path animation over its result and adds a line to
+  it. It's detected as `state.levelProgress.level !== round.level`, with no extra saved field
+  ([play-screen.md](play-screen.md)).
 
 Each `LEVELS` row sets the word-length range, the
 `clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the

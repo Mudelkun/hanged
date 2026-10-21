@@ -89,6 +89,7 @@ A level's difficulty is set by:
 - **how many clues are given** (fewer clues = harder)
 - for the hardest levels, possibly **fewer wrong guesses allowed** (fewer than 10)
 - **Dropping back down**: losing **3 rounds in a row** moves the player down one level (never below level 1). The first few rounds on a new level never count toward a drop. The result screen says so gently ("Back to level N"), not as a penalty. The leaderboard score never goes down.
+- **Each level has its own colour.** A level change plays an animation: a path of numbered stops, one colour per level, that the player's character climbs up or slides back down.
 - for the easiest levels, **disabled letters**: some letters that are *not* in the word are taken off the keyboard when the round starts, so there are fewer wrong keys to hit. Each higher level disables fewer, down to the full keyboard. At least one wrong letter always stays pickable.
 
 ### Word descriptions

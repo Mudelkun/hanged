@@ -62,3 +62,22 @@ export const characterTint: Record<string, string> = {
   biscuit: '#fff1dc',
   button: '#ffe6e3',
 };
+
+/**
+ * One colour per level (owner's call), calm to hot as the words get harder:
+ * the header's level pill, the level path and the result's level line.
+ * `main` fills a reached stop, `dark` is its raised shadow and text on `light`.
+ */
+export const levelColors = [
+  { main: '#4fcf9c', dark: '#2a9a6e', light: '#dcf7ea' }, // 1 mint
+  { main: '#5bb8f5', dark: '#2a86c8', light: '#e0f3ff' }, // 2 sky
+  { main: '#a98bf5', dark: '#7656dc', light: '#efe9ff' }, // 3 lilac
+  { main: '#f5b82e', dark: '#b97f00', light: '#fff3cc' }, // 4 gold
+  { main: '#ff9a45', dark: '#d9701a', light: '#fff0dc' }, // 5 tangerine
+  { main: '#ff7b6b', dark: '#e05040', light: '#ffe5df' }, // 6 coral
+  { main: '#e45a92', dark: '#bb3369', light: '#ffe3ee' }, // 7 berry
+  { main: '#6a5ae0', dark: '#4636b8', light: '#ebe8ff' }, // 8 indigo
+] as const;
+
+/** A level's colours. If levels are added past the list, it wraps around. */
+export const levelColor = (level: number) => levelColors[(Math.max(1, level) - 1) % levelColors.length];

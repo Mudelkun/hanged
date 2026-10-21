@@ -3,14 +3,15 @@
  * the app name), words guessed, level and token balance.
  * The avatar is the button that will open the Profile page (not built yet).
  */
-import { memo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { memo, useEffect, useRef, useState } from 'react';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { Character, faceXml } from '../characters/rig';
 import { t } from '../i18n';
-import { characterTint, colors, fonts } from '../theme';
+import { characterTint, colors, fonts, levelColor } from '../theme';
 import { Icon, starXml } from './icons';
+import { popFrom } from './motion';
 import { TokenPill } from './TokenPill';
 
 interface Props {
@@ -36,6 +37,24 @@ export const Avatar = memo(function Avatar({ character, size }: { character: Cha
   );
 });
 
+/** "Lv N" in the level's own colour. It pops when the level changes, never when it first shows. */
+const LevelPill = memo(function LevelPill({ level }: { level: number }) {
+  const [pop] = useState(() => new Animated.Value(1));
+  const prev = useRef(level);
+  useEffect(() => {
+    if (level === prev.current) return;
+    prev.current = level;
+    popFrom(pop, 1.35);
+  }, [level, pop]);
+  const c = levelColor(level);
+  return (
+    <Animated.View style={[styles.level, { backgroundColor: c.light, borderColor: `${c.main}80`, transform: [{ scale: pop }] }]}>
+      <Icon xml={starXml(c.main)} size={15} />
+      <Text style={[styles.levelText, { color: c.dark }]}>{t('header.level', { level })}</Text>
+    </Animated.View>
+  );
+});
+
 export function GameHeader({ name, character, wordsGuessed, level, tokens }: Props) {
   return (
     <View style={styles.head}>
@@ -53,10 +72,7 @@ export function GameHeader({ name, character, wordsGuessed, level, tokens }: Pro
         </View>
       </View>
       <View style={styles.side}>
-        <View style={styles.level}>
-          <Icon xml={starXml()} size={15} />
-          <Text style={styles.levelText}>{t('header.level', { level })}</Text>
-        </View>
+        <LevelPill level={level} />
         <TokenPill tokens={tokens} />
       </View>
     </View>
@@ -91,13 +107,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: colors.mintL,
-    borderColor: '#c3eedb',
     borderWidth: 2,
     borderRadius: 13,
     paddingVertical: 5,
     paddingLeft: 7,
     paddingRight: 10,
   },
-  levelText: { fontFamily: fonts.display600, fontSize: 14, color: colors.mintT },
+  levelText: { fontFamily: fonts.display600, fontSize: 14 },
 });
