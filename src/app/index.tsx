@@ -1,6 +1,6 @@
 /*
  * The Play screen. It shows one of two layouts for the current round:
- *   - playing: scene, misses, word, hint words, description, keyboard
+ *   - playing: scene, misses, word, hint words, letter shop (hardest levels), description, keyboard
  *   - result (won or lost): bigger scene with the stamp, the full word,
  *     the description and "Next word" (mockup: Round lost)
  * When the round ends, the play layout stays a moment so the last
@@ -15,12 +15,13 @@ import { GameHeader } from '../components/GameHeader';
 import { HangingScene, PLAY_VIEWBOX, RESULT_VIEWBOX, Stamp } from '../components/HangingScene';
 import { LetterKeyboard } from '../components/LetterKeyboard';
 import { PaperBackground } from '../components/PaperBackground';
-import { BigButton, DescriptionCard, HintPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
+import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
 import { TabBar } from '../components/TabBar';
 import { useTokenOrigin } from '../components/TokenFlight';
-import { DESCRIPTION_COST } from '../game/config';
+import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
 import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
-import { levelNumberFor } from '../game/levels';
+import { levelByNumber, levelNumberFor } from '../game/levels';
+import { lettersForSale } from '../game/progress';
 import { feedback } from '../feedback';
 import { t } from '../i18n';
 import { useGame } from '../state/GameContext';
@@ -67,6 +68,11 @@ export default function PlayScreen() {
     dispatch({ type: 'unlockDescription' });
   }, [dispatch]);
 
+  const onBuyLetters = useCallback(() => {
+    feedback.unlock();
+    dispatch({ type: 'buyLetters' });
+  }, [dispatch]);
+
   return (
     <View style={styles.screen}>
       <PaperBackground />
@@ -109,6 +115,14 @@ export default function PlayScreen() {
               compact={compact}
             />
             <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
+            {levelByNumber(round.level).sellsLetters && (
+              <LetterShopPill
+                bought={round.boughtLetters.length > 0}
+                canAfford={lettersForSale(state) ? state.tokens >= LETTER_BUY_COST : null}
+                onBuy={onBuyLetters}
+                compact={compact}
+              />
+            )}
             <DescriptionCard
               text={round.description}
               unlocked={round.descriptionUnlocked}

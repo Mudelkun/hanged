@@ -9,7 +9,7 @@ these components.
 
 ## Two layouts on one screen
 
-- **Playing**: header · scene · miss pips · word tiles · hint pill · description card · keyboard · tab bar.
+- **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("HANGED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · **Next word** · tab bar.
@@ -35,7 +35,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens (e.g. the Characters shop) only needs an origin. |
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, hint word, token pill). Use it for any new pop so they all feel the same. |
 | `HangingScene.tsx` | Scene card: sky, sun, drifting clouds, the animated character ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
-| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `DescriptionCard`, `BigButton`. |
+| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton`. `PayButton` (private) is the coral "label + coin" button that spends tokens: the description's Unlock and the shop's "10". It sends the token flight, then pays, and turns beige and refuses ("Not enough tokens yet", `useRefusal`) without enough tokens. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
@@ -69,6 +69,15 @@ hint with a small pop. The index is component state, reset by a per-round `key`
 isn't saved, so a restart hides it again, which costs nothing. It's left off the result
 screen. A round with no hints renders nothing. Checked at 393×852 and 375×667: still
 no scrolling, the scene absorbs the height.
+
+## Letter shop pill (not in the mockup)
+
+Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). Same
+white pill as the hint, under it, with a **butter** "LETTERS" chip (butter = clue letters and
+tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button. After buying it reads
+"2 letters revealed", and the bought tiles and keys turn butter like clues. **The pill stays for the
+whole round**, even when there's nothing left to buy or the round ends, so the scene never jumps; only
+the button comes and goes. Checked at 393×852 and 375×667 with a 12-letter word: still no scrolling.
 
 ## Deliberate differences from the mockup
 

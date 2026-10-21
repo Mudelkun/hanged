@@ -10,6 +10,7 @@
 
   "tokens.gain": "+{count}",
   "tokens.spend": "−{count}",
+  "tokens.notEnough": "Not enough tokens yet",
 
   "play.misses": "/ {max} misses",
   "play.a11y.scene": "{name}, hanging step {stage} of 10",
@@ -24,10 +25,15 @@
   "hint.a11y.show": "Show a free hint word",
   "hint.a11y.word": "Hint {index} of {total}: {word}. Tap for the next one",
 
+  "letters.label": "LETTERS",
+  "letters.offer": "Reveal {count} hidden letters",
+  "letters.bought": "{count} letters revealed",
+  "letters.buy": "{cost}",
+  "letters.a11y.buy": "Reveal {count} hidden letters for {cost} tokens",
+
   "description.label": "DESCRIPTION",
   "description.hiddenPlaceholder": "A little secret hint for you",
   "description.unlock": "Unlock · {cost}",
-  "description.notEnough": "Not enough tokens yet",
   "description.a11y.unlock": "Unlock the description for {cost} tokens",
 
   "result.lost.stamp": "HANGED !!",

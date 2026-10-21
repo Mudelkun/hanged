@@ -8,11 +8,13 @@
 import {
   DEFAULT_LANGUAGE,
   DESCRIPTION_COST,
+  LETTER_BUY_COST,
+  LETTER_BUY_COUNT,
   RECENT_WORDS_MEMORY,
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
-import { createRound, guess, Round, roundStatus, unlockDescription } from './engine';
+import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription } from './engine';
 import { levelByNumber, levelFor } from './levels';
 import { pickWord, wordById, WordEntry } from './words';
 
@@ -50,7 +52,8 @@ export type GameAction =
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
   | { type: 'guess'; letter: string }
-  | { type: 'unlockDescription' };
+  | { type: 'unlockDescription' }
+  | { type: 'buyLetters'; rng?: () => number };
 
 /**
  * Tokens paid by a win at `level` that brings the streak to `streak`: the
@@ -64,6 +67,10 @@ type LegacySave = GameState & { wordsTowardToken?: number; lastTokenEarned?: boo
 export const canUnlockDescription = (s: GameState) =>
   !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
 
+/** The round's level sells letters and the round can still take them (affordable or not). */
+export const lettersForSale = (s: GameState) =>
+  !!s.round && levelByNumber(s.round.level).sellsLetters && canBuyLetters(s.round, LETTER_BUY_COUNT);
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'hydrate': {
@@ -76,8 +83,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
       // A round saved before hint words existed gets them from the word database.
       if (s.round && !s.round.hints) s = { ...s, round: { ...s.round, hints: wordById(s.round.wordId)?.hints ?? [] } };
-      // A round saved before disabled keys existed keeps its full keyboard.
-      if (s.round && !s.round.disabledLetters) s = { ...s, round: { ...s.round, disabledLetters: [] } };
+      // A round saved before disabled keys or bought letters existed: full keyboard, nothing bought.
+      if (s.round) {
+        const { disabledLetters = [], boughtLetters = [] } = s.round;
+        s = { ...s, round: { ...s.round, disabledLetters, boughtLetters } };
+      }
       return s;
     }
 
@@ -128,6 +138,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'unlockDescription': {
       if (!canUnlockDescription(state)) return state;
       return { ...state, round: unlockDescription(state.round!), tokens: state.tokens - DESCRIPTION_COST };
+    }
+
+    case 'buyLetters': {
+      // Buying leaves a letter hidden, so it never wins the round: scoring stays in `guess`.
+      if (!lettersForSale(state) || state.tokens < LETTER_BUY_COST) return state;
+      const round = buyLetters(state.round!, LETTER_BUY_COUNT, action.rng);
+      return { ...state, round, tokens: state.tokens - LETTER_BUY_COST };
     }
   }
 }

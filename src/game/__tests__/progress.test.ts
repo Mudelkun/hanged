@@ -1,7 +1,7 @@
-import { DESCRIPTION_COST, STARTING_TOKENS, STREAK_BONUS_AT, WORDS_PER_LEVEL } from '../config';
+import { DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT, STARTING_TOKENS, STREAK_BONUS_AT, WORDS_PER_LEVEL } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { LEVELS, levelNumberFor } from '../levels';
-import { gameReducer, GameState, initialState, tokenReward } from '../progress';
+import { gameReducer, GameState, initialState, lettersForSale, tokenReward } from '../progress';
 import { pickWord, WORDS } from '../words';
 
 const word = {
@@ -160,6 +160,39 @@ describe('description unlock', () => {
   it('is refused without enough tokens', () => {
     const s = startRound({ ...initialState(), tokens: DESCRIPTION_COST - 1 });
     expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
+  });
+});
+
+describe('buying letters', () => {
+  const lastLevel = { ...initialState(), wordsGuessed: (LEVELS.length - 1) * WORDS_PER_LEVEL, tokens: LETTER_BUY_COST };
+
+  it('only the levels that sell letters offer them', () => {
+    expect(LEVELS[LEVELS.length - 1].sellsLetters).toBe(true);
+    expect(lettersForSale(startRound(lastLevel))).toBe(true);
+    const easy = startRound({ ...initialState(), tokens: LETTER_BUY_COST });
+    expect(lettersForSale(easy)).toBe(false);
+    expect(gameReducer(easy, { type: 'buyLetters' })).toBe(easy);
+  });
+
+  it('costs LETTER_BUY_COST tokens for LETTER_BUY_COUNT letters, once per round, and never scores', () => {
+    let s = startRound(lastLevel);
+    s = gameReducer(s, { type: 'buyLetters', rng: () => 0 });
+    expect(s.round!.boughtLetters).toHaveLength(LETTER_BUY_COUNT);
+    expect(s.tokens).toBe(0);
+    expect(s.wordsGuessed).toBe(lastLevel.wordsGuessed);
+    expect(roundStatus(s.round!)).toBe('playing');
+    expect(gameReducer({ ...s, tokens: LETTER_BUY_COST }, { type: 'buyLetters' }).round).toBe(s.round);
+  });
+
+  it('is refused without enough tokens', () => {
+    const s = startRound({ ...lastLevel, tokens: LETTER_BUY_COST - 1 });
+    expect(gameReducer(s, { type: 'buyLetters' })).toBe(s);
+  });
+
+  it('a round saved before bought letters existed has none', () => {
+    const { boughtLetters, ...oldRound } = startRound(initialState()).round!;
+    const saved = { ...initialState(), round: oldRound as typeof oldRound & { boughtLetters: string[] } };
+    expect(gameReducer(initialState(), { type: 'hydrate', state: saved }).round!.boughtLetters).toEqual([]);
   });
 });
 

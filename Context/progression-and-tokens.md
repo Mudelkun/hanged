@@ -28,7 +28,14 @@ would then count it again.
     streak: the round in progress is saved, so restarting the app can't skip a word, and the
     description unlock doesn't count. `streak` is saved; an older save gets 0 from `initialState()`.
   - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS** until character prices exist.
-- Tokens are spent only on a description (`DESCRIPTION_COST` = 2) and, later, on characters.
+- Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and, later, on characters.
+- **Buying letters (owner's request)**: on a level with `sellsLetters` (only level 8: 10–15 letters,
+  12% clues), the `buyLetters` action reveals `LETTER_BUY_COUNT` (2) hidden letters for
+  `LETTER_BUY_COST` (10) tokens, **once per round**. `lettersForSale(state)` says whether the round
+  can still take them; the reducer also checks the balance. The engine refuses when 2 or fewer distinct
+  letters are hidden, so one always stays hidden and **buying never wins a round**: scoring stays in
+  the winning guess. Like the description, it doesn't break a streak. To sell letters on more levels,
+  flip `sellsLetters` in `LEVELS`.
 - **Old saves**: the "N words per token" rate (5, then 2, then 1) and its `wordsTowardToken`
   field and "Next token" bar are gone, because a progress bar can't show payouts that vary.
   `hydrate` pays a leftover `wordsTowardToken` as 1 token per word (the last rate), maps the old
@@ -47,8 +54,8 @@ is `1 + floor(wordsGuessed / WORDS_PER_LEVEL)`, capped at the last level, so it
 **never drops back down**. Each `LEVELS` row sets the word-length range, the
 `clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the
 keyboard: 0.5 at level 1, minus 0.1 per level, 0 from level 6; a test keeps it
-non-increasing and ending at 0), `maxWrong` (10 until level 7, then 8, then 6) and
-`tokenReward` (see Tokens above). `levelByNumber` reads a row by a round's `level`.
+non-increasing and ending at 0), `maxWrong` (10 until level 7, then 8, then 6),
+`tokenReward` (see Tokens above) and `sellsLetters` (only level 8). `levelByNumber` reads a row by a round's `level`.
 
 **Every number in `LEVELS`, `WORDS_PER_LEVEL` and `STARTING_TOKENS` (3) is a
 PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
@@ -76,6 +83,8 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   in from the word database (`wordById`), or `[]` if the word is gone. Same key, no bump.
 - A save from before disabled keys existed has rounds without `disabledLetters`. `hydrate`
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
+- A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`
+  sets `[]`. Same key, no bump.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.

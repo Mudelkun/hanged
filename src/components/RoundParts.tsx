@@ -1,12 +1,12 @@
 /*
  * The pieces between the scene and the keyboard: miss pips, word tiles,
- * the hint pill and the description card. Sizes and colours follow
+ * the hint pill, the letter shop pill and the description card. Sizes and colours follow
  * design/ui-mockup.html (.misses, .tiles, .desc).
  */
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { DESCRIPTION_COST } from '../game/config';
+import { DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
 import { bulbXml, coinXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
@@ -132,15 +132,15 @@ export function HintPill({ hints, compact }: { hints: readonly string[]; compact
           radius={16}
           pressed={pressed}
           outerStyle={{ marginBottom: compact ? 7 : 10 }}
-          style={[styles.hint, compact && { height: 36 }]}
+          style={[styles.pill, compact && { height: 36 }]}
         >
-          <Text style={styles.hintChip}>{t('hint.label')}</Text>
+          <Text style={[styles.pillChip, styles.hintChip]}>{t('hint.label')}</Text>
           {shown ? (
             <Animated.Text style={[styles.hintWord, { transform: [{ scale: pop }] }]} numberOfLines={1}>
               {hints[index].toUpperCase()}
             </Animated.Text>
           ) : (
-            <Text style={styles.hintTap} numberOfLines={1}>
+            <Text style={styles.pillText} numberOfLines={1}>
               {t('hint.tapToShow')}
             </Text>
           )}
@@ -151,6 +151,105 @@ export function HintPill({ hints, compact }: { hints: readonly string[]; compact
         </Raised>
       )}
     </Pressable>
+  );
+}
+
+// ---- paying tokens ----
+
+/** True for 2.2 s after `refuse()`: a press without enough tokens shows "Not enough tokens yet". */
+function useRefusal(): [boolean, () => void] {
+  const [refused, setRefused] = useState(false);
+  useEffect(() => {
+    if (!refused) return;
+    const id = setTimeout(() => setRefused(false), 2200);
+    return () => clearTimeout(id);
+  }, [refused]);
+  return [refused, () => setRefused(true)];
+}
+
+/** Coral "label + coin" button that spends tokens; beige, and refused, when the player can't afford it. */
+function PayButton({ label, a11yLabel, canAfford, onPay, onRefuse, icon, pillHeight }: {
+  label: string;
+  a11yLabel: string;
+  canAfford: boolean;
+  onPay?: () => void;
+  onRefuse: () => void;
+  icon?: ReactNode;
+  /** Set when the button sits inside a pill: its height there. */
+  pillHeight?: number;
+}) {
+  const [ref, sendToken] = useTokenOrigin();
+  const small = pillHeight !== undefined;
+  const press = () => {
+    // Measure the button before paying: it's gone once the purchase shows
+    if (canAfford) sendToken(-1).then(() => onPay?.());
+    else onRefuse();
+  };
+  return (
+    <Pressable
+      ref={ref}
+      collapsable={false}
+      onPress={press}
+      hitSlop={small ? 6 : undefined}
+      accessibilityRole="button"
+      accessibilityLabel={a11yLabel}
+      accessibilityState={{ disabled: !canAfford }}
+    >
+      {({ pressed }) => (
+        <Raised
+          depth={small ? 3 : 4}
+          shadowColor={canAfford ? colors.coralD : '#dccbb8'}
+          radius={small ? 10 : 15}
+          pressed={pressed}
+          style={[styles.pay, small && [styles.paySmall, { height: pillHeight }], !canAfford && { backgroundColor: '#e9dccd' }]}
+        >
+          {icon}
+          <Text style={styles.payText}>{label}</Text>
+          <Icon xml={coinXml} size={small ? 16 : 18} />
+        </Raised>
+      )}
+    </Pressable>
+  );
+}
+
+// ---- letter shop (hardest levels) ----
+
+/**
+ * Not in the mockup. On levels that sell letters, the player can reveal
+ * LETTER_BUY_COUNT hidden letters for LETTER_BUY_COST tokens, once per round.
+ * The pill stays for the whole round so the layout never jumps; only its
+ * button comes and goes. `canAfford` null: nothing to buy right now.
+ */
+export function LetterShopPill({ bought, canAfford, onBuy, compact }: {
+  bought: boolean;
+  canAfford: boolean | null;
+  onBuy: () => void;
+  compact?: boolean;
+}) {
+  const [refused, refuse] = useRefusal();
+  const params = { count: LETTER_BUY_COUNT, cost: LETTER_BUY_COST };
+  return (
+    <Raised
+      shadowColor={colors.shadow}
+      radius={16}
+      outerStyle={{ marginBottom: compact ? 7 : 10 }}
+      style={[styles.pill, compact && { height: 36 }]}
+    >
+      <Text style={[styles.pillChip, styles.shopChip]}>{t('letters.label')}</Text>
+      <Text style={[styles.pillText, refused && { color: colors.coralD }]} numberOfLines={1}>
+        {refused ? t('tokens.notEnough') : t(bought ? 'letters.bought' : 'letters.offer', params)}
+      </Text>
+      {!bought && canAfford !== null && (
+        <PayButton
+          label={t('letters.buy', params)}
+          a11yLabel={t('letters.a11y.buy', params)}
+          canAfford={canAfford}
+          onPay={onBuy}
+          onRefuse={refuse}
+          pillHeight={compact ? 25 : 28}
+        />
+      )}
+    </Raised>
   );
 }
 
@@ -166,20 +265,7 @@ interface DescriptionProps {
 }
 
 export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }: DescriptionProps) {
-  const [refused, setRefused] = useState(false);
-  const [unlockRef, sendToken] = useTokenOrigin();
-  useEffect(() => {
-    if (!refused) return;
-    const id = setTimeout(() => setRefused(false), 2200);
-    return () => clearTimeout(id);
-  }, [refused]);
-
-  const press = () => {
-    // Measure the button before unlocking: it's gone once the description shows
-    if (canAfford) sendToken(-1).then(() => onUnlock?.());
-    else setRefused(true);
-  };
-
+  const [refused, refuse] = useRefusal();
   return (
     <Raised shadowColor={colors.shadow} radius={22} style={[styles.desc, compact && { paddingVertical: 7 }]}>
       <View style={styles.bulb}>
@@ -192,7 +278,7 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
             {text}
           </Text>
         ) : refused ? (
-          <Text style={[styles.descText, { color: colors.coralD }]}>{t('description.notEnough')}</Text>
+          <Text style={[styles.descText, { color: colors.coralD }]}>{t('tokens.notEnough')}</Text>
         ) : (
           // Placeholder text, blurred: the real hint is never on screen until it is paid for
           <Text style={styles.blurred} numberOfLines={1} accessibilityElementsHidden importantForAccessibility="no">
@@ -201,27 +287,14 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
         )}
       </View>
       {!unlocked && canAfford !== null && (
-        <Pressable
-          ref={unlockRef}
-          collapsable={false}
-          onPress={press}
-          accessibilityRole="button"
-          accessibilityLabel={t('description.a11y.unlock', { cost: DESCRIPTION_COST })}
-          accessibilityState={{ disabled: !canAfford }}
-        >
-          {({ pressed }) => (
-            <Raised
-              shadowColor={canAfford ? colors.coralD : '#dccbb8'}
-              radius={15}
-              pressed={pressed}
-              style={[styles.unlock, !canAfford && { backgroundColor: '#e9dccd' }]}
-            >
-              <Icon xml={lockXml('#fff')} size={15} />
-              <Text style={styles.unlockText}>{t('description.unlock', { cost: DESCRIPTION_COST })}</Text>
-              <Icon xml={coinXml} size={18} />
-            </Raised>
-          )}
-        </Pressable>
+        <PayButton
+          label={t('description.unlock', { cost: DESCRIPTION_COST })}
+          a11yLabel={t('description.a11y.unlock', { cost: DESCRIPTION_COST })}
+          canAfford={canAfford}
+          onPay={onUnlock}
+          onRefuse={refuse}
+          icon={<Icon xml={lockXml('#fff')} size={15} />}
+        />
       )}
     </Raised>
   );
@@ -270,7 +343,7 @@ const styles = StyleSheet.create({
   tileDash: { position: 'absolute', height: 4, borderRadius: 2, backgroundColor: '#ead9c4' },
   spark: { position: 'absolute' },
 
-  hint: {
+  pill: {
     height: 40,
     backgroundColor: '#fff',
     borderWidth: 2,
@@ -281,19 +354,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  hintChip: {
+  pillChip: {
     fontFamily: fonts.display600,
     fontSize: 12,
     letterSpacing: 1,
-    color: colors.skyT,
-    backgroundColor: colors.skyL,
     borderRadius: 10,
     overflow: 'hidden',
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
+  pillText: { flex: 1, fontFamily: fonts.body800, fontSize: 14, color: colors.muted },
+  // Sky = free (hint words); butter = clue letters and tokens (the letter shop)
+  hintChip: { color: colors.skyT, backgroundColor: colors.skyL },
+  shopChip: { color: colors.butterT, backgroundColor: colors.butterL },
   hintWord: { flex: 1, fontFamily: fonts.display700, fontSize: 18, letterSpacing: 1.5, color: colors.ink },
-  hintTap: { flex: 1, fontFamily: fonts.body800, fontSize: 14, color: colors.muted },
   hintCount: { fontFamily: fonts.display600, fontSize: 13.5, color: colors.muted },
   hintBtn: { width: 28, height: 28, borderRadius: 10, backgroundColor: colors.sky, alignItems: 'center', justifyContent: 'center' },
 
@@ -320,7 +394,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 7,
     textShadowOffset: { width: 0, height: 0 },
   },
-  unlock: {
+  pay: {
     backgroundColor: colors.coral,
     flexDirection: 'row',
     alignItems: 'center',
@@ -328,7 +402,8 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     paddingHorizontal: 11,
   },
-  unlockText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
+  paySmall: { paddingVertical: 0, paddingHorizontal: 9, gap: 4 },
+  payText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
 
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },

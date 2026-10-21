@@ -1,10 +1,13 @@
 import {
+  buyLetters,
+  canBuyLetters,
   clueCount,
   createRound,
   decoyLetters,
   disabledCount,
   guess,
   hangingStage,
+  hiddenLetters,
   keyState,
   pickClueLetters,
   pickDisabledLetters,
@@ -27,6 +30,7 @@ const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: stri
   maxWrong,
   clueLetters: clues,
   disabledLetters: disabled,
+  boughtLetters: [],
   guessed: [],
   descriptionUnlocked: false,
 });
@@ -180,5 +184,37 @@ describe('hanging stage', () => {
     const lost = play(r, 'abcdef');
     expect(roundStatus(lost)).toBe('lost');
     expect(hangingStage(lost)).toBe(10);
+  });
+});
+
+describe('bought letters', () => {
+  it('reveals every occurrence of the bought letters, which look and count like clues', () => {
+    const r = buyLetters(round('banana', ['b']), 1, () => 0);
+    expect(r.boughtLetters).toHaveLength(1);
+    const [c] = r.boughtLetters;
+    expect('an').toContain(c);
+    expect(tileState(r, c)).toBe('clue');
+    expect(keyState(r, c)).toBe('clue');
+    expect(usedLetters(r).has(c)).toBe(true);
+    expect(guess(r, c)).toBe(r);
+    expect(wrongCount(r)).toBe(0);
+  });
+
+  it('always leaves a letter hidden, so buying never wins the round', () => {
+    const r = round('castle', ['c', 'a', 's']);
+    expect(hiddenLetters(r)).toHaveLength(3);
+    expect(canBuyLetters(r, 2)).toBe(true);
+    expect(roundStatus(buyLetters(r, 2))).toBe('playing');
+    const twoLeft = play(r, 't');
+    expect(canBuyLetters(twoLeft, 2)).toBe(false);
+    expect(buyLetters(twoLeft, 2)).toBe(twoLeft);
+  });
+
+  it('can be bought once per round, and not once the round is over', () => {
+    const r = buyLetters(round('castle'), 2);
+    expect(buyLetters(r, 2)).toBe(r);
+    const lost = play(round('castle', [], 2), 'zq');
+    expect(roundStatus(lost)).toBe('lost');
+    expect(buyLetters(lost, 2)).toBe(lost);
   });
 });

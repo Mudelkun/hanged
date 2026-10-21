@@ -27,6 +27,8 @@ export interface Round {
   clueLetters: Letter[];
   /** Letters not in the word, taken off the keyboard at the start (easy levels). Their keys count as used. */
   disabledLetters: Letter[];
+  /** Letters the player bought with tokens (hardest levels). They look and count like clues. */
+  boughtLetters: Letter[];
   /** Letters the player picked, in order. Never contains a clue letter or a repeat. */
   guessed: Letter[];
   descriptionUnlocked: boolean;
@@ -139,13 +141,24 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
     clueLetters: pickClueLetters(checked.word, input.clueRatio, rng),
     disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
+    boughtLetters: [],
     guessed: [],
     descriptionUnlocked: false,
   };
 }
 
-/** Every letter that is out of play: clues + disabled keys + guesses. */
-export const usedLetters = (r: Round): Set<Letter> => new Set([...r.clueLetters, ...r.disabledLetters, ...r.guessed]);
+/** Every letter that is out of play: clues + disabled keys + bought letters + guesses. */
+export const usedLetters = (r: Round): Set<Letter> =>
+  new Set([...r.clueLetters, ...r.disabledLetters, ...r.boughtLetters, ...r.guessed]);
+
+/** A letter shown for free at the start or bought: both look like clues. */
+const isClue = (r: Round, c: Letter) => r.clueLetters.includes(c) || r.boughtLetters.includes(c);
+
+/** The word's distinct letters that are still hidden. */
+export const hiddenLetters = (r: Round): Letter[] => {
+  const used = usedLetters(r);
+  return uniqueLetters(r.word).filter((c) => !used.has(c));
+};
 
 export const wrongLetters = (r: Round): Letter[] => r.guessed.filter((c) => !r.word.includes(c));
 
@@ -166,14 +179,14 @@ export const hangingStage = (r: Round) =>
   Math.min(HANGING_STAGES, Math.round((wrongCount(r) * HANGING_STAGES) / r.maxWrong));
 
 export function keyState(r: Round, c: Letter): KeyState {
-  if (r.clueLetters.includes(c)) return 'clue';
+  if (isClue(r, c)) return 'clue';
   if (r.disabledLetters.includes(c)) return 'off';
   if (!r.guessed.includes(c)) return 'idle';
   return r.word.includes(c) ? 'ok' : 'no';
 }
 
 export function tileState(r: Round, c: Letter): TileState {
-  if (r.clueLetters.includes(c)) return 'clue';
+  if (isClue(r, c)) return 'clue';
   return r.guessed.includes(c) ? 'ok' : 'hidden';
 }
 
@@ -192,3 +205,19 @@ export function guess(r: Round, raw: string): Round {
 
 export const unlockDescription = (r: Round): Round =>
   r.descriptionUnlocked ? r : { ...r, descriptionUnlocked: true };
+
+// ---- bought letters (hardest levels) ----
+
+/**
+ * `count` letters can be bought once per round, while it's playing, and only
+ * if at least one letter stays hidden after (rule 4), so buying never wins
+ * the round and the player always gets the full `count` they paid for.
+ */
+export const canBuyLetters = (r: Round, count: number) =>
+  r.boughtLetters.length === 0 && roundStatus(r) === 'playing' && hiddenLetters(r).length > count;
+
+/** Reveals `count` random hidden letters (every occurrence). Returns the same object when not allowed. */
+export function buyLetters(r: Round, count: number, rng: () => number = Math.random): Round {
+  if (!canBuyLetters(r, count)) return r;
+  return { ...r, boughtLetters: shuffled(hiddenLetters(r), rng).slice(0, count) };
+}

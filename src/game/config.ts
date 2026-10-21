@@ -24,6 +24,10 @@ export const STREAK_BONUS_AT: readonly number[] = [3, 6, 10];
 /** Unlocking a word's description costs 2 tokens. */
 export const DESCRIPTION_COST = 2;
 
+/** On levels with `sellsLetters` (levels.ts), the player can reveal 2 hidden letters for 10 tokens, once per round. */
+export const LETTER_BUY_COUNT = 2;
+export const LETTER_BUY_COST = 10;
+
 /** PLACEHOLDER: tokens a brand-new player starts with. */
 export const STARTING_TOKENS = 3;
 

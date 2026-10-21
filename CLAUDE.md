@@ -116,9 +116,10 @@ A level's difficulty is set by:
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
-- **Spending**: tokens are used for exactly two things:
+- **Spending**: tokens are used for exactly three things:
   1. unlocking a word's description (2 tokens)
-  2. unlocking characters (each character has a price in tokens)
+  2. on the highest level (very long words, few clues): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
+  3. unlocking characters (each character has a price in tokens)
 - There are **no gems** in the game. The mockup shows gems, but ignore them.
 - The mockup puts a heart counter in the top bar. That spot becomes the token counter, with a **different symbol, not a heart**. Don't use hearts for it, because hearts suggest lives.
 
