@@ -10,7 +10,8 @@ import { SvgXml } from 'react-native-svg';
 import { Character, faceXml } from '../characters/rig';
 import { t } from '../i18n';
 import { characterTint, colors, fonts } from '../theme';
-import { coinXml, Icon, starXml } from './icons';
+import { Icon, starXml } from './icons';
+import { TokenPill } from './TokenPill';
 
 interface Props {
   name: string;
@@ -34,17 +35,6 @@ export const Avatar = memo(function Avatar({ character, size }: { character: Cha
     </View>
   );
 });
-
-export function TokenPill({ tokens }: { tokens: number }) {
-  return (
-    <View style={styles.pillShadow} accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })}>
-      <View style={styles.pill}>
-        <Icon xml={coinXml} size={24} />
-        <Text style={styles.pillText}>{tokens}</Text>
-      </View>
-    </View>
-  );
-}
 
 export function GameHeader({ name, character, wordsGuessed, level, tokens }: Props) {
   return (
@@ -110,18 +100,4 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   levelText: { fontFamily: fonts.display600, fontSize: 14, color: colors.mintT },
-  pillShadow: { borderRadius: 17, backgroundColor: '#f6dc9c', paddingBottom: 3 },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: '#fff',
-    borderColor: '#ffe39a',
-    borderWidth: 2,
-    borderRadius: 17,
-    paddingVertical: 4,
-    paddingLeft: 6,
-    paddingRight: 11,
-  },
-  pillText: { fontFamily: fonts.display700, fontSize: 19, color: colors.butterT },
 });

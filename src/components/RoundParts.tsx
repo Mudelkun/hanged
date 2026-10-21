@@ -10,7 +10,9 @@ import { DESCRIPTION_COST } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
 import { bulbXml, coinXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
+import { popFrom } from './motion';
 import { Raised } from './Raised';
+import { useTokenOrigin } from './TokenFlight';
 
 // ---- misses ----
 
@@ -47,8 +49,7 @@ function Tile({ letter, look, w, h }: { letter: string; look: TileLook; w: numbe
     if (look === prevLook.current) return;
     prevLook.current = look;
     if (look === 'hidden') return;
-    pop.setValue(0.55);
-    Animated.spring(pop, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }).start();
+    popFrom(pop, 0.55);
   }, [look, pop]);
 
   const radius = Math.round(w * 0.32);
@@ -114,8 +115,7 @@ export function HintPill({ hints, compact }: { hints: readonly string[]; compact
   const shown = index !== null;
   const press = () => {
     setIndex((i) => (i === null ? 0 : (i + 1) % total));
-    pop.setValue(0.6);
-    Animated.spring(pop, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }).start();
+    popFrom(pop, 0.6);
   };
 
   return (
@@ -167,6 +167,7 @@ interface DescriptionProps {
 
 export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }: DescriptionProps) {
   const [refused, setRefused] = useState(false);
+  const [unlockRef, sendToken] = useTokenOrigin();
   useEffect(() => {
     if (!refused) return;
     const id = setTimeout(() => setRefused(false), 2200);
@@ -174,7 +175,8 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
   }, [refused]);
 
   const press = () => {
-    if (canAfford) onUnlock?.();
+    // Measure the button before unlocking: it's gone once the description shows
+    if (canAfford) sendToken(-1).then(() => onUnlock?.());
     else setRefused(true);
   };
 
@@ -200,6 +202,8 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
       </View>
       {!unlocked && canAfford !== null && (
         <Pressable
+          ref={unlockRef}
+          collapsable={false}
           onPress={press}
           accessibilityRole="button"
           accessibilityLabel={t('description.a11y.unlock', { cost: DESCRIPTION_COST })}

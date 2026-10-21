@@ -17,6 +17,7 @@ import { LetterKeyboard } from '../components/LetterKeyboard';
 import { PaperBackground } from '../components/PaperBackground';
 import { BigButton, DescriptionCard, HintPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
 import { TabBar } from '../components/TabBar';
+import { useTokenOrigin } from '../components/TokenFlight';
 import { DESCRIPTION_COST } from '../game/config';
 import { hangingStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
 import { levelNumberFor } from '../game/levels';
@@ -146,6 +147,12 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
   const used = usedLetters(round);
   const wrong = wrongCount(round);
   const won = status === 'won';
+  const paid = won && tokensEarned > 0;
+  // The reward flies from its badge into the token counter (TokenFlight)
+  const [badgeRef, sendToken] = useTokenOrigin();
+  useEffect(() => {
+    if (paid) sendToken(1);
+  }, [paid, sendToken]);
   const letters = round.word.split('').map((c) => ({
     letter: c,
     // Lost: what was found turns mint, what was missed turns coral (mockup)
@@ -176,8 +183,8 @@ function ResultView({ round, status, character, characterName, tokensEarned, str
             ? t('result.won.line', { name: characterName, wrong, max: round.maxWrong })
             : t('result.lost.line', { wrong, max: round.maxWrong })}
         </Text>
-        {won && tokensEarned > 0 && (
-          <View style={styles.earned}>
+        {paid && (
+          <View ref={badgeRef} collapsable={false} style={styles.earned}>
             <Text style={styles.earnedText}>
               {tokensEarned === 1 ? t('result.tokenEarned') : t('result.tokensEarned', { count: tokensEarned })}
               {streak > 1 && ` · ${t('result.streak', { count: streak })}`}

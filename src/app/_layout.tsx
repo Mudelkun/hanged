@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ReactNode, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { TokenFlightProvider } from '../components/TokenFlight';
 import { GameProvider, useGame } from '../state/GameContext';
 import { colors } from '../theme';
 
@@ -36,8 +37,10 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <GameProvider>
         <Gate fontsDone={loaded || !!error}>
-          <StatusBar style="dark" />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }} />
+          <TokenFlightProvider>
+            <StatusBar style="dark" />
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }} />
+          </TokenFlightProvider>
         </Gate>
       </GameProvider>
     </SafeAreaProvider>

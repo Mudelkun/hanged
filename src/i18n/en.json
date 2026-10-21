@@ -8,6 +8,9 @@
   "header.a11y.avatar": "Your profile",
   "header.a11y.tokens": "{count} tokens",
 
+  "tokens.gain": "+{count}",
+  "tokens.spend": "−{count}",
+
   "play.misses": "/ {max} misses",
   "play.a11y.scene": "{name}, hanging step {stage} of 10",
   "play.a11y.tile.hidden": "hidden letter",

@@ -63,6 +63,9 @@ Run tests, typecheck and lint before calling a task done.
 one, the port never opens. Then drive it over the DevTools protocol (set the device
 metrics to 393×852 / 375×667, tap keys by their `aria-label`, e.g. `Letter A`).
 On web, haptics do nothing and `Animated` falls back to JS. Neither is a bug.
+**`CI=1` turns off Metro's file watching**: a server started with it keeps serving the
+bundle it first built. Use it only for one-off captures, and restart after edits. To check
+what a server serves, `curl` its bundle URL and grep it for the new code.
 The real target is iOS: confirm on a phone with Expo Go.
 
 ## App identity
