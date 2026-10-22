@@ -10,18 +10,17 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
-import { Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import { Character } from '../characters/rig';
 import { feedback } from '../feedback';
 import { t } from '../i18n';
-import { colors, fonts, levelColor } from '../theme';
+import { colors, fonts, levelColor, worldColors } from '../theme';
 import { Avatar } from './GameHeader';
 import {
   bezier,
   curve,
   curveLength,
-  EdgeFade,
   LevelStop,
   MARKER,
   MARKER_BOX,
@@ -29,8 +28,9 @@ import {
   NODE,
   PathFog,
   pathLayout,
-  PathRoad,
+  PathWorld,
   ROAD,
+  ROAD_DASHES,
 } from './LevelPath';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
@@ -55,7 +55,7 @@ const SAMPLES = 8;
  */
 function geometry(width: number, viewH: number, from: number, to: number, best: number) {
   const edge = viewH / 2;
-  const layout = pathLayout(width, edge, Math.max(best, from, to));
+  const layout = pathLayout(width, edge, edge, Math.max(best, from, to));
   const { stops } = layout;
   const up = to > from;
   const lo = Math.min(from, to) - 1;
@@ -80,6 +80,9 @@ function geometry(width: number, viewH: number, from: number, to: number, best: 
       d: moving.map((i) => curve(stops[i], stops[i + 1])).join(''),
       color: levelColor(hi + 1).main,
       length: moving.reduce((sum, i) => sum + curveLength(stops[i], stops[i + 1]), 0),
+      // Drawn in its own small Svg over the world, just around these stretches
+      top: stops[hi].y - ROAD,
+      height: stops[lo].y - stops[hi].y + 2 * ROAD,
     },
     inputRange,
     markerX: pts.map((p) => p.x - MARKER_BOX / 2),
@@ -178,7 +181,13 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
             accessibilityLabel={t('level.a11y.path', { from, to })}
           >
             <Animated.View style={{ width: pathW, height: geo.layout.height, transform: [{ translateY: at(geo.camera) }] }}>
-              <PathRoad layout={geo.layout} filled={geo.done}>
+              <PathWorld id="levelChangeWorld" layout={geo.layout} filled={geo.done} />
+              <Svg
+                width={pathW}
+                height={geo.moving.height}
+                viewBox={`0 ${geo.moving.top} ${pathW} ${geo.moving.height}`}
+                style={[styles.moving, { top: geo.moving.top }]}
+              >
                 <AnimatedPath
                   d={geo.moving.d}
                   stroke={geo.moving.color}
@@ -188,7 +197,8 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
                   strokeDasharray={[geo.moving.length, geo.moving.length]}
                   strokeDashoffset={fx.fill.interpolate({ inputRange: [0, 1], outputRange: [geo.moving.length, 0] })}
                 />
-              </PathRoad>
+                <Path d={geo.moving.d} {...ROAD_DASHES} />
+              </Svg>
               {geo.layout.stops.map((p, i) => {
                 const level = i + 1;
                 const target = level === to;
@@ -212,8 +222,6 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
                 <Avatar character={character} size={MARKER} />
               </Animated.View>
             </Animated.View>
-            <EdgeFade id="levelFadeTop" side="top" />
-            <EdgeFade id="levelFadeBottom" side="bottom" />
           </View>
         </Raised>
       </Animated.View>
@@ -234,7 +242,8 @@ const styles = StyleSheet.create({
   card: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, padding: 16 },
   title: { fontFamily: fonts.display700, fontSize: 30, textAlign: 'center' },
   body: { fontFamily: fonts.body800, fontSize: 14, color: colors.muted, textAlign: 'center', marginTop: 2 },
-  window: { marginTop: 12, borderRadius: 20, overflow: 'hidden', backgroundColor: colors.paper },
+  window: { marginTop: 12, borderRadius: 20, overflow: 'hidden', backgroundColor: worldColors.mist },
+  moving: { position: 'absolute', left: 0 },
   stop: { position: 'absolute', width: NODE, height: NODE },
   marker: { position: 'absolute', left: 0, top: 0 },
 });

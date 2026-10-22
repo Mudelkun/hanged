@@ -1,10 +1,11 @@
 /*
  * The level map (owner's idea, not in the mockup): tapping the header's level
- * pill opens the level path full screen. The player scrolls it freely, from
- * level 1 at the bottom up to the highest level they have reached, with their
- * character standing on the stop they're on. Past that it's fog (LevelPath),
- * so they never see how many levels there are. A card at the bottom says how
- * many words are left to the next level.
+ * pill opens the level path full screen, as a little world to climb
+ * (LevelPath). The player scrolls it freely, from level 1 in the meadow up to
+ * the highest level they have reached, with their character standing on the
+ * stop they're on. Past that a rope bridge runs into fog, so they never see how
+ * many levels there are. A wooden sign names it, and a card at the bottom says
+ * how many words are left to the next level.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
@@ -13,17 +14,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Character } from '../characters/rig';
 import { LevelProgress, wordsToNextLevel } from '../game/levels';
 import { t } from '../i18n';
-import { colors, fonts, levelColor } from '../theme';
+import { colors, fonts, levelColor, worldColors } from '../theme';
 import { Avatar } from './GameHeader';
-import { closeXml, Icon, starXml } from './icons';
-import { EdgeFade, LevelStop, MARKER, MARKER_BOX, MARKER_LIFT, NODE, PathFog, pathLayout, PathRoad } from './LevelPath';
-import { PaperBackground } from './PaperBackground';
+import { closeXml, Icon, leafXml, starXml } from './icons';
+import { LevelStop, MARKER, MARKER_BOX, MARKER_LIFT, NODE, PathFog, pathLayout, PathWorld } from './LevelPath';
 import { Raised } from './Raised';
 
 const SHOW_MS = 260;
 const HIDE_MS = 200;
 const BOB_MS = 900;
-const MAX_PATH_W = 420;
+/** The sign and the close button, under the status bar. */
+const HEAD_H = 64;
+const LEAF = leafXml(worldColors.bush, worldColors.bushL);
 
 interface Props {
   progress: LevelProgress;
@@ -45,11 +47,15 @@ function nextLine(progress: LevelProgress, best: number) {
 export function LevelMap({ progress, best, character, onClose }: Props) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const pathW = Math.min(width - 32, MAX_PATH_W);
   const level = progress.level;
-  const [viewH, setViewH] = useState(0);
-  // Either end of the path can sit in the middle of the window
-  const layout = useMemo(() => (viewH ? pathLayout(pathW, viewH / 2, Math.max(best, level)) : null), [pathW, viewH, best, level]);
+  // The world runs under the sign and the card; the player's stop sits in the middle of what's between them
+  const [sheetH, setSheetH] = useState(0);
+  const [footH, setFootH] = useState(0);
+  const center = (insets.top + HEAD_H + sheetH - footH) / 2;
+  const layout = useMemo(
+    () => (sheetH && footH ? pathLayout(width, sheetH - center, center, Math.max(best, level)) : null),
+    [width, sheetH, footH, center, best, level],
+  );
   const [fx] = useState(() => ({ show: new Animated.Value(0), bob: new Animated.Value(0) }));
   const closing = useRef(false);
 
@@ -67,7 +73,8 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
     Animated.timing(fx.show, { toValue: 0, duration: HIDE_MS, easing: Easing.in(Easing.quad), useNativeDriver: true }).start(() => onClose());
   }, [fx, onClose]);
 
-  const onWindowLayout = useCallback((e: LayoutChangeEvent) => setViewH(Math.round(e.nativeEvent.layout.height)), []);
+  const onSheetLayout = useCallback((e: LayoutChangeEvent) => setSheetH(Math.round(e.nativeEvent.layout.height)), []);
+  const onFootLayout = useCallback((e: LayoutChangeEvent) => setFootH(Math.round(e.nativeEvent.layout.height)), []);
 
   const c = levelColor(level);
   const here = layout?.stops[level - 1];
@@ -83,15 +90,57 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
           transform: [{ translateY: fx.show.interpolate({ inputRange: [0, 1], outputRange: [40, 0] }) }],
         },
       ]}
+      onLayout={onSheetLayout}
       accessibilityViewIsModal
     >
-      <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <View style={styles.head}>
+      {layout && here && (
+        <ScrollView
+          style={StyleSheet.absoluteFill}
+          showsVerticalScrollIndicator={false}
+          // Bands of the world scrolled far off screen give their memory back
+          removeClippedSubviews
+          // Open on the player's stop, the character in the middle of the view
+          contentOffset={{ x: 0, y: Math.max(0, here.y - MARKER_LIFT / 2 - center) }}
+          accessible
+          accessibilityLabel={t('levelMap.a11y.path', { level, best: Math.max(best, level) })}
+        >
+          <View style={{ width, height: layout.height }}>
+            <PathWorld id="levelMapWorld" layout={layout} filled={level - 1} />
+            {layout.stops.map((p, i) => (
+              <View key={i} style={[styles.stop, { left: p.x - NODE / 2, top: p.y - NODE / 2 }]}>
+                <LevelStop level={i + 1} reached={i < level} />
+              </View>
+            ))}
+            <PathFog id="levelMapFog" layout={layout} />
+            <Animated.View
+              style={[
+                styles.marker,
+                {
+                  left: here.x - MARKER_BOX / 2,
+                  top: here.y - MARKER_LIFT - MARKER_BOX / 2,
+                  transform: [{ translateY: fx.bob.interpolate({ inputRange: [0, 1], outputRange: [0, -5] }) }],
+                },
+              ]}
+            >
+              <Avatar character={character} size={MARKER} />
+            </Animated.View>
+          </View>
+        </ScrollView>
+      )}
+
+      <View style={[styles.head, { marginTop: insets.top }]} pointerEvents="box-none">
         <View style={styles.headSide} />
-        <Text style={styles.title} accessibilityRole="header">
-          {t('levelMap.title')}
-        </Text>
+        <View style={styles.signRow}>
+          <Icon xml={LEAF} size={24} height={15} />
+          <Raised depth={4} shadowColor={worldColors.signD} radius={16} style={styles.sign}>
+            <Text style={styles.title} accessibilityRole="header">
+              {t('levelMap.title')}
+            </Text>
+          </Raised>
+          <View style={styles.flip}>
+            <Icon xml={LEAF} size={24} height={15} />
+          </View>
+        </View>
         <View style={styles.headSide}>
           <Pressable onPress={close} accessibilityRole="button" accessibilityLabel={t('levelMap.close')} hitSlop={8}>
             {({ pressed }) => (
@@ -103,53 +152,13 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
         </View>
       </View>
 
-      <View
-        style={styles.window}
-        onLayout={onWindowLayout}
-        accessible
-        accessibilityLabel={t('levelMap.a11y.path', { level, best: Math.max(best, level) })}
-      >
-        {layout && here && (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            // Open on the player's stop, the character in the middle of the window
-            contentOffset={{ x: 0, y: Math.max(0, here.y - MARKER_LIFT / 2 - viewH / 2) }}
-            contentContainerStyle={styles.scrollContent}
-          >
-            <View style={{ width: pathW, height: layout.height }}>
-              <PathRoad layout={layout} filled={level - 1} />
-              {layout.stops.map((p, i) => (
-                <View key={i} style={[styles.stop, { left: p.x - NODE / 2, top: p.y - NODE / 2 }]}>
-                  <LevelStop level={i + 1} reached={i < level} />
-                </View>
-              ))}
-              <PathFog id="levelMapFog" layout={layout} />
-              <Animated.View
-                style={[
-                  styles.marker,
-                  {
-                    left: here.x - MARKER_BOX / 2,
-                    top: here.y - MARKER_LIFT - MARKER_BOX / 2,
-                    transform: [{ translateY: fx.bob.interpolate({ inputRange: [0, 1], outputRange: [0, -5] }) }],
-                  },
-                ]}
-              >
-                <Avatar character={character} size={MARKER} />
-              </Animated.View>
-            </View>
-          </ScrollView>
-        )}
-        <EdgeFade id="levelMapFadeTop" side="top" />
-        <EdgeFade id="levelMapFadeBottom" side="bottom" />
-      </View>
-
-      <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
+      <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]} onLayout={onFootLayout}>
         <Raised depth={5} shadowColor={colors.shadow} radius={22} style={styles.card}>
           <View style={styles.cardRow}>
-            <View style={[styles.level, { backgroundColor: c.light, borderColor: `${c.main}80` }]}>
-              <Icon xml={starXml(c.main)} size={16} />
-              <Text style={[styles.levelText, { color: c.dark }]}>{t('levelMap.here', { level })}</Text>
-            </View>
+            <Raised depth={3} shadowColor={c.dark} radius={14} style={[styles.level, { backgroundColor: c.main }]}>
+              <Icon xml={starXml('#fff')} size={16} />
+              <Text style={styles.levelText}>{t('levelMap.here', { level })}</Text>
+            </Raised>
             {toNext !== null && (
               <Text style={styles.count}>
                 {progress.wins} / {total}
@@ -170,20 +179,21 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
 
 const styles = StyleSheet.create({
   // Over the level-change card (zIndex 10) and the result's stamp (zIndex 2), see play-screen.md
-  sheet: { ...StyleSheet.absoluteFill, zIndex: 20, backgroundColor: colors.paper },
-  head: { height: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' },
+  sheet: { ...StyleSheet.absoluteFill, zIndex: 20, backgroundColor: worldColors.mist },
+  head: { height: HEAD_H, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' },
   headSide: { width: 44, alignItems: 'flex-end' },
-  title: { flex: 1, textAlign: 'center', fontFamily: fonts.display700, fontSize: 25, color: colors.ink },
+  signRow: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  sign: { backgroundColor: worldColors.sign, borderWidth: 2, borderColor: worldColors.signD, paddingHorizontal: 18, paddingVertical: 3, marginHorizontal: -4 },
+  flip: { transform: [{ scaleX: -1 }] },
+  title: { fontFamily: fonts.display700, fontSize: 24, color: colors.ink },
   close: { width: 40, height: 40, backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
-  window: { flex: 1, minHeight: 0 },
-  scrollContent: { alignItems: 'center' },
   stop: { position: 'absolute', width: NODE, height: NODE },
   marker: { position: 'absolute' },
-  footer: { paddingHorizontal: 16, paddingTop: 8 },
+  footer: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 16 },
   card: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, padding: 14, gap: 10 },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  level: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 2, borderRadius: 14, paddingVertical: 5, paddingLeft: 8, paddingRight: 12 },
-  levelText: { fontFamily: fonts.display600, fontSize: 17 },
+  level: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 5, paddingLeft: 9, paddingRight: 13 },
+  levelText: { fontFamily: fonts.display600, fontSize: 17, color: '#fff' },
   count: { fontFamily: fonts.display600, fontSize: 15, color: colors.muted },
   bar: { height: 12, borderRadius: 6, backgroundColor: colors.track, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 6 },

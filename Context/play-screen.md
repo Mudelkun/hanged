@@ -70,8 +70,8 @@ road of numbered stops, level 1 at the bottom, drawn in react-native-svg. Only s
 and raised in their colour; stops ahead are pale and dashed. The player's **character avatar** stands
 on its stop and travels to the new one: it hops up (the road fills in the new level's colour, the stop
 pops, sparkles burst, success haptic) or slides down (the road empties, the old stop turns pale again,
-a light tap). The window's "camera" follows the character, so any number of levels fits any phone; its top and
-bottom fade into the paper. **The card has no button** (owner's call): `HOLD_MS` (1.3 s) after the
+a light tap). The window's "camera" follows the character, so any number of levels fits any phone; the window is
+a slice of the level world (see The level map). **The card has no button** (owner's call): `HOLD_MS` (1.3 s) after the
 character lands, it fades out by itself (`onClose` → `levelGone`), leaving the result, and the player
 taps **Next word** as after any round. It blocks taps on the result while it's up.
 
@@ -91,14 +91,32 @@ taps **Next word** as after any round. It blocks taps on the result while it's u
 ## The level map: tap the level (owner's idea, not in the mockup)
 
 Tapping the header's `Lv N` pill opens `LevelMap`, a full-screen sheet over the Play screen (tab bar
-included, `zIndex: 20`). The path scrolls vertically in a `ScrollView`. It opens with the player's
-character in the middle, standing on their stop with a slow bob. Below the path, a card shows the level,
-a bar of the words won on it, and the next step: "N more words to clear the fog", or "…to reach level N"
-when the player dropped and the stop above is known. A ✕ slides it away.
+included, `zIndex: 20`). The owner asked for it to feel like a place to climb (from a reference picture
+of a game map), so the path runs through **a little world** (`PathWorld` in LevelPath), drawn in
+react-native-svg in the app's flat style:
+- a sky gradient that deepens toward the top, distant clouds, and floating islands down both sides,
+  some with a waterfall spilling off
+- a meadow at the foot, and the road on a **grassy hill**: a plateau around every stop joined by a wide
+  ribbon of grass, with the same shapes shifted down as the cliff under it
+- bushes and flowers by the road, a **stone pedestal** under every stop, and a **rope bridge** from the
+  last stop into the fog
+- decorations placed by a seeded `rand(n)`, so the world looks the same on every visit
+
+The world scrolls vertically, edge to edge, in a `ScrollView`, under a wooden **sign** ("Level path",
+with leaves) and the ✕. It opens with the player's character standing on their stop, with a slow bob,
+in the middle of the space between the sign and the bottom card. The card shows the level (a filled
+pill), a bar of the words won on it, and the next step: "N more words to clear the fog", or "…to reach
+level N" when the player dropped and the stop above is known.
+- Left out of the reference on purpose: stars under the stops (the game has no star rating per level)
+  and a settings gear (settings live on the Profile page).
+- **The world is drawn in 512-pt bands** (one Svg each, `viewBox` on its slice), and the ScrollView
+  has `removeClippedSubviews`. With 20 levels, a single Svg would be one bitmap about 2,500 pt tall.
+  Everything static is built once (`worldArt`) and shared by the bands. The level-up card animates only
+  the stretch being filled, in its own small Svg on top.
 
 - **The fog (owner's call): the player must never learn how many levels there are.** At level 6 they
   can't see level 7 or know it exists, only that the road runs into fog. So the path draws stops only
-  up to `bestLevel`, and `PathFog` covers the rest: paper fading in over the road, a thick bank of
+  up to `bestLevel`, and `PathFog` covers the rest: mist thickening over the sky, a thick bank of
   overlapping clouds where the road goes in, fainter puffs drifting above, and a dim dashed **"?"**
   stop where the next level would be, never its number. On the last level there is no "?" and the card
   says it's the highest level (the player has reached it, so nothing is spoiled). The level-up card
@@ -110,8 +128,9 @@ when the player dropped and the stop above is known. A ✕ slides it away.
 - The bank's back rows are clouds **without** the flat shadow: overlapping shadows drew a hard
   horizontal line. Only the front row and the mist puffs keep it. Clouds are staggered up and down for
   the same reason.
-- Each `PathFog` and `EdgeFade` gets its own gradient `id` (web shares SVG ids across the page).
-- Checked on web at 393×852 and 375×667 at levels 1, 6, and 13 with a best of 14, plus the level-up card 5 → 6.
+- Each `PathWorld` and `PathFog` gets its own gradient `id` (web shares SVG ids across the page).
+- The level-up card's window shows the same world, so a level-up happens in the same place as the map.
+- Checked on web at 393×852 and 375×667 at levels 1, 8 and 14 (scrolled down too), plus the level-up card 5 → 6.
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
 2600 ms so the last pop, the fall and the landing play (stage 10 lasts 2200 ms), won 700 ms so the last tile pops). Then the result
@@ -127,7 +146,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | File | What |
 |---|---|
 | `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
-| `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathRoad`, `LevelStop`, `PathFog`, `EdgeFade`. Use it for any new view of the levels. |
+| `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathWorld` (the world and the road), `LevelStop`, `PathFog`. Use it for any new view of the levels. Colours: `worldColors` in [src/theme](../src/theme/index.ts). |
 | `LevelChange.tsx` | The level path card (see Level change above). |
 | `LevelMap.tsx` | The full-screen level map (see The level map above). |
 | `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |

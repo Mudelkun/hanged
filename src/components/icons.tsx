@@ -58,6 +58,9 @@ export const cloudXml = (fill = '#fff') => svg('0 0 100 50', `<g fill="${fill}">
 // Not in the mockup: the level path's fog, a cloud on its own flat raised shadow.
 export const fogCloudXml = (shadow: string) =>
   svg('0 0 100 54', `<g fill="${shadow}" transform="translate(0 4)">${CLOUD}</g><g fill="#fff">${CLOUD}</g>`);
+// Not in the mockup: the leaves on the level map's wooden sign (pointing left; mirror it for the right side).
+export const leafXml = (c: string, vein: string) =>
+  svg('0 0 26 16', `<path d="M1 8C6 1 18 0 25 6 18 15 6 15 1 8z" fill="${c}"/><path d="M4 8h15" stroke="${vein}" stroke-width="1.6" stroke-linecap="round"/>`);
 // Not in the mockup: the close button of a full-screen sheet (the level path).
 export const closeXml = (c = '#4b3a35') =>
   svg('0 0 24 24', `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`);

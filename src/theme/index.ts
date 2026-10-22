@@ -98,5 +98,32 @@ export const streakColors = [
 /** A meter stretch's look. Every stretch past the list (the maxed laps) keeps the last one. */
 export const streakColor = (tier: number) => streakColors[Math.min(Math.max(0, tier), streakColors.length - 1)];
 
+/**
+ * The level path's world (LevelPath): a sky that deepens as the road climbs, a
+ * grassy hill with cliff edges, floating islands with waterfalls, stone pedestals
+ * under the stops, a rope bridge into the fog. A little richer than the balloon
+ * scene's pastels, so the map reads as a place to climb.
+ */
+export const worldColors = {
+  skyTop: '#5cb8f2',
+  skyBottom: '#d6f0ff',
+  grass: '#9edb7d',
+  grassL: '#b9e89c',
+  grassD: '#7cc45f',
+  bush: '#5fba68',
+  bushL: '#86d58c',
+  cliff: '#e3a774',
+  cliffD: '#c4845a',
+  water: '#8fd8ff',
+  stone: '#b8afa3',
+  stoneL: '#dcd5ca',
+  wood: '#d9a066',
+  woodD: '#9c6638',
+  mist: '#eef8ff',
+  cloudShade: '#cfe6f6',
+  sign: '#f2cf98',
+  signD: '#c99558',
+};
+
 /** Confetti: every streak colour, plus butter and sky. */
 export const confettiColors = [...streakColors.map((c) => c.main), colors.butter, colors.sky];
