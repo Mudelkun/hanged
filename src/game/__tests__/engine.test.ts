@@ -21,7 +21,7 @@ import {
   validateWord,
   wrongCount,
 } from '../engine';
-import { LETTER_FREQUENCY, LONG_WORD_CLUES, LONG_WORD_LENGTH } from '../config';
+import { EDGE_CLUES, LETTER_FREQUENCY, LONG_WORD_LENGTH } from '../config';
 import { LEVELS } from '../levels';
 import { WORDS } from '../words';
 
@@ -60,36 +60,43 @@ describe('word constraints', () => {
 
 describe('clues', () => {
   it('gives at least one clue and always keeps a letter hidden', () => {
-    expect(clueCount('cat', 0)).toBe(1);
-    expect(clueCount('cat', 1)).toBe(2);
-    expect(clueCount('ab', 0.9)).toBe(1);
+    expect(clueCount('cat', 2)).toBe(1);
+    expect(clueCount('cat', 9)).toBe(1);
+    expect(clueCount('cat', 0)).toBe(2);
+    expect(clueCount('ab', 0)).toBe(1);
   });
 
-  it('gives long words at least LONG_WORD_CLUES (4) clues, even on the hardest level', () => {
-    expect(LONG_WORD_CLUES).toBe(4);
-    const hardest = LEVELS[LEVELS.length - 1];
-    for (const w of WORDS.filter((e) => e.word.length >= LONG_WORD_LENGTH))
-      // unless a letter must stay hidden: a long word with only 4 distinct letters shows 3
-      expect(clueCount(w.word, hardest.clueRatio)).toBeGreaterThanOrEqual(Math.min(LONG_WORD_CLUES, new Set(w.word).size - 1));
-    expect(clueCount('skyscraper', 0)).toBe(LONG_WORD_CLUES);
-    expect(clueCount('sunflowe', 0)).toBe(LONG_WORD_CLUES);
-    expect(clueCount('sunflow', 0)).toBe(1);
-    // keeping a letter hidden still wins
+  it("leaves the level's letters to find, so longer words get more clues", () => {
+    expect(clueCount('strawberry', 4)).toBe(4); // 8 distinct letters
+    expect(clueCount('anthropology', 4)).toBe(6); // 10 distinct letters
+    expect(clueCount('strawberry', 4)).toBeGreaterThan(clueCount('castle', 4));
+  });
+
+  it("never leaves a long word only 2 letters to find from level 3 (owner's call)", () => {
+    for (const level of LEVELS.filter((l) => l.level >= 3))
+      for (const w of WORDS.filter((e) => e.word.length >= LONG_WORD_LENGTH && new Set(e.word).size >= 5))
+        expect(new Set(w.word).size - clueCount(w.word, Math.floor(level.toFind))).toBeGreaterThanOrEqual(3);
+    // the level 10 words that showed 2 letters to find
+    const level10 = Math.floor(LEVELS[9].toFind);
+    expect(new Set('anthropology').size - clueCount('anthropology', level10)).toBeGreaterThanOrEqual(4);
+    expect(new Set('disambiguate').size - clueCount('disambiguate', level10)).toBeGreaterThanOrEqual(4);
+  });
+
+  it('always shows a long word its edge, but keeping a letter hidden wins', () => {
+    expect(clueCount('skyscraper', 9)).toBe(EDGE_CLUES);
+    expect(clueCount('sunflowe', 9)).toBe(EDGE_CLUES);
+    expect(clueCount('sunflow', 9)).toBe(1);
     expect(clueCount('aaaaaaab', 0)).toBe(1);
   });
 
-  it('gives longer words more clues', () => {
-    expect(clueCount('strawberry', 0.4)).toBeGreaterThan(clueCount('cat', 0.4));
-  });
-
   it('gives no clue to a word with a single distinct letter (hidden letter wins)', () => {
-    expect(clueCount('a', 0.5)).toBe(0);
-    expect(clueCount('aaa', 0.5)).toBe(0);
+    expect(clueCount('a', 0)).toBe(0);
+    expect(clueCount('aaa', 0)).toBe(0);
   });
 
   it('reveals every occurrence of a clue letter and marks its key used', () => {
     const r = createRound(
-      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', hints: [], level: 1, clueRatio: 0.3 },
+      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', hints: [], level: 1, toFind: 3 },
       () => 0,
     );
     expect(r.clueLetters).toHaveLength(1);
@@ -101,7 +108,7 @@ describe('clues', () => {
   });
 
   it('picks distinct letters from the word', () => {
-    const letters = pickClueLetters('strawberry', 0.5);
+    const letters = pickClueLetters('strawberry', 3);
     expect(new Set(letters).size).toBe(letters.length);
     letters.forEach((c) => expect('strawberry').toContain(c));
   });
@@ -113,8 +120,8 @@ describe('clues', () => {
     expect(edgeLetters('balloons', () => 0.9)).toEqual(['n', 's']);
     expect(edgeLetters('llamas', () => 0)).toEqual([]); // short words: no edge
     expect(LONG_WORD_LENGTH).toBe(8);
-    const clues = pickClueLetters('reasonable', 0, () => 0.9);
-    expect(clues).toHaveLength(LONG_WORD_CLUES);
+    const clues = pickClueLetters('reasonable', 4, () => 0.9);
+    expect(clues).toHaveLength(4);
     expect(clues.slice(0, 2)).toEqual(['l', 'e']);
     // a doubled edge letter counts once
     expect(edgeLetters('aardvarks', () => 0)).toEqual(['a']);
@@ -122,29 +129,25 @@ describe('clues', () => {
     expect(pickClueLetters('aaaaaaab', 0, () => 0.9)).toEqual(['a']);
   });
 
-  it('can reveal the rarest letters first: the X of "jukebox", not its E', () => {
+  it('reveals the rarest letters, so what is left to find can be found: the X of "jukebox", not its E', () => {
     const en = LETTER_FREQUENCY.en;
-    expect(clueCount('jukebox', 0.3)).toBe(2);
-    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 2)).toEqual(['x', 'j']);
-    // only the first `rare` clues are the rarest, the rest stay random
-    const one = pickClueLetters('jukebox', 0.3, () => 0, en, 1);
-    expect(one[0]).toBe('x');
-    expect(one).toHaveLength(2);
-    // never more than the clue count
-    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 5)).toEqual(['x', 'j']);
-    // no rare clues: the same random clues as before
-    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 0)).toEqual(pickClueLetters('jukebox', 0.3, () => 0));
+    expect(pickClueLetters('jukebox', 5, () => 0, en)).toEqual(['x', 'j']);
+    expect(pickClueLetters('jukebox', 4, () => 0, en)).toEqual(['x', 'j', 'k']);
     // a long word: its edge first, then its rarest letters (the V of "virulent")
-    expect(pickClueLetters('virulent', 0.3, () => 0, en, 2)).toEqual(['v', 'i', 'u', 'l']);
+    expect(pickClueLetters('virulent', 4, () => 0, en)).toEqual(['v', 'i', 'u', 'l']);
   });
 
-  it('gives a round its rarest letters as clues when asked, in its own language', () => {
-    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 13, clueRatio: 0.3 };
-    expect(createRound({ ...input, rareClues: 2 }, () => 0).clueLetters).toEqual(['x', 'j']);
+  it('gives a round its rarest letters as clues, in its own language', () => {
+    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 13, toFind: 5 };
+    expect(createRound(input, () => 0).clueLetters).toEqual(['x', 'j']);
     // a language without a letter-frequency row gets random clues
-    expect(createRound({ ...input, language: 'xx', rareClues: 2 }, () => 0).clueLetters).toEqual(
-      createRound({ ...input, language: 'xx' }, () => 0).clueLetters,
-    );
+    expect(createRound({ ...input, language: 'xx' }, () => 0).clueLetters).toEqual(pickClueLetters('jukebox', 5, () => 0));
+  });
+
+  it('reads a fraction of letters to find as a chance: 4.5 = 4 or 5', () => {
+    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 9, toFind: 4.5 };
+    expect(createRound(input, () => 0.4).clueLetters).toHaveLength(3); // 7 distinct letters, 4 to find
+    expect(createRound(input, () => 0.6).clueLetters).toHaveLength(2); // 5 to find
   });
 });
 
@@ -165,7 +168,7 @@ describe('disabled keys (easy levels)', () => {
   });
 
   it('gives a full keyboard when the level has no ratio', () => {
-    const r = createRound({ id: 'r', wordId: 'w', word: 'castle', language: 'en', description: '', hints: [], level: 6, clueRatio: 0.2 });
+    const r = createRound({ id: 'r', wordId: 'w', word: 'castle', language: 'en', description: '', hints: [], level: 6, toFind: 4 });
     expect(r.disabledLetters).toEqual([]);
   });
 

@@ -43,13 +43,12 @@ function closest(words: readonly WordEntry[], distance: (w: WordEntry) => number
 
 /**
  * The words a level deals: those in its length range, of the kind it deals
- * (only things on easy levels), common enough, and in its difficulty band
- * (hard levels deal only hard words). When none fit, the closest lengths, then
- * the right kind, then the most common, then the closest difficulty. Cached
- * for the bundled database.
+ * (only things on easy levels), common enough, and not too hard to guess.
+ * When none fit, the closest lengths, then the right kind, then the most
+ * common, then the easiest. Cached for the bundled database.
  */
 export function levelPool(level: Level, language: string, words: readonly WordEntry[] = WORDS): readonly WordEntry[] {
-  const key = `${language}:${level.minLength}-${level.maxLength}:${level.concreteOnly}:${level.maxRarity}:${level.minDifficulty}-${level.maxDifficulty}`;
+  const key = `${language}:${level.minLength}-${level.maxLength}:${level.concreteOnly}:${level.maxRarity}:${level.maxDifficulty}`;
   const cached = words === WORDS && POOLS.get(key);
   if (cached) return cached;
   const inLanguage = words.filter((w) => w.language === language);
@@ -57,7 +56,7 @@ export function levelPool(level: Level, language: string, words: readonly WordEn
   const byLength = closest(inLanguage, (w) => Math.max(0, level.minLength - w.word.length, w.word.length - level.maxLength));
   const byKind = closest(byLength, (w) => (level.concreteOnly && !w.concrete ? 1 : 0));
   const byRarity = closest(byKind, (w) => Math.max(0, w.rarity - level.maxRarity));
-  const pool = closest(byRarity, (w) => Math.max(0, level.minDifficulty - w.difficulty, w.difficulty - level.maxDifficulty));
+  const pool = closest(byRarity, (w) => Math.max(0, w.difficulty - level.maxDifficulty));
   if (words === WORDS) POOLS.set(key, pool);
   return pool;
 }

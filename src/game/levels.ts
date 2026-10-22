@@ -8,13 +8,10 @@
  */
 import {
   DEFAULT_MAX_WRONG,
-  HARD_WORD_CLUE_BONUS,
-  HARD_WORD_MISSES,
   LEVEL_GRACE_ROUNDS,
   LOSSES_TO_DROP,
   WORDS_PER_LEVEL,
 } from './config';
-import type { WordEntry } from './words';
 
 export interface Level {
   level: number;
@@ -23,28 +20,23 @@ export interface Level {
   maxLength: number;
   /** Deal only things you can picture (WordEntry.concrete): "badly" or "adhere" are common but hard to guess. */
   concreteOnly: boolean;
-  /** The rarest words dealt (WordEntry.rarity): 10 = words everyone knows, up to 50 on the hardest levels. */
+  /**
+   * The rarest words dealt (WordEntry.rarity): 20 = everyday words, on levels
+   * 1–15 (owner's call); 35, then 40, bring in less familiar words on 16–20.
+   */
   maxRarity: number;
-  /**
-   * The band of words dealt by WordEntry.difficulty (misses a typical player
-   * makes on it, no clues). Easy levels keep "magnesium" (13 misses) out; from
-   * level 9 the band climbs, so the hardest words wait for the highest levels,
-   * where the help is (rareClues, showsSubject, sellsLetters).
-   */
-  minDifficulty: number;
+  /** The hardest words dealt by WordEntry.difficulty (misses a typical player makes on it, no clues): keeps "magnesium" off easy levels. */
   maxDifficulty: number;
-  /** Share of the word's distinct letters revealed as clues (see engine.clueCount); harder words get more (clueRatioFor). */
-  clueRatio: number;
   /**
-   * How many of the clue letters are the word's rarest, after a long word's
-   * first or last letters and before the random ones (engine.pickClueLetters):
-   * the V of "virulent", not its E. The strongest help there is, so it grows
-   * slowly on the hard levels.
+   * Distinct letters the player has to find: the rest are clues
+   * (engine.clueCount), the rarest letters first (engine.pickClueLetters).
+   * The main difficulty knob, never lower than the level before. A fraction
+   * is a chance: 4.3 = 5 letters in 30% of rounds, else 4.
    */
-  rareClues: number;
+  toFind: number;
   /** The word's subject is shown for free (Round.subject). Owner's call: from level 9. */
   showsSubject: boolean;
-  /** Share of the letters NOT in the word taken off the keyboard (see engine.disabledCount). Shrinks to 0. */
+  /** Share of the letters NOT in the word taken off the keyboard (see engine.disabledCount). Only levels 1–2: a full keyboard after that. */
   disabledRatio: number;
   maxWrong: number;
   /** Tokens a word won at this level pays before the streak bonus. Never shrinks as levels rise. */
@@ -56,41 +48,32 @@ export interface Level {
 const W = DEFAULT_MAX_WRONG;
 
 export const LEVELS: readonly Level[] = [
-  // 1–8: words most players can guess. Only things to picture up to 4, then every kind of word.
-  { level: 1, minLength: 3, maxLength: 5, concreteOnly: true, maxRarity: 20, minDifficulty: 0, maxDifficulty: 4, clueRatio: 0.4, rareClues: 0, showsSubject: false, disabledRatio: 0.5, maxWrong: W, tokenReward: 1, sellsLetters: false },
-  { level: 2, minLength: 4, maxLength: 6, concreteOnly: true, maxRarity: 20, minDifficulty: 0, maxDifficulty: 5, clueRatio: 0.35, rareClues: 0, showsSubject: false, disabledRatio: 0.45, maxWrong: W, tokenReward: 1, sellsLetters: false },
-  { level: 3, minLength: 5, maxLength: 7, concreteOnly: true, maxRarity: 35, minDifficulty: 0, maxDifficulty: 5, clueRatio: 0.3, rareClues: 0, showsSubject: false, disabledRatio: 0.4, maxWrong: W, tokenReward: 2, sellsLetters: false },
-  { level: 4, minLength: 6, maxLength: 8, concreteOnly: true, maxRarity: 35, minDifficulty: 0, maxDifficulty: 6, clueRatio: 0.25, rareClues: 0, showsSubject: false, disabledRatio: 0.4, maxWrong: W, tokenReward: 2, sellsLetters: false },
-  { level: 5, minLength: 7, maxLength: 9, concreteOnly: false, maxRarity: 35, minDifficulty: 0, maxDifficulty: 6, clueRatio: 0.2, rareClues: 0, showsSubject: false, disabledRatio: 0.35, maxWrong: W, tokenReward: 3, sellsLetters: false },
-  { level: 6, minLength: 8, maxLength: 11, concreteOnly: false, maxRarity: 35, minDifficulty: 0, maxDifficulty: 7, clueRatio: 0.18, rareClues: 0, showsSubject: false, disabledRatio: 0.35, maxWrong: W, tokenReward: 3, sellsLetters: false },
-  { level: 7, minLength: 9, maxLength: 13, concreteOnly: false, maxRarity: 35, minDifficulty: 0, maxDifficulty: 7, clueRatio: 0.15, rareClues: 0, showsSubject: false, disabledRatio: 0.3, maxWrong: W, tokenReward: 4, sellsLetters: false },
-  { level: 8, minLength: 10, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 0, maxDifficulty: 8, clueRatio: 0.12, rareClues: 0, showsSubject: false, disabledRatio: 0.3, maxWrong: W, tokenReward: 4, sellsLetters: true },
-  // 9–20: harder and harder words (the band climbs) with more help: the subject, letters to buy, and the
-  // rarest letters as clues (1 from level 11, 2 from 13). clueRatio 0 = the fewest clues plus the hard-word bonus.
-  { level: 9, minLength: 8, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 8, maxDifficulty: 11, clueRatio: 0, rareClues: 0, showsSubject: true, disabledRatio: 0.25, maxWrong: W, tokenReward: 4, sellsLetters: true },
-  { level: 10, minLength: 8, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 9, maxDifficulty: 12, clueRatio: 0, rareClues: 0, showsSubject: true, disabledRatio: 0.25, maxWrong: W, tokenReward: 4, sellsLetters: true },
-  { level: 11, minLength: 7, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 10, maxDifficulty: 13, clueRatio: 0, rareClues: 1, showsSubject: true, disabledRatio: 0.2, maxWrong: W, tokenReward: 4, sellsLetters: true },
-  { level: 12, minLength: 7, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 11, maxDifficulty: 14, clueRatio: 0, rareClues: 1, showsSubject: true, disabledRatio: 0.2, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 13, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 12, maxDifficulty: 15, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0.15, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 14, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 13, maxDifficulty: 16, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0.15, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 15, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 14, maxDifficulty: 17, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0.15, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 16, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, minDifficulty: 15, maxDifficulty: 18, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0.05, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 17, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 50, minDifficulty: 16, maxDifficulty: 19, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 18, minLength: 4, maxLength: 15, concreteOnly: false, maxRarity: 50, minDifficulty: 17, maxDifficulty: 20, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 19, minLength: 4, maxLength: 15, concreteOnly: false, maxRarity: 50, minDifficulty: 18, maxDifficulty: 22, clueRatio: 0, rareClues: 2, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
-  { level: 20, minLength: 4, maxLength: 15, concreteOnly: false, maxRarity: 50, minDifficulty: 19, maxDifficulty: 25, clueRatio: 0.05, rareClues: 2, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  // 1–15: everyday words only (maxRarity 20), the letters to find growing slowly. Only things to picture up to 4,
+  // wrong keys off the keyboard on 1–2. 16–20: less familiar words come in (rarity 35, then 40), a few more each level.
+  { level: 1, minLength: 3, maxLength: 5, concreteOnly: true, maxRarity: 20, maxDifficulty: 4, toFind: 2, showsSubject: false, disabledRatio: 0.3, maxWrong: W, tokenReward: 1, sellsLetters: false },
+  { level: 2, minLength: 4, maxLength: 6, concreteOnly: true, maxRarity: 20, maxDifficulty: 5, toFind: 3, showsSubject: false, disabledRatio: 0.15, maxWrong: W, tokenReward: 1, sellsLetters: false },
+  { level: 3, minLength: 5, maxLength: 7, concreteOnly: true, maxRarity: 20, maxDifficulty: 6, toFind: 4, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 2, sellsLetters: false },
+  { level: 4, minLength: 5, maxLength: 8, concreteOnly: true, maxRarity: 20, maxDifficulty: 6, toFind: 4, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 2, sellsLetters: false },
+  { level: 5, minLength: 6, maxLength: 9, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 3, sellsLetters: false },
+  { level: 6, minLength: 6, maxLength: 11, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.2, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 3, sellsLetters: false },
+  { level: 7, minLength: 6, maxLength: 13, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.3, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 4, sellsLetters: false },
+  { level: 8, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.4, showsSubject: false, disabledRatio: 0, maxWrong: W, tokenReward: 4, sellsLetters: true },
+  { level: 9, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.4, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 4, sellsLetters: true },
+  { level: 10, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.5, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 4, sellsLetters: true },
+  { level: 11, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.5, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 4, sellsLetters: true },
+  { level: 12, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.6, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 13, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.6, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 14, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.6, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 15, minLength: 6, maxLength: 15, concreteOnly: false, maxRarity: 20, maxDifficulty: 8, toFind: 4.7, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 16, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, maxDifficulty: 8, toFind: 5, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 17, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, maxDifficulty: 11, toFind: 5.3, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 18, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, maxDifficulty: 14, toFind: 5.6, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 19, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 35, maxDifficulty: 18, toFind: 5.9, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
+  { level: 20, minLength: 5, maxLength: 15, concreteOnly: false, maxRarity: 40, maxDifficulty: 22, toFind: 6.2, showsSubject: true, disabledRatio: 0, maxWrong: W, tokenReward: 5, sellsLetters: true },
 ];
 
 /** The row for a level number (a round's snapshotted `level`), clamped to the table. */
 export const levelByNumber = (level: number): Level => LEVELS[Math.min(LEVELS.length, Math.max(1, level)) - 1];
-
-/**
- * The share of `word`'s letters revealed as clues on `level`: the level's
- * clueRatio, plus a bonus for a word that measures hard to guess, so
- * "virulent" stays as fair as "giraffe".
- */
-export const clueRatioFor = (level: Level, word: Pick<WordEntry, 'difficulty'>): number =>
-  level.clueRatio + (word.difficulty >= HARD_WORD_MISSES ? HARD_WORD_CLUE_BONUS : 0);
 
 /** Where the player stands on the level ladder. Saved; every count restarts at 0 on a level change. */
 export interface LevelProgress {

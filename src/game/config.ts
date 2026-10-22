@@ -15,30 +15,22 @@ export const MIN_WORD_LENGTH = 1;
 export const MAX_WORD_LENGTH = 15;
 
 /**
- * Long words always get at least LONG_WORD_CLUES clue letters, on every level
- * (owner's call, raised from 2 to 4 on 2026-10-22), and the first EDGE_CLUES of
- * them are the word's first or last letters (engine.edgeLetters): "RE…LE" is
- * what makes "reasonable" recognisable. PLACEHOLDER: the length that counts as
- * long (8 = the shortest words of level 6 and up).
+ * A long word's clues always start with its first or last EDGE_CLUES letters
+ * (engine.edgeLetters): "RE…LE" is what makes "reasonable" recognisable.
+ * How many clues it gets is the level's `toFind` (levels.ts): a long word on
+ * levels 3+ always leaves at least 3 letters to find (owner's call,
+ * 2026-10-22: 2 letters to find in a 12-letter word is no game).
+ * PLACEHOLDER: the length that counts as long.
  */
 export const LONG_WORD_LENGTH = 8;
-export const LONG_WORD_CLUES = 4;
 export const EDGE_CLUES = 2;
 
 /**
- * Harder words get more clue letters (owner's request): a word that costs a
- * typical player HARD_WORD_MISSES or more (WordEntry.difficulty) adds
- * HARD_WORD_CLUE_BONUS to the level's clueRatio (levels.clueRatioFor).
- * PLACEHOLDER: about one more letter.
- */
-export const HARD_WORD_MISSES = 5;
-export const HARD_WORD_CLUE_BONUS = 0.2;
-
-/**
- * Each language's letters, most used first. On hard levels (Level.rareClues)
- * the clue letters are the word's rarest ones: the V of "virulent" is the
- * letter nobody tries, the E the one everybody does. A language without a row
- * gets random clues.
+ * Each language's letters, most used first. After a long word's edge, the
+ * clue letters are the word's rarest ones (engine.pickClueLetters): the V of
+ * "virulent" is the letter nobody tries, the E the one everybody does, so the
+ * letters left to find are the ones a player can find. A language without a
+ * row gets random clues.
  */
 export const LETTER_FREQUENCY: Readonly<Record<string, string>> = {
   en: 'etaoinshrdlucmfwypvbgkjqxz',

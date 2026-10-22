@@ -4,8 +4,6 @@ import {
   DEFAULT_CHARACTER,
   DEFAULT_MAX_WRONG,
   DESCRIPTION_COST,
-  HARD_WORD_CLUE_BONUS,
-  HARD_WORD_MISSES,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
   LEVEL_GRACE_ROUNDS,
@@ -15,7 +13,7 @@ import {
   WORDS_PER_LEVEL,
 } from '../config';
 import { clueCount, decoyLetters, roundStatus, usedLetters } from '../engine';
-import { afterRound, clueRatioFor, LEVELS, LevelProgress, START_LEVEL, wordsToNextLevel } from '../levels';
+import { afterRound, LEVELS, LevelProgress, START_LEVEL, wordsToNextLevel } from '../levels';
 import {
   canBuyCharacter,
   characterPrice,
@@ -193,11 +191,10 @@ describe('help on hard levels', () => {
   it('never takes help away or deals easier words as levels rise', () => {
     for (let i = 1; i < LEVELS.length; i++) {
       const [prev, next] = [LEVELS[i - 1], LEVELS[i]];
-      expect(next.rareClues).toBeGreaterThanOrEqual(prev.rareClues);
+      expect(next.toFind).toBeGreaterThanOrEqual(prev.toFind);
       if (prev.showsSubject) expect(next.showsSubject).toBe(true);
       if (prev.sellsLetters) expect(next.sellsLetters).toBe(true);
       expect(next.maxWrong).toBeGreaterThanOrEqual(DEFAULT_MAX_WRONG);
-      expect(next.minDifficulty).toBeGreaterThanOrEqual(prev.minDifficulty);
       expect(next.maxDifficulty).toBeGreaterThanOrEqual(prev.maxDifficulty);
       expect(next.maxRarity).toBeGreaterThanOrEqual(prev.maxRarity);
       expect(next.tokenReward).toBeGreaterThanOrEqual(prev.tokenReward);
@@ -459,16 +456,13 @@ describe('word picking', () => {
     expect(levelPool(LEVELS[0], 'en', [harp, entry('lute', 35)]).map((w) => w.word)).toEqual(['lute']);
   });
 
-  it('gives words that are hard to guess more clue letters', () => {
-    const level = LEVELS[4];
-    expect(clueRatioFor(level, { difficulty: HARD_WORD_MISSES - 1 })).toBe(level.clueRatio);
-    expect(clueRatioFor(level, { difficulty: HARD_WORD_MISSES })).toBe(level.clueRatio + HARD_WORD_CLUE_BONUS);
-    // a round snapshots the word's ratio: castle gets 2 clues on level 1, more when it measures hard
-    const clues = (w: typeof word) => gameReducer(initialState(), { type: 'newRound', word: w, roundId: 'r', rng: () => 0 }).round!.clueLetters.length;
-    const hard = { ...word, difficulty: HARD_WORD_MISSES };
-    expect(clues(word)).toBe(2);
-    expect(clues(hard)).toBe(clueCount('castle', clueRatioFor(LEVELS[0], hard)));
-    expect(clues(hard)).toBeGreaterThan(2);
+  it("leaves the level's letters to find, and more of them as levels rise", () => {
+    // castle has 6 distinct letters; the reducer passes the level's toFind (rng 0 = its whole part)
+    const clues = (level: number) =>
+      gameReducer(atLevel(level), { type: 'newRound', word, roundId: 'r', rng: () => 0 }).round!.clueLetters.length;
+    expect(clues(1)).toBe(clueCount('castle', Math.floor(LEVELS[0].toFind)));
+    expect(clues(1)).toBe(4);
+    expect(clues(10)).toBe(2);
   });
 
   it('deals no word harder to guess than the level allows', () => {

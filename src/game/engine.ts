@@ -12,7 +12,6 @@ import {
   EDGE_CLUES,
   SCENE_STAGES,
   LETTER_FREQUENCY,
-  LONG_WORD_CLUES,
   LONG_WORD_LENGTH,
   MAX_WORD_LENGTH,
   MIN_WORD_LENGTH,
@@ -79,20 +78,22 @@ export const uniqueLetters = (word: string): Letter[] => [...new Set(word.split(
 
 // ---- clues (rule 4) ----
 
-/** The fewest clues a word gets on any level: long words get LONG_WORD_CLUES, so a hard level stays fair. */
-export const minClues = (word: string) => (word.length >= LONG_WORD_LENGTH ? LONG_WORD_CLUES : 1);
+/** The fewest clues a word gets on any level: a long word shows its edge (EDGE_CLUES letters). */
+export const minClues = (word: string) => (word.length >= LONG_WORD_LENGTH ? EDGE_CLUES : 1);
 
 /**
- * How many distinct letters to reveal at the start.
- * Every word gets at least one clue (long words at least LONG_WORD_CLUES), longer words
- * get more (`ratio` comes from the level), and at least one letter always
- * stays hidden. When those collide (a word with a single distinct letter,
- * e.g. "a" or "aaa"), keeping a letter hidden wins and the word gets no clue.
+ * How many distinct letters to reveal at the start: all but `toFind` (the
+ * level's letters to find), so a longer word gets more clues and the player
+ * always has the same work to do. Every word gets at least one clue (a long
+ * word its edge), so a word with few letters leaves fewer to find, and at
+ * least one letter always stays hidden. When those collide (a word with a
+ * single distinct letter, e.g. "a" or "aaa"), keeping a letter hidden wins
+ * and the word gets no clue.
  */
-export function clueCount(word: string, ratio: number): number {
+export function clueCount(word: string, toFind: number): number {
   const distinct = uniqueLetters(word).length;
   if (distinct < 2) return 0;
-  return Math.min(distinct - 1, Math.max(minClues(word), Math.round(distinct * ratio)));
+  return Math.min(distinct - 1, Math.max(minClues(word), distinct - toFind));
 }
 
 /** Fisher–Yates shuffle of a fresh copy. */
@@ -117,25 +118,20 @@ export function edgeLetters(word: string, rng: () => number = Math.random): Lett
 
 /**
  * The clue letters, in this order until there are clueCount of them: a long
- * word's edge (edgeLetters), then its `rare` rarest letters by `frequency` (a
- * language's letters, most used first; the ones that cost players the most
- * misses), then random ones. Equally rare letters are picked at random.
+ * word's edge (edgeLetters), so the player can recognise it, then its rarest
+ * letters by `frequency` (a language's letters, most used first): the ones
+ * that cost players the most misses. What's left to find is what a player can
+ * find. Equally rare letters, and every letter of a language without a
+ * `frequency`, come in random order.
  */
-export function pickClueLetters(
-  word: string,
-  ratio: number,
-  rng: () => number = Math.random,
-  frequency?: string,
-  rare = 0,
-): Letter[] {
+export function pickClueLetters(word: string, toFind: number, rng: () => number = Math.random, frequency?: string): Letter[] {
   const edge = edgeLetters(word, rng);
   const letters = shuffled(uniqueLetters(word), rng).filter((c) => !edge.includes(c));
-  let rarest: Letter[] = [];
-  if (frequency && rare > 0) {
+  if (frequency) {
     const rank = (c: Letter) => (frequency.includes(c) ? frequency.indexOf(c) : frequency.length);
-    rarest = [...letters].sort((a, b) => rank(b) - rank(a)).slice(0, rare);
+    letters.sort((a, b) => rank(b) - rank(a));
   }
-  return [...edge, ...rarest, ...letters.filter((c) => !rarest.includes(c))].slice(0, clueCount(word, ratio));
+  return [...edge, ...letters].slice(0, clueCount(word, toFind));
 }
 
 // ---- disabled keys (easy levels) ----
@@ -170,9 +166,8 @@ export interface NewRoundInput {
   /** Shown for free: only on levels that show the subject. */
   subject?: string;
   level: number;
-  clueRatio: number;
-  /** How many of the clue letters are the word's rarest (in its language); the rest are random. */
-  rareClues?: number;
+  /** Distinct letters left to find (Level.toFind). A fraction is a chance: 4.3 = 5 letters in 30% of rounds, else 4. */
+  toFind: number;
   /** Share of the decoy letters disabled on the keyboard (0 = full keyboard). */
   disabledRatio?: number;
   maxWrong?: number;
@@ -181,6 +176,7 @@ export interface NewRoundInput {
 export function createRound(input: NewRoundInput, rng: () => number = Math.random): Round {
   const checked = validateWord(input.word);
   if (!checked.ok) throw new Error(`Invalid word "${input.word}": ${checked.error}`);
+  const toFind = Math.floor(input.toFind + rng());
   return {
     id: input.id,
     wordId: input.wordId,
@@ -191,7 +187,7 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     ...(input.subject && { subject: input.subject }),
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
-    clueLetters: pickClueLetters(checked.word, input.clueRatio, rng, LETTER_FREQUENCY[input.language], input.rareClues),
+    clueLetters: pickClueLetters(checked.word, toFind, rng, LETTER_FREQUENCY[input.language]),
     disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
     boughtLetters: [],
     guessed: [],

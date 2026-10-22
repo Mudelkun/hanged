@@ -80,50 +80,71 @@ it can go down while the score never does. `afterRound(levelProgress, won)` in
 
 ### 20 levels (owner's call, 2026-10-22)
 
-**Why:** the owner wanted the words that are really hard to guess to wait for high levels, with
-**more help as the words get harder**. So there are two tiers:
-- **Levels 1–8: words most players can guess.** Everyday words, the measured difficulty capped low,
-  random clue letters, wrong keys taken off the keyboard.
-- **Levels 9–20: harder and harder words, with more help.** Each level deals a band of measured
-  difficulty that climbs (8–11 misses on level 9 up to 19–25 on level 20; rare words from level 17).
-  The help is the free **subject** (owner's call: from level 9), **letters to buy** (from level 8),
-  wrong keys still taken off the keyboard up to level 16, and the strongest help, **the rarest
-  letters as clues**: 1 of the clue letters on levels 11–12, 2 from level 13. The V of "virulent"
-  is what players can't find, so it's what gets revealed.
+**Why:** the owner wants a game, not homework: a regular person wins most rounds, still loses some,
+and the game gets harder as they climb. Two tiers:
+- **Levels 1–15: everyday words only** (`maxRarity` 20, words everyone uses). They get harder through
+  longer words and **more letters to find**. Only things you can picture up to level 4, and wrong keys
+  taken off the keyboard on levels 1–2.
+- **Levels 16–20: less familiar words come in**, a few more each level: rarity-35 words, capped by
+  `maxDifficulty`, which climbs (8 on 16 up to 22 on 20), then rarity 40 on level 20. About 69% of
+  level 16's words are everyday ones, 34% of level 20's. The help grows too: the free **subject**
+  (owner's call: from level 9) and **letters to buy** (from level 8).
 
-Each `LEVELS` row sets the word-length range, `concreteOnly` (levels 1–4 deal only things you
-can picture), `maxRarity` (20 on levels 1–2, 35 from level 3, 50 from level 17; see
-[word-database.md](word-database.md), How hard a word is), the band `minDifficulty`–`maxDifficulty`
-(measured misses: 0–4 on level 1 up to 0–8 on level 8, then the climbing bands above), the
-`clueRatio` (a round uses `clueRatioFor(level, word)`: a word measured at `HARD_WORD_MISSES` (5) or
-more adds `HARD_WORD_CLUE_BONUS` (0.2) from config.ts, so it gets about one more clue letter; levels
-9–20 use 0, so they get the fewest clues plus that bonus), `rareClues` (how many clue letters are the word's rarest,
-in its language's `LETTER_FREQUENCY` from config.ts; the rest stay random), `showsSubject`, the `disabledRatio` (share of the letters not in the word taken off the
-keyboard: 0.5 at level 1 fading slowly to 0.15 on levels 13–15 and 0.05 on 16, a full keyboard
-from 17; the biggest single help for a regular player, see below; a test keeps it
-non-increasing and ending at 0), `maxWrong` (10 on every level: levels 7–8 used to allow 8 and 6,
-and that made them lose-more-than-win for most players, measured in
-[word-database.md](word-database.md); the rules allow fewer on the hardest levels, but measure first),
-`tokenReward` (1 to 5, see Tokens above) and `sellsLetters` (from level 8). `levelByNumber` reads a row by a round's `level`.
-A test keeps the table from ever taking help away or dealing easier words as levels rise.
+**Letters to find, the main knob (owner's call, 2026-10-22).** On level 10 the owner got ANTHROPOLOGY
+and DISAMBIGUATE with only 2 letters to find: "it makes the player feel the game is getting easier".
+The old table revealed a share of each word's letters (`clueRatio`), raised on levels 9–10 to keep
+their win rate up, plus a hard-word bonus: 98% of level 10's long words left 2 letters or fewer. Now
+each level has **`toFind`**, the number of distinct letters the player has to find; every other letter
+is a clue (`engine.clueCount`). It never goes down from one level to the next (a test checks it):
+2 on level 1, 3 on 2, 4 on 3–5, then 4.2 up to 4.7 on level 15, and 5 up to 6.2 on 16–20. A fraction
+is a chance (4.5 = 4 or 5 letters, half the time each), so the table can climb in small steps. From
+level 3 a long word never leaves fewer than 3 letters to find.
+**The clues are placed to help** (owner: "the way we place the letters should be strategic"): a long
+word's first or last two letters, so the player can recognise it, then the word's **rarest letters**
+(the J of "jelly", the V of "virulent"). The letters left to find are then the ones a player can find,
+which is what keeps a 5-letters-to-find round fun rather than a headache. This replaced three knobs
+(`clueRatio`, `rareClues`, and the hard-word clue bonus): a hard word's hard letters are now always
+the ones revealed.
 
-**The owner's target (2026-10-22): a regular person wins about 75% of rounds on levels 1–15.**
-[levels-fun.test.ts](../src/game/__tests__/levels-fun.test.ts) plays 300 real rounds of each level
-with the stand-in for a regular person: a simulated player who recognises no words, tries the most
-frequent letters, and never uses a hint, the subject or the description. It fails if that player
-wins under **75% on levels 1–15** or under **50% on 16–20**, or if a level has under 250 words.
-Today: 96 · 90 · 90 · 92 · 89 · 96 · 90 · 95 · 97 · 91 · 94 · 91 · 89 · 83 · 79% on levels 1–15,
-then 66 · 67 · 56 · 60 · 67% on 16–20 (with long words showing 4 clues, edge first). This player
-can't recognise a word, so it under-counts what the edge clues do for a real person.
+Each `LEVELS` row sets the word-length range (widening from 3–5 on level 1 to 6–15 from level 8, so
+the difficulty never jumps between neighbours: a level of only 10–15-letter words is easier than one
+with 8-letter words, because long words get more clues), `concreteOnly` (levels 1–4 deal only things
+you can picture), `maxRarity` (see [word-database.md](word-database.md), How hard a word is),
+`maxDifficulty` (measured misses: 4 on level 1 up to 8, then 11 to 22 on 17–20), `toFind`,
+`showsSubject`, the `disabledRatio` (share of the letters not in the word taken off the keyboard:
+0.3 on level 1, 0.15 on level 2, a **full keyboard from level 3**; a test keeps it non-increasing and
+ending at 0), `maxWrong` (10 on every level: levels 7–8 used to allow 8 and 6, and that made them
+lose-more-than-win for most players, measured in [word-database.md](word-database.md); the rules
+allow fewer on the hardest levels, but measure first), `tokenReward` (1 to 5, see Tokens above) and
+`sellsLetters` (from level 8). `levelByNumber` reads a row by a round's `level`. A test keeps the
+table from ever taking help away or dealing easier words as levels rise.
+
+**The owner's target (2026-10-22): a regular person wins about 75% of rounds on levels 1–15**, and not
+much more: at 90–97% the game had no tension, so the target is 75–85%.
+[levels-fun.test.ts](../src/game/__tests__/levels-fun.test.ts) plays 1,000 real rounds of each level
+(300 were too few: ±2.5% of noise moved a level across the bar) with the stand-in for a regular
+person: a simulated player who recognises no words, tries the most frequent letters, and never uses a
+hint, the subject or the description. It fails if that player wins under **75% on levels 1–15** or
+under **50% on 16–20**, over **88% on levels 3–20** (levels 1–2 teach the game and have no ceiling), or
+if a level has under 250 words. Two more checks: levels 1–15 deal only everyday words, and each
+level of 16–20 deals fewer of them than the one before (but always some).
+Today: 99 · 97 · 86 · 86 · 85 · 86 · 86 · 82 · 81 · 82 · 78 · 79 · 78 · 78 · 77% on levels 1–15,
+then 81 · 80 · 69 · 67 · 60% on 16–20. **This player can't tell a familiar word from an unfamiliar one**
+(it recognises none), so on 16–20 it under-counts how much harder the words are for a person: that's
+why the summit's ceiling is the same 88%, and why `toFind` only climbs gently there. It also
+under-counts what the edge clues do for a real person.
 
 Why this player and not a smarter one: a word-matching model that knows 10,000 words said levels
 5–8 were 99% wins while the owner kept losing there ("reasonable" on level 6: 10 letters, 2 clues,
-a full keyboard). The letter-guesser said 57–70%, which matched. What fixed it: **taking wrong keys
-off the keyboard for longer** (it used to stop at level 6). That one column took levels 3–15 from
-57–82% to 77–96%. Revealing the rarest letters is the other strong help: with random clues, this
-player fell to 10–20% on levels 13–20. It's so strong that from level 9 together with the keyboard
-it made levels a 100% walk, which is why it starts at level 11 and the second rare letter waits for
-level 13. Tune the table against this test, not by feel, and once real players play, check it against
+a full keyboard). The letter-guesser said 57–70%, which matched. Revealing the rarest letters is the
+strongest help there is: with random clues, this player fell to 10–20% on levels 13–20. That's why
+every clue after a long word's edge is now a rare one, and the difficulty comes from how many letters
+are left to find.
+**The full keyboard (2026-10-22).** At 90–97% wins every guess was a sure thing, and with half the wrong
+keys gone the player wasn't choosing a letter, just tapping what was left. The owner picked a full keyboard
+over fewer misses (10 balloons stay; fewer misses only make the end come sooner).
+
+Tune the table against this test, not by feel, and once real players play, check it against
 the real win rates the server records for every round.
 
 **Every number in `LEVELS`, `WORDS_PER_LEVEL`, `LOSSES_TO_DROP`, `LEVEL_GRACE_ROUNDS` and

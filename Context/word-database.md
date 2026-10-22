@@ -133,11 +133,12 @@ ran out of tokens, and lost on "magnesium" (level 7) and "virulent" (level 6). I
    ("badly", "always", "adhere") that hangman hints can't point at. So levels 1–4 deal only things
    (`concreteOnly`).
 2. Levels 7–8 dealt rare words with only 8 and 6 misses. Now every level allows 10 misses and **no
-   level deals rare words** (rarity 40–50, "cynosure"): `maxRarity` stops at 35. The rare words stay
+   level deals rare words** (rarity 50, "cynosure"): `maxRarity` stops at 40, on level 20 only. The rare words stay
    in the database (they count toward the language's size, and Versus may use them).
 3. Words like virulent were still dealt. Now each level has a `maxDifficulty` (4 on level 1 up to
-   8 on level 8), and words measured at `HARD_WORD_MISSES` (5) or more get **more clue letters**
-   (owner's request): `clueRatioFor` adds `HARD_WORD_CLUE_BONUS` (0.2, about one more letter).
+   8 on level 8), and words measured hard got **more clue letters** (owner's request). Since the
+   letters-to-find change (same day), every word's clues are its rarest letters, so a hard word's hard
+   letters are always the ones revealed.
 All these numbers are PLACEHOLDERS in [levels.ts](../src/game/levels.ts) and [config.ts](../src/game/config.ts),
 see [progression-and-tokens.md](progression-and-tokens.md).
 
@@ -151,13 +152,14 @@ a real person. Before these changes, levels 7–8 gave them 70–72% and 31–43
 57–97% on every level. On the level ladder over time, the weaker player now reaches level 8 and wins
 **68%** of rounds (57% before, stuck around levels 4–5). Re-run such a simulation before making levels harder.
 
-**20 levels (owner, 2026-10-22):** the hard words aren't thrown away. Levels 9–20 deal them in
-climbing difficulty bands, with more help (the rarest letters as clues, the subject, letters to buy):
-see [progression-and-tokens.md](progression-and-tokens.md), 20 levels.
+**Everyday words up to level 15 (owner, 2026-10-22):** levels 1–15 deal only rarity 10–20 words, the
+ones people use every day. Levels 9–15 used to deal climbing bands of hard-to-guess words, which were
+mostly rarity-35 words ("disambiguate"). Less familiar words now come in from level 16 (rarity 35, then
+40 on level 20), more on each level: see [progression-and-tokens.md](progression-and-tokens.md), 20 levels.
 
-Words per level today (length, kind, rarity and difficulty): 1: 269 · 2: 451 · 3: 546 · 4: 549 ·
-5: 2,876 · 6: 2,950 · 7: 2,242 · 8: 1,541 · 9: 1,443 · 10: 1,703 · 11: 2,371 · 12: 2,516 · 13: 2,839 ·
-14: 2,429 · 15: 2,205 · 16: 1,558 · 17: 1,787 · 18: 1,255 · 19: 783 · 20: 420.
+Words per level today (length, kind, rarity and difficulty): 1: 269 · 2: 451 · 3: 466 · 4: 570 ·
+5: 3,165 · 6: 3,873 · 7: 4,089 · 8–15: 4,122 (every everyday word of 6–15 letters) · 16: 7,077 (69%
+everyday) · 17: 8,936 (55%) · 18: 11,418 (43%) · 19: 12,976 (38%) · 20: 14,443 (34%).
 
 ## Adding or changing words
 
