@@ -12,8 +12,7 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
   **"Change character"** (opens the Characters tab), and the camera badge on the face is a little cat.
 - **The name is the only thing the player edits here.** It's filtered. A new player gets a random name;
   onboarding will ask for one later (not built).
-- **No sound or music switches** until the game has sound. Settings shows only the language (English, not
-  pressable: the MVP has one).
+- Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md).
 - **Privacy policy, terms of use, contact & support**: the rows and pages exist, but show "Coming soon"
   until the texts are written. Apple still needs a real privacy policy URL before release.
 

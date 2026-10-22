@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t, TranslationKey } from '../i18n';
 import { colors, fonts } from '../theme';
 import { Icon, tabIconXml } from './icons';
+import { sound } from '../audio';
 
 type TabId = keyof typeof tabIconXml;
 
@@ -33,7 +34,7 @@ export function TabBar({ active, compact }: { active: TabId; compact: boolean })
             key={tab.id}
             style={styles.tab}
             disabled={!href || on}
-            onPress={href ? () => router.navigate(href) : undefined}
+            onPress={href ? () => { sound.unlock(); sound.play('tab'); router.navigate(href); } : undefined}
             accessibilityRole="tab"
             accessibilityLabel={href ? t(tab.label) : `${t(tab.label)}, ${t('tabs.comingSoon')}`}
             accessibilityState={{ selected: on, disabled: !href }}

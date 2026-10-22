@@ -188,6 +188,8 @@ through every word available to them.**
 
 ## Saving (on the device; the server gets a copy)
 
+`soundEnabled` and `musicEnabled` save the independent audio preferences. Old saves get `true` for both; existing false values remain false. `audioSetting` changes only the selected boolean. Audio playback stays outside the reducer, and settings are not included in leaderboard snapshots. See [audio-design.md](audio-design.md).
+
 Everything (score, tokens, settings, the round in progress) is one JSON blob
 in **AsyncStorage**, key `hanged.game.v1`, written after every state change.
 `version: 1` is checked on load. A breaking shape change must bump the key or

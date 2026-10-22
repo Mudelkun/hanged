@@ -11,6 +11,7 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../../characters/rig';
+import { useSoundScope } from '../../audio/AudioProvider';
 import { CharacterGrid, CharacterInfo, Cheer, Ownership, SHOP, Showcase } from '../../components/CharacterShop';
 import { TitleHeader } from '../../components/GameHeader';
 import { PaperBackground } from '../../components/PaperBackground';
@@ -26,6 +27,7 @@ import { colors } from '../../theme';
 const GUTTER = 16;
 
 export default function CharactersScreen() {
+  const audio = useSoundScope();
   const { state, dispatch } = useGame();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
@@ -46,7 +48,13 @@ export default function CharactersScreen() {
 
   const step = (by: number) => {
     const i = SHOP.findIndex((c) => c.id === viewedId);
-    setViewedId(SHOP[(i + by + SHOP.length) % SHOP.length].id);
+    viewCharacter(SHOP[(i + by + SHOP.length) % SHOP.length].id);
+  };
+  const viewCharacter = (id: string) => {
+    if (id === viewedId) return;
+    audio.cancel();
+    audio.play('browse');
+    setViewedId(id);
   };
 
   const onBuy = () => {
@@ -54,6 +62,10 @@ export default function CharactersScreen() {
     if (!canBuyCharacter(state, viewedId)) return;
     dispatch({ type: 'buyCharacter', id: viewedId });
     feedback.characterUnlocked();
+    audio.sequence([
+      { cue: 'latch' }, { cue: 'unlock', at: 120 }, { cue: 'confetti', at: 150, gain: .8 },
+      { voice: 'hello', character: viewedId, at: 240 }, { cue: 'ribbon', at: 480 },
+    ]);
     setCheer((c) => ({ n: c.n + 1, big: true }));
   };
   const onRefuse = () => {
@@ -63,6 +75,8 @@ export default function CharactersScreen() {
   const onPick = () => {
     dispatch({ type: 'selectCharacter', id: viewedId });
     feedback.characterPicked();
+    audio.play('choose');
+    audio.sequence([{ voice: 'hello', character: viewedId, at: 120 }]);
     setCheer((c) => ({ n: c.n + 1, big: false }));
   };
 
@@ -85,7 +99,7 @@ export default function CharactersScreen() {
           style={[styles.stage, { minHeight: compact ? 130 : 170 }]}
         />
         <CharacterInfo character={viewed} ownership={status} price={price} note={note} />
-        <CharacterGrid ownership={ownership} viewedId={viewedId} width={width - GUTTER * 2} gutter={GUTTER} compact={compact} onPress={setViewedId} />
+        <CharacterGrid ownership={ownership} viewedId={viewedId} width={width - GUTTER * 2} gutter={GUTTER} compact={compact} onPress={viewCharacter} />
         <View style={styles.action}>
           {status === 'locked' ? (
             <PayButton
@@ -97,7 +111,7 @@ export default function CharactersScreen() {
               onRefuse={onRefuse}
             />
           ) : status === 'owned' ? (
-            <BigButton label={t('chars.choose', { name: viewed.name })} onPress={onPick} />
+            <BigButton cue={false} label={t('chars.choose', { name: viewed.name })} onPress={onPick} />
           ) : (
             <BigButton ghost label={t('chars.play', { name: viewed.name })} onPress={() => router.navigate('/')} />
           )}

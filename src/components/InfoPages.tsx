@@ -11,6 +11,7 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { DEFAULT_MAX_WRONG, LETTER_BUY_COST, LETTER_BUY_COUNT, LOSSES_TO_DROP, STREAK_BONUS_AT } from '../game/config';
 import { LEVELS } from '../game/levels';
 import { t, TranslationKey } from '../i18n';
+import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { profileIconXml } from './icons';
 import { BoardNote } from './Leaderboard';
@@ -68,7 +69,7 @@ function InfoCard({ title, body, color, links }: { title: string; body: string; 
       </View>
       <Text style={styles.cardBody}>{body}</Text>
       {links?.map((url) => (
-        <Pressable key={url} onPress={() => Linking.openURL(url).catch(() => {})} accessibilityRole="link" hitSlop={4}>
+        <Pressable key={url} onPress={() => { sound.play('link'); Linking.openURL(url).catch(() => {}); }} accessibilityRole="link" hitSlop={4}>
           <Text style={styles.link}>{url.replace(/^https?:\/\//, '')}</Text>
         </Pressable>
       ))}

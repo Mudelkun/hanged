@@ -15,6 +15,7 @@ import { avatarRing, avatarXml, Character } from '../characters/rig';
 import { LEVELS } from '../game/levels';
 import { t } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
+import { sound } from '../audio';
 import { chevXml, crownXml, Icon, starXml } from './icons';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
@@ -95,7 +96,7 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
 
 const ProfileButton = ({ character }: { character: Character }) => (
   <Pressable
-    onPress={() => router.push('/profile')}
+    onPress={() => { sound.unlock(); sound.play('panel-open'); router.push('/profile'); }}
     hitSlop={6}
     accessibilityRole="button"
     accessibilityLabel={t('header.a11y.avatar')}
@@ -112,7 +113,7 @@ const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 export function BackHeader({ title, tokens }: { title: string; tokens?: number }) {
   return (
     <View style={styles.head}>
-      <Pressable onPress={goBack} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
+      <Pressable onPress={() => { sound.play('back'); goBack(); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
         {({ pressed }) => (
           <Raised depth={3} shadowColor={colors.shadow} radius={15} pressed={pressed} style={styles.back}>
             <Icon xml={chevXml('l')} size={22} />

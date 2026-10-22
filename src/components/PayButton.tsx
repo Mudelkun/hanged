@@ -11,6 +11,7 @@ import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
 import { Raised } from './Raised';
 import { useTokenOrigin } from './TokenFlight';
+import { sound } from '../audio';
 
 /** True for 2.2 s after `refuse()`: a press without enough tokens shows "Not enough tokens yet". */
 export function useRefusal(): [boolean, () => void] {
@@ -40,9 +41,10 @@ export function PayButton({ label, a11yLabel, canAfford, onPay, onRefuse, icon, 
   const [ref, sendToken] = useTokenOrigin();
   const small = pillHeight !== undefined;
   const press = () => {
+    sound.unlock();
     // Measure the button before paying: it's gone once the purchase shows
     if (canAfford) sendToken(-1).then(() => onPay?.());
-    else onRefuse();
+    else { sound.play('refused'); onRefuse(); }
   };
   return (
     <Pressable

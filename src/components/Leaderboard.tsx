@@ -11,6 +11,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop, SvgXml } from 'react-native-svg'
 import type { Period } from '../../server/src/contract';
 import { bodyXml, Character } from '../characters/rig';
 import { t } from '../i18n';
+import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { Avatar } from './GameHeader';
 import { cloudXml, Icon, sparkXml } from './icons';
@@ -39,7 +40,7 @@ export function PeriodSwitch({ period, onChange }: { period: Period; onChange: (
           <Pressable
             key={p.id}
             style={styles.segItem}
-            onPress={() => onChange(p.id)}
+            onPress={() => { if (p.id !== period) { sound.play('period'); onChange(p.id); } }}
             disabled={on}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}

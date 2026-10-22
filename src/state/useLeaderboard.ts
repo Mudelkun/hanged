@@ -11,6 +11,7 @@ import type { LeaderboardResponse, Period } from '../../server/src/contract';
 import { api } from '../net/api';
 import { savedPlayerId } from '../net/sync';
 import { useGame } from './GameContext';
+import { useSoundScope } from '../audio/AudioProvider';
 
 export interface Board extends LeaderboardResponse {
   /** This device's player id, to find their row. */
@@ -20,6 +21,7 @@ export interface Board extends LeaderboardResponse {
 export type BoardView = { status: 'loading' } | { status: 'offline' } | { status: 'ready'; board: Board };
 
 export function useLeaderboard(period: Period) {
+  const audio = useSoundScope();
   const { syncNow } = useGame();
   const [boards, setBoards] = useState<Partial<Record<Period, Board>>>({});
   const [failed, setFailed] = useState<Partial<Record<Period, boolean>>>({});
@@ -32,8 +34,10 @@ export function useLeaderboard(period: Period) {
         const board = { ...(await api.leaderboard(p, meId ?? undefined)), meId };
         setBoards((all) => ({ ...all, [p]: board }));
         setFailed((all) => ({ ...all, [p]: false }));
+        return true;
       } catch {
         setFailed((all) => ({ ...all, [p]: true }));
+        return false;
       }
     },
     [syncNow],
@@ -46,10 +50,14 @@ export function useLeaderboard(period: Period) {
   );
 
   const refresh = useCallback(async () => {
+    if (refreshing) return;
+    const stillCurrent = audio.continuation();
+    audio.play('refresh');
     setRefreshing(true);
-    await load(period);
+    const succeeded = await load(period);
+    if (stillCurrent()) audio.play(succeeded ? 'board-ready' : 'offline');
     setRefreshing(false);
-  }, [load, period]);
+  }, [load, period, refreshing, audio]);
 
   const board = boards[period];
   const view: BoardView = board ? { status: 'ready', board } : failed[period] ? { status: 'offline' } : { status: 'loading' };

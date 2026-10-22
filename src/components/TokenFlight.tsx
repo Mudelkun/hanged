@@ -23,6 +23,7 @@ import { createContext, ReactNode, RefObject, useCallback, useContext, useEffect
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
 import { t } from '../i18n';
+import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
 
@@ -188,7 +189,13 @@ function Flight({ from, to, delta, onDone }: FlightData) {
 
   useEffect(() => {
     const native = { useNativeDriver: true };
-    Animated.sequence([
+    const audio = sound.scope();
+    audio.activate();
+    audio.sequence([
+      { cue: delta > 0 ? 'token-gain' : 'token-spend' },
+      { cue: 'token-flight', at: APPEAR_MS + (delta > 0 ? HOLD_MS.gain : HOLD_MS.spend), gain: .8 },
+    ]);
+    const animation = Animated.sequence([
       Animated.timing(fx.appear, { toValue: 1, duration: APPEAR_MS, easing: Easing.out(Easing.back(2.2)), ...native }),
       Animated.delay(delta > 0 ? HOLD_MS.gain : HOLD_MS.spend),
       // x eases both ways, y winds up then rushes in: the chip arcs up to the counter
@@ -196,7 +203,9 @@ function Flight({ from, to, delta, onDone }: FlightData) {
         Animated.timing(fx.x, { toValue: 1, duration: FLY_MS, easing: Easing.inOut(Easing.cubic), ...native }),
         Animated.timing(fx.y, { toValue: 1, duration: FLY_MS, easing: Easing.back(1.2), ...native }),
       ]),
-    ]).start(onDone);
+    ]);
+    animation.start(({ finished }) => { if (finished) onDone(); });
+    return () => { audio.deactivate(); animation.stop(); };
   }, [fx, delta, onDone]);
 
   return (

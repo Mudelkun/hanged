@@ -14,6 +14,8 @@ import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../../characters/rig';
+import { sound } from '../../audio';
+import { useSoundScope } from '../../audio/AudioProvider';
 import { GameHeader } from '../../components/GameHeader';
 import { GameScene, Stamp } from '../../components/GameScene';
 import { LetterKeyboard } from '../../components/LetterKeyboard';
@@ -25,7 +27,7 @@ import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeov
 import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
 import { LETTER_BUY_COST } from '../../game/config';
-import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../../game/engine';
+import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
 import { lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { t } from '../../i18n';
@@ -36,6 +38,7 @@ import { colors, fonts, levelColor } from '../../theme';
 const RESULT_DELAY = { lost: 2600, won: 700 };
 
 export default function PlayScreen() {
+  const audio = useSoundScope();
   const { state, dispatch, startNextRound } = useGame();
   const round = state.round!;
   const status = roundStatus(round);
@@ -59,7 +62,9 @@ export default function PlayScreen() {
   const revealResult = useCallback(() => {
     setResultFor(round.id);
     feedback.stamp();
-  }, [round.id]);
+    audio.play('stamp');
+    if (status === 'lost') audio.sequence([{ cue: 'loss', at: 130, gain: .7 }]);
+  }, [round.id, status, audio]);
 
   // A round that moved the level plays the level path over its result. Until the
   // character lands on the new stop, the header keeps showing the round's level.
@@ -79,25 +84,36 @@ export default function PlayScreen() {
   const streak = state.streak;
   useEffect(() => {
     if (status === 'playing' || resultFor === round.id || streakFor === round.id) return;
-    if (status === 'won') feedback.won();
+    if (status === 'won') {
+      feedback.won();
+      audio.sequence([{ cue: 'win', at: 100 }, { voice: 'joy', character: character.id, at: 220, gain: .9 }]);
+    }
     else feedback.lost();
     const celebrate = status === 'won' && streak >= STREAK_SHOWN_FROM;
     const id = setTimeout(() => (celebrate ? setStreakFor(round.id) : revealResult()), RESULT_DELAY[status]);
     return () => clearTimeout(id);
-  }, [status, round.id, resultFor, streakFor, streak, revealResult]);
+  }, [status, round.id, resultFor, streakFor, streak, revealResult, audio, character.id]);
 
   const onKey = useCallback(
     (c: Letter) => {
       if (roundStatus(round) !== 'playing' || usedLetters(round).has(c)) return;
+      const next = guess(round, c);
+      if (next === round) return;
+      sound.unlock();
+      audio.play('key');
+      audio.sequence(wrongCount(next) > wrongCount(round)
+        ? [{ cue: 'wrong', at: 30 }]
+        : [{ cue: 'correct', at: 35 }, { cue: 'tile', at: 80, gain: .65 }]);
       dispatch({ type: 'guess', letter: c, at: Date.now() });
     },
-    [round, dispatch],
+    [round, dispatch, audio],
   );
 
   const onBuyLetters = useCallback(() => {
     feedback.unlock();
+    audio.play('letters');
     dispatch({ type: 'buyLetters' });
-  }, [dispatch]);
+  }, [dispatch, audio]);
 
   return (
     <View style={styles.screen}>
@@ -124,7 +140,7 @@ export default function PlayScreen() {
             level={level}
             available={available}
             compact={compact}
-            onNext={startNextRound}
+            onNext={() => { audio.cancel(); startNextRound(); audio.sequence([{ cue: 'deal', at: 100 }]); }}
           />
         ) : (
           <>

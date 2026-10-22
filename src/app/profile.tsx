@@ -3,8 +3,7 @@
  * the top-left of Play, Leaderboard and Characters. The player's name (the
  * only thing they edit here), their character, stats, settings, the info and
  * legal pages, and account deletion (App Store Guideline 5.1.1(v)).
- * Owner's calls (2026-10-22): no photo upload, the avatar is the character;
- * no sound or music switches until the game has sound.
+ * The avatar is the character. Music and effects now have separate saved switches.
  */
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import appConfig from '../../app.json';
 import { characterById } from '../characters/rig';
+import { sound } from '../audio';
 import { BackHeader } from '../components/GameHeader';
 import { profileIconXml } from '../components/icons';
 import { INFO_PAGES, InfoPage } from '../components/InfoPages';
@@ -29,7 +29,7 @@ const infoItems = (): ListItem[] =>
     icon: INFO_PAGES[page].icon,
     color: INFO_PAGES[page].color,
     label: t(INFO_PAGES[page].title),
-    onPress: () => router.push({ pathname: '/info/[page]', params: { page } }),
+    onPress: () => { sound.play('panel-open'); router.push({ pathname: '/info/[page]', params: { page } }); },
   }));
 
 export default function ProfileScreen() {
@@ -37,8 +37,16 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const [deleting, setDeleting] = useState(false);
   const character = characterById(state.characterId);
+  const setAudio = (setting: 'soundEnabled' | 'musicEnabled', enabled: boolean) => {
+    sound.unlock();
+    sound.settings(setting === 'soundEnabled' ? enabled : state.soundEnabled, setting === 'musicEnabled' ? enabled : state.musicEnabled);
+    if (enabled || setting === 'musicEnabled') sound.play('tap');
+    dispatch({ type: 'audioSetting', setting, enabled });
+  };
 
   const settings: ListItem[] = [
+    { key: 'sound', icon: profileIconXml.sound, color: colors.coral, label: t('profile.sound'), toggle: { value: state.soundEnabled, onChange: value => setAudio('soundEnabled', value) } },
+    { key: 'music', icon: profileIconXml.music, color: colors.mintD, label: t('profile.music'), toggle: { value: state.musicEnabled, onChange: value => setAudio('musicEnabled', value) } },
     // The MVP is English only: the row shows the language, a picker comes with the second one.
     { key: 'language', icon: profileIconXml.language, color: colors.sky, label: t('profile.language'), value: t(`language.${state.language}` as TranslationKey) },
   ];
@@ -46,6 +54,7 @@ export default function ProfileScreen() {
   const onDeleted = async () => {
     const done = await deleteAccount();
     if (done) {
+      sound.play('delete-complete');
       setDeleting(false);
       router.dismissTo('/');
     }
@@ -66,12 +75,12 @@ export default function ProfileScreen() {
           name={state.playerName ?? t('player.defaultName')}
           character={character}
           onRename={(name) => dispatch({ type: 'rename', name })}
-          onChangeCharacter={() => router.dismissTo('/characters')}
+          onChangeCharacter={() => { sound.play('tab'); router.dismissTo('/characters'); }}
         />
         <StatTiles words={state.wordsGuessed} tokens={state.tokens} level={state.levelProgress.level} />
         <ListGroup title={t('profile.settings')} items={settings} />
         <ListGroup title={t('profile.info')} items={infoItems()} />
-        <ProfileFooter version={appConfig.expo.version} onDelete={() => setDeleting(true)} />
+        <ProfileFooter version={appConfig.expo.version} onDelete={() => { sound.play('delete-open'); setDeleting(true); }} />
       </ScrollView>
       <DeleteSheet visible={deleting} character={character} onClose={() => setDeleting(false)} onConfirm={onDeleted} />
     </View>

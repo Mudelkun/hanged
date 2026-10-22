@@ -1,6 +1,6 @@
 # Hanged — sound playground
 
-Open **[soundboard.html](soundboard.html)** in a browser. It contains the audio and character artwork, works offline, and needs no server. Nothing has been connected to the application.
+Open **[soundboard.html](soundboard.html)** in a browser. It contains the audio and character artwork, works offline, and needs no server. The collection has also been integrated into the app at the owner's request; runtime placement and volume controls are documented in [Context/audio-design.md](../../../Context/audio-design.md). The ZIP preserves the original audition snapshot.
 
 - **65 effect families**, with **150 individual takes**.
 - **15 character voices × 6 reactions = 90 vocal files**.

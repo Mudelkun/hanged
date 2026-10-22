@@ -60,6 +60,8 @@ export const closeXml = (c = '#4b3a35') =>
 
 // The Profile page's row icons (white, on a coloured square) and its name editor.
 export const profileIconXml = {
+  sound: svg('0 0 24 24', '<path d="M3 9h4l6-5v16l-6-5H3z" fill="#fff"/><path d="M16 8q5 4 0 8M19 5q7 7 0 14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'),
+  music: svg('0 0 24 24', '<path d="M9 17V5l11-2v12M9 8l11-2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="6" cy="18" rx="4" ry="3" fill="#fff"/><ellipse cx="17" cy="16" rx="4" ry="3" fill="#fff"/>'),
   language: svg(
     '0 0 24 24',
     '<g fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></g>',

@@ -17,6 +17,7 @@ import Svg, { Path } from 'react-native-svg';
 
 import { Character } from '../characters/rig';
 import { feedback } from '../feedback';
+import { useSoundScope } from '../audio/AudioProvider';
 import { worldBands } from '../world/world';
 import { t } from '../i18n';
 import { LEVELS } from '../game/levels';
@@ -126,6 +127,7 @@ interface Props {
 }
 
 export function LevelChange({ from, to, best, character, width, compact, onLanded, onClose }: Props) {
+  const audio = useSoundScope();
   const up = to > from;
   const cardW = Math.min(width, 360);
   const pathW = cardW - 32;
@@ -167,6 +169,8 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
 
   useEffect(() => {
     if (!open) return;
+    const stillCurrent = audio.continuation();
+    const cancelAudio = audio.sequence([{ cue: 'panel-open' }, { cue: up ? 'level-rise' : 'level-slide', at: SHOW_MS + START_MS }]);
     const travel = { duration: TRAVEL_MS[up ? 'up' : 'down'], easing: Easing.inOut(Easing.cubic) };
     const run = Animated.sequence([
       Animated.timing(fx.show, { toValue: 1, duration: SHOW_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }),
@@ -177,6 +181,10 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
     run.start(({ finished }) => {
       if (!finished) return;
       setLanded(true);
+      if (stillCurrent()) {
+        audio.play(top ? 'summit' : up ? 'level-up' : 'level-down');
+        audio.sequence([{ voice: up ? 'joy' : 'recover', character: character.id, at: 220, gain: .8 }]);
+      }
       popFrom(fx.land, up ? 0.5 : 0.8);
       if (up) {
         fx.burst.setValue(0);
@@ -184,6 +192,11 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
         feedback.levelUp();
       } else feedback.levelDown();
       if (top) {
+        if (stillCurrent()) {
+          audio.play('fog');
+          audio.play('confetti', .8);
+          audio.sequence([{ cue: 'crown', at: 180, gain: .75 }]);
+        }
         Animated.timing(fx.fog, { toValue: 0, duration: FOG_LIFT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
         Animated.timing(fx.confetti, { toValue: 1, duration: CONFETTI_MS, easing: Easing.linear, useNativeDriver: true }).start();
         popFrom(fx.crown, 0);
@@ -193,8 +206,9 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
     return () => {
       run.stop();
       road.stop();
+      cancelAudio();
     };
-  }, [open, up, top, fx]);
+  }, [open, up, top, fx, audio, character.id]);
 
   useEffect(() => {
     if (!landed) return;

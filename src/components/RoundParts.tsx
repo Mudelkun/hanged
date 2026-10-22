@@ -14,6 +14,7 @@ import { bulbXml, Icon, sparkXml } from './icons';
 import { popFrom } from './motion';
 import { PayButton, useRefusal } from './PayButton';
 import { Raised } from './Raised';
+import { sound, Cue } from '../audio';
 
 // ---- misses ----
 
@@ -164,9 +165,9 @@ export function DescriptionCard({ text, compact }: DescriptionProps) {
 
 // ---- big button ----
 
-export function BigButton({ label, onPress, ghost }: { label: string; onPress: () => void; ghost?: boolean }) {
+export function BigButton({ label, onPress, ghost, cue }: { label: string; onPress: () => void; ghost?: boolean; cue?: Cue | false }) {
   return (
-    <Pressable onPress={onPress} accessibilityRole="button">
+    <Pressable onPress={() => { sound.unlock(); if (cue !== false) sound.play(cue ?? (ghost ? 'tap' : 'primary')); onPress(); }} accessibilityRole="button">
       {({ pressed }) => (
         <Raised
           depth={5}

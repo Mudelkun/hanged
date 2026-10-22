@@ -33,6 +33,9 @@ export interface GameState {
   /** Characters bought with tokens. Free ones (price 0) are owned without being listed. */
   unlockedCharacterIds: string[];
   language: string;
+  /** Local playback preferences. Voices follow sound effects. */
+  soundEnabled: boolean;
+  musicEnabled: boolean;
   /** Leaderboard score: words guessed. Spending tokens never lowers it. */
   wordsGuessed: number;
   tokens: number;
@@ -62,6 +65,8 @@ export const initialState = (): GameState => ({
   characterId: DEFAULT_CHARACTER,
   unlockedCharacterIds: [],
   language: DEFAULT_LANGUAGE,
+  soundEnabled: true,
+  musicEnabled: true,
   wordsGuessed: 0,
   tokens: STARTING_TOKENS,
   streak: 0,
@@ -75,6 +80,7 @@ export const initialState = (): GameState => ({
 });
 
 export type GameAction =
+  | { type: 'audioSetting'; setting: 'soundEnabled' | 'musicEnabled'; enabled: boolean }
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
   /** `at`: now, in epoch ms (the reducer stays pure). */
@@ -165,6 +171,8 @@ export const lettersForSale = (s: GameState) =>
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case 'audioSetting':
+      return state[action.setting] === action.enabled ? state : { ...state, [action.setting]: action.enabled };
     case 'hydrate': {
       let s = action.state;
       // A save from before levels could drop: its level came from the score.
@@ -177,6 +185,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         s = { ...rest, seenWordIds: [...recentWordIds].reverse() };
       }
       s = withDefaults(s);
+      if (typeof s.soundEnabled !== 'boolean' || typeof s.musicEnabled !== 'boolean')
+        s = { ...s, soundEnabled: typeof s.soundEnabled === 'boolean' ? s.soundEnabled : true,
+          musicEnabled: typeof s.musicEnabled === 'boolean' ? s.musicEnabled : true };
       // A save from the old "N words per token" rate: its progress was worth a
       // token per word at the last rate (1), so pay it out and drop the old fields.
       if ('wordsTowardToken' in s || 'lastTokenEarned' in s) {

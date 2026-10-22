@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Character } from '../characters/rig';
 import { LEVELS, levelByNumber, LevelProgress, wordsToNextLevel } from '../game/levels';
 import { t } from '../i18n';
+import { sound } from '../audio';
 import { colors, fonts, levelColor, worldColors } from '../theme';
 import { Avatar } from './GameHeader';
 import { closeXml, crownXml, Icon, leafXml, starXml } from './icons';
@@ -66,6 +67,7 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
   const closing = useRef(false);
 
   useEffect(() => {
+    sound.play('map-open');
     Animated.timing(fx.show, { toValue: 1, duration: SHOW_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
     const ease = { duration: BOB_MS, easing: Easing.inOut(Easing.sin), useNativeDriver: true };
     const bob = Animated.loop(Animated.sequence([Animated.timing(fx.bob, { toValue: 1, ...ease }), Animated.timing(fx.bob, { toValue: 0, ...ease })]));
@@ -76,6 +78,7 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
   const close = useCallback(() => {
     if (closing.current) return;
     closing.current = true;
+    sound.play('map-close');
     Animated.timing(fx.show, { toValue: 0, duration: HIDE_MS, easing: Easing.in(Easing.quad), useNativeDriver: true }).start(() => onClose());
   }, [fx, onClose]);
 

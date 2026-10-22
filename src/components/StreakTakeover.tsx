@@ -16,6 +16,7 @@ import Svg, { Defs, LinearGradient, Path, Rect, Stop, SvgXml } from 'react-nativ
 
 import { bodyXml, Character } from '../characters/rig';
 import { feedback } from '../feedback';
+import { useSoundScope } from '../audio/AudioProvider';
 import { STREAK_BONUS_AT } from '../game/config';
 import { StreakMeter, streakMeter } from '../game/progress';
 import { t } from '../i18n';
@@ -248,6 +249,7 @@ interface Props {
 }
 
 export function StreakTakeover({ streak, tokens, character, compact, onReveal, onDone }: Props) {
+  const audio = useSoundScope();
   const meter = streakMeter(streak);
   const maxed = meter.tier >= STREAK_BONUS_AT.length;
   const look = streakColor(meter.tier);
@@ -269,13 +271,15 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
   const close = useCallback(() => {
     if (closing.current) return;
     closing.current = true;
+    audio.cancel();
     sendReward();
     onReveal();
     timing(fx.hide, 1, HIDE_MS, Easing.in(Easing.quad)).start(() => onDone());
-  }, [fx, sendReward, onReveal, onDone]);
+  }, [fx, sendReward, onReveal, onDone, audio]);
 
   // Appear, keep the backdrop alive, fill this win's cell
   useEffect(() => {
+    const cancelAudio = audio.sequence([{ cue: 'streak-open' }, { cue: 'streak-fill', at: SHOW_MS + FILL_DELAY_MS }]);
     const loops = [
       Animated.loop(timing(fx.spin, 1, 26000, Easing.linear)),
       Animated.loop(timing(fx.twinkle, 1, 2400, Easing.linear)),
@@ -299,12 +303,14 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
       loops.forEach((l) => l.stop());
       run.stop();
       clearTimeout(tap);
+      cancelAudio();
     };
-  }, [fx]);
+  }, [fx, audio]);
 
   // The cell is full: its star pops, the count ticks up, the reward flies
   useEffect(() => {
     if (phase !== 'landed') return;
+    if (!closing.current) audio.play('star-land');
     feedback.streak();
     popFrom(fx.cell, 0);
     popFrom(fx.count, 1.6);
@@ -314,11 +320,15 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
     if (!meter.full) Animated.spring(fx.note, { toValue: 1, friction: 6, tension: 120, useNativeDriver: true }).start();
     const id = setTimeout(() => (meter.full ? setPhase('boom') : close()), meter.full ? BOOM_DELAY_MS : HOLD_MS.plain);
     return () => clearTimeout(id);
-  }, [phase, fx, meter.full, sendReward, close]);
+  }, [phase, fx, meter.full, sendReward, close, audio]);
 
   // The meter is full: the bonus moment
   useEffect(() => {
     if (phase !== 'boom') return;
+    if (!closing.current) {
+      audio.play('streak-bonus');
+      audio.play('confetti', .8);
+    }
     feedback.streakBonus();
     popFrom(fx.star, 0);
     popFrom(fx.title, 0.5);
@@ -331,7 +341,7 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
     ]).start();
     const id = setTimeout(close, HOLD_MS.full);
     return () => clearTimeout(id);
-  }, [phase, fx, close]);
+  }, [phase, fx, close, audio]);
 
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -375,7 +385,7 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
     >
       <Pressable
         style={styles.press}
-        onPress={close}
+        onPress={() => { close(); audio.play('panel-close'); }}
         disabled={!tappable}
         accessibilityRole="button"
         accessibilityLabel={t('streak.a11y', { count: streak, note })}

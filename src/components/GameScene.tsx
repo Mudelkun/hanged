@@ -20,6 +20,8 @@ import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewS
 import Svg, { Circle, Defs, G, LinearGradient, Mask, Rect, Stop, SvgXml, Text as SvgText } from 'react-native-svg';
 
 import { BalloonAnim, Character, Frame, HangedRig } from '../characters/rig';
+import { useSoundScope } from '../audio/AudioProvider';
+import { balloonSounds } from '../audio/scenes';
 import { colors } from '../theme';
 import { cloudXml, Icon } from './icons';
 import { Raised } from './Raised';
@@ -84,6 +86,7 @@ const restFrame = (c: Character, mode: SceneMode, stage: number, gone: number) =
   sceneFrame(c, mode, { from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 }, 1, 0);
 
 function AnimatedCharacter({ character, stage, gone, mode }: { character: Character; stage: number; gone: number; mode: SceneMode }) {
+  const audio = useSoundScope();
   const step = useRef<Step>({ from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 });
   const [view, setView] = useState(() => restFrame(character, mode, stage, gone));
   const focused = useIsFocused();
@@ -92,9 +95,12 @@ function AnimatedCharacter({ character, stage, gone, mode }: { character: Charac
 
   useEffect(() => {
     const s = step.current;
-    if (stage !== s.to || gone !== s.goneTo)
+    if (stage !== s.to || gone !== s.goneTo) {
+      audio.cancel();
+      if (gone > s.goneTo) audio.sequence(balloonSounds(stage === 10, BalloonAnim.STAGES[stage].dur ?? BalloonAnim.DURATION, character.id, gone % 3 === 0));
       step.current = { from: s.to, to: stage, goneFrom: s.goneTo, goneTo: gone, start: performance.now() };
-  }, [stage, gone]);
+    }
+  }, [stage, gone, character.id, audio]);
 
   // A new character keeps the step: it carries on from the same stage.
   useEffect(() => {

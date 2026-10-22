@@ -42,7 +42,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The Leaderboard screen, the ranking rules, and how the bottom tabs work | [Context/leaderboard.md](Context/leaderboard.md) |
 | The Characters page: character prices (and why), buying and picking, ownership in the save, every place the character shows | [Context/characters-shop.md](Context/characters-shop.md) |
 | The Profile page: player names (the filter, random names), the info and legal pages, deleting the account | [Context/profile.md](Context/profile.md) |
-| Music, sound effects, character voices, and standalone listening previews awaiting approval | [Context/audio-design.md](Context/audio-design.md) |
+| Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
@@ -168,7 +168,7 @@ This is the player's own page. It holds personal customization, app settings, an
 - **Stats**: words guessed, tokens and current level.
 - **Settings**
   - App **language**. The MVP lists English only.
-  - **Sound effects** and **music** on/off switches. These are my addition, since the game is meant to be full of sound. **Not shown until the game has sound** (owner's call, 2026-10-22).
+  - Separate saved **Sound effects & voices** and **Music** on/off switches. Audio is integrated at the owner's request (2026-10-22); both default on, respect the iOS silent switch, and pause in the background.
 - **Info & legal**
   - **Game rules**: an in-app sheet that explains the rules in player-friendly words. It must match the rules in this file.
   - **Privacy policy**: required by the App Store. Apple also needs a public URL for it in App Store Connect.

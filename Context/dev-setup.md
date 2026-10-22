@@ -17,6 +17,7 @@
 - Fonts: `@expo-google-fonts/fredoka` (titles, letters) and `nunito` (body). Loaded in
   `_layout.tsx`. The splash screen stays up until the fonts **and** the saved game are loaded.
 - Haptics: `expo-haptics`.
+- Audio: `expo-audio` for native playback, `expo-asset` for bundled sources; the browser uses Web Audio. See [audio-design.md](audio-design.md). Both Expo modules are included in SDK 57 Expo Go. Existing development builds need rebuilding to add the native audio module/config; there is no microphone permission or background audio service.
 
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
 with Expo Go. No dev build is needed yet.

@@ -7,6 +7,7 @@ import { ReactNode, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { TokenFlightProvider } from '../components/TokenFlight';
+import { AudioProvider } from '../audio/AudioProvider';
 import { GameProvider, useGame } from '../state/GameContext';
 import { colors } from '../theme';
 
@@ -37,10 +38,12 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <GameProvider>
         <Gate fontsDone={loaded || !!error}>
-          <TokenFlightProvider>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }} />
-          </TokenFlightProvider>
+          <AudioProvider>
+            <TokenFlightProvider>
+              <StatusBar style="dark" />
+              <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }} />
+            </TokenFlightProvider>
+          </AudioProvider>
         </Gate>
       </GameProvider>
     </SafeAreaProvider>

@@ -15,6 +15,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
 import { t } from '../i18n';
+import { useSoundScope } from '../audio/AudioProvider';
 import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
 import { popFrom } from './motion';
@@ -61,6 +62,7 @@ const run = (value: Animated.Value, toValue: number, duration: number, easing: (
   Animated.timing(value, { toValue, duration, easing, useNativeDriver: true }).start();
 
 export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number }) {
+  const audio = useSoundScope();
   const flights = useTokenFlights();
   const focused = useIsFocused();
   const coin = useRef<View>(null);
@@ -98,6 +100,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
     let step = 0;
     const tick = () => {
       step += 1;
+      if (step <= 3) audio.play('count', gain ? .8 : .5);
       setShown(from + sign * step);
       popFrom(fx.bump, gain ? 1.18 : 0.86);
       if (step < steps) timer = setTimeout(tick, stepMs);
@@ -105,6 +108,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
     const count = () => {
       if (cancelled || counting) return;
       counting = true;
+      audio.play(gain ? 'token-land' : 'spend-land');
       fx.spin.setValue(0);
       if (gain) {
         fx.burst.setValue(0);
@@ -131,7 +135,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
       clearTimeout(fallback);
       clearTimeout(timer);
     };
-  }, [change, fx, flights]);
+  }, [change, fx, flights, audio]);
 
   const spending = !!change && change.delta < 0;
 

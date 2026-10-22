@@ -6,11 +6,13 @@
  * No photo upload (owner's call, 2026-10-22): the avatar is the character.
  */
 import { memo, ReactNode, useEffect, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Animated, Modal, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { Character, faceXml } from '../characters/rig';
 import { feedback } from '../feedback';
+import { sound } from '../audio';
+import { useSoundScope } from '../audio/AudioProvider';
 import { checkName, NAME_MAX, NAME_MIN, NameProblem, randomName } from '../game/names';
 import { t, TranslationKey } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
@@ -63,6 +65,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
   const problem = check && !check.ok && (check.problem !== 'short' || triedSave) ? check.problem : null;
 
   const startEdit = () => {
+    sound.play('edit');
     setDraft(name);
     setTriedSave(false);
     setSaved(false);
@@ -72,16 +75,19 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
     if (!check.ok) {
       setTriedSave(true);
       feedback.refused();
+      sound.play('name-invalid');
       return;
     }
     setDraft(null);
     if (check.name === name) return;
     onRename(check.name);
+    sound.play('name-save');
     feedback.characterPicked();
     setSaved(true);
     popFrom(pop, 1.25);
   };
   const roll = () => {
+    sound.play('dice');
     setDraft(randomName());
     setTriedSave(false);
     feedback.unlock();
@@ -160,7 +166,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
             <Icon xml={diceXml()} size={22} />
           </SmallButton>
           <View style={styles.flex} />
-          <SmallButton onPress={() => setDraft(null)} label={t('profile.name.cancel')} tone="plain">
+          <SmallButton onPress={() => { sound.play('panel-close'); setDraft(null); }} label={t('profile.name.cancel')} tone="plain">
             <Icon xml={closeXml(colors.muted)} size={16} />
             <Text style={[styles.smallText, { color: colors.muted }]}>{t('profile.name.cancel')}</Text>
           </SmallButton>
@@ -234,6 +240,7 @@ export interface ListItem {
   value?: string;
   /** Without it the row is plain text (no chevron). */
   onPress?: () => void;
+  toggle?: { value: boolean; onChange: (enabled: boolean) => void };
 }
 
 /** A titled white group of rows (SETTINGS, INFO & LEGAL). */
@@ -244,7 +251,14 @@ export function ListGroup({ title, items }: { title: string; items: ListItem[] }
         {title}
       </Text>
       <Raised depth={3} shadowColor={colors.shadow} radius={20} outerStyle={styles.groupOuter} style={styles.group}>
-        {items.map((item, i) => (
+        {items.map((item, i) => item.toggle ? (
+          <View key={item.key} style={[styles.row, i > 0 && styles.rowLine]}>
+            <View style={[styles.rowIcon, { backgroundColor: item.color }]}><Icon xml={item.icon} size={17} /></View>
+            <Text style={styles.rowLabel}>{item.label}</Text>
+            <Switch accessibilityLabel={item.label} value={item.toggle.value} onValueChange={item.toggle.onChange}
+              trackColor={{ false: colors.line, true: colors.mintD }} thumbColor="#fff" ios_backgroundColor={colors.line} />
+          </View>
+        ) : (
           <Pressable
             key={item.key}
             onPress={item.onPress}
@@ -295,21 +309,25 @@ interface DeleteSheetProps {
 
 /** "Delete your account?" over the page. Offline, it says so and stays open. */
 export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSheetProps) {
+  const audio = useSoundScope();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
   const close = () => {
     if (busy) return;
     setFailed(false);
+    audio.play('panel-close');
     onClose();
   };
   const confirm = async () => {
     if (busy) return;
+    audio.play('delete-confirm');
     setBusy(true);
     setFailed(false);
     const done = await onConfirm();
     setBusy(false);
     if (!done) {
+      audio.play('operation-failed');
       setFailed(true);
       feedback.refused();
     }
@@ -333,8 +351,8 @@ export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSh
             </Text>
           )}
           <View style={styles.sheetButtons}>
-            <BigButton label={busy ? t('delete.working') : t('delete.confirm')} onPress={confirm} />
-            <BigButton ghost label={t('delete.keep')} onPress={close} />
+            <BigButton cue={false} label={busy ? t('delete.working') : t('delete.confirm')} onPress={confirm} />
+            <BigButton cue={false} ghost label={t('delete.keep')} onPress={close} />
           </View>
         </View>
       </View>
