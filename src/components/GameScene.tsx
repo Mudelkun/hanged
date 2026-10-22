@@ -202,7 +202,7 @@ export function GameScene({ character, stage, gone, mode, style, accessibilityLa
   );
 }
 
-// ---- the rubber stamp ("POPPED !!" / "SAVED !!") ----
+// ---- the rubber stamp ("DROPPED !!" / "HANGING !!") ----
 
 // Deterministic specks knocked out of the ink, like a stamp pressed by hand
 // (the mockup uses an feTurbulence filter, which react-native-svg cannot draw).
@@ -235,7 +235,41 @@ export function Stamp({ text, color, width, visible }: { text: string; color: st
   );
 }
 
+// The text is sized to fit, not squeezed: react-native-svg on iOS ignores textLength, so a long
+// stamp used to run past the frame. Advance widths (em) of Fredoka Bold, read from the .ttf.
+const FREDOKA_BOLD_EM: Record<string, number> = {
+  A: 0.711, B: 0.609, C: 0.631, D: 0.655, E: 0.603, F: 0.613, G: 0.719, H: 0.65, I: 0.239, J: 0.531,
+  K: 0.597, L: 0.569, M: 0.809, N: 0.67, O: 0.721, P: 0.595, Q: 0.782, R: 0.604, S: 0.542, T: 0.64,
+  U: 0.675, V: 0.728, W: 0.947, X: 0.689, Y: 0.638, Z: 0.598, ' ': 0.235, '!': 0.248, '?': 0.476, '.': 0.22,
+};
+const WIDEST_EM = 0.75; // unknown characters (e.g. accented letters later) count as wide, so they still fit
+const emWidth = (s: string) => [...s].reduce((w, c) => w + (FREDOKA_BOLD_EM[c.toUpperCase()] ?? WIDEST_EM), 0);
+
+// Text box inside the inner frame (viewBox units). Fredoka caps are 0.7em tall.
+const STAMP_TEXT_W = 296;
+const STAMP_MID_Y = 78;
+const STAMP_FONT_MAX = [74, 50]; // one line, two lines (two lines of 50 fill the inner frame's height)
+const STAMP_ONE_LINE_MIN = 50; // below this a single line reads too small: break it in two instead
+
+/** Lines and font size so the text fits the frame. Long text breaks at the space nearest its middle. */
+function stampLayout(text: string): { lines: string[]; fontSize: number } {
+  const fit = (lines: string[]) =>
+    Math.min(STAMP_FONT_MAX[lines.length - 1], ...lines.map((l) => STAMP_TEXT_W / emWidth(l)));
+  const one = fit([text]);
+  let cut = -1;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === ' ' && (cut < 0 || Math.abs(i - text.length / 2) < Math.abs(cut - text.length / 2))) cut = i;
+  }
+  if (one >= STAMP_ONE_LINE_MIN || cut < 0) return { lines: [text], fontSize: one };
+  const two = [text.slice(0, cut), text.slice(cut + 1)];
+  return { lines: two, fontSize: fit(two) };
+}
+
 function StampArt({ text, color, width, height }: { text: string; color: string; width: number; height: number }) {
+  const { lines, fontSize } = stampLayout(text);
+  const cap = fontSize * 0.7;
+  const gap = fontSize * 0.24;
+  const firstBaseline = STAMP_MID_Y - (lines.length * cap + (lines.length - 1) * gap) / 2 + cap;
   return (
     <Svg width={width} height={height} viewBox="0 0 372 156">
       <Defs>
@@ -249,19 +283,20 @@ function StampArt({ text, color, width, height }: { text: string; color: string;
       <G mask="url(#stampInk)" opacity={0.96}>
         <Rect x="7" y="7" width="358" height="142" rx="20" fill="none" stroke={color} strokeWidth={8} />
         <Rect x="20" y="20" width="332" height="116" rx="12" fill="none" stroke={color} strokeWidth={3} />
-        <SvgText
-          x="186"
-          y="104"
-          textAnchor="middle"
-          fontFamily="Fredoka_700Bold"
-          fontWeight="700"
-          fontSize={74}
-          fill={color}
-          textLength={296}
-          lengthAdjust="spacingAndGlyphs"
-        >
-          {text}
-        </SvgText>
+        {lines.map((line, i) => (
+          <SvgText
+            key={i}
+            x="186"
+            y={firstBaseline + i * (cap + gap)}
+            textAnchor="middle"
+            fontFamily="Fredoka_700Bold"
+            fontWeight="700"
+            fontSize={fontSize}
+            fill={color}
+          >
+            {line}
+          </SvgText>
+        ))}
       </G>
     </Svg>
   );

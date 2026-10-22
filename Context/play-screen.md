@@ -10,8 +10,11 @@ these components.
 ## Two layouts on one screen
 
 - **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
-- **Result** (won or lost): header · bigger scene + rubber stamp ("POPPED !!" red /
-  "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
+- **Result** (won or lost): header · bigger scene + rubber stamp ("DROPPED !!" red /
+  "HANGING !!" green). The stamp sizes its font to fit the frame from Fredoka Bold's real letter
+  widths (`FREDOKA_BOLD_EM`), because react-native-svg on iOS ignores `textLength`; text that would
+  drop below 50 breaks onto two lines. Changing the stamp font means re-reading that table from the
+  .ttf · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · **Next word** · **Change character** · tab bar. A round that moved the level adds a line under the
   misses line, in the new level's colour: "Level up! Welcome to level N." or "Back to level N. You've
   got this!" (encouraging, never a penalty message).

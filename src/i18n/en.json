@@ -36,9 +36,9 @@
   "description.unlock": "Unlock · {cost}",
   "description.a11y.unlock": "Unlock the description for {cost} tokens",
 
-  "result.lost.stamp": "POPPED !!",
+  "result.lost.stamp": "DROPPED !!",
   "result.lost.line": "{wrong} / {max} misses · the word was",
-  "result.won.stamp": "SAVED !!",
+  "result.won.stamp": "HANGING !!",
   "result.won.line": "You saved {name}! · {wrong} / {max} misses",
   "result.tokenEarned": "+1 token",
   "result.tokensEarned": "+{count} tokens",
