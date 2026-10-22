@@ -1,6 +1,5 @@
 # Terms the generator (scripts/auto-words.js) keeps out of the game, one per line:
-# a generated word is left out if it is one of them or its description uses one,
-# and none of them is ever a hint. It's a cute game for everyone: sexual, drug,
+# a generated word is left out if it is one of them or its description uses one. It's a cute game for everyone: sexual, drug,
 # violent and hurtful words the dictionary doesn't already label as obscene or a slur.
 # List every form that matters (sex, sexual, sexually). Hand-written words in
 # words-source.txt are not checked: review those by eye.

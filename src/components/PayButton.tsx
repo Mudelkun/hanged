@@ -1,6 +1,5 @@
 /*
- * The coral "label + coin" button that spends tokens: the description's
- * Unlock, the letter shop's "10" and the Characters page's Unlock. It sends
+ * The coral "label + coin" button that spends tokens: the letter shop's "10" and the Characters page's Unlock. It sends
  * the token flight from itself, then pays. Without enough tokens it turns
  * beige and refuses (pair it with useRefusal to say why). Reuse it for any
  * new spend.

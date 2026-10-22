@@ -6,9 +6,8 @@ The core rules of CLAUDE.md, as pure TypeScript with no React and no storage:
 
 ## A round stores only what happened; everything else is derived
 
-`Round` holds the word, its description, its `hints` (free hint words, snapshotted like
-the description so a database change never alters a round in progress), `maxWrong`, the `clueLetters` given at the
-start, the `disabledLetters` taken off the keyboard at the start, the `boughtLetters` paid for with tokens, the `guessed` letters in order, and `descriptionUnlocked`. That's all.
+`Round` holds the word, its dictionary description, `maxWrong`, the `clueLetters` given at the
+start, the `disabledLetters` taken off the keyboard at the start, the `boughtLetters` paid for with tokens, the `guessed` letters in order, and `descriptionUnlocked` (whether the player revealed the free description). That's all.
 **Revealed letters, wrong count, status (`playing` / `won` / `lost`), scene stage,
 key looks and tile looks are all computed from it** (`usedLetters`, `wrongCount`,
 `roundStatus`, `sceneStage`, `keyState`, `tileState`).

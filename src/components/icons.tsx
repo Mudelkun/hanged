@@ -44,16 +44,11 @@ export const bulbXml = svg(
   '0 0 24 24',
   '<path d="M12 2.5a7 7 0 0 0-4.2 12.6c.8.6 1.2 1.4 1.2 2.4h6c0-1 .4-1.8 1.2-2.4A7 7 0 0 0 12 2.5z" fill="#ffd667" stroke="#f0b43a" stroke-width="1.6"/><rect x="9" y="18.5" width="6" height="3" rx="1.5" fill="#f0b43a"/><path d="M9.5 9.5a3 3 0 0 1 2.5-2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>',
 );
-// Not in the mockup: the hint pill's "show" and "next" buttons.
+// The free description reveal button.
 export const eyeXml = (c = '#fff') =>
   svg(
     '0 0 24 24',
     `<path d="M1.8 12S5.5 5.2 12 5.2 22.2 12 22.2 12 18.5 18.8 12 18.8 1.8 12 1.8 12z" fill="${c}"/><circle cx="12" cy="12" r="3.9" fill="#6cc4ff"/><circle cx="13.2" cy="10.8" r="1.2" fill="#fff"/>`,
-  );
-export const nextXml = (c = '#fff') =>
-  svg(
-    '0 0 24 24',
-    `<path d="M9 5.5l6.5 6.5L9 18.5" fill="none" stroke="${c}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`,
   );
 const CLOUD = '<circle cx="28" cy="32" r="15"/><circle cx="48" cy="22" r="19"/><circle cx="70" cy="29" r="15"/><rect x="14" y="30" width="72" height="17" rx="8.5"/>';
 export const cloudXml = (fill = '#fff') => svg('0 0 100 50', `<g fill="${fill}">${CLOUD}</g>`);

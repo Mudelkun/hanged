@@ -3,7 +3,6 @@ import {
   CHARACTER_PRICES,
   DEFAULT_CHARACTER,
   DEFAULT_MAX_WRONG,
-  DESCRIPTION_COST,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
   LEVEL_GRACE_ROUNDS,
@@ -34,7 +33,6 @@ const word = {
   word: 'castle',
   language: 'en',
   description: 'A big stone home for a king.',
-  hints: ['king', 'tower', 'stone'],
   sense: 'oewn-02983900-n',
   rarity: 10,
   concrete: true,
@@ -163,17 +161,16 @@ describe('win streak', () => {
   });
 });
 
-describe('hint words', () => {
-  it('a new round carries the word hints, for free', () => {
-    const s = startRound(initialState());
-    expect(s.round!.hints).toEqual(word.hints);
-    expect(s.tokens).toBe(STARTING_TOKENS);
-  });
-
-  it('a round saved before hints existed gets them from the word database', () => {
-    const { hints, ...oldRound } = startRound(initialState()).round!;
-    const saved = { ...initialState(), round: oldRound as typeof oldRound & { hints: string[] } };
-    expect(gameReducer(initialState(), { type: 'hydrate', state: saved }).round!.hints).toEqual(hints);
+describe('retired hint words', () => {
+  it.each([false, true])('restores a legacy round with description revealed = %s and discards its hints', (descriptionUnlocked) => {
+    let saved = startRound({ ...initialState(), tokens: 0, streak: 4, wordsGuessed: 7 });
+    saved = gameReducer(saved, { type: 'guess', letter: 'z', at: 0 });
+    const round = { ...saved.round!, descriptionUnlocked };
+    const legacy = { ...saved, round: { ...round, hints: ['king', 'tower', 'stone'] } };
+    const restored = gameReducer(initialState(), { type: 'hydrate', state: legacy });
+    expect(restored).toEqual({ ...saved, round });
+    expect(restored.round).not.toHaveProperty('hints');
+    expect(legacy.round.hints).toEqual(['king', 'tower', 'stone']);
   });
 });
 
@@ -224,20 +221,36 @@ describe('disabled keys', () => {
   });
 });
 
-describe('description unlock', () => {
-  it('costs DESCRIPTION_COST tokens and never lowers the score', () => {
-    let s = startRound({ ...initialState(), wordsGuessed: 7 });
-    s = gameReducer(s, { type: 'unlockDescription' });
+describe('free description reveal', () => {
+  it.each([0, STARTING_TOKENS])('works with %i tokens without changing progress, guesses or balance', (tokens) => {
+    const before = startRound({ ...initialState(), tokens, wordsGuessed: 7, streak: 4 });
+    expect(before.round!.descriptionUnlocked).toBe(false);
+    const s = gameReducer(before, { type: 'unlockDescription' });
     expect(s.round!.descriptionUnlocked).toBe(true);
-    expect(s.tokens).toBe(STARTING_TOKENS - DESCRIPTION_COST);
-    expect(s.wordsGuessed).toBe(7);
-    // Unlocking twice is free and does nothing
+    expect(s).toEqual({ ...before, round: { ...before.round, descriptionUnlocked: true } });
     expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
   });
 
-  it('is refused without enough tokens', () => {
-    const s = startRound({ ...initialState(), tokens: DESCRIPTION_COST - 1 });
-    expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
+  it('stays revealed after reloading and starts hidden for the next word', () => {
+    const s = gameReducer(startRound(initialState()), { type: 'unlockDescription' });
+    const restored = gameReducer(initialState(), { type: 'hydrate', state: JSON.parse(JSON.stringify(s)) });
+    expect(restored.round!.descriptionUnlocked).toBe(true);
+    expect(startRound(restored).round!.descriptionUnlocked).toBe(false);
+  });
+
+  it('ignores reveals without a round or after a win or loss', () => {
+    for (const s of [initialState(), winRound(initialState()), loseRound(initialState())]) {
+      expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
+    }
+  });
+
+  it.each([false, true])('reports whether the description was revealed during play (%s)', (revealed) => {
+    let s = startRound(initialState());
+    if (revealed) s = gameReducer(s, { type: 'unlockDescription' });
+    for (const letter of word.word) s = gameReducer(s, { type: 'guess', letter, at: 0 });
+    expect(roundStatus(s.round!)).toBe('won');
+    expect(s.reports).toHaveLength(1);
+    expect(s.reports[0].description).toBe(revealed);
   });
 });
 

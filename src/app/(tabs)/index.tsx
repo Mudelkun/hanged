@@ -1,6 +1,6 @@
 /*
  * The Play screen. It shows one of two layouts for the current round:
- *   - playing: scene, misses, word, hint words, letter shop (hardest levels), description, keyboard
+ *   - playing: scene, misses, word, letter shop (hardest levels), description, keyboard
  *   - result (won or lost): bigger scene with the stamp, the full word,
  *     the description and "Next word" (mockup: Round lost)
  * When the round ends, the play layout stays a moment so the last
@@ -20,13 +20,13 @@ import { LetterKeyboard } from '../../components/LetterKeyboard';
 import { LevelChange } from '../../components/LevelChange';
 import { LevelMap } from '../../components/LevelMap';
 import { PaperBackground } from '../../components/PaperBackground';
-import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
+import { BigButton, DescriptionCard, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
 import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
 import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
-import { DESCRIPTION_COST, LETTER_BUY_COST } from '../../game/config';
+import { LETTER_BUY_COST } from '../../game/config';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../../game/engine';
-import { lettersForSale } from '../../game/progress';
+import { canUnlockDescription, lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { t } from '../../i18n';
 import { useGame } from '../../state/GameContext';
@@ -94,7 +94,7 @@ export default function PlayScreen() {
     [round, dispatch],
   );
 
-  const onUnlock = useCallback(() => {
+  const onReveal = useCallback(() => {
     feedback.unlock();
     dispatch({ type: 'unlockDescription' });
   }, [dispatch]);
@@ -155,12 +155,10 @@ export default function PlayScreen() {
                 compact={compact}
               />
             )}
-            <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
             <DescriptionCard
               text={round.description}
               unlocked={round.descriptionUnlocked}
-              canAfford={status === 'playing' ? state.tokens >= DESCRIPTION_COST : null}
-              onUnlock={onUnlock}
+              onReveal={canUnlockDescription(state) ? onReveal : undefined}
               compact={compact}
             />
             <View style={[styles.keyboardWrap, { paddingTop: compact ? 8 : 12 }]}>
@@ -274,7 +272,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         </Text>
       )}
       <WordTiles letters={letters} available={available} compact={compact} />
-      <DescriptionCard text={round.description} unlocked canAfford={null} compact={compact} />
+      <DescriptionCard text={round.description} unlocked compact={compact} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
         <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />

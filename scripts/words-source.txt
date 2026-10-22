@@ -1,192 +1,190 @@
-# Source for data/words.json (English). One word per line: word | sense | hint, hint, hint
+# Source for data/words.json (English). One word per line: word | sense
 # The sense is an Open English WordNet synset id: the description is that sense's dictionary definition.
 # List a word's senses with `npm run check:words -- --senses <word>`, then
 # run `npm run check:words -- --build` to regenerate data/words.json from this file.
 # Rules: a–z only, 1–15 letters, at least 2 distinct letters (so a clue AND a hidden letter both exist),
 # and the description must not give the word away (the build drops clauses that do, or rejects the sense).
-# Hints: 2 to 4 single words (a–z), shown for free one at a time. A hint must not contain the word,
-# and the word must not contain a hint (e.g. "sun" for "sunflower" gives letters away).
 
-cat | 02124272-n | pet, meow, whiskers
-sun | 09473603-n | hot, sky, bright
-owl | 01623768-n | hoot, night, feathers
-map | 03725654-n | travel, paper, directions
-jam | 07658542-n | toast, fruit, sweet
-fox | 02120985-n | tail, clever, forest
-bee | 02209508-n | honey, buzz, hive
-cup | 03152175-n | drink, tea, mug
-hat | 03502782-n | head, cap, wear
-pig | 02398058-n | oink, farm, pink
-web | 04575843-n | spider, silk, sticky
-egg | 07856780-n | hen, shell, yolk
-bus | 02927500-n | school, wheels, ride
-pie | 07641102-n | crust, dessert, oven
-frog | 01642406-n | green, pond, hop
-cake | 07644479-n | birthday, candles, frosting
-moon | 09381123-n | night, crescent, space
-rain | 15033174-n | wet, clouds, drops
-ship | 04201332-n | sea, sail, captain
-nest | 09392066-n | bird, twigs, eggs
-kite | 03626682-n | wind, string, fly
-milk | 07860018-n | cow, white, drink
-bell | 02827590-n | ring, ding, church
-star | 09467004-n | twinkle, sky, night
-lamp | 03641940-n | light, bulb, desk
-sock | 04261887-n | foot, pair, shoe
-snow | 11528800-n | cold, white, winter
-wolf | 02116752-n | howl, pack, wild
-duck | 01848972-n | quack, pond, bird
-rose | 04978580-n | pink, color, blush
-gift | 13285910-n | present, bow, surprise
-boat | 02861626-n | water, sail, float
-leaf | 13173519-n | tree, green, autumn
-apple | 07755101-n | fruit, red, tree
-beach | 09240137-n | sand, waves, sea
-bread | 07695101-n | toast, loaf, flour
-chair | 03005231-n | sit, seat, table
-cloud | 09270316-n | sky, fluffy, rain
-dance | 00429255-n | music, steps, party
-honey | 07874954-n | bee, sweet, golden
-house | 03549540-n | home, roof, family
-lemon | 07765558-n | sour, yellow, citrus
-music | 07034009-n | song, sound, melody
-night | 15192074-n | dark, moon, sleep
-ocean | 09399110-n | sea, waves, salty
-pizza | 07889783-n | cheese, slice, oven
-queen | 10518940-n | crown, royal, throne
-river | 09434308-n | water, flow, bank
-smile | 06891121-n | happy, face, grin
-tiger | 02132256-n | stripes, cat, roar
-water | 14869913-n | drink, wet, splash
-zebra | 02393701-n | stripes, horse, safari
-ghost | 09569105-n | boo, spooky, spirit
-piano | 03934354-n | keys, music, play
-candy | 07612936-n | sweet, sugar, treat
-train | 04475240-n | tracks, station, choo
-clock | 03050242-n | time, tick, hands
-grape | 07774656-n | purple, vine, bunch
-castle | 02983900-n | king, tower, stone
-garden | 03422255-n | flowers, plants, grow
-rabbit | 02326697-n | bunny, ears, hop
-pencil | 03914323-n | write, draw, eraser
-rocket | 04106269-n | space, launch, fire
-cookie | 07650764-n | chocolate, baked, crumbs
-island | 09339360-n | sea, beach, palm
-jungle | 08456014-n | trees, wild, monkeys
-kitten | 02125600-n | cat, baby, meow
-monkey | 02486953-n | banana, swing, tail
-orange | 04972356-n | color, sunset, bright
-planet | 09417539-n | space, earth, orbit
-school | 04153115-n | class, teacher, learn
-spider | 01774863-n | web, legs, creepy
-turtle | 01665425-n | shell, slow, sea
-window | 04596289-n | glass, view, open
-winter | 15262579-n | cold, snow, season
-bridge | 02901994-n | river, cross, road
-dragon | 09517519-n | fire, wings, scales
-flower | 11689786-n | bloom, petals, garden
-guitar | 03472449-n | strings, music, strum
-puzzle | 04034791-n | pieces, picture, solve
-butter | 07864314-n | cream, yellow, toast
-carrot | 07746183-n | orange, vegetable, rabbit
-pirate | 10455134-n | ship, treasure, parrot
-balloon | 02785116-n | air, party, float
-blanket | 02852392-n | warm, bed, cozy
-chicken | 01794266-n | hen, eggs, cluck
-dolphin | 02071627-n | sea, smart, jump
-giraffe | 02441664-n | neck, tall, spots
-holiday | 15162842-n | vacation, travel, break
-lantern | 03646302-n | light, carry, glow
-library | 03666369-n | books, quiet, read
-monster | 09515097-n | scary, creature, roar
-octopus | 01972805-n | tentacles, sea, ink
-pancake | 07655812-n | breakfast, syrup, flat
-penguin | 02058457-n | ice, waddle, bird
-rainbow | 09426302-n | colors, arc, sky
-thunder | 07392282-n | storm, boom, loud
-unicorn | 10757621-n | horn, magic, horse
-volcano | 09493680-n | lava, erupt, mountain
-kitchen | 03625099-n | cook, oven, meals
-mermaid | 09512731-n | tail, sea, fish
-popcorn | 07748612-n | movies, snack, butter
-cupcake | 07646632-n | frosting, small, sweet
-pumpkin | 07751486-n | orange, halloween, carve
-dinosaur | 01702472-n | fossil, reptile, extinct
-elephant | 02506148-n | trunk, gray, big
-sandwich | 07711710-n | bread, lunch, filling
-umbrella | 04514450-n | rain, dry, open
-mushroom | 13018679-n | forest, cap, fungus
-treasure | 13391842-n | gold, chest, pirate
-birthday | 15274989-n | party, cake, candles
-kangaroo | 01879775-n | pouch, hop, australia
-airplane | 02694015-n | fly, wings, pilot
-football | 00469555-n | goal, kick, team
-mountain | 09382700-n | peak, tall, climb
-snowball | 04258670-n | throw, cold, winter
-hospital | 08071169-n | doctor, nurse, sick
-notebook | 06427062-n | paper, write, pages
-princess | 10493649-n | crown, royal, castle
-squirrel | 02357879-n | nuts, tail, tree
-starfish | 02319987-n | sea, arms, beach
-backpack | 02772753-n | bag, school, straps
-astronaut | 09837427-n | space, rocket, moon
-butterfly | 02276911-n | wings, colorful, insect
-chocolate | 07617570-n | cocoa, sweet, brown
-crocodile | 01699819-n | teeth, reptile, river
-hamburger | 07712845-n | bun, meat, grill
-telescope | 04410773-n | stars, lens, look
-adventure | 00797976-n | journey, explore, quest
-sunflower | 11998702-n | yellow, tall, seeds
-snowflake | 11529484-n | ice, winter, crystal
-spaghetti | 07715659-n | pasta, noodles, italian
-pineapple | 07769251-n | tropical, spiky, fruit
-detective | 10029138-n | mystery, clues, solve
-lightning | 07427593-n | flash, storm, bolt
-scarecrow | 04150777-n | straw, field, farm
-alligator | 01701075-n | swamp, reptile, jaws
-waterfall | 09498422-n | cliff, splash, river
-fireworks | 03353300-n | boom, sparkle, night
-chameleon | 01696424-n | lizard, color, hide
-strawberry | 07761916-n | red, seeds, fruit
-skateboard | 04233049-n | wheels, tricks, ride
-motorcycle | 03796045-n | engine, wheels, helmet
-lighthouse | 02817995-n | tower, ships, coast
-toothbrush | 04460427-n | teeth, clean, paste
-watermelon | 07772927-n | green, juicy, seeds
-helicopter | 03517291-n | blades, fly, pilot
-playground | 03969939-n | swings, slide, park
-basketball | 00482004-n | hoop, dribble, team
-trampoline | 04476749-n | bounce, jump, high
-skyscraper | 04240233-n | tall, city, building
-caterpillar | 02311989-n | butterfly, crawl, leaf
-grasshopper | 02229081-n | jump, green, insect
-imagination | 05633248-n | dream, ideas, create
-marshmallow | 07623707-n | campfire, soft, toast
-thermometer | 04429007-n | hot, cold, fever
-firefighter | 10111420-n | hero, hose, truck
-celebration | 07465251-n | party, cheer, fun
-electricity | 11470244-n | power, plug, spark
-wheelbarrow | 02800454-n | garden, push, cart
-hummingbird | 01836446-n | tiny, hover, nectar
-thunderstorm | 11539686-n | rain, lightning, boom
-refrigerator | 04077839-n | cold, food, kitchen
-kindergarten | 08429093-n | kids, class, play
-butterscotch | 07615965-n | candy, caramel, sweet
-grandparents | 10162692-n | family, elders, love
-hippopotamus | 02401173-n | river, huge, africa
-kaleidoscope | 03612969-n | patterns, colors, tube
-rollercoaster | 04109500-n | ride, loops, thrill
-extraordinary | 01679784-a | amazing, special, unusual
-grandchildren | 10161110-n | family, kids, young
-entertainment | 00430033-n | fun, shows, games
-tyrannosaurus | 01716405-n | dinosaur, rex, teeth
-hallucination | 14401022-n | dream, illusion, imaginary
-photosynthesis | 13558632-n | plants, sunlight, leaves
-transformation | 00399512-n | change, morph, become
-constellations | 09275876-n | stars, sky, patterns
-procrastination | 01069286-n | delay, later, lazy
-kindheartedness | 07569056-n | caring, gentle, warm
-troubleshooting | 00263435-v | fix, problem, repair
-personification | 07122808-n | human, poetry, figurative
-characteristics | 04738737-n | traits, features, qualities
-child | 09937706-n | kid, family, parent
+cat | 02124272-n
+sun | 09473603-n
+owl | 01623768-n
+map | 03725654-n
+jam | 07658542-n
+fox | 02120985-n
+bee | 02209508-n
+cup | 03152175-n
+hat | 03502782-n
+pig | 02398058-n
+web | 04575843-n
+egg | 07856780-n
+bus | 02927500-n
+pie | 07641102-n
+frog | 01642406-n
+cake | 07644479-n
+moon | 09381123-n
+rain | 15033174-n
+ship | 04201332-n
+nest | 09392066-n
+kite | 03626682-n
+milk | 07860018-n
+bell | 02827590-n
+star | 09467004-n
+lamp | 03641940-n
+sock | 04261887-n
+snow | 11528800-n
+wolf | 02116752-n
+duck | 01848972-n
+rose | 04978580-n
+gift | 13285910-n
+boat | 02861626-n
+leaf | 13173519-n
+apple | 07755101-n
+beach | 09240137-n
+bread | 07695101-n
+chair | 03005231-n
+cloud | 09270316-n
+dance | 00429255-n
+honey | 07874954-n
+house | 03549540-n
+lemon | 07765558-n
+music | 07034009-n
+night | 15192074-n
+ocean | 09399110-n
+pizza | 07889783-n
+queen | 10518940-n
+river | 09434308-n
+smile | 06891121-n
+tiger | 02132256-n
+water | 14869913-n
+zebra | 02393701-n
+ghost | 09569105-n
+piano | 03934354-n
+candy | 07612936-n
+train | 04475240-n
+clock | 03050242-n
+grape | 07774656-n
+castle | 02983900-n
+garden | 03422255-n
+rabbit | 02326697-n
+pencil | 03914323-n
+rocket | 04106269-n
+cookie | 07650764-n
+island | 09339360-n
+jungle | 08456014-n
+kitten | 02125600-n
+monkey | 02486953-n
+orange | 04972356-n
+planet | 09417539-n
+school | 04153115-n
+spider | 01774863-n
+turtle | 01665425-n
+window | 04596289-n
+winter | 15262579-n
+bridge | 02901994-n
+dragon | 09517519-n
+flower | 11689786-n
+guitar | 03472449-n
+puzzle | 04034791-n
+butter | 07864314-n
+carrot | 07746183-n
+pirate | 10455134-n
+balloon | 02785116-n
+blanket | 02852392-n
+chicken | 01794266-n
+dolphin | 02071627-n
+giraffe | 02441664-n
+holiday | 15162842-n
+lantern | 03646302-n
+library | 03666369-n
+monster | 09515097-n
+octopus | 01972805-n
+pancake | 07655812-n
+penguin | 02058457-n
+rainbow | 09426302-n
+thunder | 07392282-n
+unicorn | 10757621-n
+volcano | 09493680-n
+kitchen | 03625099-n
+mermaid | 09512731-n
+popcorn | 07748612-n
+cupcake | 07646632-n
+pumpkin | 07751486-n
+dinosaur | 01702472-n
+elephant | 02506148-n
+sandwich | 07711710-n
+umbrella | 04514450-n
+mushroom | 13018679-n
+treasure | 13391842-n
+birthday | 15274989-n
+kangaroo | 01879775-n
+airplane | 02694015-n
+football | 00469555-n
+mountain | 09382700-n
+snowball | 04258670-n
+hospital | 08071169-n
+notebook | 06427062-n
+princess | 10493649-n
+squirrel | 02357879-n
+starfish | 02319987-n
+backpack | 02772753-n
+astronaut | 09837427-n
+butterfly | 02276911-n
+chocolate | 07617570-n
+crocodile | 01699819-n
+hamburger | 07712845-n
+telescope | 04410773-n
+adventure | 00797976-n
+sunflower | 11998702-n
+snowflake | 11529484-n
+spaghetti | 07715659-n
+pineapple | 07769251-n
+detective | 10029138-n
+lightning | 07427593-n
+scarecrow | 04150777-n
+alligator | 01701075-n
+waterfall | 09498422-n
+fireworks | 03353300-n
+chameleon | 01696424-n
+strawberry | 07761916-n
+skateboard | 04233049-n
+motorcycle | 03796045-n
+lighthouse | 02817995-n
+toothbrush | 04460427-n
+watermelon | 07772927-n
+helicopter | 03517291-n
+playground | 03969939-n
+basketball | 00482004-n
+trampoline | 04476749-n
+skyscraper | 04240233-n
+caterpillar | 02311989-n
+grasshopper | 02229081-n
+imagination | 05633248-n
+marshmallow | 07623707-n
+thermometer | 04429007-n
+firefighter | 10111420-n
+celebration | 07465251-n
+electricity | 11470244-n
+wheelbarrow | 02800454-n
+hummingbird | 01836446-n
+thunderstorm | 11539686-n
+refrigerator | 04077839-n
+kindergarten | 08429093-n
+butterscotch | 07615965-n
+grandparents | 10162692-n
+hippopotamus | 02401173-n
+kaleidoscope | 03612969-n
+rollercoaster | 04109500-n
+extraordinary | 01679784-a
+grandchildren | 10161110-n
+entertainment | 00430033-n
+tyrannosaurus | 01716405-n
+hallucination | 14401022-n
+photosynthesis | 13558632-n
+transformation | 00399512-n
+constellations | 09275876-n
+procrastination | 01069286-n
+kindheartedness | 07569056-n
+troubleshooting | 00263435-v
+personification | 07122808-n
+characteristics | 04738737-n
+child | 09937706-n

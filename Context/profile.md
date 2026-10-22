@@ -107,7 +107,7 @@ the player until it expires.
 `INFO_PAGES` (title, icon, colour) drives both the Profile rows and the page header. An unknown `/info/x`
 redirects to Profile.
 - **Game rules**: cards in player words, matching CLAUDE.md's rules. **Every number comes from the config**
-  (`DEFAULT_MAX_WRONG`, `DESCRIPTION_COST`, `LETTER_BUY_*`, `STREAK_BONUS_AT[0]`, `LOSSES_TO_DROP`, the
+  (`DEFAULT_MAX_WRONG`, `LETTER_BUY_*`, `STREAK_BONUS_AT[0]`, `LOSSES_TO_DROP`, the
   first level that sells letters / shows the subject, `LEVELS.length`), so a placeholder change updates the
   sheet. A rule change that adds a new idea needs a new card (`RULES` + `rules.*` keys).
 - **Credits**: [data/CREDITS.md](../data/CREDITS.md) in player words: Open English WordNet (CC BY 4.0, with

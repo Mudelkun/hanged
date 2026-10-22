@@ -20,11 +20,6 @@
   "play.a11y.key.used": "Letter {letter}, already used",
   "play.a11y.key.off": "Letter {letter}, not in this word",
 
-  "hint.label": "HINT",
-  "hint.tapToShow": "Tap to show a free hint word",
-  "hint.count": "{index} / {total}",
-  "hint.a11y.show": "Show a free hint word",
-  "hint.a11y.word": "Hint {index} of {total}: {word}. Tap for the next one",
 
   "letters.label": "LETTERS",
   "letters.offer": "Reveal {count} hidden letters",
@@ -32,9 +27,9 @@
   "letters.a11y.buy": "Reveal {count} hidden letters for {cost} tokens",
 
   "description.label": "DESCRIPTION",
-  "description.hiddenPlaceholder": "A little secret hint for you",
-  "description.unlock": "Unlock · {cost}",
-  "description.a11y.unlock": "Unlock the description for {cost} tokens",
+  "description.hidden": "Free to reveal",
+  "description.show": "Show clue",
+  "description.a11y.show": "Show the description for free",
 
   "result.lost.stamp": "DROPPED !!",
   "result.lost.line": "{wrong} / {max} misses · the word was",
@@ -171,11 +166,11 @@
   "rules.guess.title": "Guessing",
   "rules.guess.body": "Tap a letter. If it's in the word, every copy of it shows up. If it isn't, a balloon pops. Each letter can only be tried once.",
   "rules.help.title": "A little help",
-  "rules.help.body": "Every word starts with a few letters showing. Hint words are free: tap to see them. The word's description costs {descriptionCost} tokens. On the first levels, some letters that aren't in the word are taken off the keyboard.",
+  "rules.help.body": "Every word starts with a few letters showing. Tap Show clue to reveal the word's description for free, whenever you need help. On the first levels, some letters that aren't in the word are taken off the keyboard.",
   "rules.hard.title": "Harder words",
   "rules.hard.body": "From level {lettersLevel}, you can reveal {letterCount} hidden letters for {letterCost} tokens, once per word. From level {subjectLevel}, the word's subject is shown for free.",
   "rules.tokens.title": "Tokens",
-  "rules.tokens.body": "Every word you guess pays tokens, and harder levels pay more. Guess {streak} words in a row for a bonus. Spend tokens on descriptions, letters and new characters.",
+  "rules.tokens.body": "Every word you guess pays tokens, and harder levels pay more. Guess {streak} words in a row for a bonus. Spend tokens on letters and new characters.",
   "rules.levels.title": "Levels",
   "rules.levels.body": "There are {levels} levels, and the words get harder as you climb. Lose {drop} words in a row and you step back one level. You'll be back up in no time!",
   "rules.board.title": "Leaderboard",
@@ -183,7 +178,7 @@
 
   "credits.intro": "The words in Hanged and their descriptions come from these word lists. Thank you to everyone who made them!",
   "credits.wordnet.title": "Open English WordNet",
-  "credits.wordnet.body": "Every word description is a definition from Open English WordNet 2025, © the Open English WordNet contributors, based on Princeton WordNet 3.0 (© Princeton University). Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). Changes made: the first letter is capitalised and a full stop added; subject labels, clauses that contain the answer and some trailing clauses are removed. Most hint words are words that Open English WordNet links to the answer.",
+  "credits.wordnet.body": "Every word description is a definition from Open English WordNet 2025, © the Open English WordNet contributors, based on Princeton WordNet 3.0 (© Princeton University). Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). Changes made: the first letter is capitalised and a full stop added; subject labels, clauses that contain the answer and some trailing clauses are removed.",
   "credits.scowl.title": "SCOWL",
   "credits.scowl.body": "The choice of words and how common each one is come from SCOWL (Spell Checker Oriented Word Lists), release 2020.12.07. Copyright 2000-2018 by Kevin Atkinson. Permission to use, copy, modify, distribute and sell these word lists, the associated scripts, the output created from the scripts, and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appears in all copies and that both that copyright notice and this permission notice appear in supporting documentation. Kevin Atkinson makes no representations about the suitability of this array for any purpose. It is provided \"as is\" without express or implied warranty.",
   "credits.princeton.title": "Princeton WordNet",

@@ -2,8 +2,6 @@
  * The rules every word in data/words.json follows, shared by the builder and
  * checker (check-words.js) and the generator (auto-words.js).
  */
-const MIN_HINTS = 2;
-const MAX_HINTS = 4;
 /** Fits the description card in 4 lines on a 375 pt phone. */
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -93,4 +91,4 @@ const SUBJECTS = [...new Set([...Object.values(SUBJECT_OF_LEXFILE), 'action', 'd
 const subjectOf = (lexfile) =>
   SUBJECT_OF_LEXFILE[lexfile] ?? (lexfile.startsWith('verb.') ? 'action' : lexfile.startsWith('adj.') ? 'describing' : 'object');
 
-module.exports = { MIN_HINTS, MAX_HINTS, MAX_DESCRIPTION_LENGTH, SUBJECTS, givesAway, revealsWord, describe, subjectOf };
+module.exports = { MAX_DESCRIPTION_LENGTH, SUBJECTS, givesAway, revealsWord, describe, subjectOf };

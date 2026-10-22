@@ -35,7 +35,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 |---|---|
 | The round rules in code: word validation, clues, guesses, win/loss, scene stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
 | Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
-| The word database: `data/words.json`, how to add words and hint words, the checks, why words stay on the device | [Context/word-database.md](Context/word-database.md) |
+| The word database: `data/words.json`, how to add words, the checks, why words stay on the device | [Context/word-database.md](Context/word-database.md) |
 | How the app draws characters **from `design/characters/*.js`**, the personas (signature poses, elbows, props), the balloon stages, the animation loop, the won pose, the scene camera, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
 | The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
 | The server (`server/`): API, database, anonymous accounts, round reports and the sync, word statistics, deploying on Railway | [Context/server.md](Context/server.md) |
@@ -107,13 +107,7 @@ A level's difficulty is set by:
 
 - **Every word** has a **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
 - Descriptions come from a **trusted dictionary**, never written by hand or by an AI: today Open English WordNet (CC BY 4.0, so the app must credit it). They must not contain the word itself.
-- The description is **always hidden** when a round starts. The player can unlock it by spending **two tokens** (see Tokens below). It never costs a wrong guess.
-
-### Hint words
-
-- **Every word** also has a short, limited list of **hint words** (2 to 4, each a single word, e.g. *castle* → king, tower, stone).
-- They're **free**, but hidden when a round starts: the player taps to show the first one, and each further tap **loops** to the next (back to the first after the last). They never cost a token or a wrong guess.
-- A hint word must not give letters away: it can't contain the word, and the word can't contain it.
+- The description is **always hidden** when a round starts. The player taps **Show clue** to reveal it **for free**. It never costs a token or a wrong guess, and stays revealed when the app reopens. Results always show it.
 
 ### Keyboard
 
@@ -135,10 +129,9 @@ A level's difficulty is set by:
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
-- **Spending**: tokens are used for exactly three things:
-  1. unlocking a word's description (2 tokens)
-  2. on the hard levels (8 and up): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
-  3. unlocking characters (each character has a price in tokens)
+- **Spending**: tokens are used for exactly two things:
+  1. on the hard levels (8 and up): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
+  2. unlocking characters (each character has a price in tokens)
 - There are **no gems** in the game. The mockup shows gems, but ignore them.
 - The mockup puts a heart counter in the top bar. That spot becomes the token counter, with a **different symbol, not a heart**. Don't use hearts for it, because hearts suggest lives.
 
@@ -197,7 +190,7 @@ Names and photos are public content that players create, so the App Store expect
 
 ## Data the game needs (from the owner's notes)
 
-- **Words**: word, language, short description, hint words, plus whatever difficulty needs (length can be computed from the word).
+- **Words**: word, language, short description, plus whatever difficulty needs (length can be computed from the word).
 - **Players**: identity, name, profile picture (an image stored on the server), score (words guessed), token balance, current level, and settings (language, sound, music). This is what feeds the leaderboard.
 - **Characters**: catalogue, token price, which characters the player has unlocked, and their current selection.
 

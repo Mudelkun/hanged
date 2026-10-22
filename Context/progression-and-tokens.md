@@ -32,7 +32,7 @@ would then count it again.
     past the last one). Only the streak takeover draws it ([play-screen.md](play-screen.md)); it reads
     `STREAK_BONUS_AT`, so changing the steps changes the meter too.
   - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS**, like the character prices built on them.
-- Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and on characters
+- Tokens are spent only on bought letters (below) and on characters
   (`buyCharacter`, `CHARACTER_PRICES`: [characters-shop.md](characters-shop.md)). The character prices were set
   from a simulation of this token pay, so **changing the pay means re-checking those prices**.
 - **Buying letters (owner's request)**: on a level with `sellsLetters` (levels 8–20, the hard
@@ -46,12 +46,13 @@ would then count it again.
   field and "Next token" bar are gone, because a progress bar can't show payouts that vary.
   `hydrate` pays a leftover `wordsTowardToken` as 1 token per word (the last rate), maps the old
   boolean `lastTokenEarned` to `lastTokensEarned`, and drops both fields. Same key, no bump.
-- **Hint words are free**: they never touch tokens or the reducer. Which hint is showing
-  is UI state in `HintPill` ([play-screen.md](play-screen.md)), not saved.
+- **Descriptions are free to reveal** with Show clue (owner, 2026-10-22). They start hidden,
+  and `descriptionUnlocked` keeps the reveal across app restarts. No token flight, deduction,
+  wrong guess, score or streak change. Hint words are removed. Rewards and shop prices stay
+  unchanged pending playtesting.
 - `lastTokensEarned` is what the winning guess paid (the result screen shows
   "+N tokens"). The next `newRound` sets it back to 0.
-- `unlockDescription` is refused without enough tokens, when it's already unlocked,
-  or once the round is over. The result screens always show the description for free.
+- `unlockDescription` is refused without a round, when already revealed, or once the round is over. The result screens always show the description for free.
 
 ## Levels: up with wins, down with losses in a row
 
@@ -86,8 +87,8 @@ and the game gets harder as they climb. Two tiers:
   longer words and **more letters to find**. Only things you can picture up to level 4, and wrong keys
   taken off the keyboard on levels 1–2.
 - **Levels 16–20: less familiar words come in**, a few more each level: rarity-35 words, capped by
-  `maxDifficulty`, which climbs (8 on 16 up to 22 on 20), then rarity 40 on level 20. About 69% of
-  level 16's words are everyday ones, 34% of level 20's. The help grows too: the free **subject**
+  `maxDifficulty`, which climbs (8 on 16 up to 22 on 20), then rarity 40 on level 20. About 68% of
+  level 16's words are everyday ones, 32% of level 20's. The help grows too: the free **subject**
   (owner's call: from level 9) and **letters to buy** (from level 8).
 
 **Letters to find, the main knob (owner's call, 2026-10-22).** On level 10 the owner got ANTHROPOLOGY
@@ -124,15 +125,17 @@ much more: at 90–97% the game had no tension, so the target is 75–85%.
 [levels-fun.test.ts](../src/game/__tests__/levels-fun.test.ts) plays 1,000 real rounds of each level
 (300 were too few: ±2.5% of noise moved a level across the bar) with the stand-in for a regular
 person: a simulated player who recognises no words, tries the most frequent letters, and never uses a
-hint, the subject or the description. It fails if that player wins under **75% on levels 1–15** or
+subject or description. It fails if that player wins under **75% on levels 1–15** or
 under **50% on 16–20**, over **88% on levels 3–20** (levels 1–2 teach the game and have no ceiling), or
 if a level has under 250 words. Two more checks: levels 1–15 deal only everyday words, and each
 level of 16–20 deals fewer of them than the one before (but always some).
-Today: 99 · 97 · 86 · 86 · 85 · 86 · 86 · 82 · 81 · 82 · 78 · 79 · 78 · 78 · 77% on levels 1–15,
+Before removing hint-word requirements: 99 · 97 · 86 · 86 · 85 · 86 · 86 · 82 · 81 · 82 · 78 · 79 · 78 · 78 · 77% on levels 1–15,
 then 81 · 80 · 69 · 67 · 60% on 16–20. **This player can't tell a familiar word from an unfamiliar one**
 (it recognises none), so on 16–20 it under-counts how much harder the words are for a person: that's
 why the summit's ceiling is the same 88%, and why `toFind` only climbs gently there. It also
-under-counts what the edge clues do for a real person.
+under-counts what the edge clues do for a real person. The rebuilt word list after removing
+hint-word requirements also passes all these bounds without changes to `LEVELS`; free descriptions
+are not modeled by this simulation, so their effect still needs playtesting.
 
 Why this player and not a smarter one: a word-matching model that knows 10,000 words said levels
 5–8 were 99% wins while the owner kept losing there ("reasonable" on level 6: 10 letters, 2 clues,
@@ -189,8 +192,9 @@ in **AsyncStorage**, key `hanged.game.v1`, written after every state change.
 `version: 1` is checked on load. A breaking shape change must bump the key or
 migrate, never silently reuse it. An unreadable save starts a fresh player.
 
-- A save from before hint words existed has rounds without `hints`. `hydrate` fills them
-  in from the word database (`wordById`), or `[]` if the word is gone. Same key, no bump.
+- `hydrate` removes retired `hints` from saved rounds, preserving guesses, tokens and
+  `descriptionUnlocked` (including descriptions bought before they became free). Older rounds
+  without hints also work. Same key, no bump.
 - A save from before disabled keys existed has rounds without `disabledLetters`. `hydrate`
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`

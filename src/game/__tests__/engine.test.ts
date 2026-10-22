@@ -31,7 +31,6 @@ const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: stri
   word,
   language: 'en',
   description: 'test',
-  hints: ['hint'],
   level: 1,
   maxWrong,
   clueLetters: clues,
@@ -96,7 +95,7 @@ describe('clues', () => {
 
   it('reveals every occurrence of a clue letter and marks its key used', () => {
     const r = createRound(
-      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', hints: [], level: 1, toFind: 3 },
+      { id: 'r', wordId: 'w', word: 'hello', language: 'en', description: '', level: 1, toFind: 3 },
       () => 0,
     );
     expect(r.clueLetters).toHaveLength(1);
@@ -138,14 +137,14 @@ describe('clues', () => {
   });
 
   it('gives a round its rarest letters as clues, in its own language', () => {
-    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 13, toFind: 5 };
+    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', level: 13, toFind: 5 };
     expect(createRound(input, () => 0).clueLetters).toEqual(['x', 'j']);
     // a language without a letter-frequency row gets random clues
     expect(createRound({ ...input, language: 'xx' }, () => 0).clueLetters).toEqual(pickClueLetters('jukebox', 5, () => 0));
   });
 
   it('reads a fraction of letters to find as a chance: 4.5 = 4 or 5', () => {
-    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 9, toFind: 4.5 };
+    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', level: 9, toFind: 4.5 };
     expect(createRound(input, () => 0.4).clueLetters).toHaveLength(3); // 7 distinct letters, 4 to find
     expect(createRound(input, () => 0.6).clueLetters).toHaveLength(2); // 5 to find
   });
@@ -168,7 +167,7 @@ describe('disabled keys (easy levels)', () => {
   });
 
   it('gives a full keyboard when the level has no ratio', () => {
-    const r = createRound({ id: 'r', wordId: 'w', word: 'castle', language: 'en', description: '', hints: [], level: 6, toFind: 4 });
+    const r = createRound({ id: 'r', wordId: 'w', word: 'castle', language: 'en', description: '', level: 6, toFind: 4 });
     expect(r.disabledLetters).toEqual([]);
   });
 

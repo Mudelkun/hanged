@@ -14,8 +14,6 @@ export interface WordEntry {
   description: string;
   /** The WordNet sense the description comes from, e.g. "oewn-02124272-n". */
   sense: string;
-  /** 2–4 one-word hints, free to show (checked by scripts/check-words.js). */
-  hints: string[];
   /** How common the word is: 10 (everyone knows it) to 50 (a medium dictionary). Levels cap it (Level.maxRarity). */
   rarity: number;
   /** A thing you can picture (an animal, food, an object, a person…). Easy levels deal only these (Level.concreteOnly). */

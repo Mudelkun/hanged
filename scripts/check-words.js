@@ -6,13 +6,13 @@
  * The database is the hand-written words of scripts/words-source.txt, then
  * every common English word the generator finds (scripts/auto-words.js), each
  * with how many misses it costs a typical player (scripts/difficulty.js).
- * Source lines are `word | sense | hint, hint, hint`. The sense is an Open
+ * Source lines are `word | sense`. The sense is an Open
  * English WordNet synset id (e.g. 02124272-n): the word's description is that
  * sense's definition, never text written by hand (scripts/wordnet.js).
  */
 const fs = require('fs');
 const path = require('path');
-const { describe, revealsWord, subjectOf, MIN_HINTS, MAX_HINTS, MAX_DESCRIPTION_LENGTH, SUBJECTS } = require('./words-rules');
+const { describe, revealsWord, subjectOf, MAX_DESCRIPTION_LENGTH, SUBJECTS } = require('./words-rules');
 
 const ROOT = path.join(__dirname, '..');
 const JSON_PATH = path.join(ROOT, 'data', 'words.json');
@@ -41,17 +41,16 @@ function readSource() {
     .map((l) => l.trim())
     .filter((l) => l && !l.startsWith('#'))
     .map((l) => {
-      const [word = '', sense = '', hints = ''] = l.split('|').map((part) => part.trim());
-      return { word: word.toLowerCase(), sense, hints: hints.split(',').map((h) => h.trim().toLowerCase()).filter(Boolean) };
+      const [word = '', sense = ''] = l.split('|').map((part) => part.trim());
+      return { word: word.toLowerCase(), sense };
     });
 }
 
-const entry = ({ word, description, hints, sense, rarity, concrete }) => ({
+const entry = ({ word, description, sense, rarity, concrete }) => ({
   id: `${LANGUAGE}-${word}`,
   word,
   language: LANGUAGE,
   description,
-  hints,
   sense: `oewn-${sense}`,
   rarity,
   concrete,
@@ -64,14 +63,14 @@ async function build() {
   const wn = await require('./wordnet').loadWordNet();
   const scowl = await require('./scowl').loadScowl();
   const errors = [];
-  const handWritten = readSource().map(({ word, sense, hints }) => {
+  const handWritten = readSource().map(({ word, sense }) => {
     const synset = wn.synset(sense);
     let description = '';
     if (!synset) errors.push(`"${word}": unknown sense "${sense}" (try --senses ${word})`);
     else if (!synset.lemmas.some((l) => isFormOf(word, l))) errors.push(`"${word}": sense ${sense} is for ${synset.lemmas.join(', ')}`);
     else if (!(description = describe(word, synset.definition)))
       errors.push(`"${word}": sense ${sense} gives the word away or is too long, pick another (--senses ${word})`);
-    return entry({ word, description, hints, sense, rarity: HAND_WRITTEN_RARITY, concrete: HAND_WRITTEN_CONCRETE });
+    return entry({ word, description, sense, rarity: HAND_WRITTEN_RARITY, concrete: HAND_WRITTEN_CONCRETE });
   });
   if (errors.length) {
     console.error(errors.join('\n'));
@@ -125,13 +124,6 @@ function check() {
     if (!w.description || !w.description.trim()) errors.push(`${where}: missing description`);
     else if (revealsWord(w.word, w.description)) errors.push(`${where}: description gives the word away`);
     else if (w.description.length > MAX_DESCRIPTION_LENGTH) errors.push(`${where}: description over ${MAX_DESCRIPTION_LENGTH} characters`);
-    const hints = Array.isArray(w.hints) ? w.hints : [];
-    if (hints.length < MIN_HINTS || hints.length > MAX_HINTS) errors.push(`${where}: needs ${MIN_HINTS}-${MAX_HINTS} hints`);
-    if (new Set(hints).size !== hints.length) errors.push(`${where}: duplicate hint`);
-    for (const h of hints) {
-      if (!/^[a-z]{2,12}$/.test(h)) errors.push(`${where}: hint "${h}" must be one word of 2-12 letters a-z`);
-      else if (h.includes(w.word) || w.word.includes(h)) errors.push(`${where}: hint "${h}" gives the word away`);
-    }
     if (ids.has(w.id)) errors.push(`${where}: duplicate id`);
     ids.add(w.id);
     tally(byLength, w.word.length);

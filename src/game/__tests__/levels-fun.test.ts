@@ -4,7 +4,7 @@
  * either: a level everyone wins has no tension, so levels 3–20 also have a
  * ceiling (levels 1–2 teach the game and may be easier). The stand-in for a
  * regular person is a simulated player who recognises no words and just tries
- * the most frequent letters (no hints, no subject, no description), playing
+ * the most frequent letters (no subject, no description), playing
  * real rounds of each level. A smarter word-matching model said "easy" while the
  * owner kept losing, so this one is the yardstick. Run it before making a level
  * harder: the numbers in levels.ts are tuned against it

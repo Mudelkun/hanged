@@ -4,8 +4,6 @@ Every word description in `words.json` is a definition from
 **Open English WordNet 2025** (https://en-word.net,
 https://github.com/globalwordnet/english-wordnet), © the Open English WordNet
 contributors, based on Princeton WordNet 3.0 (© Princeton University).
-Most hint words are words that Open English WordNet links to the answer
-(synonyms, broader terms, parts and wholes, topics) or uses in its definition.
 
 Licence: Creative Commons Attribution 4.0 International (CC BY 4.0),
 https://creativecommons.org/licenses/by/4.0/

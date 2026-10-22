@@ -37,7 +37,7 @@ prince with the crown and sceptre is the top prize). The 5 newer characters (202
 the ladder instead of being stacked on top, so the dearest is still 400. The mockup's prices
 (10 to 50) were not used: the owner asked for prices that fit how tokens are really earned.
 
-They come from simulating players through the real level and token rules (pay 1–4 per level, the
+They originally came from simulating players through the real level and token rules (pay 1–4 per level, the
 streak bonus, 10 wins to move up, drops after 3 losses, 15% of rounds buying a description):
 
 | Player | Wins on level 1 → 8 | Tokens a round (net) |
@@ -45,10 +45,11 @@ streak bonus, 10 wins to move up, drops after 3 losses, 15% of rounds buying a d
 | Casual | 80% → 35% | ~1.35 |
 | Strong | 92% → 50% | ~2.1 |
 
-So the first paid character comes in the first session (~25 rounds), each one after takes longer, and the
-whole set (2430 tokens) takes a casual player ~1800 rounds (a strong one ~1150). Saving for one favourite
-is at most ~300 rounds. **If the token pay (`LEVELS`, `STREAK_BONUS_AT`) or the description price changes, redo
-this check** and adjust the prices with it.
+In that simulation the first paid character came in the first session (~25 rounds), each one after took longer, and the
+whole set (2430 tokens) took a casual player ~1800 rounds (a strong one ~1150). Saving for one favourite
+was at most ~300 rounds. **Descriptions became free on 2026-10-22.** The owner explicitly kept
+rewards and prices unchanged until playtesting; these old estimates are historical, not the current
+unlock pace. Check real win rates and character unlock speed before adjusting prices.
 
 ## The page (mockup: Characters)
 

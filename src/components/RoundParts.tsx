@@ -1,16 +1,16 @@
 /*
  * The pieces between the scene and the keyboard: miss pips, word tiles,
- * the hint pill, the letter shop pill and the description card (their pay
+ * the letter shop pill and the description card (the shop's pay
  * buttons: PayButton.tsx). Sizes and colours follow
  * design/ui-mockup.html (.misses, .tiles, .desc).
  */
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
+import { LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
-import { bulbXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
+import { bulbXml, eyeXml, Icon, sparkXml } from './icons';
 import { popFrom } from './motion';
 import { PayButton, useRefusal } from './PayButton';
 import { Raised } from './Raised';
@@ -100,61 +100,6 @@ export function WordTiles({ letters, available, compact }: { letters: { letter: 
   );
 }
 
-// ---- hint words ----
-
-/**
- * Free one-word hints (not in the mockup). Hidden until the player taps;
- * then each tap shows the next one, looping back to the first. Give it a
- * key per round so it hides again for every new word.
- */
-export function HintPill({ hints, compact }: { hints: readonly string[]; compact?: boolean }) {
-  const [index, setIndex] = useState<number | null>(null);
-  const [pop] = useState(() => new Animated.Value(1));
-  if (hints.length === 0) return null;
-
-  const total = hints.length;
-  const shown = index !== null;
-  const press = () => {
-    setIndex((i) => (i === null ? 0 : (i + 1) % total));
-    popFrom(pop, 0.6);
-  };
-
-  return (
-    <Pressable
-      onPress={press}
-      accessibilityRole="button"
-      accessibilityLabel={
-        shown ? t('hint.a11y.word', { index: index + 1, total, word: hints[index] }) : t('hint.a11y.show')
-      }
-    >
-      {({ pressed }) => (
-        <Raised
-          shadowColor={colors.shadow}
-          radius={16}
-          pressed={pressed}
-          outerStyle={{ marginBottom: compact ? 7 : 10 }}
-          style={[styles.pill, compact && { height: 36 }]}
-        >
-          <Text style={[styles.pillChip, styles.hintChip]}>{t('hint.label')}</Text>
-          {shown ? (
-            <Animated.Text style={[styles.hintWord, { transform: [{ scale: pop }] }]} numberOfLines={1}>
-              {hints[index].toUpperCase()}
-            </Animated.Text>
-          ) : (
-            <Text style={styles.pillText} numberOfLines={1}>
-              {t('hint.tapToShow')}
-            </Text>
-          )}
-          {shown && total > 1 && <Text style={styles.hintCount}>{t('hint.count', { index: index + 1, total })}</Text>}
-          <View style={styles.hintBtn}>
-            <Icon xml={shown ? nextXml() : eyeXml()} size={16} />
-          </View>
-        </Raised>
-      )}
-    </Pressable>
-  );
-}
-
 // ---- letter shop (hardest levels) ----
 
 /**
@@ -198,14 +143,12 @@ export function LetterShopPill({ canAfford, onBuy, compact }: {
 interface DescriptionProps {
   text: string;
   unlocked: boolean;
-  /** null: no unlock button (round over). */
-  canAfford: boolean | null;
-  onUnlock?: () => void;
+  /** Omitted once the round is over. Revealing the clue is always free. */
+  onReveal?: () => void;
   compact?: boolean;
 }
 
-export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }: DescriptionProps) {
-  const [refused, refuse] = useRefusal();
+export function DescriptionCard({ text, unlocked, onReveal, compact }: DescriptionProps) {
   return (
     <Raised shadowColor={colors.shadow} radius={22} style={[styles.desc, compact && { paddingVertical: 7 }]}>
       <View style={styles.bulb}>
@@ -218,24 +161,20 @@ export function DescriptionCard({ text, unlocked, canAfford, onUnlock, compact }
           <Text style={styles.descText} numberOfLines={4} adjustsFontSizeToFit minimumFontScale={0.85}>
             {text}
           </Text>
-        ) : refused ? (
-          <Text style={[styles.descText, { color: colors.coralD }]}>{t('tokens.notEnough')}</Text>
         ) : (
-          // Placeholder text, blurred: the real hint is never on screen until it is paid for
-          <Text style={styles.blurred} numberOfLines={1} accessibilityElementsHidden importantForAccessibility="no">
-            {t('description.hiddenPlaceholder')}
-          </Text>
+          // Keep the actual definition out of the view and accessibility tree until requested.
+          <Text style={styles.descPrompt}>{t('description.hidden')}</Text>
         )}
       </View>
-      {!unlocked && canAfford !== null && (
-        <PayButton
-          label={t('description.unlock', { cost: DESCRIPTION_COST })}
-          a11yLabel={t('description.a11y.unlock', { cost: DESCRIPTION_COST })}
-          canAfford={canAfford}
-          onPay={onUnlock}
-          onRefuse={refuse}
-          icon={<Icon xml={lockXml('#fff')} size={15} />}
-        />
+      {!unlocked && onReveal && (
+        <Pressable onPress={onReveal} accessibilityRole="button" accessibilityLabel={t('description.a11y.show')}>
+          {({ pressed }) => (
+            <Raised pressed={pressed} shadowColor={colors.skyT} radius={14} style={styles.revealButton}>
+              <Icon xml={eyeXml()} size={16} />
+              <Text style={styles.revealText}>{t('description.show')}</Text>
+            </Raised>
+          )}
+        </Pressable>
       )}
     </Raised>
   );
@@ -305,12 +244,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   pillText: { flex: 1, fontFamily: fonts.body800, fontSize: 14, color: colors.muted },
-  // Sky = free (hint words); butter = clue letters and tokens (the letter shop)
-  hintChip: { color: colors.skyT, backgroundColor: colors.skyL },
   shopChip: { color: colors.butterT, backgroundColor: colors.butterL },
-  hintWord: { flex: 1, fontFamily: fonts.display700, fontSize: 18, letterSpacing: 1.5, color: colors.ink },
-  hintCount: { fontFamily: fonts.display600, fontSize: 13.5, color: colors.muted },
-  hintBtn: { width: 28, height: 28, borderRadius: 10, backgroundColor: colors.sky, alignItems: 'center', justifyContent: 'center' },
 
   desc: {
     backgroundColor: '#fff',
@@ -326,15 +260,9 @@ const styles = StyleSheet.create({
   descBody: { flex: 1, minWidth: 0 },
   chip: { fontFamily: fonts.display600, fontSize: 12, letterSpacing: 1, color: colors.butterT },
   descText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink, marginTop: 1 },
-  blurred: {
-    fontFamily: fonts.body800,
-    fontSize: 14.5,
-    marginTop: 3,
-    color: 'transparent',
-    textShadowColor: 'rgba(109,90,82,0.85)',
-    textShadowRadius: 7,
-    textShadowOffset: { width: 0, height: 0 },
-  },
+  descPrompt: { fontFamily: fonts.body800, fontSize: 14, color: colors.muted, marginTop: 3 },
+  revealButton: { minHeight: 44, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.sky },
+  revealText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
   btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },

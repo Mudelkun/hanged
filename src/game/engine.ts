@@ -27,8 +27,6 @@ export interface Round {
   word: string;
   language: string;
   description: string;
-  /** One-word hints the player can show for free and loop through (UI only, never a rule). */
-  hints: string[];
   /**
    * The word's subject key (translated as subjects.<key>), shown for free on
    * levels that show it (Level.showsSubject). Absent elsewhere, and in rounds
@@ -45,6 +43,7 @@ export interface Round {
   boughtLetters: Letter[];
   /** Letters the player picked, in order. Never contains a clue letter or a repeat. */
   guessed: Letter[];
+  /** The player revealed the free description; kept across app restarts. */
   descriptionUnlocked: boolean;
 }
 
@@ -162,7 +161,6 @@ export interface NewRoundInput {
   word: string;
   language: string;
   description: string;
-  hints: readonly string[];
   /** Shown for free: only on levels that show the subject. */
   subject?: string;
   level: number;
@@ -183,7 +181,6 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     word: checked.word,
     language: input.language,
     description: input.description,
-    hints: [...input.hints],
     ...(input.subject && { subject: input.subject }),
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,

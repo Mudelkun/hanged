@@ -43,9 +43,6 @@ export const LETTER_FREQUENCY: Readonly<Record<string, string>> = {
  */
 export const STREAK_BONUS_AT: readonly number[] = [3, 6, 10];
 
-/** Unlocking a word's description costs 2 tokens. */
-export const DESCRIPTION_COST = 2;
-
 /** On levels with `sellsLetters` (levels.ts), the player can reveal 2 hidden letters for 10 tokens, once per round. */
 export const LETTER_BUY_COUNT = 2;
 export const LETTER_BUY_COST = 10;
@@ -58,9 +55,10 @@ export const DEFAULT_CHARACTER = 'mochi';
  * first: the Characters page lists them in this order. Every character in
  * design/characters/rig.js needs a row (a test checks it).
  *
- * Calibrated on a simulated player (Context/characters-shop.md): a
+ * Originally calibrated on a simulated player (Context/characters-shop.md): a
  * casual player nets ~1.35 tokens a round, a strong one ~2.1, after buying
- * some descriptions. So the first friend comes in the first session (~25
+ * some descriptions. Descriptions are now free; prices stay until playtesting.
+ * In that original simulation the first friend came in the first session (~25
  * rounds), each next one takes longer, and the whole set (15 characters)
  * takes a casual player ~1800 rounds. Saving up for one favourite is never
  * more than ~300.

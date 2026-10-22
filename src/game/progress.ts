@@ -11,7 +11,6 @@ import {
   CHARACTER_PRICES,
   DEFAULT_CHARACTER,
   DEFAULT_LANGUAGE,
-  DESCRIPTION_COST,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
   STARTING_TOKENS,
@@ -152,7 +151,7 @@ function queueReport(s: GameState, round: Round, won: boolean, at: number): Pick
 }
 
 export const canUnlockDescription = (s: GameState) =>
-  !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
+  !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing';
 
 /** A character's price in tokens (0 = free), or null if it isn't in the shop. */
 export const characterPrice = (id: string): number | null => CHARACTER_PRICES[id] ?? null;
@@ -188,8 +187,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         const { wordsTowardToken = 0, lastTokenEarned, ...rest } = s as LegacySave;
         s = { ...rest, tokens: rest.tokens + wordsTowardToken, lastTokensEarned: lastTokenEarned ? 1 : 0 };
       }
-      // A round saved before hint words existed gets them from the word database.
-      if (s.round && !s.round.hints) s = { ...s, round: { ...s.round, hints: wordById(s.round.wordId)?.hints ?? [] } };
+      // Hint words were retired. Preserve the round and any previously revealed description.
+      if (s.round && 'hints' in s.round) {
+        const { hints, ...round } = s.round;
+        s = { ...s, round };
+      }
       // A round saved before disabled keys or bought letters existed: full keyboard, nothing bought.
       if (s.round) {
         const { disabledLetters = [], boughtLetters = [] } = s.round;
@@ -215,7 +217,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           word: action.word.word,
           language: action.word.language,
           description: action.word.description,
-          hints: action.word.hints,
           subject: level.showsSubject ? action.word.subject : undefined,
           level: level.level,
           toFind: level.toFind,
@@ -257,7 +258,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'unlockDescription': {
       if (!canUnlockDescription(state)) return state;
-      return { ...state, round: unlockDescription(state.round!), tokens: state.tokens - DESCRIPTION_COST };
+      return { ...state, round: unlockDescription(state.round!) };
     }
 
     case 'buyLetters': {

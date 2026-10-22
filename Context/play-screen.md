@@ -9,7 +9,7 @@ these components.
 
 ## Two layouts on one screen
 
-- **Playing**: header · scene · miss pips · word tiles · letter shop pill (levels that sell letters) · hint pill · description card · keyboard · tab bar.
+- **Playing**: header · scene · miss pips · word tiles · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("DROPPED !!" red /
   "HANGING !!" green). The stamp sizes its font to fit the frame from Fredoka Bold's real letter
   widths (`FREDOKA_BOLD_EM`), because react-native-svg on iOS ignores `textLength`; text that would
@@ -182,10 +182,10 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
 | `TokenPill.tsx` | The header's token counter, live on Play and Characters (where tokens move). Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. **Several live pills**: flights land on the focused screen's pill (it sets the hub's target on focus), and a pill shows a change as is when its screen isn't focused or another pill already showed it (`claim` / `isClaimed`), so coming back to Play after buying a character doesn't count the spend again. |
 | `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens only needs an origin, and a live `TokenPill` in its screen's header (the Characters page: `TitleHeader live`). |
-| `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, hint word, token pill). Use it for any new pop so they all feel the same. |
+| `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, token pill). Use it for any new pop so they all feel the same. |
 | `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
-| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton` (`ghost`: white). |
-| `PayButton.tsx` | `PayButton`, the coral "label + coin" button that spends tokens: the description's Unlock, the letter shop's "10" and the Characters page's Unlock (`big`: BigButton's size). It sends the token flight, then pays, and turns beige and refuses without enough tokens; `useRefusal` shows why ("Not enough tokens yet") for 2.2 s. Reuse it for any new spend. |
+| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `LetterShopPill`, `DescriptionCard`, `BigButton` (`ghost`: white). |
+| `PayButton.tsx` | `PayButton`, the coral "label + coin" button that spends tokens: the letter shop's "10" and the Characters page's Unlock (`big`: BigButton's size). It sends the token flight, then pays, and turns beige and refuses without enough tokens; `useRefusal` shows why ("Not enough tokens yet") for 2.2 s. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Play, Leaderboard and Characters navigate; Versus is drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** How the tabs work: [leaderboard.md](leaderboard.md). |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
@@ -208,23 +208,19 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
   ([characters-shop.md](characters-shop.md)). The scene absorbs its height: checked at 393×852 and
   375×667 without scrolling.
 
-## Hint pill (not in the mockup)
+## Free description clue (owner, 2026-10-22)
 
-The free hint words (CLAUDE.md, Hint words). A white pill, 40 tall (36 compact), with a
-**sky blue** "HINT" chip and button. Sky means *free*, unlike coral (costs/actions),
-butter (tokens, clue letters) and mint (correct). Hidden it reads "Tap to show a free
-hint word" with an eye button. **The hint is not rendered until tapped.** Then it shows
-the word, `1 / 3` and a next arrow, and every tap anywhere on the pill loops to the next
-hint with a small pop. The index is component state, reset by a per-round `key`
-(`hint-<round.id>`; not `round.id`, which the scene already uses as a sibling key). It
-isn't saved, so a restart hides it again, which costs nothing. It's left off the result
-screen. A round with no hints renders nothing. Checked at 393×852 and 375×667: still
-no scrolling, the scene absorbs the height.
+Hint words are removed. The description starts hidden with a readable "Free to reveal" prompt
+and a sky-blue **Show clue** button (44 pt minimum height, with an eye icon). The actual definition
+is not rendered or exposed to accessibility until requested. The reducer records the reveal in
+`descriptionUnlocked`, so it survives a restart. There is no payment or token flight. The button
+goes away after revealing, and no new reveal is offered after the round ends. Results always show
+the description. Rewards, letter prices and character prices are unchanged pending playtesting.
 
 ## Letter shop pill (not in the mockup)
 
-Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). Same
-white pill as the hint, above it (between the word tiles and the hint), with a **butter** "LETTERS" chip (butter = clue letters and
+Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). A
+white pill between the word tiles and the description, with a **butter** "LETTERS" chip (butter = clue letters and
 tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button; the bought tiles and
 keys turn butter like clues. **The pill only shows while the letters can be bought**
 (`lettersForSale`): once bought, when only 2 letters are left hidden (buying must leave one hidden), or
@@ -238,13 +234,10 @@ pill with no button was confusing). Without enough tokens it stays, and its butt
   ([word-database.md](word-database.md)), so the unlocked card shows **4 lines** (the mockup's are one
   short sentence), with `adjustsFontSizeToFit` (iOS) as a safety net. Checked at 393×852 and 375×667
   on level 8 (letter shop pill showing) with a 139-character description: no scrolling.
-- **Blurred description**: the locked card shows a *placeholder* sentence drawn as
-  blurred text (transparent text + text shadow), **never the real hint**. That way
-  it can't be read from a screenshot or with accessibility tools.
 - **Stamp ink**: the mockup roughens the stamp with an `feTurbulence` filter, which
   react-native-svg can't draw. The app knocks out a fixed set of specks with a mask instead.
-- **Not enough tokens**: the Unlock button turns beige. Pressing it shows "Not enough
-  tokens yet" in the card for 2 s. It never goes negative.
+- **Not enough tokens**: paid letter and character buttons still refuse purchases
+  without enough tokens. The free description has no affordability check.
 - No sound yet: [src/feedback.ts](../src/feedback.ts) is the single hook for game
   events (won, lost, stamp, unlock). Haptics only for now; add sound effects and music
   there. **Key presses don't buzz**: the owner found a vibration on every letter

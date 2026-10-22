@@ -1,6 +1,6 @@
 /*
  * Open English WordNet (https://en-word.net), the dictionary the word
- * descriptions and generated hints come from. CC BY 4.0: the app must credit
+ * descriptions come from. CC BY 4.0: the app must credit
  * it (data/CREDITS.md). Senses are ordered by how often they were tagged in
  * real text, from Princeton WordNet 3.0's cntlist (only the build reads it).
  */

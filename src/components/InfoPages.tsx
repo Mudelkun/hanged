@@ -8,7 +8,7 @@
  */
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { DEFAULT_MAX_WRONG, DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT, LOSSES_TO_DROP, STREAK_BONUS_AT } from '../game/config';
+import { DEFAULT_MAX_WRONG, LETTER_BUY_COST, LETTER_BUY_COUNT, LOSSES_TO_DROP, STREAK_BONUS_AT } from '../game/config';
 import { LEVELS } from '../game/levels';
 import { t, TranslationKey } from '../i18n';
 import { colors, fonts } from '../theme';
@@ -35,7 +35,7 @@ const firstLevel = (has: (l: (typeof LEVELS)[number]) => boolean) => LEVELS.find
 const RULES: { key: string; color: string; params?: () => Record<string, number> }[] = [
   { key: 'goal', color: colors.sky, params: () => ({ max: DEFAULT_MAX_WRONG }) },
   { key: 'guess', color: colors.mint },
-  { key: 'help', color: colors.butterD, params: () => ({ descriptionCost: DESCRIPTION_COST }) },
+  { key: 'help', color: colors.butterD },
   {
     key: 'hard',
     color: '#a98bf5',
