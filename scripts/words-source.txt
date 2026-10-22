@@ -189,3 +189,4 @@ kindheartedness | 07569056-n | caring, gentle, warm
 troubleshooting | 00263435-v | fix, problem, repair
 personification | 07122808-n | human, poetry, figurative
 characteristics | 04738737-n | traits, features, qualities
+child | 09937706-n | kid, family, parent

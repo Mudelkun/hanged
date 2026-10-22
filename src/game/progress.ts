@@ -18,7 +18,7 @@ import {
   STREAK_BONUS_AT,
 } from './config';
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription, wrongCount } from './engine';
-import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
+import { afterRound, clueRatioFor, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
 
 export interface GameState {
@@ -200,8 +200,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           language: action.word.language,
           description: action.word.description,
           hints: action.word.hints,
+          subject: level.showsSubject ? action.word.subject : undefined,
           level: level.level,
-          clueRatio: level.clueRatio,
+          clueRatio: clueRatioFor(level, action.word),
+          rareClues: level.rareClues,
           disabledRatio: level.disabledRatio,
           maxWrong: level.maxWrong,
         },

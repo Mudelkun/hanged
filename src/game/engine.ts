@@ -9,7 +9,9 @@
  */
 import {
   DEFAULT_MAX_WRONG,
+  EDGE_CLUES,
   SCENE_STAGES,
+  LETTER_FREQUENCY,
   LONG_WORD_CLUES,
   LONG_WORD_LENGTH,
   MAX_WORD_LENGTH,
@@ -28,6 +30,12 @@ export interface Round {
   description: string;
   /** One-word hints the player can show for free and loop through (UI only, never a rule). */
   hints: string[];
+  /**
+   * The word's subject key (translated as subjects.<key>), shown for free on
+   * levels that show it (Level.showsSubject). Absent elsewhere, and in rounds
+   * saved before subjects existed.
+   */
+  subject?: string;
   level: number;
   maxWrong: number;
   /** Letters revealed when the round starts. Their keys count as used. */
@@ -76,7 +84,7 @@ export const minClues = (word: string) => (word.length >= LONG_WORD_LENGTH ? LON
 
 /**
  * How many distinct letters to reveal at the start.
- * Every word gets at least one clue (long words at least two), longer words
+ * Every word gets at least one clue (long words at least LONG_WORD_CLUES), longer words
  * get more (`ratio` comes from the level), and at least one letter always
  * stays hidden. When those collide (a word with a single distinct letter,
  * e.g. "a" or "aaa"), keeping a letter hidden wins and the word gets no clue.
@@ -97,8 +105,37 @@ function shuffled<T>(items: readonly T[], rng: () => number): T[] {
   return pool;
 }
 
-export function pickClueLetters(word: string, ratio: number, rng: () => number = Math.random): Letter[] {
-  return shuffled(uniqueLetters(word), rng).slice(0, clueCount(word, ratio));
+/**
+ * A long word's first or last EDGE_CLUES letters, front or back at random
+ * (owner's call): a word's start or ending is what people recognise it by.
+ * Short words get none.
+ */
+export function edgeLetters(word: string, rng: () => number = Math.random): Letter[] {
+  if (word.length < LONG_WORD_LENGTH) return [];
+  return uniqueLetters(rng() < 0.5 ? word.slice(0, EDGE_CLUES) : word.slice(-EDGE_CLUES));
+}
+
+/**
+ * The clue letters, in this order until there are clueCount of them: a long
+ * word's edge (edgeLetters), then its `rare` rarest letters by `frequency` (a
+ * language's letters, most used first; the ones that cost players the most
+ * misses), then random ones. Equally rare letters are picked at random.
+ */
+export function pickClueLetters(
+  word: string,
+  ratio: number,
+  rng: () => number = Math.random,
+  frequency?: string,
+  rare = 0,
+): Letter[] {
+  const edge = edgeLetters(word, rng);
+  const letters = shuffled(uniqueLetters(word), rng).filter((c) => !edge.includes(c));
+  let rarest: Letter[] = [];
+  if (frequency && rare > 0) {
+    const rank = (c: Letter) => (frequency.includes(c) ? frequency.indexOf(c) : frequency.length);
+    rarest = [...letters].sort((a, b) => rank(b) - rank(a)).slice(0, rare);
+  }
+  return [...edge, ...rarest, ...letters.filter((c) => !rarest.includes(c))].slice(0, clueCount(word, ratio));
 }
 
 // ---- disabled keys (easy levels) ----
@@ -130,8 +167,12 @@ export interface NewRoundInput {
   language: string;
   description: string;
   hints: readonly string[];
+  /** Shown for free: only on levels that show the subject. */
+  subject?: string;
   level: number;
   clueRatio: number;
+  /** How many of the clue letters are the word's rarest (in its language); the rest are random. */
+  rareClues?: number;
   /** Share of the decoy letters disabled on the keyboard (0 = full keyboard). */
   disabledRatio?: number;
   maxWrong?: number;
@@ -147,9 +188,10 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     language: input.language,
     description: input.description,
     hints: [...input.hints],
+    ...(input.subject && { subject: input.subject }),
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
-    clueLetters: pickClueLetters(checked.word, input.clueRatio, rng),
+    clueLetters: pickClueLetters(checked.word, input.clueRatio, rng, LETTER_FREQUENCY[input.language], input.rareClues),
     disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
     boughtLetters: [],
     guessed: [],

@@ -5,6 +5,7 @@ import {
   createRound,
   decoyLetters,
   disabledCount,
+  edgeLetters,
   guess,
   sceneStage,
   balloonsGone,
@@ -20,7 +21,7 @@ import {
   validateWord,
   wrongCount,
 } from '../engine';
-import { LONG_WORD_CLUES, LONG_WORD_LENGTH } from '../config';
+import { LETTER_FREQUENCY, LONG_WORD_CLUES, LONG_WORD_LENGTH } from '../config';
 import { LEVELS } from '../levels';
 import { WORDS } from '../words';
 
@@ -64,10 +65,12 @@ describe('clues', () => {
     expect(clueCount('ab', 0.9)).toBe(1);
   });
 
-  it('gives long words at least two clues, even on the hardest level', () => {
+  it('gives long words at least LONG_WORD_CLUES (4) clues, even on the hardest level', () => {
+    expect(LONG_WORD_CLUES).toBe(4);
     const hardest = LEVELS[LEVELS.length - 1];
     for (const w of WORDS.filter((e) => e.word.length >= LONG_WORD_LENGTH))
-      expect(clueCount(w.word, hardest.clueRatio)).toBeGreaterThanOrEqual(LONG_WORD_CLUES);
+      // unless a letter must stay hidden: a long word with only 4 distinct letters shows 3
+      expect(clueCount(w.word, hardest.clueRatio)).toBeGreaterThanOrEqual(Math.min(LONG_WORD_CLUES, new Set(w.word).size - 1));
     expect(clueCount('skyscraper', 0)).toBe(LONG_WORD_CLUES);
     expect(clueCount('sunflowe', 0)).toBe(LONG_WORD_CLUES);
     expect(clueCount('sunflow', 0)).toBe(1);
@@ -101,6 +104,47 @@ describe('clues', () => {
     const letters = pickClueLetters('strawberry', 0.5);
     expect(new Set(letters).size).toBe(letters.length);
     letters.forEach((c) => expect('strawberry').toContain(c));
+  });
+
+  it("starts a long word's clues with its first or last two letters (owner's call)", () => {
+    // rng < 0.5 = the front, otherwise the back; each letter shows everywhere it appears
+    expect(edgeLetters('reasonable', () => 0)).toEqual(['r', 'e']);
+    expect(edgeLetters('reasonable', () => 0.9)).toEqual(['l', 'e']);
+    expect(edgeLetters('balloons', () => 0.9)).toEqual(['n', 's']);
+    expect(edgeLetters('llamas', () => 0)).toEqual([]); // short words: no edge
+    expect(LONG_WORD_LENGTH).toBe(8);
+    const clues = pickClueLetters('reasonable', 0, () => 0.9);
+    expect(clues).toHaveLength(LONG_WORD_CLUES);
+    expect(clues.slice(0, 2)).toEqual(['l', 'e']);
+    // a doubled edge letter counts once
+    expect(edgeLetters('aardvarks', () => 0)).toEqual(['a']);
+    // keeping a letter hidden still wins over the edge
+    expect(pickClueLetters('aaaaaaab', 0, () => 0.9)).toEqual(['a']);
+  });
+
+  it('can reveal the rarest letters first: the X of "jukebox", not its E', () => {
+    const en = LETTER_FREQUENCY.en;
+    expect(clueCount('jukebox', 0.3)).toBe(2);
+    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 2)).toEqual(['x', 'j']);
+    // only the first `rare` clues are the rarest, the rest stay random
+    const one = pickClueLetters('jukebox', 0.3, () => 0, en, 1);
+    expect(one[0]).toBe('x');
+    expect(one).toHaveLength(2);
+    // never more than the clue count
+    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 5)).toEqual(['x', 'j']);
+    // no rare clues: the same random clues as before
+    expect(pickClueLetters('jukebox', 0.3, () => 0, en, 0)).toEqual(pickClueLetters('jukebox', 0.3, () => 0));
+    // a long word: its edge first, then its rarest letters (the V of "virulent")
+    expect(pickClueLetters('virulent', 0.3, () => 0, en, 2)).toEqual(['v', 'i', 'u', 'l']);
+  });
+
+  it('gives a round its rarest letters as clues when asked, in its own language', () => {
+    const input = { id: 'r', wordId: 'w', word: 'jukebox', language: 'en', description: '', hints: [], level: 13, clueRatio: 0.3 };
+    expect(createRound({ ...input, rareClues: 2 }, () => 0).clueLetters).toEqual(['x', 'j']);
+    // a language without a letter-frequency row gets random clues
+    expect(createRound({ ...input, language: 'xx', rareClues: 2 }, () => 0).clueLetters).toEqual(
+      createRound({ ...input, language: 'xx' }, () => 0).clueLetters,
+    );
   });
 });
 

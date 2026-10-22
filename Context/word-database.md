@@ -5,17 +5,22 @@ offline first). **No server serves words**: the player can play every level with
 New words ship with app updates. The server only keeps a copy of the list to label the word
 statistics ([server.md](server.md)).
 
-- Data: [data/words.json](../data/words.json) (generated, don't hand-edit).
-- Source: [scripts/words-source.txt](../scripts/words-source.txt), one `word | sense | hint, hint, hint` per line.
-- Builder/checker: [scripts/check-words.js](../scripts/check-words.js). Dictionary loader:
-  [scripts/wordnet.js](../scripts/wordnet.js).
+- Data: [data/words.json](../data/words.json) (generated, don't hand-edit). One word per line, so the
+  ~22,000-word file stays readable and diffs line by line.
+- Hand-written words: [scripts/words-source.txt](../scripts/words-source.txt), one `word | sense | hint, hint, hint` per line.
+- Generated words: [scripts/auto-words.js](../scripts/auto-words.js) (below). Terms kept out of the
+  game: [scripts/blocked-words.txt](../scripts/blocked-words.txt).
+- Builder/checker: [scripts/check-words.js](../scripts/check-words.js); the rules both share:
+  [scripts/words-rules.js](../scripts/words-rules.js); difficulty: [scripts/difficulty.js](../scripts/difficulty.js). Sources, downloaded once into `scripts/.cache/`
+  (gitignored) by [scripts/download.js](../scripts/download.js): [scripts/wordnet.js](../scripts/wordnet.js)
+  (Open English WordNet + Princeton sense counts) and [scripts/scowl.js](../scripts/scowl.js) (SCOWL).
 - Access: [src/game/words.ts](../src/game/words.ts), the **only** module that reads the
   file. If words ever arrive as downloaded packs, that is the one place to change.
 
 ## Shape
 
 ```json
-{ "id": "en-castle", "word": "castle", "language": "en", "description": "A large building formerly occupied by a ruler and fortified against attack.", "hints": ["king", "tower", "stone"], "sense": "oewn-02983900-n" }
+{"id":"en-castle","word":"castle","language":"en","description":"A large building formerly occupied by a ruler and fortified against attack.","hints":["king","tower","stone"],"sense":"oewn-02983900-n","rarity":10,"concrete":true,"subject":"object","difficulty":1}
 ```
 
 - `id` = `<language>-<word>`, stable. `seenWordIds` in the saved game refers to it,
@@ -26,7 +31,18 @@ statistics ([server.md](server.md)).
   from a dictionary (below), never written by hand.
 - `sense` is the dictionary sense the description comes from.
 - `hints` are the free one-word hints the player loops through (CLAUDE.md, Hint words).
-  2–4 per word, required. Every word has 3 today. They are still hand-written.
+  2–4 per word, required. Hand-written for the words in `words-source.txt`, taken from the
+  dictionary for the generated ones (below).
+- `rarity` is how common the word is, `concrete` whether it's a thing you can picture, and
+  `difficulty` how many misses it costs a typical player (see How hard a word is, below). Levels use
+  all three to pick words, and words that measure hard get more clues.
+- `subject` is a key for the word's broad subject ("animal", "material", "feeling", "describing"…),
+  shown for free from level 9 (owner's call). It comes from the sense's WordNet category, grouped
+  by `subjectOf` in [words-rules.js](../scripts/words-rules.js); the checker accepts only the keys in
+  `SUBJECTS`. **A key, not text**: the label belongs in the app's translations (`subjects.<key>`),
+  so another language reuses the same subjects. WordNet's precise subjects ("chemistry", "music")
+  cover only 4% of words and some are wrong (it links "capricious" to sexual activity), so the broad
+  category is what every word can have: magnesium is "material", virulent "describing".
 
 ## Descriptions come from a dictionary (owner's call)
 
@@ -53,14 +69,111 @@ maintained successor of Princeton WordNet.
   spelled out the word ("a person whose occupation is teaching") or was too long for the card.
   rose and orange now mean the colours (their hints were changed to match).
 
+## Generated words (2026-10-22)
+
+**Why:** the owner wants as many English words as possible, partly to know how many words a language
+needs before adding others. Hand-picking a sense and writing hints for every word doesn't scale, so
+`--build` adds every common English word it can describe from the dictionaries
+([auto-words.js](../scripts/auto-words.js)). Today: **183 hand-written + 21,686 generated = 21,869 words**.
+
+- **Which words:** OEWN lemmas of 3–15 letters a–z, not capitalised (no names), that SCOWL lists at
+  size ≤ 50 (common to medium) in its `english` or `american` lists. American spelling only, so
+  "color" and "colour" don't both appear. Plurals the dictionary lists as words ("hands", "years") are
+  dropped when the singular noun was used at least as often ("physics" and "species" stay).
+- **Which sense:** OEWN's XML doesn't order senses by use (bank's first listed sense is "the
+  responsibility of a bank…"), so senses are ordered by **Princeton WordNet 3.0's tag counts**
+  (`cntlist.rev`; OEWN sense ids map to its keys). The word takes the most used sense that gives a
+  usable description and at least 2 hints, **among its main senses only**: the most used one, or one of
+  the next two if it was ever tagged. A word whose main senses all fail is left out rather than given an
+  odd meaning (elephant would otherwise be "the symbol of the Republican Party").
+- **Which hints:** words the dictionary links to that sense, most telling first: synonyms, broader
+  terms (cat → carnivore, mammal), topics, parts and wholes, similar words, narrower terms, broader
+  terms two levels up. If there are fewer than 2, nouns from the description fill in. A hint must be one word of
+  2–12 letters that SCOWL lists at ≤ 35 (everyone knows it). It can't be vague ("entity", "act") or blocked,
+  and it can't share telling letters with the answer or another hint (`givesAway` both ways, which also drops
+  "signaling" next to "signalling"). It must be **used in one of its own main senses**: "dab" is a kind of
+  dance, but nobody reads "dab" and thinks of dancing. Up to 3 hints.
+- **Kept out**: words with any sense the dictionary labels obscenity or ethnic slur; senses labelled
+  disparagement, slang, archaism, trademark, plural or acronym; and any word that is, or whose
+  description uses, a term in [blocked-words.txt](../scripts/blocked-words.txt) (sexual, drug,
+  violent, hurtful). That list catches what the labels miss (OEWN even links "capricious" to sexual
+  activity). Its cost is a few innocent words ("child" is "a young person of either **sex**"): add
+  those by hand with another sense, as child is.
+- **Hand-written words win**: a word in `words-source.txt` keeps its sense and hints. It isn't
+  checked against the blocked list, so review those by eye.
+- The build is deterministic: the sources are pinned releases, so rebuilding gives the same file.
+  Changing the generator's rules can drop words. That's fine for ids (see below), but say so in the commit.
+
+## How hard a word is: rarity, kind and difficulty
+
+`rarity` is SCOWL's size for the word: **10** (the most common), 20, 35, 40, **50** (a medium
+dictionary). Hand-written words count as 10: they were picked as words everyone knows, and SCOWL,
+counted from adult text, rates "owl" or "zebra" 35.
+
+`concrete` is true for a thing you can picture: the sense is in one of WordNet's categories
+for animals, food, plants, the body, made things, natural things, materials or people
+(`CONCRETE_LEXFILES` in auto-words.js). Phenomena, places and times are left out, because they mix
+"storm" with "effect". Hand-written words count as concrete, for the same reason as their rarity.
+5,918 words are concrete.
+
+`difficulty` is **how many misses the word costs a typical player**, measured at build time by
+[scripts/difficulty.js](../scripts/difficulty.js) (no clues, no miss limit). The simulated player knows
+the everyday words (rarity ≤ 20): each turn it keeps those that fit the pattern and tries the letter
+most of them share. When none fit, it tries the most frequent English letters, the way people do
+with a word they don't think of. castle costs 1, cat 3, badly 5, **virulent 11, magnesium 13**.
+Commonness alone misses this: virulent and magnesium are rarity 35 like "zebra", but V, G and M are
+letters nobody tries early. The measure is pessimistic about some familiar words outside the
+everyday ~10,000 ("armchair" 8). That only shrinks pools, which are big. It's deterministic, takes
+~10 s of the build, and must be re-run (`--build`) whenever the word list changes, since it depends
+on the whole list.
+
+**Why (2026-10-22):** after the list grew to 21,869 words, the owner found the game far too hard and
+ran out of tokens, and lost on "magnesium" (level 7) and "virulent" (level 6). In order:
+1. Only ~20% of what the easy levels dealt were things. The rest were common but abstract words
+   ("badly", "always", "adhere") that hangman hints can't point at. So levels 1–4 deal only things
+   (`concreteOnly`).
+2. Levels 7–8 dealt rare words with only 8 and 6 misses. Now every level allows 10 misses and **no
+   level deals rare words** (rarity 40–50, "cynosure"): `maxRarity` stops at 35. The rare words stay
+   in the database (they count toward the language's size, and Versus may use them).
+3. Words like virulent were still dealt. Now each level has a `maxDifficulty` (4 on level 1 up to
+   8 on level 8), and words measured at `HARD_WORD_MISSES` (5) or more get **more clue letters**
+   (owner's request): `clueRatioFor` adds `HARD_WORD_CLUE_BONUS` (0.2, about one more letter).
+All these numbers are PLACEHOLDERS in [levels.ts](../src/game/levels.ts) and [config.ts](../src/game/config.ts),
+see [progression-and-tokens.md](progression-and-tokens.md).
+
+The owner turned down making the description cheaper or free on hard words (the token rules stay),
+and the goal they set is that **players win more rounds than they lose**.
+
+**Measured, not guessed:** two simulated players play real rounds through the real rules (no hints or
+descriptions). The first is a word-matcher who knows every common word, 60% of rarity-35 words and a
+quarter of the rare ones. The second just tries letters by English frequency, a pessimistic bound for
+a real person. Before these changes, levels 7–8 gave them 70–72% and 31–43% wins. Now they win 99–100% and
+57–97% on every level. On the level ladder over time, the weaker player now reaches level 8 and wins
+**68%** of rounds (57% before, stuck around levels 4–5). Re-run such a simulation before making levels harder.
+
+**20 levels (owner, 2026-10-22):** the hard words aren't thrown away. Levels 9–20 deal them in
+climbing difficulty bands, with more help (the rarest letters as clues, the subject, letters to buy):
+see [progression-and-tokens.md](progression-and-tokens.md), 20 levels.
+
+Words per level today (length, kind, rarity and difficulty): 1: 269 · 2: 451 · 3: 546 · 4: 549 ·
+5: 2,876 · 6: 2,950 · 7: 2,242 · 8: 1,541 · 9: 1,443 · 10: 1,703 · 11: 2,371 · 12: 2,516 · 13: 2,839 ·
+14: 2,429 · 15: 2,205 · 16: 1,558 · 17: 1,787 · 18: 1,255 · 19: 783 · 20: 420.
+
 ## Adding or changing words
 
-1. `npm run check:words -- --senses <word>` lists the word's senses with the description each
-   would give, or `(unusable)`.
+Most words need nothing. If a common word is missing, it's usually because no main sense gave a
+usable description and 2 hints (`noSense`/`fewHints` in the build's "Left out" counts). To add it,
+or to fix a generated word's sense or hints, write it by hand:
+
+1. `npm run check:words -- --senses <word>` lists the word's senses, most used first, with the
+   description each would give, or `(unusable)`.
 2. Add `word | sense | hint, hint, hint` to `scripts/words-source.txt`.
 3. Run `npm run check:words -- --build`. This regenerates `data/words.json` and validates it.
 4. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
    can show the new words by name ([server.md](server.md)).
+
+To keep a generated word out, add it (or the term that makes it unsuitable) to
+`blocked-words.txt` and rebuild.
 
 The build fails on a sense that doesn't exist, that isn't for this word, or whose definition
 is unusable. The check fails on any word that:
@@ -68,6 +181,7 @@ is unusable. The check fails on any word that:
 - isn't 1–15 lowercase a–z,
 - has fewer than **2 distinct letters**, so no clue would fit (see [game-engine.md](game-engine.md)),
 - has no dictionary `sense`,
+- has a `rarity` that isn't one of SCOWL's sizes 10, 20, 35, 40, 50, or a `concrete` that isn't true/false,
 - has a missing description, or **a description that gives the word away**: any word in it that
   starts with the answer ("roses"), or shares most of its stem (at least 4 letters and 60% of the
   word: "paleontology" for paleontologist, "dancing" for dance). Compound parts are allowed
@@ -80,15 +194,18 @@ is unusable. The check fails on any word that:
   "hippo" for "hippopotamus"). Those give letters away,
 - has a duplicate id.
 
-It also prints how many words there are at each length. **Every level in
-`src/game/levels.ts` needs words in its length range.** A test (`has words for
-every level`) fails if a level has none. Today: 182 words of 3–15 letters, thinnest
-at 13–15 letters (3–6 each). Add long words before adding harder levels.
+It also prints how many words there are at each length and rarity. **Every level in
+`src/game/levels.ts` needs words in its length range, kind and rarity cap.** A test (`has words for
+every level`) fails if a level has none. Today there are 21,869 words of 3–15 letters: from 431 of 3 letters
+up to 3,460 of 7, and still 96 of 15.
 
 ## Why the words stay on the device
 
-The owner's call is **offline first**. Bundling the words also costs nothing to serve: 182 words are
-12 KB gzipped, and 10,000 would be about 650 KB. Fetching words per round or in batches would put load on
+The owner's call is **offline first**. Bundling the words also costs nothing to serve. The 21,869
+words are 4.4 MB of JSON, 1.1 MB gzipped. In the iOS bundle (Hermes bytecode) they take 2.9 MB: the
+bundle went from 2.8 MB to 5.7 MB, about 1 MB more to download once the app package is compressed.
+Another language of the same size would cost the same again, so if several languages ship, load only the
+player's language ([words.ts](../src/game/words.ts) is the one place to change). Fetching words per round or in batches would put load on
 the server and break offline play. It would also make the "never repeat" rule depend on the server
 knowing what each player has seen. The **ids are the contract** with the server (`word_days.word_id`),
 so never rename an id: retire the word and add a new one.

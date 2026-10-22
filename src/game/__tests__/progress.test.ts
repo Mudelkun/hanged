@@ -2,7 +2,10 @@ import { CHARACTERS } from '../../characters/rig';
 import {
   CHARACTER_PRICES,
   DEFAULT_CHARACTER,
+  DEFAULT_MAX_WRONG,
   DESCRIPTION_COST,
+  HARD_WORD_CLUE_BONUS,
+  HARD_WORD_MISSES,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
   LEVEL_GRACE_ROUNDS,
@@ -11,8 +14,8 @@ import {
   STREAK_BONUS_AT,
   WORDS_PER_LEVEL,
 } from '../config';
-import { decoyLetters, roundStatus, usedLetters } from '../engine';
-import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
+import { clueCount, decoyLetters, roundStatus, usedLetters } from '../engine';
+import { afterRound, clueRatioFor, LEVELS, LevelProgress, START_LEVEL } from '../levels';
 import {
   canBuyCharacter,
   characterPrice,
@@ -35,6 +38,10 @@ const word = {
   description: 'A big stone home for a king.',
   hints: ['king', 'tower', 'stone'],
   sense: 'oewn-02983900-n',
+  rarity: 10,
+  concrete: true,
+  difficulty: 1,
+  subject: 'object',
 };
 
 const startRound = (s: GameState) => gameReducer(s, { type: 'newRound', word, roundId: 'r', rng: () => 0 });
@@ -172,6 +179,32 @@ describe('hint words', () => {
   });
 });
 
+describe('help on hard levels', () => {
+  const firstWith = (has: (l: (typeof LEVELS)[number]) => boolean) => LEVELS.find(has)!.level;
+
+  it('shows the subject for free from level 9 (owner), never before', () => {
+    expect(firstWith((l) => l.showsSubject)).toBe(9);
+    const at = (level: number) => gameReducer(atLevel(level), { type: 'newRound', word, roundId: 'r', rng: () => 0 });
+    expect(at(8).round!.subject).toBeUndefined();
+    expect(at(9).round!.subject).toBe(word.subject);
+    expect(at(9).tokens).toBe(STARTING_TOKENS);
+  });
+
+  it('never takes help away or deals easier words as levels rise', () => {
+    for (let i = 1; i < LEVELS.length; i++) {
+      const [prev, next] = [LEVELS[i - 1], LEVELS[i]];
+      expect(next.rareClues).toBeGreaterThanOrEqual(prev.rareClues);
+      if (prev.showsSubject) expect(next.showsSubject).toBe(true);
+      if (prev.sellsLetters) expect(next.sellsLetters).toBe(true);
+      expect(next.maxWrong).toBeGreaterThanOrEqual(DEFAULT_MAX_WRONG);
+      expect(next.minDifficulty).toBeGreaterThanOrEqual(prev.minDifficulty);
+      expect(next.maxDifficulty).toBeGreaterThanOrEqual(prev.maxDifficulty);
+      expect(next.maxRarity).toBeGreaterThanOrEqual(prev.maxRarity);
+      expect(next.tokenReward).toBeGreaterThanOrEqual(prev.tokenReward);
+    }
+  });
+});
+
 describe('disabled keys', () => {
   it('disable fewer letters as levels rise, down to a full keyboard', () => {
     for (let i = 1; i < LEVELS.length; i++) {
@@ -244,7 +277,6 @@ describe('buying letters', () => {
   });
 });
 
-describe('moving up and down levels', () => {
 describe('characters', () => {
   const prices = Object.values(CHARACTER_PRICES);
   const paid = Object.keys(CHARACTER_PRICES).find((id) => CHARACTER_PRICES[id] > 0)!;
@@ -308,6 +340,7 @@ describe('characters', () => {
   });
 });
 
+describe('moving up and down levels', () => {
   const loseTimes = (s: GameState, n: number) => Array.from({ length: n }).reduce<GameState>(loseRound, s);
 
   it(`moves up after ${WORDS_PER_LEVEL} words guessed on a level, and caps at the last level`, () => {
@@ -390,7 +423,56 @@ describe('word picking', () => {
       const w = pickWord(level, 'en', [], () => 0.5);
       expect(w.word.length).toBeGreaterThanOrEqual(level.minLength);
       expect(w.word.length).toBeLessThanOrEqual(level.maxLength);
+      expect(w.rarity).toBeLessThanOrEqual(level.maxRarity);
+      if (level.concreteOnly) expect(w.concrete).toBe(true);
+      expect(levelPool(level, 'en').every((e) => e.difficulty <= level.maxDifficulty)).toBe(true);
     }
+  });
+
+  const entry = (w: string, rarity: number, concrete = true) => ({ ...word, id: `en-${w}`, word: w, rarity, concrete });
+
+  it('deals only words common enough for the level', () => {
+    expect(levelPool(LEVELS[0], 'en').every((w) => w.rarity <= LEVELS[0].maxRarity)).toBe(true);
+    const harp = entry('harp', 50);
+    const dog = entry('dog', 10);
+    expect(levelPool(LEVELS[0], 'en', [harp, dog])).toEqual([dog]);
+    // with nothing common enough, the most common words left
+    expect(levelPool(LEVELS[0], 'en', [harp, entry('lute', 35)]).map((w) => w.word)).toEqual(['lute']);
+  });
+
+  it('gives words that are hard to guess more clue letters', () => {
+    const level = LEVELS[4];
+    expect(clueRatioFor(level, { difficulty: HARD_WORD_MISSES - 1 })).toBe(level.clueRatio);
+    expect(clueRatioFor(level, { difficulty: HARD_WORD_MISSES })).toBe(level.clueRatio + HARD_WORD_CLUE_BONUS);
+    // a round snapshots the word's ratio: castle gets 2 clues on level 1, more when it measures hard
+    const clues = (w: typeof word) => gameReducer(initialState(), { type: 'newRound', word: w, roundId: 'r', rng: () => 0 }).round!.clueLetters.length;
+    const hard = { ...word, difficulty: HARD_WORD_MISSES };
+    expect(clues(word)).toBe(2);
+    expect(clues(hard)).toBe(clueCount('castle', clueRatioFor(LEVELS[0], hard)));
+    expect(clues(hard)).toBeGreaterThan(2);
+  });
+
+  it('deals no word harder to guess than the level allows', () => {
+    const easy = { ...entry('dog', 10), difficulty: 0 };
+    const hard = { ...entry('jinx', 10), difficulty: LEVELS[0].maxDifficulty + 1 };
+    expect(levelPool(LEVELS[0], 'en', [hard, easy])).toEqual([easy]);
+    // with nothing easy enough, the easiest words left
+    const harder = { ...entry('jazz', 10), difficulty: hard.difficulty + 3 };
+    expect(levelPool(LEVELS[0], 'en', [harder, hard])).toEqual([hard]);
+  });
+
+  it('deals only things you can picture on easy levels, every kind of word later', () => {
+    expect(levelPool(LEVELS[0], 'en').every((w) => w.concrete)).toBe(true);
+    const calm = entry('calm', 10, false);
+    const dog = entry('dog', 10);
+    expect(levelPool(LEVELS[0], 'en', [calm, dog])).toEqual([dog]);
+    // the right kind before the right rarity, and any kind when there's none
+    expect(levelPool(LEVELS[0], 'en', [calm, entry('lute', 50)]).map((w) => w.word)).toEqual(['lute']);
+    expect(levelPool(LEVELS[0], 'en', [calm])).toEqual([calm]);
+    const hard = LEVELS.find((l) => !l.concreteOnly)!;
+    const harmony = entry('harmonies', 10, false);
+    const giraffes = entry('giraffes', 10);
+    expect(levelPool(hard, 'en', [harmony, giraffes])).toEqual([harmony, giraffes]);
   });
 
   it('never repeats a word before the level has dealt them all', () => {
@@ -421,7 +503,7 @@ describe('word picking', () => {
 
   it('a save from the "last 40 words" memory counts those words as seen', () => {
     const { seenWordIds, ...rest } = initialState();
-    const old = { ...rest, recentWordIds: ['en-cat', 'en-gone', 'en-sun'] } as unknown as GameState;
+    const old = { ...rest, recentWordIds: ['en-cat', 'en-xyzzy', 'en-sun'] } as unknown as GameState;
     const s = gameReducer(initialState(), { type: 'hydrate', state: old });
     expect(s.seenWordIds).toEqual(['en-sun', 'en-cat']);
     expect('recentWordIds' in s).toBe(false);

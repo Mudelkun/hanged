@@ -15,12 +15,34 @@ export const MIN_WORD_LENGTH = 1;
 export const MAX_WORD_LENGTH = 15;
 
 /**
- * Long words always get at least 2 clue letters, even on the hardest levels
- * (owner's call), so they stay challenging but fair. PLACEHOLDER: the length
- * that counts as long (8 = the shortest words of level 6 and up).
+ * Long words always get at least LONG_WORD_CLUES clue letters, on every level
+ * (owner's call, raised from 2 to 4 on 2026-10-22), and the first EDGE_CLUES of
+ * them are the word's first or last letters (engine.edgeLetters): "RE…LE" is
+ * what makes "reasonable" recognisable. PLACEHOLDER: the length that counts as
+ * long (8 = the shortest words of level 6 and up).
  */
 export const LONG_WORD_LENGTH = 8;
-export const LONG_WORD_CLUES = 2;
+export const LONG_WORD_CLUES = 4;
+export const EDGE_CLUES = 2;
+
+/**
+ * Harder words get more clue letters (owner's request): a word that costs a
+ * typical player HARD_WORD_MISSES or more (WordEntry.difficulty) adds
+ * HARD_WORD_CLUE_BONUS to the level's clueRatio (levels.clueRatioFor).
+ * PLACEHOLDER: about one more letter.
+ */
+export const HARD_WORD_MISSES = 5;
+export const HARD_WORD_CLUE_BONUS = 0.2;
+
+/**
+ * Each language's letters, most used first. On hard levels (Level.rareClues)
+ * the clue letters are the word's rarest ones: the V of "virulent" is the
+ * letter nobody tries, the E the one everybody does. A language without a row
+ * gets random clues.
+ */
+export const LETTER_FREQUENCY: Readonly<Record<string, string>> = {
+  en: 'etaoinshrdlucmfwypvbgkjqxz',
+};
 
 /**
  * A won word pays its level's tokenReward (levels.ts), plus +1 token for each

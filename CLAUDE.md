@@ -53,7 +53,7 @@ src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one 
 src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
-data/words.json     the word database (generated from scripts/words-source.txt)
+data/words.json     the word database (built by scripts/check-words.js: hand-written words + generated from the dictionaries)
 server/             the API (its own package, deployed on Railway): src/contract.ts is shared with the app
 ```
 
@@ -75,7 +75,7 @@ server/             the API (its own package, deployed on Railway): src/contract
    - Letters only, A–Z. No spaces, digits, hyphens or accents. Normalize to one case internally (the original used lowercase).
    - Length: 1 to **15** letters, inclusive.
 3. **Display**: each hidden letter shows as a blank (dash or empty tile), e.g. `h _ l l _`. Revealed letters appear in their positions.
-4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more. **Long words always get at least two**, even on the hardest levels, so they stay challenging but fair.
+4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more. **Long words (8+ letters) always get at least four**, even on the hardest levels, and the first two clues are **the word's first two letters or its last two** (front or back at random), because a word's start or ending is what people recognise it by (owner's call, 2026-10-22; it was two clues before).
    - When a letter is revealed as a clue, **all** of its occurrences are shown and that key counts as used.
    - At least one letter must always stay hidden.
 5. **A turn** = the player picks one letter on the in-game keyboard.
@@ -98,6 +98,7 @@ A level's difficulty is set by:
 - **Dropping back down**: losing **3 rounds in a row** moves the player down one level (never below level 1). The first few rounds on a new level never count toward a drop. The result screen says so gently ("Back to level N"), not as a penalty. The leaderboard score never goes down.
 - **Each level has its own colour.** A level change plays an animation: a path of numbered stops, one colour per level, that the player's character climbs up or slides back down.
 - for the easiest levels, **disabled letters**: some letters that are *not* in the word are taken off the keyboard when the round starts, so there are fewer wrong keys to hit. Each higher level disables fewer, down to the full keyboard. At least one wrong letter always stays pickable.
+- **20 levels** (owner's call, 2026-10-22). Levels 1–8 deal words most players can guess. Levels 9–20 deal harder and harder words, and **the help grows with them**: the word's **subject** (e.g. "Animal", "Material") is shown for free from level 9, some clue letters are the word's **rarest letters** (the ones players can't find), and letters can be bought. The goal: **a regular person (not a word expert) wins about 75% of rounds on levels 1–15**, and more than they lose on 16–20, checked by a simulation test ([Context/progression-and-tokens.md](Context/progression-and-tokens.md)).
 
 ### Word descriptions
 
@@ -133,7 +134,7 @@ A level's difficulty is set by:
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
 - **Spending**: tokens are used for exactly three things:
   1. unlocking a word's description (2 tokens)
-  2. on the highest level (very long words, few clues): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
+  2. on the hard levels (8 and up): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
   3. unlocking characters (each character has a price in tokens)
 - There are **no gems** in the game. The mockup shows gems, but ignore them.
 - The mockup puts a heart counter in the top bar. That spot becomes the token counter, with a **different symbol, not a heart**. Don't use hearts for it, because hearts suggest lives.
@@ -215,8 +216,8 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 
 - **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost? (Placeholders for now: 2 free characters, then 30 to 400 tokens, set from a simulation of the token pay: [Context/characters-shop.md](Context/characters-shop.md).)
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
-- **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: long words get at least 2. How long counts as long is a placeholder: 8 letters.)
-- **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? (Dropping down is decided: 3 losses in a row. The exact numbers are placeholders.)
+- **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: long words get at least 4, starting with their first or last two letters. How long counts as long is a placeholder: 8 letters.)
+- **Progression**: what moves the player up a level (a number of words won, a streak)? (Decided: 20 levels, and dropping down after 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
 - **Player names**: must they be unique? What length limits apply?

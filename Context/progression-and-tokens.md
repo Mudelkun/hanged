@@ -35,8 +35,8 @@ would then count it again.
 - Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and on characters
   (`buyCharacter`, `CHARACTER_PRICES`: [characters-shop.md](characters-shop.md)). The character prices were set
   from a simulation of this token pay, so **changing the pay means re-checking those prices**.
-- **Buying letters (owner's request)**: on a level with `sellsLetters` (only level 8: 10–15 letters,
-  12% clues), the `buyLetters` action reveals `LETTER_BUY_COUNT` (2) hidden letters for
+- **Buying letters (owner's request)**: on a level with `sellsLetters` (levels 8–20, the hard
+  ones), the `buyLetters` action reveals `LETTER_BUY_COUNT` (2) hidden letters for
   `LETTER_BUY_COST` (10) tokens, **once per round**. `lettersForSale(state)` says whether the round
   can still take them; the reducer also checks the balance. The engine refuses when 2 or fewer distinct
   letters are hidden, so one always stays hidden and **buying never wins a round**: scoring stays in
@@ -74,27 +74,78 @@ it can go down while the score never does. `afterRound(levelProgress, won)` in
   it. It's detected as `state.levelProgress.level !== round.level`, with no extra saved field
   ([play-screen.md](play-screen.md)).
 
-Each `LEVELS` row sets the word-length range, the
-`clueRatio`, the `disabledRatio` (share of the letters not in the word taken off the
-keyboard: 0.5 at level 1, minus 0.1 per level, 0 from level 6; a test keeps it
-non-increasing and ending at 0), `maxWrong` (10 until level 7, then 8, then 6),
-`tokenReward` (see Tokens above) and `sellsLetters` (only level 8). `levelByNumber` reads a row by a round's `level`.
+### 20 levels (owner's call, 2026-10-22)
+
+**Why:** the owner wanted the words that are really hard to guess to wait for high levels, with
+**more help as the words get harder**. So there are two tiers:
+- **Levels 1–8: words most players can guess.** Everyday words, the measured difficulty capped low,
+  random clue letters, wrong keys taken off the keyboard.
+- **Levels 9–20: harder and harder words, with more help.** Each level deals a band of measured
+  difficulty that climbs (8–11 misses on level 9 up to 19–25 on level 20; rare words from level 17).
+  The help is the free **subject** (owner's call: from level 9), **letters to buy** (from level 8),
+  wrong keys still taken off the keyboard up to level 16, and the strongest help, **the rarest
+  letters as clues**: 1 of the clue letters on levels 11–12, 2 from level 13. The V of "virulent"
+  is what players can't find, so it's what gets revealed.
+
+Each `LEVELS` row sets the word-length range, `concreteOnly` (levels 1–4 deal only things you
+can picture), `maxRarity` (20 on levels 1–2, 35 from level 3, 50 from level 17; see
+[word-database.md](word-database.md), How hard a word is), the band `minDifficulty`–`maxDifficulty`
+(measured misses: 0–4 on level 1 up to 0–8 on level 8, then the climbing bands above), the
+`clueRatio` (a round uses `clueRatioFor(level, word)`: a word measured at `HARD_WORD_MISSES` (5) or
+more adds `HARD_WORD_CLUE_BONUS` (0.2) from config.ts, so it gets about one more clue letter; levels
+9–20 use 0, so they get the fewest clues plus that bonus), `rareClues` (how many clue letters are the word's rarest,
+in its language's `LETTER_FREQUENCY` from config.ts; the rest stay random), `showsSubject`, the `disabledRatio` (share of the letters not in the word taken off the
+keyboard: 0.5 at level 1 fading slowly to 0.15 on levels 13–15 and 0.05 on 16, a full keyboard
+from 17; the biggest single help for a regular player, see below; a test keeps it
+non-increasing and ending at 0), `maxWrong` (10 on every level: levels 7–8 used to allow 8 and 6,
+and that made them lose-more-than-win for most players, measured in
+[word-database.md](word-database.md); the rules allow fewer on the hardest levels, but measure first),
+`tokenReward` (1 to 5, see Tokens above) and `sellsLetters` (from level 8). `levelByNumber` reads a row by a round's `level`.
+A test keeps the table from ever taking help away or dealing easier words as levels rise.
+
+**The owner's target (2026-10-22): a regular person wins about 75% of rounds on levels 1–15.**
+[levels-fun.test.ts](../src/game/__tests__/levels-fun.test.ts) plays 300 real rounds of each level
+with the stand-in for a regular person: a simulated player who recognises no words, tries the most
+frequent letters, and never uses a hint, the subject or the description. It fails if that player
+wins under **75% on levels 1–15** or under **50% on 16–20**, or if a level has under 250 words.
+Today: 96 · 90 · 90 · 92 · 89 · 96 · 90 · 95 · 97 · 91 · 94 · 91 · 89 · 83 · 79% on levels 1–15,
+then 66 · 67 · 56 · 60 · 67% on 16–20 (with long words showing 4 clues, edge first). This player
+can't recognise a word, so it under-counts what the edge clues do for a real person.
+
+Why this player and not a smarter one: a word-matching model that knows 10,000 words said levels
+5–8 were 99% wins while the owner kept losing there ("reasonable" on level 6: 10 letters, 2 clues,
+a full keyboard). The letter-guesser said 57–70%, which matched. What fixed it: **taking wrong keys
+off the keyboard for longer** (it used to stop at level 6). That one column took levels 3–15 from
+57–82% to 77–96%. Revealing the rarest letters is the other strong help: with random clues, this
+player fell to 10–20% on levels 13–20. It's so strong that from level 9 together with the keyboard
+it made levels a 100% walk, which is why it starts at level 11 and the second rare letter waits for
+level 13. Tune the table against this test, not by feel, and once real players play, check it against
+the real win rates the server records for every round.
 
 **Every number in `LEVELS`, `WORDS_PER_LEVEL`, `LOSSES_TO_DROP`, `LEVEL_GRACE_ROUNDS` and
 `STARTING_TOKENS` (3) is a PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
 starting-token questions in CLAUDE.md. Change them only in those two files,
 and update this doc when you do.
 
-A round snapshots its `level`, `maxWrong` and disabled letters when it starts, so a level-up never
-changes a round in progress.
+A round snapshots its `level`, `maxWrong`, clue and disabled letters and its `subject` (only on a
+level that shows it) when it starts, so a level-up never changes a round in progress.
+
+**Not built yet (screens, waiting for the other Play-screen work to land):** showing `round.subject`
+(the label is `subjects.<key>` in en.json, one per key in `SUBJECTS`, scripts/words-rules.js), 20
+level colours (theme `levelColors` has 8 and wraps), and checking the level path reads well with 20
+stops (it scrolls, so it works).
 
 ## Word picking
 
 `nextWord(state)` → `pickWord(level, language, seenWordIds)` in [words.ts](../src/game/words.ts).
 **Owner's rules: the order is random, and a word never comes back before the player has gone
 through every word available to them.**
-- A level deals from its pool, `levelPool(level, language)`: the words in its length range (or the
-  closest lengths if none fit), cached per range.
+- A level deals from its pool, `levelPool(level, language)`: the words in its length range that are
+  of the right kind (only things on `concreteOnly` levels), common enough (`rarity <= maxRarity`)
+  and not too hard to guess (`difficulty <= maxDifficulty`), cached per level. If none fit, the
+  closest lengths first, then the right kind, then the most common, then the easiest words among
+  those: length is the main difficulty, the rest only narrow it. Without them, 20,000 dictionary
+  words would deal "badly" or "ecru" on level 1 and "magnesium" on level 7.
 - `pickWord` picks at random among the pool words not in `seenWordIds`. Random picks from what's
   left = a freshly shuffled deck, so every player and every cycle gets a different order.
 - When the whole pool has been seen, the level **starts over**: `pickWord` deals a seen word (never

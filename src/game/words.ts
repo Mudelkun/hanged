@@ -16,6 +16,14 @@ export interface WordEntry {
   sense: string;
   /** 2–4 one-word hints, free to show (checked by scripts/check-words.js). */
   hints: string[];
+  /** How common the word is: 10 (everyone knows it) to 50 (a medium dictionary). Levels cap it (Level.maxRarity). */
+  rarity: number;
+  /** A thing you can picture (an animal, food, an object, a person…). Easy levels deal only these (Level.concreteOnly). */
+  concrete: boolean;
+  /** Misses a typical player makes on it, measured at build time (scripts/difficulty.js). Levels cap it (Level.maxDifficulty). */
+  difficulty: number;
+  /** Its subject key ("animal", "material", "describing"…), shown free on hard levels (Level.showsSubject). */
+  subject: string;
 }
 
 export const WORDS: readonly WordEntry[] = rawWords as WordEntry[];
@@ -26,19 +34,30 @@ export const wordById = (id: string): WordEntry | undefined => BY_ID.get(id);
 
 const POOLS = new Map<string, readonly WordEntry[]>();
 
+/** The entries `distance` puts closest to 0 (all of them when several tie). */
+function closest(words: readonly WordEntry[], distance: (w: WordEntry) => number): WordEntry[] {
+  let best = Infinity;
+  for (const w of words) best = Math.min(best, distance(w));
+  return words.filter((w) => distance(w) === best);
+}
+
 /**
- * The words a level deals: those in its length range, or the closest lengths
- * if none fit. Cached for the bundled database.
+ * The words a level deals: those in its length range, of the kind it deals
+ * (only things on easy levels), common enough, and in its difficulty band
+ * (hard levels deal only hard words). When none fit, the closest lengths, then
+ * the right kind, then the most common, then the closest difficulty. Cached
+ * for the bundled database.
  */
 export function levelPool(level: Level, language: string, words: readonly WordEntry[] = WORDS): readonly WordEntry[] {
-  const key = `${language}:${level.minLength}-${level.maxLength}`;
+  const key = `${language}:${level.minLength}-${level.maxLength}:${level.concreteOnly}:${level.maxRarity}:${level.minDifficulty}-${level.maxDifficulty}`;
   const cached = words === WORDS && POOLS.get(key);
   if (cached) return cached;
   const inLanguage = words.filter((w) => w.language === language);
   if (inLanguage.length === 0) throw new Error(`No words for language "${language}"`);
-  const gap = (w: WordEntry) => Math.max(0, level.minLength - w.word.length, w.word.length - level.maxLength);
-  const best = Math.min(...inLanguage.map(gap));
-  const pool = inLanguage.filter((w) => gap(w) === best);
+  const byLength = closest(inLanguage, (w) => Math.max(0, level.minLength - w.word.length, w.word.length - level.maxLength));
+  const byKind = closest(byLength, (w) => (level.concreteOnly && !w.concrete ? 1 : 0));
+  const byRarity = closest(byKind, (w) => Math.max(0, w.rarity - level.maxRarity));
+  const pool = closest(byRarity, (w) => Math.max(0, level.minDifficulty - w.difficulty, w.difficulty - level.maxDifficulty));
   if (words === WORDS) POOLS.set(key, pool);
   return pool;
 }
