@@ -40,6 +40,7 @@ export interface Frame {
   expr: Expression;
   tx: number;
   ty: number;
+  rot: number;
   a: Required<Angles>;
 }
 
@@ -103,3 +104,11 @@ export const avatarRing = (c: Character) => HangedRig.avatarRing(c);
 
 /** The whole character in its persona's signature pose (Characters page). */
 export const signatureXml = (c: Character) => bodyXml(c, HangedRig.signature(c));
+
+/** Remount SVG only when its structure changes, avoiding stale native SVG attributes on iOS. */
+export function structureKey(xml: string) {
+  const shape = xml.replace(/="[^"]*"/g, '');
+  let h = 5381;
+  for (let i = 0; i < shape.length; i++) h = ((h << 5) + h + shape.charCodeAt(i)) | 0;
+  return h;
+}

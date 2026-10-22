@@ -3,8 +3,8 @@
  * Game rules explain CLAUDE.md's rules in player words, with the numbers read
  * from the game's config so they never drift from the real rules. Credits are
  * required by the word lists' licences (data/CREDITS.md). Privacy policy,
- * terms of use and support are still to be written (owner's call): they show
- * "Coming soon".
+ * terms of use and support are still to be written (owner's call). Terms and
+ * privacy share onboarding's explicit draft placeholder; support says "Coming soon".
  */
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -16,6 +16,7 @@ import { colors, fonts } from '../theme';
 import { profileIconXml } from './icons';
 import { BoardNote } from './Leaderboard';
 import { Raised } from './Raised';
+import { LegalDocument } from './LegalDocument';
 
 export const INFO_PAGES = {
   rules: { title: 'profile.rules', icon: profileIconXml.rules, color: '#5fd3a5' },
@@ -81,6 +82,9 @@ const text = (key: string, params?: Record<string, number>) => t(key as Translat
 
 export function InfoContent({ page }: { page: InfoPage }) {
   switch (page) {
+    case 'terms':
+    case 'privacy':
+      return <LegalDocument page={page} />;
     case 'rules':
       return RULES.map(({ key, color, params }) => (
         <InfoCard key={key} color={color} title={text(`rules.${key}.title`)} body={text(`rules.${key}.body`, params?.())} />

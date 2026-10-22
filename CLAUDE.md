@@ -42,6 +42,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The Leaderboard screen, the ranking rules, and how the bottom tabs work | [Context/leaderboard.md](Context/leaderboard.md) |
 | The Characters page: character prices (and why), buying and picking, ownership in the save, every place the character shows | [Context/characters-shop.md](Context/characters-shop.md) |
 | The Profile page: player names (the filter, random names), the info and legal pages, deleting the account | [Context/profile.md](Context/profile.md) |
+| Onboarding: buddy selection, name and consent, lift-off, existing saves and the first-word welcome | [Context/onboarding.md](Context/onboarding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
@@ -161,7 +162,7 @@ This is the player's own page. It holds personal customization, app settings, an
 - **How the player gets there:** Profile is **not** a bottom tab. The player taps their **avatar button** at the top-left of the Play, Leaderboard and Characters screens, and Profile opens as a pushed screen with a back button.
 - **Navigation rule:** the bottom tab bar has **at most 4 items**: Play · Versus · Leaderboard · Characters. Any new section needs a different entry point, such as a header button or a link inside an existing screen. Never add a fifth tab.
 
-- **Player name**: editable, and the only thing the player edits here. It's public, because it shows on the leaderboard and in online matches, so it's **filtered** (offensive words, names that pose as the game) on the device and again on the server. At most **15 characters**, for long real names; the Play header shrinks a long name to fit. A new player gets a **random friendly name** ("SunnyOtter"); onboarding will ask for a name later (owner's calls, 2026-10-22).
+- **Player name**: editable, and the only thing the player edits here. It's public, because it shows on the leaderboard and in online matches, so it's **filtered** (offensive words, names that pose as the game) on the device and again on the server. At most **15 characters**, for long real names; the Play header shrinks a long name to fit. Onboarding offers a **random friendly name** ("SunnyOtter"), which the player can keep or edit (owner's calls, 2026-10-22; [Context/onboarding.md](Context/onboarding.md)).
 - **Profile picture: not for now** (owner's call, 2026-10-22). No uploads, to keep out user-uploaded content and the privacy work it brings: the avatar is the face of the player's selected character, everywhere, and "Change character" replaces "Change photo". Kept for later: the player can upload one from the photo library or take one with the camera. Ask for that permission only when the player taps "Change photo". Crop the picture to a circle.
   - Until a picture is uploaded, the avatar is the face of the player's selected character.
   - The profile picture (or that fallback) is the avatar used on the leaderboard and in online matches.

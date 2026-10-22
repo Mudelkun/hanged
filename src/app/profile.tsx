@@ -56,7 +56,7 @@ export default function ProfileScreen() {
     if (done) {
       sound.play('delete-complete');
       setDeleting(false);
-      router.dismissTo('/');
+      // Resetting the save makes the root route guard return to onboarding.
     }
     return done;
   };

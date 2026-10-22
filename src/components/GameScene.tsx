@@ -19,7 +19,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Svg, { Circle, Defs, G, LinearGradient, Mask, Rect, Stop, SvgXml, Text as SvgText } from 'react-native-svg';
 
-import { BalloonAnim, Character, Frame, HangedRig } from '../characters/rig';
+import { BalloonAnim, Character, Frame, HangedRig, structureKey } from '../characters/rig';
 import { useSoundScope } from '../audio/AudioProvider';
 import { balloonSounds } from '../audio/scenes';
 import { colors } from '../theme';
@@ -65,13 +65,6 @@ function wonFrame(stage: number, gone: number, t: number): Frame {
 // kept its transform and was drawn far from the bunch (the browser was fine). So the drawing is
 // remounted whenever its structure changes (tags and attribute names, values aside); otherwise
 // React only updates values in place, which every platform gets right.
-function structureKey(xml: string) {
-  const shape = xml.replace(/="[^"]*"/g, '');
-  let h = 5381;
-  for (let i = 0; i < shape.length; i++) h = ((h << 5) + h + shape.charCodeAt(i)) | 0;
-  return h;
-}
-
 // One frame of the scene: the step at p (0..1), plus the loops at time t.
 function sceneFrame(c: Character, mode: SceneMode, s: Step, p: number, t: number) {
   const f = mode === 'won' ? wonFrame(s.to, s.goneTo, t) : BalloonAnim.frame(s.from, s.to, p, t, true, [s.goneFrom, s.goneTo]);
@@ -85,11 +78,18 @@ function sceneFrame(c: Character, mode: SceneMode, s: Step, p: number, t: number
 const restFrame = (c: Character, mode: SceneMode, stage: number, gone: number) =>
   sceneFrame(c, mode, { from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 }, 1, 0);
 
-function AnimatedCharacter({ character, stage, gone, mode }: { character: Character; stage: number; gone: number; mode: SceneMode }) {
+function AnimatedCharacter({ character, stage, gone, mode, entering }: { character: Character; stage: number; gone: number; mode: SceneMode; entering?: boolean }) {
   const audio = useSoundScope();
   const step = useRef<Step>({ from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 });
   const [view, setView] = useState(() => restFrame(character, mode, stage, gone));
   const focused = useIsFocused();
+  const [arrival] = useState(() => new Animated.Value(entering ? -100 : 0));
+  useEffect(() => {
+    if (!entering) return;
+    const animation = Animated.spring(arrival, { toValue: 0, friction: 8, tension: 48, useNativeDriver: true });
+    animation.start();
+    return () => animation.stop();
+  }, [arrival, entering]);
   // A character picked on the Characters tab shows at once, at rest, until the loop draws its next frame.
   const drawn = view.character === character ? view : restFrame(character, mode, stage, gone);
 
@@ -125,9 +125,9 @@ function AnimatedCharacter({ character, stage, gone, mode }: { character: Charac
   };
 
   return (
-    <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
+    <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ translateY: arrival }] }]} onLayout={onLayout}>
       <SvgXml key={drawn.key} xml={drawn.xml} width="100%" height="100%" viewBox={VIEWBOX} preserveAspectRatio={`xMidYMax ${fit}`} />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -188,6 +188,7 @@ function Sky({ sad }: { sad: boolean }) {
 }
 
 interface Props {
+  entering?: boolean;
   character: Character;
   stage: number;
   /** Balloons gone out of 10 (balloonsGone): one pops per miss. */
@@ -197,12 +198,12 @@ interface Props {
   accessibilityLabel?: string;
 }
 
-export function GameScene({ character, stage, gone, mode, style, accessibilityLabel }: Props) {
+export function GameScene({ character, stage, gone, mode, style, accessibilityLabel, entering }: Props) {
   return (
     <Raised shadowColor={colors.shadow} radius={28} outerStyle={style} style={styles.scene}>
       <View style={StyleSheet.absoluteFill} accessible accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
         <Sky sad={mode === 'lost'} />
-        <AnimatedCharacter character={character} stage={stage} gone={gone} mode={mode} />
+        <AnimatedCharacter character={character} stage={stage} gone={gone} mode={mode} entering={entering} />
       </View>
     </Raised>
   );

@@ -9,6 +9,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, 
 import { AppState } from 'react-native';
 
 import { randomName } from '../game/names';
+import { needsOnboarding } from '../game/onboarding';
 import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
 import { createSync } from '../net/sync';
@@ -29,6 +30,9 @@ interface GameContextValue {
    * device. Resolves false (and changes nothing) when the server can't be reached.
    */
   deleteAccount: () => Promise<boolean>;
+  completeOnboarding: (name: string, characterId: string) => void;
+  welcomePending: boolean;
+  dismissWelcome: () => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -38,6 +42,12 @@ const newRoundId = () => `${Date.now().toString(36)}-${Math.random().toString(36
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialState);
   const [ready, setReady] = useState(false);
+  const [welcomePending, setWelcomePending] = useState(false);
+  const dismissWelcome = useCallback(() => setWelcomePending(false), []);
+  const completeOnboarding = useCallback((name: string, characterId: string) => {
+    setWelcomePending(!state.onboardingCompleted);
+    dispatch({ type: 'completeOnboarding', name, characterId, accepted: true, at: Date.now() });
+  }, [state.onboardingCompleted]);
 
   // Load once. A missing or unreadable save starts a fresh player.
   useEffect(() => {
@@ -59,20 +69,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // The sync reads the latest state when it runs, never the one it was scheduled with.
   const [sync] = useState(() => createSync(dispatch));
-  useEffect(() => sync.update(ready ? state : null), [sync, ready, state]);
+  const syncReady = ready && !needsOnboarding(state);
+  useEffect(() => sync.update(syncReady ? state : null), [sync, syncReady, state]);
   const pending = state.reports.length;
   useEffect(() => {
-    if (!ready) return;
+    if (!syncReady) return;
     sync.run();
     // Coming back, or leaving: iOS gives a few seconds in the background, enough for one request.
     const sub = AppState.addEventListener('change', (s) => s !== 'inactive' && sync.run());
     return () => sub.remove();
-  }, [ready, sync]);
+  }, [syncReady, sync]);
   useEffect(() => {
-    if (!ready || !pending) return;
+    if (!syncReady || !pending) return;
     const id = setTimeout(sync.run, SYNC_AFTER_ROUND_MS);
     return () => clearTimeout(id);
-  }, [ready, pending, sync]);
+  }, [syncReady, pending, sync]);
 
   const startNextRound = useCallback(() => {
     dispatch({ type: 'newRound', word: nextWord(state), roundId: newRoundId() });
@@ -91,16 +102,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const deleteAccount = useCallback(async () => {
     const deleted = await sync.deleteAccount();
     if (deleted) {
+      setWelcomePending(false);
       // Dealt in the same batch, so there's never a state without a round (the root Gate would unmount the app)
       dispatch({ type: 'reset' });
+      dispatch({ type: 'rename', name: randomName() });
       dispatch({ type: 'newRound', word: nextWord(initialState()), roundId: newRoundId() });
     }
     return deleted;
   }, [sync]);
 
   const value = useMemo(
-    () => ({ state, ready, dispatch, startNextRound, syncNow: sync.run, deleteAccount }),
-    [state, ready, startNextRound, sync, deleteAccount],
+    () => ({ state, ready, dispatch, startNextRound, syncNow: sync.run, deleteAccount, completeOnboarding, welcomePending, dismissWelcome }),
+    [state, ready, startNextRound, sync, deleteAccount, completeOnboarding, welcomePending, dismissWelcome],
   );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

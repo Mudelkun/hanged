@@ -188,6 +188,12 @@ through every word available to them.**
 
 ## Saving (on the device; the server gets a copy)
 
+Onboarding and consent are saved in the same blob: `onboardingCompleted` and
+`legalAcceptance` (version and epoch acceptance time). Old saves without the flag keep their identity and
+progress, asking only for consent; explicit false stays a new player. `completeOnboarding` validates the
+name, free starter and acceptance in one action without changing the round or economy. `reset` clears
+both fields. See [onboarding.md](onboarding.md).
+
 `soundEnabled` and `musicEnabled` save the independent audio preferences. Old saves get `true` for both; existing false values remain false. `audioSetting` changes only the selected boolean. Audio playback stays outside the reducer, and settings are not included in leaderboard snapshots. See [audio-design.md](audio-design.md).
 
 Everything (score, tokens, settings, the round in progress) is one JSON blob

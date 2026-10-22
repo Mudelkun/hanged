@@ -13,8 +13,8 @@ import { Character, faceXml } from '../characters/rig';
 import { feedback } from '../feedback';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
-import { checkName, NAME_MAX, NAME_MIN, NameProblem, randomName } from '../game/names';
-import { t, TranslationKey } from '../i18n';
+import { checkName, randomName } from '../game/names';
+import { t } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
 import { speciesOf } from './CharacterShop';
 import { Avatar } from './GameHeader';
@@ -22,16 +22,10 @@ import { checkXml, chevXml, closeXml, coinXml, diceXml, Icon, penXml, starXml, t
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { BigButton } from './RoundParts';
+import { nameHelp, PlayerNameInput } from './PlayerNameInput';
 
 // ---- the name card ----
 
-const PROBLEM_TEXT: Record<NameProblem, TranslationKey> = {
-  short: 'profile.name.short',
-  long: 'profile.name.long',
-  characters: 'profile.name.characters',
-  blocked: 'profile.name.blocked',
-};
-const LIMITS = { min: NAME_MIN, max: NAME_MAX };
 const SAVED_MS = 2400;
 
 interface NameCardProps {
@@ -112,21 +106,13 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
         <View style={styles.nameSide}>
           <Text style={styles.label}>{t('profile.nameLabel')}</Text>
           {editing ? (
-            <TextInput
+            <PlayerNameInput
               ref={input}
               value={draft}
               onChangeText={setDraft}
               onSubmitEditing={save}
               autoFocus
               selectTextOnFocus
-              maxLength={NAME_MAX}
-              autoCapitalize="words"
-              autoCorrect={false}
-              autoComplete="off"
-              returnKeyType="done"
-              placeholder={t('profile.name.placeholder')}
-              placeholderTextColor={colors.muted}
-              accessibilityLabel={t('profile.name.placeholder')}
               style={[styles.input, problem && styles.inputBad]}
             />
           ) : (
@@ -145,7 +131,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
           )}
           {editing ? (
             <Text style={[styles.note, problem && styles.noteBad]} accessibilityLiveRegion="polite">
-              {problem ? t(PROBLEM_TEXT[problem], LIMITS) : t('profile.name.help', LIMITS)}
+              {nameHelp(problem)}
             </Text>
           ) : saved ? (
             <Text style={[styles.note, styles.noteGood]} numberOfLines={1} accessibilityLiveRegion="polite">

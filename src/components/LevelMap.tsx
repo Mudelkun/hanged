@@ -23,6 +23,7 @@ import { Avatar } from './GameHeader';
 import { closeXml, crownXml, Icon, leafXml, starXml } from './icons';
 import { LevelStop, MARKER, MARKER_BOX, MARKER_LIFT, NODE, PathFog, pathLayout, PathWorld } from './LevelPath';
 import { Raised } from './Raised';
+import { WoodenSign } from './WoodenSign';
 
 const SHOW_MS = 260;
 const HIDE_MS = 200;
@@ -148,11 +149,11 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
         <View style={styles.headSide} />
         <View style={styles.signRow}>
           <Icon xml={LEAF} size={24} height={15} />
-          <Raised depth={4} shadowColor={worldColors.signD} radius={16} style={styles.sign}>
+          <WoodenSign style={styles.sign}>
             <Text style={styles.title} accessibilityRole="header">
               {t('levelMap.title')}
             </Text>
-          </Raised>
+          </WoodenSign>
           <View style={styles.flip}>
             <Icon xml={LEAF} size={24} height={15} />
           </View>

@@ -10,11 +10,11 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
 - **No profile picture for now.** No uploads means no user photos to moderate and no camera/library permission
   or privacy work. The avatar is the character's face everywhere; the mockup's "Change photo" is
   **"Change character"** (opens the Characters tab), and the camera badge on the face is a little cat.
-- **The name is the only thing the player edits here.** It's filtered. A new player gets a random name;
-  onboarding will ask for one later (not built).
+- **The name is the only thing the player edits here.** It's filtered. Onboarding offers a random name
+  and the same `PlayerNameInput` and validation messages; see [onboarding.md](onboarding.md).
 - Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md).
-- **Privacy policy, terms of use, contact & support**: the rows and pages exist, but show "Coming soon"
-  until the texts are written. Apple still needs a real privacy policy URL before release.
+- **Privacy policy and terms of use** share onboarding's explicit draft placeholder (`LegalDocument`).
+  **Contact & support** still says "Coming soon". The actual legal texts and privacy policy URL remain to be supplied before release.
 
 ## The page (mockup: Profile)
 
@@ -97,7 +97,8 @@ Then `useGame().deleteAccount()`:
 2. **Offline it changes nothing**: the sheet says deleting needs the internet and stays open. The save is
    only wiped once the server has deleted the player, so nobody ends up with a wiped phone and a live account.
 3. The reducer's `reset` (back to `initialState()`) and a new round **in the same batch**: a state without a
-   round makes the root `Gate` unmount the whole app. Then a random name, and `router.dismissTo('/')`: Play.
+   round makes the root `Gate` unmount the whole app. A random name is assigned in the same batch.
+   The root route guard returns to onboarding, with identity setup and consent cleared.
 
 The server deletes the `players` row, and `player_weeks` goes with it (`ON DELETE CASCADE`). `word_days`
 stays: counts per word and day, nothing points back to the player. The leaderboard's 10 s cache can show
@@ -114,4 +115,5 @@ redirects to Profile.
 - **Credits**: [data/CREDITS.md](../data/CREDITS.md) in player words: Open English WordNet (CC BY 4.0, with
   the list of changes), SCOWL (its full permission notice, which its licence requires), Princeton WordNet. Links
   open in the browser. **If the word sources or CREDITS.md change, change `credits.*` in `en.json` too.**
-- **Privacy, terms, support**: "Coming soon" (`BoardNote`).
+- **Privacy and terms**: the bundled `LegalDocument` draft, also shown in onboarding's tabbed sheet.
+- **Support**: "Coming soon" (`BoardNote`).

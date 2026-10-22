@@ -19,6 +19,7 @@ import {
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, wrongCount } from './engine';
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { checkName, keptName } from './names';
+import { LEGAL_VERSION, LegalAcceptance, STARTER_CHARACTERS } from './onboarding';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
 
 export interface GameState {
@@ -28,6 +29,8 @@ export interface GameState {
    * a moment: the provider gives a new player a random name (names.randomName).
    */
   playerName: string | null;
+  onboardingCompleted: boolean;
+  legalAcceptance: LegalAcceptance | null;
   /** The character the player plays with. Always one they own (ownsCharacter). */
   characterId: string;
   /** Characters bought with tokens. Free ones (price 0) are owned without being listed. */
@@ -62,6 +65,8 @@ export const REPORTS_KEPT = 2000;
 export const initialState = (): GameState => ({
   version: 1,
   playerName: null,
+  onboardingCompleted: false,
+  legalAcceptance: null,
   characterId: DEFAULT_CHARACTER,
   unlockedCharacterIds: [],
   language: DEFAULT_LANGUAGE,
@@ -80,6 +85,7 @@ export const initialState = (): GameState => ({
 });
 
 export type GameAction =
+  | { type: 'completeOnboarding'; name: string; characterId: string; accepted: boolean; at: number }
   | { type: 'audioSetting'; setting: 'soundEnabled' | 'musicEnabled'; enabled: boolean }
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
@@ -175,6 +181,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return state[action.setting] === action.enabled ? state : { ...state, [action.setting]: action.enabled };
     case 'hydrate': {
       let s = action.state;
+      // Existing players keep their identity and round; they only need the new consent step.
+      if (typeof s.onboardingCompleted !== 'boolean') s = { ...s, onboardingCompleted: true };
       // A save from before levels could drop: its level came from the score.
       if (!s.levelProgress) s = { ...s, levelProgress: levelFromScore(s.wordsGuessed ?? 0) };
       // A save from before the level path: the best it knows is where the player stands.
@@ -185,6 +193,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         s = { ...rest, seenWordIds: [...recentWordIds].reverse() };
       }
       s = withDefaults(s);
+      if (s.legalAcceptance && (typeof s.legalAcceptance.version !== 'string' ||
+          !Number.isFinite(s.legalAcceptance.acceptedAt) || s.legalAcceptance.acceptedAt <= 0)) {
+        s = { ...s, legalAcceptance: null };
+      }
       if (typeof s.soundEnabled !== 'boolean' || typeof s.musicEnabled !== 'boolean')
         s = { ...s, soundEnabled: typeof s.soundEnabled === 'boolean' ? s.soundEnabled : true,
           musicEnabled: typeof s.musicEnabled === 'boolean' ? s.musicEnabled : true };
@@ -285,6 +297,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'reportsSent': {
       const reports = state.reports.filter((r) => r.seq > action.upTo);
       return reports.length === state.reports.length ? state : { ...state, reports };
+    }
+
+    case 'completeOnboarding': {
+      const check = checkName(action.name);
+      const allowedCharacter = state.onboardingCompleted
+        ? action.characterId === state.characterId
+        : STARTER_CHARACTERS.some(id => id === action.characterId);
+      if (!action.accepted || !check.ok || !allowedCharacter || !ownsCharacter(state, action.characterId) ||
+          !Number.isFinite(action.at) || action.at <= 0) return state;
+      return {
+        ...state,
+        playerName: state.onboardingCompleted ? state.playerName : check.name,
+        characterId: action.characterId,
+        onboardingCompleted: true,
+        legalAcceptance: { version: LEGAL_VERSION, acceptedAt: action.at },
+      };
     }
 
     case 'rename': {

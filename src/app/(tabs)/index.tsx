@@ -26,6 +26,7 @@ import { BigButton, DescriptionCard, LetterShopPill, MissesBar, TileLook, WordTi
 import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
 import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
+import { WelcomeToast } from '../../components/WelcomeToast';
 import { LETTER_BUY_COST } from '../../game/config';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
 import { lettersForSale } from '../../game/progress';
@@ -39,7 +40,7 @@ const RESULT_DELAY = { lost: 2600, won: 700 };
 
 export default function PlayScreen() {
   const audio = useSoundScope();
-  const { state, dispatch, startNextRound } = useGame();
+  const { state, dispatch, startNextRound, welcomePending, dismissWelcome } = useGame();
   const round = state.round!;
   const status = roundStatus(round);
   const insets = useSafeAreaInsets();
@@ -150,6 +151,7 @@ export default function PlayScreen() {
               stage={sceneStage(round)}
               gone={balloonsGone(round)}
               mode="play"
+              entering={welcomePending}
               style={[styles.playScene, { minHeight: compact ? 96 : 130 }]}
               accessibilityLabel={t('play.a11y.scene', { name: character.name, left: balloonsLeft(round) })}
             />
@@ -176,6 +178,7 @@ export default function PlayScreen() {
             />
           </>
         )}
+        {welcomePending && <WelcomeToast name={playerName} character={character} onDone={dismissWelcome} />}
         {streakShown && streakGone !== round.id && (
           <StreakTakeover
             key={round.id}

@@ -9,6 +9,10 @@ these components.
 
 ## Two layouts on one screen
 
+After new-player onboarding, the selected character descends into the scene and `WelcomeToast` shows
+the Profile welcome wording for 2.4 seconds. It overlays the body without moving keys and does not replay
+after a restart. This uses the normal first round and economy. See [onboarding.md](onboarding.md).
+
 - **Playing**: header · scene · miss pips · word tiles · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("DROPPED !!" red /
   "HANGING !!" green). The stamp sizes its font to fit the frame from Fredoka Bold's real letter

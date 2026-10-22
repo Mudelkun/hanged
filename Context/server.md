@@ -56,12 +56,16 @@ reports keep their original values. The wire field and database column stay comp
 `at` comes in on the `guess` action, so the reducer stays pure.
 
 [GameContext](../src/state/GameContext.tsx) runs a sync:
-- once the save is loaded. **Never before**: the first sync sets the player's starting score on the
+- once the save is loaded and current onboarding consent is accepted. **Never before**: the first sync sets the player's starting score on the
   server, and a fresh state would set it to 0.
 - when the app comes back to the foreground or goes to the background. iOS leaves a few seconds,
   enough for one request.
 - 20 s after the last finished round (`SYNC_AFTER_ROUND_MS`), so a run of quick words sends one request.
 - when the Leaderboard shows (`syncNow`), so the player's own row is up to date.
+
+While onboarding or renewed consent is required, the provider passes `null` to sync and leaves its
+automatic triggers inactive. The new name and buddy are therefore settled before account creation.
+Consent version/time remain local; the server snapshot is unchanged. See [onboarding.md](onboarding.md).
 
 `createSync` runs one sync at a time: a second call joins the one in flight. It sends the snapshot
 (`name`, `characterId`, `language`, `wordsGuessed`, `level`, `tokens`) with up to 200 reports, and loops

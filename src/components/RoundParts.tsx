@@ -4,7 +4,7 @@
  * buttons: PayButton.tsx). Sizes and colours follow
  * design/ui-mockup.html (.misses, .tiles, .desc).
  */
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
@@ -43,7 +43,7 @@ const TILE_LOOK = {
   miss: { bg: colors.coralL, border: '#ffcfc5', shadow: '#f6b8ab', text: colors.coralD },
 };
 
-function Tile({ letter, look, w, h }: { letter: string; look: TileLook; w: number; h: number }) {
+export function Tile({ letter, look, w, h, sparkle = true }: { letter: string; look: TileLook; w: number; h: number; sparkle?: boolean }) {
   const [pop] = useState(() => new Animated.Value(1));
   // Pop when the tile turns over during play, not when it first appears
   const prevLook = useRef(look);
@@ -74,7 +74,7 @@ function Tile({ letter, look, w, h }: { letter: string; look: TileLook; w: numbe
       <Raised shadowColor={c.shadow} radius={radius} style={[styles.tile, { width: w, height: h, backgroundColor: c.bg, borderColor: c.border }]}>
         <Text style={[styles.tileText, { fontSize: Math.round(w * 0.6), color: c.text }]}>{letter.toUpperCase()}</Text>
       </Raised>
-      {look === 'clue' && (
+      {look === 'clue' && sparkle && (
         <View style={[styles.spark, { top: -spark * 0.4, right: -spark * 0.4 }]} pointerEvents="none">
           <Icon xml={sparkXml()} size={spark} />
         </View>
@@ -165,19 +165,24 @@ export function DescriptionCard({ text, compact }: DescriptionProps) {
 
 // ---- big button ----
 
-export function BigButton({ label, onPress, ghost, cue, disabled = false }: { label: string; onPress: () => void; ghost?: boolean; cue?: Cue | false; disabled?: boolean }) {
+export function BigButton({ label, onPress, ghost, cue, disabled = false, muted, leading, trailing }: {
+  label: string; onPress: () => void; ghost?: boolean; cue?: Cue | false; disabled?: boolean;
+  muted?: boolean; leading?: ReactNode; trailing?: ReactNode;
+}) {
   return (
     <Pressable onPress={() => { sound.unlock(); if (cue !== false) sound.play(cue ?? (ghost ? 'tap' : 'primary')); onPress(); }} disabled={disabled} accessibilityRole="button" accessibilityState={{ disabled }} style={disabled && styles.btnDisabled}>
       {({ pressed }) => (
         <Raised
           depth={5}
           pressed={pressed}
-          shadowColor={ghost ? colors.shadow : colors.coralD}
+          shadowColor={muted ? '#dccdbc' : ghost ? colors.shadow : colors.coralD}
           radius={20}
           outerStyle={{ marginVertical: 8 }}
-          style={[styles.btn, ghost && styles.btnGhost]}
+          style={[styles.btn, ghost && styles.btnGhost, muted && styles.btnMuted]}
         >
-          <Text style={[styles.btnText, ghost && { color: colors.coralD }]}>{label}</Text>
+          {leading}
+          <Text style={[styles.btnText, ghost && { color: colors.coralD }, muted && { color: '#b9a595' }]}>{label}</Text>
+          {trailing}
         </Raised>
       )}
     </Pressable>
@@ -243,7 +248,8 @@ const styles = StyleSheet.create({
   descBody: { flex: 1, minWidth: 0 },
   chip: { fontFamily: fonts.display600, fontSize: 12, letterSpacing: 1, color: colors.butterT },
   descText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink, marginTop: 1 },
-  btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
+  btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 },
+  btnMuted: { backgroundColor: '#eadfd2' },
   btnDisabled: { opacity: 0.45 },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
   btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },

@@ -33,6 +33,8 @@ The playlist plays Little Detours, Sunday Window, then Updraft, with four second
 - Streak opening/fill follow the card entrance. Star and bonus cues follow actual phase changes. Level arrivals, fog/confetti/crown, and voices follow the native animation completion callback. Dismissed and hidden scenes cancel their audio.
 - Character browsing, choosing, unlocks, ribbon, confetti and character greetings use the viewed character. Browsing quickly cancels an old greeting rather than speaking on every swipe.
 - Navigation, map opening/closing, Profile editing/saving/random names, validation, deletion, links, and user-requested Leaderboard refresh success/failure use the corresponding inventory cues. Background refreshes, idle motion, disabled controls, OS keyboard typing, and the always-visible description remain quiet.
+- Onboarding reuses choose/hello for buddy selection, dice and name-invalid for name/consent feedback,
+  panel cues for the legal sheet, and primary/joy for lift-off. Idle figures are quiet; there are no new assets.
 
 Tests cover take rotation, cancellation/mute, stale loads/async replies, voice exclusion, ducking, playlist transitions, resource bounds, inventory completeness, animation landmarks, and save migration. Export bundles are checked for iOS, Android, and web. Real-device listening remains necessary to judge speaker balance and native playback latency.
 

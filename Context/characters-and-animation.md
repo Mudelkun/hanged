@@ -25,6 +25,9 @@ react-native-svg's `<SvgXml>` draws.
   must be imported first.
 - `rig.ts` holds the TypeScript types for the parts of the API the app uses. If you
   use something new from the scripts, type it there.
+- Onboarding uses the same stage-zero scene, cropped/positioned as its HTML design. Its active figures
+  update at 20 fps and pause offscreen/backgrounded; larger movements use native transforms. `structureKey`
+  lives in `rig.ts` and is shared by onboarding and `GameScene`. See [onboarding.md](onboarding.md).
 - The scripts put `class="balloon-scene"` on the root `<svg>`. React DOM rejects
   `class` on web, so `GameScene` strips it.
 
