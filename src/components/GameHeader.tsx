@@ -1,7 +1,8 @@
 /*
  * The headers. In game (Play and Round lost): the player's avatar and name
  * (never the app name), words guessed, level and token balance. On the other
- * tabs (TitleHeader): avatar, the screen's title, token balance.
+ * tabs (TitleHeader): avatar, the screen's title, token balance (`live` on a
+ * screen where tokens are spent, so the spend flies into it).
  * The avatar is the button that will open the Profile page (not built yet).
  */
 import { memo, useEffect, useRef, useState } from 'react';
@@ -64,14 +65,14 @@ const ProfileButton = ({ character }: { character: Character }) => (
   </Pressable>
 );
 
-export function TitleHeader({ title, character, tokens }: { title: string; character: Character; tokens: number }) {
+export function TitleHeader({ title, character, tokens, live }: { title: string; character: Character; tokens: number; live?: boolean }) {
   return (
     <View style={styles.head}>
       <ProfileButton character={character} />
       <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
         {title}
       </Text>
-      <StillTokenPill tokens={tokens} />
+      {live ? <TokenPill tokens={tokens} /> : <StillTokenPill tokens={tokens} />}
     </View>
   );
 }

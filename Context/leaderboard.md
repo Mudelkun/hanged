@@ -20,8 +20,8 @@ layout is the mockup's and nothing more.
 
 - Header: `TitleHeader` ([GameHeader.tsx](../src/components/GameHeader.tsx)): avatar (the future
   Profile button), the title, and `StillTokenPill`.
-  - **Only one live `TokenPill` may be mounted**, because token flights land on it. That's Play's pill,
-    and Play stays mounted behind this tab. Other screens use `StillTokenPill`.
+  - Tokens never move here, so the pill is the still one. A screen where tokens move (Play, Characters)
+    has a live `TokenPill`; flights land on the focused one ([play-screen.md](play-screen.md), TokenPill).
 - `PeriodSwitch`: This week (the default) / All time.
 - `Podium`: the top 3 under a sky. 2nd, 1st and 3rd stand on their blocks, and 1st cheers. A missing place
   stays empty.
@@ -46,6 +46,7 @@ The bottom tabs are an Expo Router `Tabs` group, [src/app/(tabs)/_layout.tsx](..
   [TabBar](../src/components/TabBar.tsx) itself, so a full-screen overlay (the level path) can still
   cover it.
 - A `TabBar` entry with an `href` navigates; an entry without one is drawn disabled ("Coming soon").
+  Play, Leaderboard and Characters navigate; Versus is still disabled.
   **Never a 5th tab** (CLAUDE.md).
 - Screens **stay mounted** when the player switches tabs, and they're **frozen while hidden**
   (`freezeOnBlur`). So Play keeps its round, its result and its animations' state, and stops

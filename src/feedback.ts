@@ -17,5 +17,7 @@ export const feedback = {
   levelDown: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
   streak: () => safe(Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)),
   streakBonus: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
+  characterUnlocked: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
+  characterPicked: () => safe(Haptics.selectionAsync()),
   refused: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
 };

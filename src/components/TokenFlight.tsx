@@ -13,6 +13,11 @@
  * Whichever comes second starts the flight. An origin with no change to
  * carry expires (e.g. a result restored after a restart); a change with no
  * origin is counted in place by the pill after a moment.
+ *
+ * Each screen that spends or earns has its own live pill (Play, Characters).
+ * Flights land on the focused screen's pill (`setTarget` on focus), and a
+ * pill that comes back into view shows a balance another pill already
+ * counted (`claim`) as is, without counting it again.
  */
 import { createContext, ReactNode, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
@@ -61,12 +66,18 @@ function createHub(setFlights: ((f: (all: FlightData[]) => FlightData[]) => void
   let origin: Origin | null = null;
   let waiter: { sign: Sign; take: (o: Origin) => void } | null = null;
   let target: View | null = null;
+  let claimed: number | null = null;
   let nextId = 0;
   return {
-    /** The counter's coin, where every flight lands. */
+    /** The focused screen's counter coin, where every flight lands. */
     setTarget: (view: View | null) => {
       target = view;
     },
+    /** A pill is showing the change to `balance`, so no other pill needs to count it. */
+    claim: (balance: number) => {
+      claimed = balance;
+    },
+    isClaimed: (balance: number) => claimed === balance,
     /** An origin says: the next balance change in this direction starts at `view`. Resolves once measured. */
     async send(view: View | null, sign: Sign) {
       const o = { sign, at: await centerOf(view), time: Date.now() };

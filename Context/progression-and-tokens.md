@@ -31,8 +31,10 @@ would then count it again.
   - `streakMeter(streak)` turns the streak into the stretch it's filling between two bonus steps (and laps
     past the last one). Only the streak takeover draws it ([play-screen.md](play-screen.md)); it reads
     `STREAK_BONUS_AT`, so changing the steps changes the meter too.
-  - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS** until character prices exist.
-- Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and, later, on characters.
+  - **The `tokenReward` values and `STREAK_BONUS_AT` are PLACEHOLDERS**, like the character prices built on them.
+- Tokens are spent only on a description (`DESCRIPTION_COST` = 2), on bought letters (below) and on characters
+  (`buyCharacter`, `CHARACTER_PRICES`: [characters-shop.md](characters-shop.md)). The character prices were set
+  from a simulation of this token pay, so **changing the pay means re-checking those prices**.
 - **Buying letters (owner's request)**: on a level with `sellsLetters` (only level 8: 10–15 letters,
   12% clues), the `buyLetters` action reveals `LETTER_BUY_COUNT` (2) hidden letters for
   `LETTER_BUY_COST` (10) tokens, **once per round**. `lettersForSale(state)` says whether the round
@@ -117,6 +119,8 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`
   sets `[]`. Same key, no bump.
+- A save from before the Characters page has no `unlockedCharacterIds`: `[]` from `initialState()`.
+  `hydrate` also keeps the picked character owned ([characters-shop.md](characters-shop.md)). Same key, no bump.
 - A save from before the seen list has `recentWordIds` (the last 40 words, newest first). `hydrate`
   turns it into `seenWordIds` (reversed) and drops it. Same key, no bump. Ids of words no longer in the
   database are pruned from `seenWordIds` on every load.

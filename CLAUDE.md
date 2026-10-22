@@ -14,7 +14,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
-**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway. Versus, Characters and Profile aren't built yet.
+**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, and the **Characters** tab (buy characters with tokens and pick one, all on the device). Versus and Profile aren't built yet.
 
 **Stack:** Expo SDK 57 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
@@ -39,17 +39,18 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
 | The server (`server/`): API, database, anonymous accounts, round reports and the sync, word statistics, deploying on Railway | [Context/server.md](Context/server.md) |
 | The Leaderboard screen, the ranking rules, and how the bottom tabs work | [Context/leaderboard.md](Context/leaderboard.md) |
+| The Characters page: character prices (and why), buying and picking, ownership in the save, every place the character shows | [Context/characters-shop.md](Context/characters-shop.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
 
 ```
-src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx
+src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx, (tabs)/characters.tsx
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
 src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard
 src/net/            the only code that talks to the server: api.ts, sync.ts
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
-src/components/     UI pieces of the Play screen
+src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
 data/words.json     the word database (generated from scripts/words-source.txt)
@@ -212,7 +213,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 
 ## Open questions (ask the owner, don't guess)
 
-- **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost?
+- **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost? (Placeholders for now: 2 free characters, then 30 to 400 tokens, set from a simulation of the token pay: [Context/characters-shop.md](Context/characters-shop.md).)
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: long words get at least 2. How long counts as long is a placeholder: 8 letters.)
 - **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? (Dropping down is decided: 3 losses in a row. The exact numbers are placeholders.)

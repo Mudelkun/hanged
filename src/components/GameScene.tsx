@@ -12,7 +12,9 @@
  *
  * The loop runs on a timer, not requestAnimationFrame: on React Native that
  * is a setTimeout(0), so a rAF loop would keep the JS thread busy non-stop.
+ * It stops while another tab is in view (a frozen screen's timers still run).
  */
+import { useIsFocused } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Svg, { Circle, Defs, G, LinearGradient, Mask, Rect, Stop, SvgXml, Text as SvgText } from 'react-native-svg';
@@ -74,13 +76,19 @@ function sceneFrame(c: Character, mode: SceneMode, s: Step, p: number, t: number
   // The design scripts tag the root <svg> with a CSS class; React DOM rejects `class` on web.
   // Lost keeps the grey native clouds of the sad sky instead of the scene's white ones.
   const xml = BalloonAnim.scene(c, f, { sky: false, clouds: mode !== 'lost', camera: true }).replace(' class="balloon-scene"', '');
-  return { xml, key: structureKey(xml) };
+  return { xml, key: structureKey(xml), character: c };
 }
+
+/** The scene at rest on a stage. */
+const restFrame = (c: Character, mode: SceneMode, stage: number, gone: number) =>
+  sceneFrame(c, mode, { from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 }, 1, 0);
 
 function AnimatedCharacter({ character, stage, gone, mode }: { character: Character; stage: number; gone: number; mode: SceneMode }) {
   const step = useRef<Step>({ from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 });
-  const [view, setView] = useState(() =>
-    sceneFrame(character, mode, { from: stage, to: stage, goneFrom: gone, goneTo: gone, start: 0 }, 1, 0));
+  const [view, setView] = useState(() => restFrame(character, mode, stage, gone));
+  const focused = useIsFocused();
+  // A character picked on the Characters tab shows at once, at rest, until the loop draws its next frame.
+  const drawn = view.character === character ? view : restFrame(character, mode, stage, gone);
 
   useEffect(() => {
     const s = step.current;
@@ -88,7 +96,9 @@ function AnimatedCharacter({ character, stage, gone, mode }: { character: Charac
       step.current = { from: s.to, to: stage, goneFrom: s.goneTo, goneTo: gone, start: performance.now() };
   }, [stage, gone]);
 
+  // A new character keeps the step: it carries on from the same stage.
   useEffect(() => {
+    if (!focused) return;
     const t0 = performance.now();
     const id = setInterval(() => {
       const now = performance.now();
@@ -98,7 +108,7 @@ function AnimatedCharacter({ character, stage, gone, mode }: { character: Charac
       setView(sceneFrame(character, mode, s, p, (now - t0) / 1000));
     }, FRAME_MS);
     return () => clearInterval(id);
-  }, [character, mode]);
+  }, [character, mode, focused]);
 
   // Fit the camera's height: crop the sides when the box is narrower than the window,
   // letterbox them (the grass runs on) when it is wider, so no balloon or head is ever cut.
@@ -110,7 +120,7 @@ function AnimatedCharacter({ character, stage, gone, mode }: { character: Charac
 
   return (
     <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
-      <SvgXml key={view.key} xml={view.xml} width="100%" height="100%" viewBox={VIEWBOX} preserveAspectRatio={`xMidYMax ${fit}`} />
+      <SvgXml key={drawn.key} xml={drawn.xml} width="100%" height="100%" viewBox={VIEWBOX} preserveAspectRatio={`xMidYMax ${fit}`} />
     </View>
   );
 }

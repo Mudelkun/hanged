@@ -87,6 +87,12 @@ Two numbers drive the scene, both from the engine ([game-engine.md](game-engine.
   you change stage 10's duration, change that delay too**.
 - **A new round remounts the scene** (`key={round.id}`), so it snaps to stage 0
   instead of tweening backwards from 10.
+- **A new character does not remount it**: the step is kept, so a character picked mid-round
+  carries on at the same stage. Until the loop draws its first frame, `AnimatedCharacter` draws it
+  at rest on the stage (`restFrame`), so the old character never flashes when Play comes back.
+- **The loop stops while another tab is in view** (`useIsFocused`). Frozen tabs (`freezeOnBlur`)
+  skip renders but their timers still run, so without this the scene was built 30 times a second
+  behind the Leaderboard and Characters pages.
 - **Won** has no keyframe in balloons.js. `wonFrame(stage, gone, t)` keeps the round's
   stage (the balloons that are left), applies the rig's `cheer` pose and `joy`
   face to the free arm and the legs, keeps the right paw on the strings and adds a
@@ -126,6 +132,6 @@ gives each character its pastel circle colour.
 
 ## Character selection
 
-`GameState.characterId` (default `mochi`) picks the character. There is no
-Characters page or price list yet: the token prices are open questions.
-`characterById` falls back to Mochi for an unknown id.
+`GameState.characterId` (default `DEFAULT_CHARACTER`, Mochi) picks the character. The player buys and
+picks characters on the Characters page: [characters-shop.md](characters-shop.md) (prices, ownership,
+where the character shows). `characterById` falls back to Mochi for an unknown id.

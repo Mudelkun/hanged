@@ -1,4 +1,7 @@
+import { CHARACTERS } from '../../characters/rig';
 import {
+  CHARACTER_PRICES,
+  DEFAULT_CHARACTER,
   DESCRIPTION_COST,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
@@ -10,7 +13,19 @@ import {
 } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
-import { gameReducer, GameState, initialState, lettersForSale, nextWord, REPORTS_KEPT, streakMeter, tokenReward } from '../progress';
+import {
+  canBuyCharacter,
+  characterPrice,
+  gameReducer,
+  GameState,
+  initialState,
+  lettersForSale,
+  nextWord,
+  ownsCharacter,
+  REPORTS_KEPT,
+  streakMeter,
+  tokenReward,
+} from '../progress';
 import { levelPool, pickWord } from '../words';
 
 const word = {
@@ -230,6 +245,69 @@ describe('buying letters', () => {
 });
 
 describe('moving up and down levels', () => {
+describe('characters', () => {
+  const prices = Object.values(CHARACTER_PRICES);
+  const paid = Object.keys(CHARACTER_PRICES).find((id) => CHARACTER_PRICES[id] > 0)!;
+  const price = characterPrice(paid)!;
+  const rich = { ...initialState(), tokens: price + 5 };
+
+  it('prices every character, cheapest first, and the default one is free', () => {
+    expect(Object.keys(CHARACTER_PRICES).sort()).toEqual(CHARACTERS.map((c) => c.id).sort());
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+    expect(characterPrice(DEFAULT_CHARACTER)).toBe(0);
+    expect(initialState().characterId).toBe(DEFAULT_CHARACTER);
+    expect(characterPrice('nobody')).toBeNull();
+  });
+
+  it('a new player owns only the free characters', () => {
+    const s = initialState();
+    for (const [id, p] of Object.entries(CHARACTER_PRICES)) expect(ownsCharacter(s, id)).toBe(p === 0);
+  });
+
+  it('buying pays the price, unlocks the character and plays with it, and never lowers the score', () => {
+    const s = gameReducer({ ...rich, wordsGuessed: 9 }, { type: 'buyCharacter', id: paid });
+    expect(s.tokens).toBe(5);
+    expect(ownsCharacter(s, paid)).toBe(true);
+    expect(s.characterId).toBe(paid);
+    expect(s.wordsGuessed).toBe(9);
+    // A character is bought once
+    expect(canBuyCharacter(s, paid)).toBe(false);
+    expect(gameReducer({ ...s, tokens: price }, { type: 'buyCharacter', id: paid }).tokens).toBe(price);
+  });
+
+  it('is refused without enough tokens, for a free character, or one not in the shop', () => {
+    const poor = { ...initialState(), tokens: price - 1 };
+    expect(gameReducer(poor, { type: 'buyCharacter', id: paid })).toBe(poor);
+    expect(gameReducer(rich, { type: 'buyCharacter', id: DEFAULT_CHARACTER })).toBe(rich);
+    expect(gameReducer(rich, { type: 'buyCharacter', id: 'nobody' })).toBe(rich);
+  });
+
+  it('selects only characters the player owns', () => {
+    const s = initialState();
+    expect(gameReducer(s, { type: 'selectCharacter', id: paid })).toBe(s);
+    const owned = gameReducer(rich, { type: 'buyCharacter', id: paid });
+    const back = gameReducer(owned, { type: 'selectCharacter', id: DEFAULT_CHARACTER });
+    expect(back.characterId).toBe(DEFAULT_CHARACTER);
+    expect(gameReducer(back, { type: 'selectCharacter', id: paid }).characterId).toBe(paid);
+    expect(gameReducer(back, { type: 'selectCharacter', id: DEFAULT_CHARACTER })).toBe(back);
+  });
+
+  it('a mid-round switch keeps the round as it is', () => {
+    const playing = startRound(rich);
+    const s = gameReducer(playing, { type: 'buyCharacter', id: paid });
+    expect(s.round).toBe(playing.round);
+    expect(gameReducer(s, { type: 'selectCharacter', id: DEFAULT_CHARACTER }).round).toBe(s.round);
+  });
+
+  it('a save from before the shop keeps its character, and one that left the shop goes back to the default', () => {
+    const { unlockedCharacterIds, ...old } = initialState();
+    const kept = gameReducer(initialState(), { type: 'hydrate', state: { ...old, characterId: paid } as GameState });
+    expect([kept.characterId, ownsCharacter(kept, paid)]).toEqual([paid, true]);
+    const gone = gameReducer(initialState(), { type: 'hydrate', state: { ...initialState(), characterId: 'nobody' } });
+    expect(gone.characterId).toBe(DEFAULT_CHARACTER);
+  });
+});
+
   const loseTimes = (s: GameState, n: number) => Array.from({ length: n }).reduce<GameState>(loseRound, s);
 
   it(`moves up after ${WORDS_PER_LEVEL} words guessed on a level, and caps at the last level`, () => {

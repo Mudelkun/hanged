@@ -5,11 +5,13 @@
  *   - gain: the coin flips once per token, the pill pops, sparkles burst.
  *   - spend: the pill squishes and the coin wobbles.
  * A change nobody sent from is counted in place after a moment. The balance
- * the pill mounts with (the saved one) never animates.
- * Only ONE live pill may be mounted (flights land on it): Play's. Other
- * screens show StillTokenPill.
+ * the pill mounts with (the saved one) never animates, and neither does a
+ * change made on another screen (it was counted there, or not seen here).
+ * Screens where tokens move (Play, Characters) show a live pill; flights
+ * land on the focused one. Other screens show StillTokenPill.
  */
-import { memo, useEffect, useState } from 'react';
+import { useFocusEffect, useIsFocused } from 'expo-router';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
 import { t } from '../i18n';
@@ -60,19 +62,30 @@ const run = (value: Animated.Value, toValue: number, duration: number, easing: (
 
 export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number }) {
   const flights = useTokenFlights();
+  const focused = useIsFocused();
+  const coin = useRef<View>(null);
   const [fx] = useState(createFx);
   const [shown, setShown] = useState(tokens);
   const [prev, setPrev] = useState(tokens);
   const [change, setChange] = useState<Change | null>(null);
-  // A new balance starts a new animation, counting on from what's on screen
+  // A new balance starts a new animation, counting on from what's on screen.
+  // One spent or earned on another screen just shows: it happened (and flew) there.
   if (tokens !== prev) {
     setPrev(tokens);
-    setChange({ from: shown, to: tokens, delta: tokens - prev });
+    if (!focused || flights.isClaimed(tokens)) {
+      setShown(tokens);
+      setChange(null);
+    } else setChange({ from: shown, to: tokens, delta: tokens - prev });
   }
+
+  // Flights land on the pill of the screen in view.
+  useFocusEffect(useCallback(() => flights.setTarget(coin.current), [flights]));
 
   useEffect(() => {
     if (!change) return;
     const { from, to, delta } = change;
+    // This pill shows the change, by a flight or in place: no other screen's pill counts it again
+    flights.claim(to);
     const gain = delta > 0;
     const sign = Math.sign(to - from);
     const steps = Math.abs(to - from);
@@ -126,7 +139,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
     <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })}>
       <Animated.View style={[styles.pillShadow, fx.pill]}>
         <View style={styles.pill}>
-          <View ref={flights.setTarget} collapsable={false} style={styles.coin}>
+          <View ref={coin} collapsable={false} style={styles.coin}>
             {change && !spending && <SparkBurst burst={fx.burst} reach={27} />}
             <Animated.View style={spending ? fx.coinSpend : fx.coinGain}>
               <Icon xml={coinXml} size={24} />
@@ -139,7 +152,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
   );
 });
 
-/** The same pill without flights or counting, for screens where tokens don't move (Leaderboard). */
+/** The same pill without flights or counting, for screens where tokens never move (Leaderboard). */
 export const StillTokenPill = memo(function StillTokenPill({ tokens }: { tokens: number }) {
   return (
     <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })} style={styles.pillShadow}>

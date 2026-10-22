@@ -8,6 +8,8 @@
  */
 import type { RoundReport } from '../../server/src/contract';
 import {
+  CHARACTER_PRICES,
+  DEFAULT_CHARACTER,
   DEFAULT_LANGUAGE,
   DESCRIPTION_COST,
   LETTER_BUY_COST,
@@ -23,7 +25,10 @@ export interface GameState {
   version: 1;
   /** null until the Profile page lets the player pick one; the UI shows a default. */
   playerName: string | null;
+  /** The character the player plays with. Always one they own (ownsCharacter). */
   characterId: string;
+  /** Characters bought with tokens. Free ones (price 0) are owned without being listed. */
+  unlockedCharacterIds: string[];
   language: string;
   /** Leaderboard score: words guessed. Spending tokens never lowers it. */
   wordsGuessed: number;
@@ -49,7 +54,8 @@ export const REPORTS_KEPT = 2000;
 export const initialState = (): GameState => ({
   version: 1,
   playerName: null,
-  characterId: 'mochi',
+  characterId: DEFAULT_CHARACTER,
+  unlockedCharacterIds: [],
   language: DEFAULT_LANGUAGE,
   wordsGuessed: 0,
   tokens: STARTING_TOKENS,
@@ -69,6 +75,10 @@ export type GameAction =
   | { type: 'guess'; letter: string; at: number }
   | { type: 'unlockDescription' }
   | { type: 'buyLetters'; rng?: () => number }
+  /** Pays for a locked character and plays with it. */
+  | { type: 'buyCharacter'; id: string }
+  /** Plays with a character the player owns. */
+  | { type: 'selectCharacter'; id: string }
   /** The server counted every report up to this seq. */
   | { type: 'reportsSent'; upTo: number };
 
@@ -133,6 +143,16 @@ function queueReport(s: GameState, round: Round, won: boolean, at: number): Pick
 export const canUnlockDescription = (s: GameState) =>
   !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
 
+/** A character's price in tokens (0 = free), or null if it isn't in the shop. */
+export const characterPrice = (id: string): number | null => CHARACTER_PRICES[id] ?? null;
+
+export const ownsCharacter = (s: GameState, id: string) => characterPrice(id) === 0 || s.unlockedCharacterIds.includes(id);
+
+export const canBuyCharacter = (s: GameState, id: string) => {
+  const price = characterPrice(id);
+  return price !== null && !ownsCharacter(s, id) && s.tokens >= price;
+};
+
 /** The round's level sells letters and the round can still take them (affordable or not). */
 export const lettersForSale = (s: GameState) =>
   !!s.round && levelByNumber(s.round.level).sellsLetters && canBuyLetters(s.round, LETTER_BUY_COUNT);
@@ -162,6 +182,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         const { disabledLetters = [], boughtLetters = [] } = s.round;
         s = { ...s, round: { ...s.round, disabledLetters, boughtLetters } };
       }
+      // A character that left the shop goes back to the default; one that stopped being free stays owned.
+      if (characterPrice(s.characterId) === null) s = { ...s, characterId: DEFAULT_CHARACTER };
+      else if (!ownsCharacter(s, s.characterId)) s = { ...s, unlockedCharacterIds: [...s.unlockedCharacterIds, s.characterId] };
       // Words removed from the database can never be dealt again: forget them.
       const seenWordIds = s.seenWordIds.filter((id) => wordById(id));
       return seenWordIds.length === s.seenWordIds.length ? s : { ...s, seenWordIds };
@@ -218,6 +241,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (!lettersForSale(state) || state.tokens < LETTER_BUY_COST) return state;
       const round = buyLetters(state.round!, LETTER_BUY_COUNT, action.rng);
       return { ...state, round, tokens: state.tokens - LETTER_BUY_COST };
+    }
+
+    case 'buyCharacter': {
+      if (!canBuyCharacter(state, action.id)) return state;
+      return {
+        ...state,
+        tokens: state.tokens - characterPrice(action.id)!,
+        unlockedCharacterIds: [...state.unlockedCharacterIds, action.id],
+        characterId: action.id,
+      };
+    }
+
+    case 'selectCharacter': {
+      if (action.id === state.characterId || !ownsCharacter(state, action.id)) return state;
+      return { ...state, characterId: action.id };
     }
 
     case 'reportsSent': {

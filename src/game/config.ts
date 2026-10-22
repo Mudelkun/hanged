@@ -36,6 +36,33 @@ export const DESCRIPTION_COST = 2;
 export const LETTER_BUY_COUNT = 2;
 export const LETTER_BUY_COST = 10;
 
+/** The character a new player starts with. Always free. */
+export const DEFAULT_CHARACTER = 'mochi';
+
+/**
+ * PLACEHOLDER: what each character costs in tokens (0 = free), cheapest
+ * first: the Characters page lists them in this order. Every character in
+ * design/characters/rig.js needs a row (a test checks it).
+ *
+ * Calibrated on a simulated player (Context/characters-shop.md): a
+ * casual player nets ~1.35 tokens a round, a strong one ~2.1, after buying
+ * some descriptions. So the first friend comes in the first session (~25
+ * rounds), each next one takes longer, and the whole set takes a casual
+ * player ~1100 rounds. Saving up for one favourite is never more than ~300.
+ */
+export const CHARACTER_PRICES: Readonly<Record<string, number>> = {
+  mochi: 0,
+  bun: 0,
+  coco: 30,
+  biscuit: 60,
+  bao: 100,
+  lolo: 150,
+  ember: 200,
+  rexy: 250,
+  button: 300,
+  ribbit: 400,
+};
+
 /** PLACEHOLDER: tokens a brand-new player starts with. */
 export const STARTING_TOKENS = 3;
 

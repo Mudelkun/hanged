@@ -1,18 +1,19 @@
 /*
  * The pieces between the scene and the keyboard: miss pips, word tiles,
- * the hint pill, the letter shop pill and the description card. Sizes and colours follow
+ * the hint pill, the letter shop pill and the description card (their pay
+ * buttons: PayButton.tsx). Sizes and colours follow
  * design/ui-mockup.html (.misses, .tiles, .desc).
  */
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { DESCRIPTION_COST, LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
-import { bulbXml, coinXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
+import { bulbXml, eyeXml, Icon, lockXml, nextXml, sparkXml } from './icons';
 import { popFrom } from './motion';
+import { PayButton, useRefusal } from './PayButton';
 import { Raised } from './Raised';
-import { useTokenOrigin } from './TokenFlight';
 
 // ---- misses ----
 
@@ -148,64 +149,6 @@ export function HintPill({ hints, compact }: { hints: readonly string[]; compact
           <View style={styles.hintBtn}>
             <Icon xml={shown ? nextXml() : eyeXml()} size={16} />
           </View>
-        </Raised>
-      )}
-    </Pressable>
-  );
-}
-
-// ---- paying tokens ----
-
-/** True for 2.2 s after `refuse()`: a press without enough tokens shows "Not enough tokens yet". */
-function useRefusal(): [boolean, () => void] {
-  const [refused, setRefused] = useState(false);
-  useEffect(() => {
-    if (!refused) return;
-    const id = setTimeout(() => setRefused(false), 2200);
-    return () => clearTimeout(id);
-  }, [refused]);
-  return [refused, () => setRefused(true)];
-}
-
-/** Coral "label + coin" button that spends tokens; beige, and refused, when the player can't afford it. */
-function PayButton({ label, a11yLabel, canAfford, onPay, onRefuse, icon, pillHeight }: {
-  label: string;
-  a11yLabel: string;
-  canAfford: boolean;
-  onPay?: () => void;
-  onRefuse: () => void;
-  icon?: ReactNode;
-  /** Set when the button sits inside a pill: its height there. */
-  pillHeight?: number;
-}) {
-  const [ref, sendToken] = useTokenOrigin();
-  const small = pillHeight !== undefined;
-  const press = () => {
-    // Measure the button before paying: it's gone once the purchase shows
-    if (canAfford) sendToken(-1).then(() => onPay?.());
-    else onRefuse();
-  };
-  return (
-    <Pressable
-      ref={ref}
-      collapsable={false}
-      onPress={press}
-      hitSlop={small ? 6 : undefined}
-      accessibilityRole="button"
-      accessibilityLabel={a11yLabel}
-      accessibilityState={{ disabled: !canAfford }}
-    >
-      {({ pressed }) => (
-        <Raised
-          depth={small ? 3 : 4}
-          shadowColor={canAfford ? colors.coralD : '#dccbb8'}
-          radius={small ? 10 : 15}
-          pressed={pressed}
-          style={[styles.pay, small && [styles.paySmall, { height: pillHeight }], !canAfford && { backgroundColor: '#e9dccd' }]}
-        >
-          {icon}
-          <Text style={styles.payText}>{label}</Text>
-          <Icon xml={coinXml} size={small ? 16 : 18} />
         </Raised>
       )}
     </Pressable>
@@ -395,17 +338,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 7,
     textShadowOffset: { width: 0, height: 0 },
   },
-  pay: {
-    backgroundColor: colors.coral,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingVertical: 9,
-    paddingHorizontal: 11,
-  },
-  paySmall: { paddingVertical: 0, paddingHorizontal: 9, gap: 4 },
-  payText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
-
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
   btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },

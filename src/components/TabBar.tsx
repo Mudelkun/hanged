@@ -18,7 +18,7 @@ const TABS: { id: TabId; label: TranslationKey; href?: Href }[] = [
   { id: 'play', label: 'tabs.play', href: '/' },
   { id: 'versus', label: 'tabs.versus' },
   { id: 'leaderboard', label: 'tabs.leaderboard', href: '/leaderboard' },
-  { id: 'characters', label: 'tabs.characters' },
+  { id: 'characters', label: 'tabs.characters', href: '/characters' },
 ];
 
 export function TabBar({ active, compact }: { active: TabId; compact: boolean }) {

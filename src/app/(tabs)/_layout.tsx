@@ -2,7 +2,7 @@
  * The bottom-tab screens. The navigator draws no tab bar: each screen draws
  * the mockup's TabBar itself, so a full-screen overlay (the level path) can
  * cover it. Screens stay mounted when you switch, and frozen while hidden,
- * so Play keeps its round and stops animating behind the Leaderboard.
+ * so Play keeps its round and stops animating behind the other tabs.
  */
 import { Tabs } from 'expo-router';
 
@@ -16,6 +16,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" />
       <Tabs.Screen name="leaderboard" />
+      <Tabs.Screen name="characters" />
     </Tabs>
   );
 }

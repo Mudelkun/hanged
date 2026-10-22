@@ -12,7 +12,7 @@ these components.
 - **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("POPPED !!" red /
   "SAVED !!" green) · "10 / 10 misses · the word was" · full word · description
-  (always unlocked) · **Next word** · tab bar. A round that moved the level adds a line under the
+  (always unlocked) · **Next word** · **Change character** · tab bar. A round that moved the level adds a line under the
   misses line, in the new level's colour: "Level up! Welcome to level N." or "Back to level N. You've
   got this!" (encouraging, never a penalty message).
 - There is **no "Next token" bar**: words guessed in a row pay more tokens
@@ -100,13 +100,14 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |
 | `Confetti.tsx` | A party-popper burst driven by one value, native driver only. `seed` and `aim` per popper. Reuse it for any big celebration. Pieces flutter with a flat `scaleY`, **never `rotateX`** (see the 3D trap in [dev-setup.md](dev-setup.md)). |
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
-| `TokenPill.tsx` | The header's token counter. Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. |
-| `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens (e.g. the Characters shop) only needs an origin. |
+| `TokenPill.tsx` | The header's token counter, live on Play and Characters (where tokens move). Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. **Several live pills**: flights land on the focused screen's pill (it sets the hub's target on focus), and a pill shows a change as is when its screen isn't focused or another pill already showed it (`claim` / `isClaimed`), so coming back to Play after buying a character doesn't count the spend again. |
+| `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens only needs an origin, and a live `TokenPill` in its screen's header (the Characters page: `TitleHeader live`). |
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, hint word, token pill). Use it for any new pop so they all feel the same. |
 | `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
-| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton`. `PayButton` (private) is the coral "label + coin" button that spends tokens: the description's Unlock and the shop's "10". It sends the token flight, then pays, and turns beige and refuses ("Not enough tokens yet", `useRefusal`) without enough tokens. Reuse it for any new spend. |
+| `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton` (`ghost`: white). |
+| `PayButton.tsx` | `PayButton`, the coral "label + coin" button that spends tokens: the description's Unlock, the letter shop's "10" and the Characters page's Unlock (`big`: BigButton's size). It sends the token flight, then pays, and turns beige and refuses without enough tokens; `useRefusal` shows why ("Not enough tokens yet") for 2.2 s. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
-| `TabBar.tsx` | The 4 tabs. Play and Leaderboard navigate; Versus and Characters are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** How the tabs work: [leaderboard.md](leaderboard.md). |
+| `TabBar.tsx` | The 4 tabs. Play, Leaderboard and Characters navigate; Versus is drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** How the tabs work: [leaderboard.md](leaderboard.md). |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
 | `icons.tsx` | The mockup's SVG icons, copied verbatim as strings. |
 | `PaperBackground.tsx` | Cream paper with the 18 px dot grid. |
@@ -122,9 +123,10 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
   tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
   (`flexGrow` between a minimum and the mockup's height), so every layout fits
   without scrolling. Checked at 393×852 and 375×667.
-- Result scene max height is **340**, taller than the mockup's 282. The mockup also
-  has a "Change character" button there, which is left out until the Characters
-  page exists.
+- Result scene max height is **340**, taller than the mockup's 282. Under "Next word" sits the
+  mockup's ghost **"Change character"** button, which opens the Characters page
+  ([characters-shop.md](characters-shop.md)). The scene absorbs its height: checked at 393×852 and
+  375×667 without scrolling.
 
 ## Hint pill (not in the mockup)
 

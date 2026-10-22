@@ -29,6 +29,15 @@ export const starXml = (c = '#38b283') =>
     '0 0 24 24',
     `<path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`,
   );
+export const chevXml = (dir: 'l' | 'r', c = '#4b3a35') =>
+  svg(
+    '0 0 24 24',
+    `<path d="${dir === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  );
+export const checkXml = svg(
+  '0 0 24 24',
+  '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>',
+);
 export const bulbXml = svg(
   '0 0 24 24',
   '<path d="M12 2.5a7 7 0 0 0-4.2 12.6c.8.6 1.2 1.4 1.2 2.4h6c0-1 .4-1.8 1.2-2.4A7 7 0 0 0 12 2.5z" fill="#ffd667" stroke="#f0b43a" stroke-width="1.6"/><rect x="9" y="18.5" width="6" height="3" rx="1.5" fill="#f0b43a"/><path d="M9.5 9.5a3 3 0 0 1 2.5-2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>',

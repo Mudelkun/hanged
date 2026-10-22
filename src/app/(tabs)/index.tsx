@@ -8,6 +8,7 @@
  * that makes a streak plays the streak takeover over it, which dissolves
  * onto the result.
  */
+import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -267,6 +268,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
       <DescriptionCard text={round.description} unlocked canAfford={null} compact={compact} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
+        <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />
       </View>
     </>
   );
@@ -277,7 +279,6 @@ const styles = StyleSheet.create({
   body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
   playScene: { flexGrow: 1, flexShrink: 1, maxHeight: 230 },
   keyboardWrap: { marginTop: 'auto' },
-  // Taller than the mockup's 282: there is no "Change character" button until the Characters page exists
   resultScene: { flexGrow: 1, flexShrink: 1, maxHeight: 340 },
   over: { marginTop: 14, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   overText: { fontFamily: fonts.display500, fontSize: 15, color: colors.muted, textAlign: 'center' },
