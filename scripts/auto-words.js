@@ -208,4 +208,4 @@ function generateWords(wn, scowl) {
   return { words, rejected };
 }
 
-module.exports = { generateWords, MAX_WORD_SIZE };
+module.exports = { generateWords };

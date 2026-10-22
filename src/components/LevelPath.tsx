@@ -19,9 +19,6 @@ import { HangedWorld, Point, WorldLayout, worldBands } from '../world/world';
 import { cloudXml, fogCloudXml, Icon } from './icons';
 import { Raised } from './Raised';
 
-export type { Point };
-/** Vertical distance between two stops. */
-export const STEP = HangedWorld.STEP;
 export const NODE = HangedWorld.NODE;
 /** The character's avatar, ring included (GameHeader's Avatar adds 5). */
 export const MARKER = 38;

@@ -26,7 +26,6 @@ export const colors = {
   butterT: '#9a6a00',
 
   sky: '#6cc4ff',
-  skyD: '#3ea6ec',
   skyL: '#e0f3ff',
   skyT: '#2a86c8',
 
