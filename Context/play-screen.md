@@ -64,12 +64,13 @@ mint, sky, lilac, gold, tangerine, coral, berry, indigo). The header's `Lv N` pi
 result's level line use it.
 
 When a round moves the level, `LevelChange` pops a card over the result, `APPEAR_MS` (1100 ms) after
-it shows, so the stamp and the token flight come first. The card holds the **level path**: a winding
-road of numbered stops, level 1 at the bottom, drawn in react-native-svg. Reached stops are filled
+it shows, so the stamp and the token flight come first. The card holds the **level path** (`LevelPath.tsx`, shared with the level map below): a winding
+road of numbered stops, level 1 at the bottom, drawn in react-native-svg. Only stops up to
+`bestLevel` are drawn; past them is the fog (see The level map). Reached stops are filled
 and raised in their colour; stops ahead are pale and dashed. The player's **character avatar** stands
 on its stop and travels to the new one: it hops up (the road fills in the new level's colour, the stop
 pops, sparkles burst, success haptic) or slides down (the road empties, the old stop turns pale again,
-a light tap). The window's "camera" follows the character, so all 8 levels fit any phone; its top and
+a light tap). The window's "camera" follows the character, so any number of levels fits any phone; its top and
 bottom fade into the paper. **The card has no button** (owner's call): `HOLD_MS` (1.3 s) after the
 character lands, it fades out by itself (`onClose` → `levelGone`), leaving the result, and the player
 taps **Next word** as after any round. It blocks taps on the result while it's up.
@@ -82,10 +83,35 @@ taps **Next word** as after any round. It blocks taps on the result while it's u
 - **The card has `zIndex: 10`.** On iOS, `zIndex` becomes a native layer depth that ignores the
   parent's stacking order, so the stamp's `zIndex: 2` drew over the card on a phone even though the
   card comes later in the tree. Anything drawn over the result needs a zIndex above 2.
-- Positions come from one `geometry()`: each stretch is an S-curve leaving and entering stops straight
+- Positions come from `pathLayout()` (LevelPath) plus the trip in `geometry()`: each stretch is an S-curve leaving and entering stops straight
   up, and the character and camera follow 8 samples of it. The road's fill is an SVG dash offset,
   which can't use the native driver, so it runs as its own JS-driven value in step with the travel.
 - Checked on web at 393×852 and 375×667 (both directions); the card fits without scrolling.
+
+## The level map: tap the level (owner's idea, not in the mockup)
+
+Tapping the header's `Lv N` pill opens `LevelMap`, a full-screen sheet over the Play screen (tab bar
+included, `zIndex: 20`). The path scrolls vertically in a `ScrollView`. It opens with the player's
+character in the middle, standing on their stop with a slow bob. Below the path, a card shows the level,
+a bar of the words won on it, and the next step: "N more words to clear the fog", or "…to reach level N"
+when the player dropped and the stop above is known. A ✕ slides it away.
+
+- **The fog (owner's call): the player must never learn how many levels there are.** At level 6 they
+  can't see level 7 or know it exists, only that the road runs into fog. So the path draws stops only
+  up to `bestLevel`, and `PathFog` covers the rest: paper fading in over the road, a thick bank of
+  overlapping clouds where the road goes in, fainter puffs drifting above, and a dim dashed **"?"**
+  stop where the next level would be, never its number. On the last level there is no "?" and the card
+  says it's the highest level (the player has reached it, so nothing is spoiled). The level-up card
+  uses the same fog.
+- Stops between the current level and `bestLevel` (after a drop) are pale and dashed, like a stop not
+  yet reached on the level-up card.
+- The pill is disabled while a level change is due (`levelChanging`), so the map never shows a level
+  the header and the level-up card haven't shown yet.
+- The bank's back rows are clouds **without** the flat shadow: overlapping shadows drew a hard
+  horizontal line. Only the front row and the mist puffs keep it. Clouds are staggered up and down for
+  the same reason.
+- Each `PathFog` and `EdgeFade` gets its own gradient `id` (web shares SVG ids across the page).
+- Checked on web at 393×852 and 375×667 at levels 1, 6, and 13 with a best of 14, plus the level-up card 5 → 6.
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
 2600 ms so the last pop, the fall and the landing play (stage 10 lasts 2200 ms), won 700 ms so the last tile pops). Then the result
@@ -100,8 +126,10 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 | File | What |
 |---|---|
-| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes), token pill. |
+| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
+| `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathRoad`, `LevelStop`, `PathFog`, `EdgeFade`. Use it for any new view of the levels. |
 | `LevelChange.tsx` | The level path card (see Level change above). |
+| `LevelMap.tsx` | The full-screen level map (see The level map above). |
 | `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |
 | `Confetti.tsx` | A party-popper burst driven by one value, native driver only. `seed` and `aim` per popper. Reuse it for any big celebration. Pieces flutter with a flat `scaleY`, **never `rotateX`** (see the 3D trap in [dev-setup.md](dev-setup.md)). |
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |

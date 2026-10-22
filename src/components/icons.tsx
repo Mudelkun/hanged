@@ -53,11 +53,14 @@ export const nextXml = (c = '#fff') =>
     '0 0 24 24',
     `<path d="M9 5.5l6.5 6.5L9 18.5" fill="none" stroke="${c}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`,
   );
-export const cloudXml = (fill = '#fff') =>
-  svg(
-    '0 0 100 50',
-    `<g fill="${fill}"><circle cx="28" cy="32" r="15"/><circle cx="48" cy="22" r="19"/><circle cx="70" cy="29" r="15"/><rect x="14" y="30" width="72" height="17" rx="8.5"/></g>`,
-  );
+const CLOUD = '<circle cx="28" cy="32" r="15"/><circle cx="48" cy="22" r="19"/><circle cx="70" cy="29" r="15"/><rect x="14" y="30" width="72" height="17" rx="8.5"/>';
+export const cloudXml = (fill = '#fff') => svg('0 0 100 50', `<g fill="${fill}">${CLOUD}</g>`);
+// Not in the mockup: the level path's fog, a cloud on its own flat raised shadow.
+export const fogCloudXml = (shadow: string) =>
+  svg('0 0 100 54', `<g fill="${shadow}" transform="translate(0 4)">${CLOUD}</g><g fill="#fff">${CLOUD}</g>`);
+// Not in the mockup: the close button of a full-screen sheet (the level path).
+export const closeXml = (c = '#4b3a35') =>
+  svg('0 0 24 24', `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`);
 
 export const tabIconXml = {
   play: (c: string) =>

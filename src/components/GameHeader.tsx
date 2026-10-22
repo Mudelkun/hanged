@@ -3,7 +3,8 @@
  * (never the app name), words guessed, level and token balance. On the other
  * tabs (TitleHeader): avatar, the screen's title, token balance (`live` on a
  * screen where tokens are spent, so the spend flies into it).
- * The avatar is the button that will open the Profile page (not built yet).
+ * The avatar is the button that will open the Profile page (not built yet);
+ * the level pill opens the level map (LevelMap).
  */
 import { memo, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -22,6 +23,8 @@ interface Props {
   wordsGuessed: number;
   level: number;
   tokens: number;
+  /** Opens the level map. Left out while the level is changing (the level-up card is showing it). */
+  onLevelPress?: () => void;
 }
 
 /** The character's face in a coral ring (the player's own profile button), or a thin `plain` one (other players). */
@@ -41,8 +44,11 @@ export const Avatar = memo(function Avatar({ character, size, plain }: { charact
   );
 });
 
-/** "Lv N" in the level's own colour. It pops when the level changes, never when it first shows. */
-const LevelPill = memo(function LevelPill({ level }: { level: number }) {
+/**
+ * "Lv N" in the level's own colour. It pops when the level changes, never when
+ * it first shows. Tapping it opens the level map.
+ */
+const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; onPress?: () => void }) {
   const [pop] = useState(() => new Animated.Value(1));
   const prev = useRef(level);
   useEffect(() => {
@@ -52,10 +58,26 @@ const LevelPill = memo(function LevelPill({ level }: { level: number }) {
   }, [level, pop]);
   const c = levelColor(level);
   return (
-    <Animated.View style={[styles.level, { backgroundColor: c.light, borderColor: `${c.main}80`, transform: [{ scale: pop }] }]}>
-      <Icon xml={starXml(c.main)} size={15} />
-      <Text style={[styles.levelText, { color: c.dark }]}>{t('header.level', { level })}</Text>
-    </Animated.View>
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
+      hitSlop={6}
+      accessibilityRole="button"
+      accessibilityLabel={t('header.a11y.level', { level })}
+    >
+      {({ pressed }) => (
+        <Animated.View
+          style={[
+            styles.level,
+            { backgroundColor: c.light, borderColor: `${c.main}80`, transform: [{ scale: pop }] },
+            pressed && styles.levelPressed,
+          ]}
+        >
+          <Icon xml={starXml(c.main)} size={15} />
+          <Text style={[styles.levelText, { color: c.dark }]}>{t('header.level', { level })}</Text>
+        </Animated.View>
+      )}
+    </Pressable>
   );
 });
 
@@ -77,7 +99,7 @@ export function TitleHeader({ title, character, tokens, live }: { title: string;
   );
 }
 
-export function GameHeader({ name, character, wordsGuessed, level, tokens }: Props) {
+export function GameHeader({ name, character, wordsGuessed, level, tokens, onLevelPress }: Props) {
   return (
     <View style={styles.head}>
       <View style={styles.side}>
@@ -92,7 +114,7 @@ export function GameHeader({ name, character, wordsGuessed, level, tokens }: Pro
         </View>
       </View>
       <View style={styles.side}>
-        <LevelPill level={level} />
+        <LevelPill level={level} onPress={onLevelPress} />
         <TokenPill tokens={tokens} />
       </View>
     </View>
@@ -135,5 +157,6 @@ const styles = StyleSheet.create({
     paddingLeft: 7,
     paddingRight: 10,
   },
+  levelPressed: { opacity: 0.7 },
   levelText: { fontFamily: fonts.display600, fontSize: 14 },
 });

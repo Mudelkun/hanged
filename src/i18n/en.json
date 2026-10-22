@@ -6,6 +6,7 @@
   "header.wordGuessed": "1 word guessed",
   "header.level": "Lv {level}",
   "header.a11y.avatar": "Your profile",
+  "header.a11y.level": "Level {level}. Show the level path",
   "header.a11y.tokens": "{count} tokens",
 
   "tokens.gain": "+{count}",
@@ -65,6 +66,16 @@
   "level.down.title": "Back to level {level}",
   "level.down.body": "Take a breath. You've got this!",
   "level.a11y.path": "Level path: from level {from} to level {to}",
+
+  "levelMap.title": "Level path",
+  "levelMap.close": "Close",
+  "levelMap.here": "Level {level}",
+  "levelMap.toFog": "{count} more words to clear the fog",
+  "levelMap.toFogOne": "1 more word to clear the fog",
+  "levelMap.toLevel": "{count} more words to reach level {level}",
+  "levelMap.toLevelOne": "1 more word to reach level {level}",
+  "levelMap.top": "You made it to the highest level!",
+  "levelMap.a11y.path": "Level path. You are on level {level}. Past level {best}, the path is hidden in fog.",
 
   "tabs.play": "Play",
   "tabs.versus": "Versus",

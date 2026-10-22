@@ -15,7 +15,7 @@ import {
   WORDS_PER_LEVEL,
 } from '../config';
 import { clueCount, decoyLetters, roundStatus, usedLetters } from '../engine';
-import { afterRound, clueRatioFor, LEVELS, LevelProgress, START_LEVEL } from '../levels';
+import { afterRound, clueRatioFor, LEVELS, LevelProgress, START_LEVEL, wordsToNextLevel } from '../levels';
 import {
   canBuyCharacter,
   characterPrice,
@@ -389,6 +389,25 @@ describe('moving up and down levels', () => {
 
   it('a loss in the grace counts the round, not the loss', () => {
     expect(afterRound(START_LEVEL, false)).toEqual({ level: 1, wins: 0, rounds: 1, losses: 0 });
+  });
+
+  it('remembers the highest level reached, so a drop keeps it on the level path', () => {
+    let s = winRound(atLevel(4, { wins: WORDS_PER_LEVEL - 1 }));
+    expect(s.bestLevel).toBe(5);
+    s = loseTimes({ ...s, levelProgress: { ...s.levelProgress, rounds: LEVEL_GRACE_ROUNDS } }, LOSSES_TO_DROP);
+    expect(s.levelProgress.level).toBe(4);
+    expect(s.bestLevel).toBe(5);
+  });
+
+  it('counts the words left to the next level, and none on the last one', () => {
+    expect(wordsToNextLevel(START_LEVEL)).toBe(WORDS_PER_LEVEL);
+    expect(wordsToNextLevel({ ...START_LEVEL, wins: 3 })).toBe(WORDS_PER_LEVEL - 3);
+    expect(wordsToNextLevel({ ...START_LEVEL, level: LEVELS.length })).toBeNull();
+  });
+
+  it('a save from before the level path knows its current level as the best', () => {
+    const { bestLevel, ...old } = atLevel(7);
+    expect(gameReducer(initialState(), { type: 'hydrate', state: old as GameState }).bestLevel).toBe(7);
   });
 
   it('a save from before levels could drop keeps the level its score earned', () => {

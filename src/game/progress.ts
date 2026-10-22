@@ -37,6 +37,8 @@ export interface GameState {
   streak: number;
   /** The level and the counts that move it up or down (levels.afterRound). */
   levelProgress: LevelProgress;
+  /** The highest level ever reached. The level path shows every stop up to it; the rest is in the fog. */
+  bestLevel: number;
   /** Words dealt since their level last started over, oldest first (words.pickWord). */
   seenWordIds: string[];
   round: Round | null;
@@ -61,6 +63,7 @@ export const initialState = (): GameState => ({
   tokens: STARTING_TOKENS,
   streak: 0,
   levelProgress: START_LEVEL,
+  bestLevel: START_LEVEL.level,
   seenWordIds: [],
   round: null,
   lastTokensEarned: 0,
@@ -163,6 +166,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let s = action.state;
       // A save from before levels could drop: its level came from the score.
       if (!s.levelProgress) s = { ...s, levelProgress: levelFromScore(s.wordsGuessed ?? 0) };
+      // A save from before the level path: the best it knows is where the player stands.
+      if (!s.bestLevel) s = { ...s, bestLevel: s.levelProgress.level };
       // A save from the "last 40 words" memory (newest first): those words count as seen.
       if (!s.seenWordIds) {
         const { recentWordIds = [], ...rest } = s as LegacySave;
@@ -219,7 +224,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const status = roundStatus(round);
       if (status === 'playing') return { ...state, round };
       const won = status === 'won';
-      const ended = { ...state, round, levelProgress: afterRound(state.levelProgress, won), ...queueReport(state, round, won, action.at) };
+      const levelProgress = afterRound(state.levelProgress, won);
+      const ended = {
+        ...state,
+        round,
+        levelProgress,
+        bestLevel: Math.max(state.bestLevel, levelProgress.level),
+        ...queueReport(state, round, won, action.at),
+      };
       if (!won) return { ...ended, streak: 0 };
       const streak = state.streak + 1;
       // The round's own level pays, not the level this win may move the player up to.

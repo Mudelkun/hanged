@@ -73,6 +73,10 @@ it can go down while the score never does. `afterRound(levelProgress, won)` in
 - A round that moved the level plays the level path animation over its result and adds a line to
   it. It's detected as `state.levelProgress.level !== round.level`, with no extra saved field
   ([play-screen.md](play-screen.md)).
+- **`bestLevel`** (saved) is the highest level ever reached, raised in the same reducer step that
+  moves the level. The level path draws every stop up to it, and the rest is fog, so a player who
+  drops from 14 to 13 still sees 14. `wordsToNextLevel(levelProgress)` (null on the last level) feeds
+  the level map's "N more words…" line. The UI never counts it itself.
 
 ### 20 levels (owner's call, 2026-10-22)
 
@@ -177,6 +181,8 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   database are pruned from `seenWordIds` on every load.
 - A save from before levels could drop has no `levelProgress`. `hydrate` rebuilds it from the score
   (`levelFromScore`: same level as before, the words past that level's start as `wins`). Same key, no bump.
+- A save from before the level path has no `bestLevel`. `hydrate` sets it to the current level
+  (before `withDefaults`, which would say 1). Same key, no bump.
 - **`hydrate` gets the save exactly as stored** and fills missing fields from `initialState()` itself
   (`withDefaults`). `GameContext` must not merge first, or `hydrate` can't tell an old save from a new one.
 - The **round in progress is saved too**. Killing the app does not deal a new word,

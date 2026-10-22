@@ -114,6 +114,10 @@ export function levelFromScore(wordsGuessed: number): LevelProgress {
   return { level, wins, rounds: wins, losses: 0 };
 }
 
+/** Words still to guess before the level moves up, or null on the last level (it never moves up). */
+export const wordsToNextLevel = (p: LevelProgress): number | null =>
+  p.level >= LEVELS.length ? null : Math.max(1, WORDS_PER_LEVEL - p.wins);
+
 /**
  * The level after a finished round. A win clears the losses and may move the
  * player up; a loss after the grace counts toward a drop. Never below level 1

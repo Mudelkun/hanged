@@ -18,6 +18,7 @@ import { GameHeader } from '../../components/GameHeader';
 import { GameScene, Stamp } from '../../components/GameScene';
 import { LetterKeyboard } from '../../components/LetterKeyboard';
 import { LevelChange } from '../../components/LevelChange';
+import { LevelMap } from '../../components/LevelMap';
 import { PaperBackground } from '../../components/PaperBackground';
 import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
 import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
@@ -70,6 +71,11 @@ export default function PlayScreen() {
   // The card closes by itself after the landing, leaving the result and its "Next word" button.
   const [levelGone, setLevelGone] = useState<string | null>(null);
   const onLevelGone = useCallback(() => setLevelGone(round.id), [round.id]);
+  const levelChanging = levelMoved && levelGone !== round.id;
+  // Tapping the header's level opens the level map, except while the level-up card is due
+  const [mapOpen, setMapOpen] = useState(false);
+  const openMap = useCallback(() => setMapOpen(true), []);
+  const closeMap = useCallback(() => setMapOpen(false), []);
 
   const streak = state.streak;
   useEffect(() => {
@@ -109,6 +115,7 @@ export default function PlayScreen() {
         wordsGuessed={state.wordsGuessed}
         level={levelMoved && landedFor !== round.id ? round.level : level}
         tokens={state.tokens}
+        onLevelPress={levelChanging ? undefined : openMap}
       />
       <View style={styles.body}>
         {showResult ? (
@@ -182,11 +189,12 @@ export default function PlayScreen() {
         )}
       </View>
       <TabBar active="play" compact={compact} />
-      {showResult && levelMoved && levelGone !== round.id && (
+      {showResult && levelChanging && (
         <LevelChange
           key={round.id}
           from={round.level}
           to={level}
+          best={state.bestLevel}
           character={character}
           width={available}
           compact={compact}
@@ -194,6 +202,7 @@ export default function PlayScreen() {
           onClose={onLevelGone}
         />
       )}
+      {mapOpen && <LevelMap progress={state.levelProgress} best={state.bestLevel} character={character} onClose={closeMap} />}
     </View>
   );
 }
