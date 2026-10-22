@@ -7,8 +7,9 @@
  * every common English word the generator finds (scripts/auto-words.js), each
  * with how many misses it costs a typical player (scripts/difficulty.js).
  * Source lines are `word | sense`. The sense is an Open
- * English WordNet synset id (e.g. 02124272-n): the word's description is that
- * sense's definition, never text written by hand (scripts/wordnet.js).
+ * English WordNet synset id (e.g. 02124272-n) (scripts/wordnet.js). The word's
+ * description is the plain-English rewrite of that sense in
+ * scripts/descriptions.txt, or the sense's definition when it has none.
  */
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +18,7 @@ const { describe, revealsWord, subjectOf, MAX_DESCRIPTION_LENGTH, SUBJECTS } = r
 const ROOT = path.join(__dirname, '..');
 const JSON_PATH = path.join(ROOT, 'data', 'words.json');
 const SOURCE_PATH = path.join(__dirname, 'words-source.txt');
+const DESCRIPTIONS_PATH = path.join(__dirname, 'descriptions.txt');
 const LANGUAGE = 'en';
 /**
  * How common a word is: SCOWL's sizes (scripts/scowl.js), 10 = the most common.
@@ -34,16 +36,36 @@ function isFormOf(word, lemma) {
   return [l, `${l}s`, `${l}es`, `${l}ren`, `${l}ing`, `${l.replace(/e$/, '')}ing`, l.replace(/y$/, 'ies')].includes(word);
 }
 
-function readSource() {
-  return fs
-    .readFileSync(SOURCE_PATH, 'utf8')
+/** A `|`-separated file's lines, comments and blanks skipped, as arrays of trimmed fields. */
+const readTable = (file) =>
+  fs
+    .readFileSync(file, 'utf8')
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l && !l.startsWith('#'))
-    .map((l) => {
-      const [word = '', sense = ''] = l.split('|').map((part) => part.trim());
-      return { word: word.toLowerCase(), sense };
-    });
+    .map((l) => l.split('|').map((part) => part.trim()));
+
+const readSource = () => readTable(SOURCE_PATH).map(([word = '', sense = '']) => ({ word: word.toLowerCase(), sense }));
+
+/**
+ * Puts each word's rewritten description (scripts/descriptions.txt) in place of the
+ * dictionary's. A rewrite describes one sense, so a word whose sense changed since,
+ * or that left the list, is an error: re-check the rewrite against the new sense.
+ */
+function applyRewrites(words, errors) {
+  const byWord = new Map(words.map((w) => [w.word, w]));
+  let applied = 0;
+  for (const [word = '', sense = '', description = ''] of readTable(DESCRIPTIONS_PATH)) {
+    const w = byWord.get(word);
+    if (!w) errors.push(`descriptions.txt: "${word}" is no longer in the list, remove its line`);
+    else if (w.sense !== `oewn-${sense}`) errors.push(`descriptions.txt: "${word}" was written for ${sense}, it is now ${w.sense}`);
+    else if (!description) errors.push(`descriptions.txt: "${word}" has no description`);
+    else {
+      w.description = description;
+      applied++;
+    }
+  }
+  return applied;
 }
 
 const entry = ({ word, description, sense, rarity, concrete }) => ({
@@ -79,6 +101,11 @@ async function build() {
   const taken = new Set(handWritten.map((w) => w.word));
   const { words: generated, rejected } = require('./auto-words').generateWords(wn, scowl);
   const words = [...handWritten, ...generated.filter((w) => !taken.has(w.word)).map((w) => entry({ ...w, rarity: w.size }))];
+  const rewritten = applyRewrites(words, errors);
+  if (errors.length) {
+    console.error(errors.join('\n'));
+    process.exit(1);
+  }
   const difficulty = require('./difficulty').measureDifficulty(words);
   for (const w of words) {
     w.subject = subjectOf(wn.synset(w.sense.replace(/^oewn-/, '')).lexfile);
@@ -87,7 +114,8 @@ async function build() {
   fs.writeFileSync(JSON_PATH, serialize(words));
   console.log(
     `Wrote ${words.length} words to data/words.json: ${handWritten.length} hand-written, ${words.length - handWritten.length} generated ` +
-      `(Open English WordNet ${wn.edition}, SCOWL ${scowl.release}). Left out:`,
+      `(Open English WordNet ${wn.edition}, SCOWL ${scowl.release}); ${words.length - rewritten} with the dictionary's description, ` +
+      'not yet rewritten. Left out:',
     rejected,
   );
 }

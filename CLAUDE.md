@@ -107,7 +107,7 @@ A level's difficulty is set by:
 ### Word descriptions
 
 - **Every word** has a **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
-- Descriptions come from a **trusted dictionary**, never written by hand or by an AI: today Open English WordNet (CC BY 4.0, so the app must credit it). They must not contain the word itself.
+- Descriptions are **grounded in a trusted dictionary**: today Open English WordNet (CC BY 4.0, so the app must credit it). Each one is a plain-English rewrite of the definition of the word's dictionary sense, made clear and concise for the clue card (owner's request, 2026-10-22, replacing verbatim definitions). They must not contain the word itself.
 - The description is **always visible for free**, from the start of every round and on the result screen. There is no reveal button, token cost or wrong-guess penalty.
 
 ### Keyboard

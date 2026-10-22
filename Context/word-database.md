@@ -8,6 +8,8 @@ statistics ([server.md](server.md)).
 - Data: [data/words.json](../data/words.json) (generated, don't hand-edit). One word per line, so the
   ~27,000-word file stays readable and diffs line by line.
 - Hand-written words: [scripts/words-source.txt](../scripts/words-source.txt), one `word | sense` per line.
+- Descriptions: [scripts/descriptions.txt](../scripts/descriptions.txt), one `word | sense | description`
+  per word; words to review: [scripts/words-review.txt](../scripts/words-review.txt) (below).
 - Generated words: [scripts/auto-words.js](../scripts/auto-words.js) (below). Terms kept out of the
   game: [scripts/blocked-words.txt](../scripts/blocked-words.txt).
 - Builder/checker: [scripts/check-words.js](../scripts/check-words.js); the rules both share:
@@ -27,9 +29,9 @@ statistics ([server.md](server.md)).
   so keep the ids when migrating.
 - `word` is lowercase a–z. Length isn't stored: it's computed (CLAUDE.md).
 - `language` is on **every** word from day one, even though the MVP is English only.
-- `description` is the clue always shown for free. It's required, and it comes
-  from a dictionary (below), never written by hand.
-- `sense` is the dictionary sense the description comes from.
+- `description` is the clue always shown for free. It's required: a plain-English rewrite of the
+  word's dictionary sense (below).
+- `sense` is the dictionary sense the description is based on.
 - `rarity` is how common the word is, `concrete` whether it's a thing you can picture, and
   `difficulty` how many misses it costs a typical player (see How hard a word is, below). Levels use
   all three to pick words, and words that measure hard get more clues.
@@ -41,11 +43,32 @@ statistics ([server.md](server.md)).
   cover only 4% of words and some are wrong (it links "capricious" to sexual activity), so the broad
   category is what every word can have: magnesium is "material", virulent "describing".
 
-## Descriptions come from a dictionary (owner's call)
+## Descriptions: dictionary senses, rewritten for the card
 
-**Why:** the owner wants longer, more formal and accurate descriptions from a trusted source,
-not text an AI wrote. The source is **Open English WordNet 2025** (https://en-word.net), the
-maintained successor of Princeton WordNet.
+**Why:** the owner first wanted accurate descriptions from a trusted source, copied verbatim. Then
+(2026-10-22) they asked for every description to be reviewed and rewritten: many verbatim
+definitions were vague ("Grow worse."), awkward, technical, or about an uncommon meaning, which made
+poor clues. So the dictionary still decides *what* each description says (the pinned sense), and
+[scripts/descriptions.txt](../scripts/descriptions.txt) says it in plain English.
+
+- **The rewrites:** `word | sense | description`, one per word (all 26,571 today). The build
+  replaces the dictionary's text with them. It **fails** if a listed word left the list or its sense
+  changed (the generator picked another sense, or `words-source.txt` re-pinned it): the rewrite
+  described the old sense, so re-check it against the new one and update the line. A word with no
+  line (a new word) keeps the dictionary's definition, and the build prints how many are left.
+- **How they're written:** the most common modern meaning of the sense, concise (one line where
+  possible), informative enough to find the word, one meaning only, no giveaways (the checker's rule
+  below, and no obvious variant such as "heat" for reheat). Verbs start with "To …".
+- **Review list:** [scripts/words-review.txt](../scripts/words-review.txt). *Meaning changed*: 975
+  words whose pinned sense was an odd meaning (donkey as the Democratic Party symbol, lettuce as money,
+  center as a baseball position); their description now gives the common meaning of the same part of
+  speech, but `sense` and `subject` still come from the old sense until someone pins the right sense
+  in `words-source.txt` (then update the rewrite's sense id). *Flagged*: 182 archaic or obscure
+  words, words pinned to a rare part of speech, and words that may not belong in a family game (slurs
+  the filters missed, such as "gook" and "squaw", and vulgar words): they still have a description,
+  but the owner should decide whether to keep, re-sense or block each one.
+- The source is **Open English WordNet 2025** (https://en-word.net), the maintained successor of
+  Princeton WordNet.
 - **Licence: CC BY 4.0.** Commercial use is fine, but the app **must credit it**:
   [data/CREDITS.md](../data/CREDITS.md) holds the credit and the list of changes. Profile → Credits shows
   it (`credits.*` in `en.json`: keep them in step with CREDITS.md). Don't switch to Wiktionary
@@ -53,10 +76,10 @@ maintained successor of Princeton WordNet.
 - Each source line pins one **sense** (a WordNet synset id such as `02983900-n`), because most
   words have several meanings (castle: the building, the chess piece, the chess move). Pick the
   familiar meaning intended for the game.
-- The build copies that sense's definition **verbatim**, except: a leading label such as
-  "(astronomy)" goes, `;`-separated clauses that give the word away are dropped ("the coldest season
-  of the year; … from the winter solstice …"), then trailing clauses until it fits, and it's
-  sentence-cased with a full stop. Nothing is reworded.
+- For a word without a rewrite, the build copies that sense's definition, except: a leading label
+  such as "(astronomy)" goes, `;`-separated clauses that give the word away are dropped ("the coldest
+  season of the year; … from the winter solstice …"), then trailing clauses until it fits, and it's
+  sentence-cased with a full stop. The definition must also be usable this way to pick the sense.
 - The dictionary (~11 MB) is downloaded on the first `--build` into `scripts/.cache/` (gitignored).
   The app never reads it: `words.json` carries the finished text.
 - A game word may be a plural or `-ing` form of the dictionary entry ("fireworks", "grandchildren",
@@ -167,8 +190,10 @@ or to fix a generated word's sense, write it by hand:
 1. `npm run check:words -- --senses <word>` lists the word's senses, most used first, with the
    description each would give, or `(unusable)`.
 2. Add `word | sense` to `scripts/words-source.txt`.
-3. Run `npm run check:words -- --build`. This regenerates `data/words.json` and validates it.
-4. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
+3. Write its description in `scripts/descriptions.txt` as `word | sense | description`, from that
+   sense's definition (or update the line if the word was already there).
+4. Run `npm run check:words -- --build`. This regenerates `data/words.json` and validates it.
+5. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
    can show the new words by name ([server.md](server.md)).
 
 To keep a generated word out, add it (or the term that makes it unsuitable) to

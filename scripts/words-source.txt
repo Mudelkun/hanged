@@ -1,5 +1,6 @@
 # Source for data/words.json (English). One word per line: word | sense
-# The sense is an Open English WordNet synset id: the description is that sense's dictionary definition.
+# The sense is an Open English WordNet synset id: the description is the rewrite of that sense in
+# scripts/descriptions.txt (update its line when you change a sense), or the dictionary definition.
 # List a word's senses with `npm run check:words -- --senses <word>`, then
 # run `npm run check:words -- --build` to regenerate data/words.json from this file.
 # Rules: a–z only, 1–15 letters, at least 2 distinct letters (so a clue AND a hidden letter both exist),

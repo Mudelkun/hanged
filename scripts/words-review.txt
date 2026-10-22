@@ -1,0 +1,1174 @@
+# Words to review (description rewrite, 2026-10-22).
+#
+# MEANING CHANGED: the dictionary sense pinned for these words was an uncommon
+# meaning (e.g. "donkey" as the Democratic Party symbol), so the description now
+# describes the common meaning of the same part of speech. The word's `sense`
+# and `subject` still come from the old sense: pin the matching sense in
+# scripts/words-source.txt (`--senses <word>`) to fix them.
+# Format: word | old dictionary description => new description
+#
+# FLAGGED: archaic or obscure words, words pinned to a rare part of speech, and
+# words that may not belong in a family game. They kept a description; decide
+# whether to keep, re-sense or block them (scripts/blocked-words.txt).
+# Format: word | reason
+
+## MEANING CHANGED (975)
+above | At an earlier place. => In or to a higher place; overhead.
+academic | Hypothetical or theoretical and not expected to produce an immediate or practical result. => Relating to school, college and study.
+active | Tending to become more severe or wider in scope. => Busy moving or doing things; full of energy.
+address | The code that identifies where a piece of information is stored. => The details of where someone lives, such as the street and town.
+advise | Inform (somebody) of something. => To tell someone what you think they should do.
+altering | The sterilization of an animal. => The act of changing something.
+annual | Completing its life cycle within a year. => Happening once every year.
+appearing | Formal attendance (in court or at a hearing) of a party in an action. => Coming into view or showing up somewhere.
+area | A subject of study. => A region or part of a place.
+attach | Be in contact with. => To fasten or join one thing to another.
+attended | Playing or singing with instrumental or vocal accompaniment. => Having people present, like an event with many guests.
+award | A grant made by a law court. => A prize given for an achievement.
+away | From one's possession. => To or at a distance from a place.
+band | An unofficial association of people or groups. => A group of musicians who play together.
+bank | Sloping land (especially the slope beside a body of water). => A business that keeps money safe, lends it and pays interest.
+battery | Group of guns or missile launchers operated together at one place. => A device that stores electricity, used to power phones and toys.
+bear | Have. => To put up with something hard or unpleasant.
+benefit | Financial assistance in time of need. => Something good that you gain; an advantage.
+bill | A statute in draft before it becomes law. => A paper showing how much you owe for goods or services.
+break | Terminate or end. => To smash or split something into pieces.
+buffer | An ionic compound that resists changes in its pH. => Something that protects by softening a blow or keeping things apart.
+built | Having a substance (an abrasive or filler) added to increase effectiveness. => Made or put together; constructed.
+calculate | Judge to be probable. => To work out an answer using numbers.
+captain | An officer holding a rank below a major but above a lieutenant. => The person in command of a ship, plane or sports team.
+catch | Discover or come upon accidentally, suddenly, or unexpectedly. => To seize or grab something moving through the air.
+center | The piece of ground in the outfield directly ahead of the catcher. => The middle point or part of something.
+certain | Definite but not specified or identified. => Completely sure; having no doubt.
+channel | A path over which electrical signals can pass. => A television or radio station you can tune to.
+class | A collection of things sharing a common attribute. => A group of students taught together.
+clever | Showing self-interest and shrewdness in dealing with others. => Quick to learn and understand; smart.
+club | A team of professional baseball players who play and travel together. => A group of people who meet to share an interest.
+coding | Act of writing in code or cipher. => Writing computer programs.
+cold | Extended meanings; without human warmth or emotion. => Having a low temperature; not warm.
+common | Public. => Found or happening often; ordinary.
+complaint | An often persistent bodily disorder or disease. => A statement that you are unhappy or dissatisfied about something.
+composing | The spatial property resulting from the arrangement of parts in relation to each other and to the whole. => Writing music or poetry.
+consist | Originate (in). => To be made up of certain parts.
+core | A small group of indispensable persons or things. => The central or most important part of something.
+corner | A place off to the side of an area. => A place where two walls, streets or edges meet.
+crash | A loud resonant repeating noise. => A violent collision, as between cars.
+creature | A person who is controlled by others and is used to perform unpleasant or dishonest tasks for someone else. => An animal or other living being, often a strange one.
+crisp | Clearly defined. => Firm and crunchy, like fresh lettuce.
+cure | Prepare by drying, salting, or chemical processing in order to preserve. => To make a sick person healthy again.
+curious | Beyond or deviating from the usual or expected. => Eager to learn or know about something.
+dating | Use of chemical analysis to estimate the age of geological specimens. => Going out with someone you are romantically interested in.
+deal | Act on verbally or in some form of artistic expression. => To handle or take care of a problem or task.
+decide | Bring to an end; settle conclusively. => To make up your mind after thinking.
+deep | Marked by depth of thinking. => Going far down from the top or surface.
+default | Loss due to not showing up. => The setting or option chosen automatically unless you change it.
+discount | Bar from attention or consideration. => To take an amount off the usual price.
+distant | Far apart in relevance or relationship or kinship. => Far away in space or time.
+division | An army unit large enough to sustain combat. => Splitting a number into equal parts, as in math.
+double | A base hit on which the batter stops safely at second base. => An amount twice as big.
+draw | Cause to move by pulling. => To make a picture with a pencil or pen.
+easily | Without doubt. => Without difficulty.
+economic | Using the minimum of time or resources necessary for effectiveness. => Relating to money, trade and industry.
+except | Object to. => To leave something out; exclude it.
+exchange | Chemical process in which one atom or ion or group changes places with another. => Giving one thing and receiving another in return; a swap.
+execute | Kill as a means of socially sanctioned punishment. => To carry out a plan, order or task.
+exist | Support oneself. => To be real or present.
+expense | A detriment or sacrifice. => Money spent on something; a cost.
+fashion | How something is done or how it happens. => The popular style of clothes at a given time.
+father | The founder of a family. => A man who has a child; a dad.
+favorite | Appealing to the general public. => Liked more than all others.
+feedback | The process in which part of the output of a system is returned to its input in order to regulate its further output. => Comments or reactions given to help someone improve.
+fight | A hostile meeting of opposing military forces in the course of a war. => A struggle between people using force.
+flashing | A short vivid experience. => A burst of bright light shown on and off.
+flavor | The general atmosphere of a place or situation and the effect that it has on people. => The taste of a food or drink.
+form | The phonological or orthographic sound or appearance of a word that can be used to describe or identify something. => The shape or outline of something.
+fry | Be excessively hot. => To cook food in hot oil or fat.
+government | Exercising authority. => The group of people who rule a country.
+grave | Death of a person. => A hole in the ground where a dead person is buried.
+group | Two or more atoms bound together as a single unit and forming part of a molecule. => A number of people or things together.
+hardly | Only a very short time before. => Almost not; barely.
+hardware | Major items of military weaponry (as tanks or missile). => The physical parts of a computer, such as the keyboard and screen.
+headed | Often used in combination. => Going in a particular direction.
+invite | Increase the likelihood of. => To ask someone to come to an event or place.
+isolated | Not close together in time. => Far away from others; alone.
+lock | Keep engaged. => To fasten something with a key so it cannot be opened.
+loop | Fastener consisting of a metal ring for lining a small hole to permit the attachment of cords or lines. => A shape made by a line, rope or string curving back on itself.
+lorry | A large low horse-drawn wagon without sides. => A large truck for carrying goods.
+make | Engage in. => To create or produce something.
+mechanic | A craftsman skilled in operating machine tools. => A person who repairs cars and other machines.
+mechanism | The atomic process that occurs during a chemical reaction. => The working parts of a machine or how something works.
+mix | Open (a place) to members of all races and ethnic groups. => To combine things together.
+modern | Since the Middle Ages. => Belonging to recent times; up to date.
+option | The right to buy or sell property at an agreed price. => One of the choices you can make.
+please | Be the will of or have the will (to). => To make someone happy or satisfied.
+pull | Direct toward itself or oneself by means of some psychological power or physical attributes. => To draw something toward yourself.
+punctuation | Something that makes repeated and regular interruptions or divisions. => Marks such as commas and periods that divide sentences.
+science | Ability to produce solutions in some problem domain. => Knowledge about the natural world gained through study and experiments.
+sorry | Bad; unfortunate. => Feeling regret or sadness for something.
+throw | Move violently, energetically, or carelessly. => To send something flying with a toss of your hand.
+title | A heading that names a statute or legislative bill; may give a brief summary of the matters it deals with. => The name of a book, film or song.
+trial | The act of testing something. => A test to see how good or useful something is.
+absorb | Become imbued. => To soak up a liquid or take something in.
+abysmal | Very great; limitless. => Extremely bad.
+assignment | The instrument by which a claim or right or interest or property is transferred from one person to another. => A legal document that transfers a right or property to someone.
+bath | A vessel containing liquid in which something is immersed (as to process it or to maintain it at a constant temperature or to lubricate it). => A tub of water you sit in to wash.
+belt | Endless loop of flexible material between two rotating shafts or pulleys. => A band of material worn around the waist.
+bonus | Anything that tends to arouse. => Something extra that encourages or rewards.
+cable | A telegram sent abroad. => A thick wire that carries electricity or signals.
+capture | Succeed in representing or expressing something intangible. => To catch or take control of something.
+chess | Weedy annual native to Europe but widely distributed as a weed especially in wheat. => A board game in which two players move pieces such as kings and queens.
+complementary | Of words or propositions so related that each is the negation of the other. => Completing or going well with each other.
+construction | A group of words that form a constituent of a sentence and are considered as a single unit. => A group of words that form part of a sentence.
+cream | The best people or things in a group. => The best part of a group.
+decay | Lose a stored charge, magnetic flux, or current. => To rot or break down slowly.
+devastating | Making light of. => Extremely shocking or destructive.
+evolve | Work out. => To develop gradually.
+expedition | A military campaign designed to achieve a specific objective in a foreign country. => A journey made for a particular purpose, often exploration.
+extinction | No longer active; extinguished. => The dying out of a whole species.
+fantastic | Ludicrously odd. => Wonderful; amazing.
+fare | An agenda of things to do. => The money paid for a journey on a bus, train or plane.
+forgive | Absolve from payment. => To stop being angry with someone for what they did.
+galaxy | A splendid assemblage (especially of famous people). => A gathering of famous people.
+glove | The handwear used by fielders in playing baseball. => A covering for the hand with a separate part for each finger.
+guideline | A light line that is used in lettering to help align the letters. => A rule or principle that helps you decide how to act.
+hacker | Someone who plays golf poorly. => A person who breaks into computer systems.
+hammer | The part of a gunlock that strikes the percussion cap when the trigger is pulled. => A tool with a heavy head for hitting nails.
+hobby | An auxiliary activity. => An activity you do for fun in your spare time.
+hook | A catch for locking a door. => A curved piece of metal used to hold or catch things.
+hut | Temporary military shelter. => A small simple building, often made of wood.
+idealistic | Of or relating to the philosophical doctrine of the reality of ideas. => Believing in high ideals, even if they are unrealistic.
+leaflet | A thin triangular flap of a heart valve. => A printed sheet of paper with information.
+lighter | A substance used to ignite or kindle a fire. => A small device for starting a flame.
+misdirect | Corrupt morally or by intemperance or sensuality. => To send someone the wrong way.
+module | One of the inherent cognitive or perceptual powers of the mind. => A separate unit that fits together with others to make a whole.
+mole | The basic unit of amount of substance adopted under the Systeme International d'Unites. => A small burrowing animal with dark fur and tiny eyes.
+multiplication | The act of producing offspring or multiplying by such production. => Adding a number to itself a set number of times, as in 3 times 4.
+needle | The leaf of a conifer. => A thin pointed steel tool with a hole at one end, used for sewing.
+notification | An accusation of crime made by a grand jury on its own initiative. => A message telling you about something.
+novice | Someone who has entered a religious order but has not taken final vows. => A beginner.
+nuisance | A broad legal concept including anything that disturbs the reasonable use of your property or endangers life and health or is offensive. => Something or someone annoying.
+pacifier | Someone who tries to bring peace. => A rubber nipple that a baby sucks to stay calm.
+parity | The number of liveborn children a woman has delivered. => Being equal, especially in pay or status.
+pipeline | Gossip spread by spoken communication. => A long line of pipes that carries oil or gas over a great distance.
+plate | Base consisting of a rubber slab where the batter stands; it must be touched by a base runner in order to score. => A flat dish for serving food.
+pulse | A sharp transient wave in the normal electrical state (or a series of such transients). => The regular beat of blood in your arteries as your heart pumps.
+receiver | A person (usually appointed by a court of law) who liquidates assets or preserves them for the benefit of affected parties. => A device that picks up radio or phone signals.
+rectify | Determine the length of. => To put something right.
+reluctance | Opposition to magnetic flux (analogous to electric resistance). => Unwillingness to do something.
+resist | Elude, especially in a baffling way. => To fight against something.
+ringing | The giving of a ring as a token of engagement. => The clear sound a bell makes when struck.
+ripped | Stupefied or excited by a chemical substance (especially alcohol). => Torn roughly.
+scanner | Someone who scans verse to determine the number and prosodic value of the syllables. => A machine that copies a picture or document into a computer.
+scarce | Only a very short time before. => Barely; hardly.
+scarcely | Only a very short time before. => Hardly; almost not.
+sequel | Something that follows something else. => A book or film that continues a story.
+slot | A position in a grammatical linguistic construction in which a variety of alternative units are interchangeable. => A narrow opening for inserting something, like a coin.
+soil | Anything regarded as making something unclean. => The earth that plants grow in.
+spike | A transient variation in voltage or current. => A sharp pointed piece of metal or wood.
+spray | A pesticide in suspension or solution. => A fine mist of liquid.
+stem | The form of a word after all affixes are removed. => The main stalk of a plant that holds up the leaves and flowers.
+stray | Not close together in time. => Lost and without a home, like an animal.
+transient | Of a mental act; causing effects outside the mind. => Lasting only a short time.
+transit | A surveying instrument for measuring horizontal and vertical angles, consisting of a small telescope mounted on a tripod. => Moving people or goods from place to place.
+trek | A journey by ox wagon (especially an organized migration by a group of settlers). => A long, hard journey on foot.
+vinyl | A univalent chemical radical derived from ethylene. => A kind of plastic used for records, floors and clothing.
+abacus | A tablet placed horizontally on top of the capital of a column as an aid in supporting the architrave. => A frame of beads on rods used for counting.
+acumen | A tapering point. => Sharp skill at judging situations.
+adhesion | Abnormal union of bodily tissues; most common in the abdomen. => The ability to stick to a surface.
+administrator | The party appointed by a probate court to distribute the estate of someone who dies without a will or without naming an executor. => A person who manages an organization or system.
+affinity | The attraction between an antigen and an antibody. => A natural liking or sense of connection.
+aide | An officer who acts as military assistant to a more senior officer. => An assistant.
+airline | A hose that carries air under pressure. => A company that flies passengers on planes.
+aisle | A long narrow passage (as in a cave or woods). => A passage between rows of seats, as in a church or plane.
+aloft | At or on or to the masthead or upper rigging of a ship. => Up in the air; overhead.
+angler | A scheming person; someone who schemes to gain an advantage. => A person who fishes with a rod and line.
+animate | Belonging to the class of nouns that denote living beings. => Alive.
+anteater | Toothless mammal of southern Africa and Asia having a body covered with horny scales and a long snout for feeding on ants and termites. => An animal with a long snout and a sticky tongue that eats ants.
+apprehensive | Quick to understand. => Worried that something bad will happen.
+approachable | Capable of being read with comprehension. => Friendly and easy to talk to.
+apricot | Asian tree having clusters of usually white blossoms and edible fruit resembling the peach. => A small orange fruit with a stone, like a tiny peach.
+arbor | Tree (as opposed to shrub). => A shady garden shelter covered with vines.
+armory | A collection of resources. => A place where weapons are stored.
+aromatic | Of or relating to or containing one or more benzene rings. => Having a strong, pleasant smell.
+assassination | An attack intended to ruin someone's reputation. => The murder of an important person, often for political reasons.
+auction | A variety of bridge in which tricks made in excess of the contract are scored toward game; now generally superseded by contract bridge. => A sale where items go to whoever offers the most money.
+auditor | Someone who listens attentively. => A person who checks a company's accounts.
+aviation | The aggregation of a country's military aircraft. => The flying and building of aircraft.
+backhanded | Made across the body with back of hand facing direction of stroke. => Indirect and insulting, like a false compliment.
+balcony | An upper floor projecting from the rear over the main floor in an auditorium. => A platform with a railing outside an upper window.
+bald | With no effort to conceal. => Having no hair on the head.
+balmy | Informal or slang terms for mentally irregular. => Pleasantly warm and mild.
+beehive | Any workplace where people are very busy. => A box or structure where bees live.
+bereft | Unhappy in love; suffering from unrequited love. => Deprived of something; lacking.
+berth | A job in an organization. => A bed on a ship or train.
+bib | Top part of an apron; covering the chest. => A cloth tied under a baby's chin to keep clothes clean.
+blackjack | A common scrubby deciduous tree of central and southeastern United States having dark bark and broad three-lobed (club-shaped) leaves. => A card game where players try to reach 21.
+blockbuster | A large bomb used to demolish extensive areas (as a city block). => A hugely successful film or book.
+boa | A long thin fluffy scarf of feathers or fur. => A large snake that squeezes its prey.
+brawl | An uproarious party. => A rough, noisy fight.
+brownie | Fairies that are somewhat mischievous. => A small square of rich chocolate cake.
+builder | A substance added to soaps or detergents to increase their cleansing action. => A person who constructs houses.
+bumper | A glass filled to the brim (especially as a toast). => A bar on the front or back of a car that softens knocks.
+bunk | A long trough for feeding cattle. => A narrow bed, often one of two stacked.
+bunny | A young waitress in a nightclub whose costume includes the tail and ears of a rabbit. => A child's word for a rabbit.
+buzz | Fly low. => To make a humming sound like a bee.
+caboose | The area for food preparation on a ship. => The last car of a freight train, for the crew.
+calve | Release ice. => To give birth to a young cow.
+canal | An indistinct surface feature of Mars once thought to be a system of channels; they are now believed to be an optical illusion. => A man-made waterway for boats or for watering crops.
+canine | Of or relating to a pointed conical tooth. => Relating to dogs.
+canister | A metallic cylinder packed with shot and used as ammunition in a firearm. => A round metal container.
+canned | Recorded for broadcast. => Preserved in a sealed metal tin.
+canopy | The transparent covering of an aircraft cockpit. => A cloth covering held up over a bed, throne or doorway.
+caption | Taking exception. => A short title or explanation under a picture.
+catchy | Having concealed difficulty. => Easy to remember, like a good tune.
+catechism | A series of questions put to an individual (such as a political candidate) to elicit their views. => A set of questions and answers teaching religious beliefs.
+chassis | Alternative names for the body of a human being. => The frame of a car.
+chilly | Not characterized by emotion. => Rather cold.
+chopper | A grounder that bounces high in the air. => A helicopter.
+cistern | A sac or cavity containing fluid especially lymph or cerebrospinal fluid. => A tank for storing water.
+clamp | Impose or inflict forcefully. => To hold firmly in a tight grip.
+clapper | Someone who applauds. => The tongue of a bell that strikes it.
+clemency | Good weather with comfortable temperatures. => Mercy shown to someone being punished.
+clout | A target used in archery. => Influence or power.
+clubbing | A condition in which the ends of toes and fingers become wide and thick; a symptom of heart or lung disease. => Going out dancing at nightclubs.
+cob | Nut of any of several trees of the genus Corylus. => The core of an ear of corn.
+coffer | An ornamental sunken panel in a ceiling or dome. => A strongbox for money.
+cog | A subordinate who performs an important but routine function. => One of the teeth on the edge of a gear wheel.
+collide | Be incompatible; be or come into conflict. => To crash into something.
+comely | According with custom or propriety. => Attractive.
+commute | Exchange positions without a change in value. => To travel regularly between home and work.
+condensation | An unconscious process whereby two ideas or images combine into a single symbol; especially in dreams. => Water drops that form on a cold surface.
+confinement | Concluding state of pregnancy; from the onset of contractions to the birth of a child. => Being kept in a closed space.
+constellation | An arrangement of parts or elements. => A group of stars that form a pattern.
+constricted | Especially tense; especially in some dialects. => Squeezed or narrowed.
+convoluted | Rolled longitudinally upon itself. => Very complicated and hard to follow.
+corpus | Capital as contrasted with the income derived from it. => A large collection of writings.
+corpuscle | A tiny piece of anything. => A blood cell.
+cot | A sheath worn to protect a finger. => A small bed for a baby, or a folding bed.
+cowboy | Someone who is reckless or irresponsible (especially in driving vehicles). => A man who herds cattle on horseback.
+cranky | Inclined to heel over easily under sail. => Grumpy and irritable.
+creepy | Annoying and unpleasant. => Strange and a little scary.
+croak | Pass from physical life and lose all bodily attributes and functions necessary to sustain life. => To make a deep, hoarse sound like a frog.
+crock | A black colloidal substance consisting wholly or principally of amorphous carbon and used to make pigments and ink. => A clay pot or jar.
+crook | A circular segment of a curve. => A dishonest person; a criminal.
+cropped | Used for growing crops. => Cut short.
+cub | An awkward and inexperienced youth. => A young bear, lion or wolf.
+cubicle | Small room in which a monk or nun lives. => A small partitioned workspace in an office.
+cunningly | In an attractive manner. => In a clever, sly way.
+cutlery | A cutting implement; a tool for cutting. => Knives, forks and spoons.
+dashboard | Protective covering consisting of a panel to protect people from the splashing water or mud etc. => The panel of dials in front of a car's driver.
+decimate | Kill one in every ten, as of mutineers in Roman armies. => To destroy a large part of something.
+decoder | The kind of intellectual who converts messages from a code to plain text. => A device that converts coded signals.
+decomposition | The analysis of a vector field. => Rotting or breaking down.
+deflation | The erosion of soil as a consequence of sand and dust and loose rocks being removed by the wind. => A fall in prices.
+deflection | A twist or aberration; especially a perverse or abnormal way of judging or acting. => Turning aside from a course.
+densely | Stupidly or insensitively. => Thickly; closely packed.
+desist | Choose not to consume. => To stop doing something.
+diaphragm | A mechanical device in a camera that controls size of aperture of the lens. => The muscle under the lungs that helps you breathe.
+dictation | An authoritative direction or instruction to do something. => Saying words aloud for someone to write down.
+diffusion | The spread of social institutions (and myths and skills) from one society to another. => The spreading out of something, like a gas.
+digestion | The process of decomposing organic matter (as in sewage) by bacteria or by chemical action or heat. => Breaking down food in the stomach.
+digitally | By means of the fingers. => Using computer technology.
+dilation | A lengthy discussion (spoken or written) on a particular topic. => Becoming wider.
+dipped | Having abnormal sagging of the spine (especially in horses). => Briefly lowered into a liquid.
+dissected | Having one or more indentations reaching nearly to the midrib. => Cut apart to study, as in biology.
+dithering | The process of representing intermediate colors by patterns of tiny colored dots that simulate the desired color. => Being unable to make up your mind.
+dock | An enclosure in a court of law where the defendant sits during the trial. => A platform where ships load and unload.
+dodo | Someone whose style is out of fashion. => A large extinct flightless bird.
+domino | A loose hooded cloak worn with a half mask as part of a masquerade costume. => A small tile with dots used in a game.
+donkey | The symbol of the Democratic Party; introduced in cartoons by Thomas Nast in 1874. => A gray animal like a small horse with long ears, known for braying.
+dote | Be foolish or senile due to old age. => To be very fond of someone.
+doughnut | A toroidal shape. => A ring-shaped fried cake.
+ducking | Hunting ducks. => Quickly lowering your head to avoid something.
+duet | Two items of the same kind. => A piece of music for two performers.
+dungeon | The main tower within the walls of a medieval castle or fortress. => A dark underground prison in a castle.
+earthy | Conspicuously and tastelessly indecent. => Simple, natural and unrefined.
+elusive | Difficult to describe. => Hard to find or catch.
+elves | An acronym for emissions of light and very low frequency perturbations due to electromagnetic pulse sources. => Small magical beings from folk tales.
+engagement | A hostile meeting of opposing military forces in the course of a war. => An agreement to marry.
+engulf | Devote (oneself) fully to. => To swallow up or surround completely.
+entrant | A commodity that enters competition with established merchandise. => A person who enters a contest.
+equestrian | Of or relating to or composed of knights. => Relating to horse riding.
+exacting | Having complicated nutritional requirements; especially growing only in special artificial cultures. => Demanding great care and effort.
+exquisite | Intense or sharp. => Very beautiful and delicate.
+extinguished | Of a conditioned response; caused to die out because of the absence or withdrawal of reinforcement. => Put out, like a fire.
+extortion | An exorbitant charge. => Getting money by threats.
+fable | A deliberately false or improbable account. => A short story, often with animals, that teaches a lesson.
+fang | An appendage of insects that is capable of injecting venom; usually evolved from the legs. => A long sharp tooth, as of a snake or wolf.
+feeder | An animal being fattened or suitable for fattening. => A container that holds food for birds or animals.
+fermentation | A state of agitation or turbulent change or development. => The process by which yeast turns sugar into alcohol.
+fertility | The ratio of live births in an area to the population of that area; expressed per 1000 population per year. => The ability to have babies or produce crops.
+fidelity | Accuracy with which an electronic system reproduces the sound or image of its input signal. => Faithfulness and loyalty.
+fig | A diagram or picture illustrating textual material. => A soft sweet fruit full of tiny seeds.
+fin | The cardinal number that is the sum of four and one. => A thin flat part on a fish's body used for swimming.
+fireman | Play in which children pretend to put out a fire. => A person whose job is to put out fires.
+fission | Reproduction of some unicellular organisms by division of the cell into two more or less equal parts. => Splitting an atom to release energy.
+fixation | An abnormal state in which development has stopped prematurely. => An obsession.
+flagpole | Surveying instrument consisting of a straight rod painted in bands of alternate red and white each one foot wide. => A tall pole for flying a banner.
+flak | A slick spokesperson who can turn any criticism to the advantage of their employer. => Harsh criticism.
+flock | A church congregation guided by a pastor. => A group of sheep or birds.
+flue | Flat bladelike projection on the arm of an anchor. => A pipe that carries smoke up a chimney.
+flux | The rate of flow of energy or particles across a given surface. => Constant change.
+fodder | Soldiers who are regarded as expendable in the face of artillery fire. => Food for farm animals, such as hay.
+foothold | An area in hostile territory that has been captured and is held awaiting further troops and supplies. => A secure place to put your foot.
+foregrounding | The execution of a program that preempts the use of the processing system. => Making something the most noticeable part.
+forensic | Of, relating to, or used in public debate or argument. => Relating to scientific methods used to solve crimes.
+founder | Inflammation of the laminated tissue that attaches the hoof to the foot of a horse. => A person who starts an organization.
+fount | A specific size and style of type within a type family. => A source, like a spring.
+fracture | Violate or abuse. => To crack or break, like a bone.
+frill | A bony plate that curves upward behind the skull of many ceratopsian dinosaurs. => A decorative ruffle on clothing.
+gal | United States liquid unit equal to 4 quarts or 3.785 liters. => A girl or woman.
+gall | An open sore on the back of a horse caused by ill-fitting or badly adjusted saddle. => Bold rudeness; nerve.
+gallery | Spectators at a golf or tennis match. => A room or building for showing art.
+galley | A large medieval vessel with a single deck propelled by sails and oars with guns at stern and prow; a complement of 1,000 men. => The kitchen on a ship.
+gem | Art highly prized for its beauty or perfection. => A precious stone, such as a diamond or ruby.
+gentleness | The property possessed by a slope that is very gradual. => Kindness and softness.
+germ | Anything that provides inspiration for later work. => A tiny living thing that can cause disease.
+getaway | The attribute of being capable of rapid acceleration. => An escape.
+gill | A British imperial capacity unit (liquid or dry) equal to 5 fluid ounces or 142.066 cubic centimeters. => The organ a fish uses to breathe.
+gimmick | A drawback or difficulty that is not readily evident. => A trick to attract attention.
+gob | A man who serves as a sailor. => A lump of something soft.
+gondola | A low flat-bottomed freight car with fixed sides but no roof. => A long narrow boat used on the canals of Venice.
+gopher | A zealously energetic person (especially a salesman). => A small burrowing rodent with cheek pouches.
+gouge | Force with the thumb. => To dig out with something sharp.
+greet | React to in a certain way. => To say hello to someone.
+gregarious | Tending to form a group with others of the same species. => Sociable; enjoying company.
+grievous | Causing fear or anxiety by threatening great harm. => Very serious, like a grave injury.
+grille | Small opening (like a window in a door) through which business can be transacted. => A grating of bars over an opening, as on the front of a car.
+grit | A hard coarse-grained siliceous sandstone. => Tiny hard bits of sand or stone.
+grooming | Activity leading to skilled behavior. => Keeping yourself or an animal clean and neat.
+guillotine | Closure imposed on the debate of specific sections of a bill. => A machine with a heavy blade once used for executions.
+hammock | A small natural hill. => A hanging bed made of cloth or netting.
+haunted | Having or showing excessive or compulsive concern with something. => Visited by ghosts.
+headstone | The central building block at the top of an arch or vault. => A stone marking a grave.
+headway | Vertical space available to allow easy passage under something. => Progress toward a goal.
+heady | Marked by the exercise of good judgment or common sense in practical matters. => Exciting and intoxicating.
+hedgehog | Relatively large rodents with sharp erectile bristles mingled with the fur. => A small animal covered in spines that rolls into a ball.
+hive | A teeming multitude. => A home for bees.
+homeless | Without nationality or citizenship. => Having nowhere to live.
+hoop | A light curved skeleton to spread out a skirt. => A large ring.
+hose | Socks and stockings and tights collectively (the British include underwear). => A flexible tube for carrying water.
+hospitable | Favorable to life and growth. => Friendly and welcoming to guests.
+hover | Be undecided about something; waver between conflicting positions or courses of action. => To stay in the air in one place.
+hyacinth | A red transparent variety of zircon used as a gemstone. => A spring plant with fragrant clusters of flowers.
+hydrant | A faucet for drawing water from a pipe or cask. => A street water pipe used by firefighters.
+icing | The formation of frost or ice on a surface. => A sweet sugar coating on cakes.
+idiocy | Extreme mental retardation. => Extreme foolishness.
+immobilize | Hold as reserve or withdraw from circulation; of capital. => To stop from moving.
+impertinent | Characterized by a lightly pert and exuberant quality. => Rude and disrespectful.
+inactive | Not participating in a chemical reaction; chemically inert. => Not active; doing nothing.
+inanimate | Belonging to the class of nouns denoting nonliving things. => Not alive, like a rock.
+incumbent | Lying or leaning on something else. => Currently holding an office.
+individualism | The doctrine that government should not interfere in commercial affairs. => Belief in personal independence.
+infiltrate | Cause (a liquid) to enter by penetrating the interstices. => To secretly enter a group or place.
+infuse | Teach and impress by frequent repetitions or admonitions. => To soak in liquid to draw out flavor, like tea.
+insulate | Place or set apart. => To cover something to keep in heat or block electricity.
+insulation | The state of being isolated or detached. => Material that keeps in heat or blocks electricity.
+insure | Be careful or certain to do something; make certain of something. => To protect against loss with a policy you pay for.
+intruding | Projecting inward. => Entering without being invited.
+inversion | The layer of air near the earth is cooler than an overlying layer. => A reversal of the normal order.
+investigator | A scientist who devotes themself to doing research. => A person who looks into crimes or problems.
+irradiate | Give spiritual insight to; in religion. => To expose to radiation.
+itchy | Nervous and unable to relax. => Making you want to scratch.
+jellyfish | Large siphonophore having a bladderlike float and stinging tentacles. => A soft, see-through sea creature with stinging tentacles.
+jog | Continue talking or writing in a desultory manner. => To run slowly and steadily for exercise.
+juggle | The act of rearranging things to give a misleading impression. => Keeping several objects in the air by tossing and catching them.
+juggling | The act of rearranging things to give a misleading impression. => Tossing and catching several objects without dropping them.
+juniper | Desert shrub of Syria and Arabia having small white flowers; sometimes placed in genus Genista. => An evergreen shrub with blue berries.
+kink | A painful muscle spasm especially in the neck or back (‘rick’ and ‘wrick’ are British). => A twist or bend in a line or hair.
+kitty | The combined stakes of the betters. => A pet name for a cat.
+knocker | A big shot who knows it and acts that way; a boastful immoderate person. => A hinged metal piece on a front door, used to announce visitors.
+knot | A tight cluster of people or things. => A tie made by looping and pulling string tight.
+landslide | An overwhelming electoral victory. => A fall of earth and rocks down a slope.
+leeway | Sideways drift. => Freedom to act; room to maneuver.
+lettuce | Informal terms for money. => A leafy green vegetable used in salads.
+levee | A formal reception of visitors or guests (as at a royal court). => A bank built to stop a river from flooding.
+liberated | Released from chemical combination. => Freed.
+lick | Beat thoroughly and conclusively in a competition or fight. => To pass your tongue over something.
+lifeline | A crease on the palm; its length is said by palmists to indicate how long you will live. => A rope or support that saves someone in danger.
+lightening | Descent of the uterus into the pelvic cavity that occurs late in pregnancy; the fetus is said to have dropped. => Making something paler or less heavy.
+liner | A hit that flies straight out from the batter. => A large passenger ship.
+liquidate | Get rid of (someone who may be a threat) by killing. => To close a business and sell off its assets.
+livid | Anemic looking from illness or emotion. => Furious.
+lollipop | Ice cream or water ice on a small wooden stick. => A hard candy on a stick.
+loon | A worthless lazy fellow. => A diving water bird with an eerie call.
+loosened | Straightened out. => Made less tight.
+lottery | Something that is regarded as a chance event. => A game where people buy tickets and winners are drawn at random.
+lute | A substance for packing a joint or coating a porous surface to make it impervious to gas or liquid. => A stringed instrument with a pear-shaped body.
+macaroni | A British dandy in the 18th century who affected Continental mannerisms. => Pasta in short curved tubes.
+mall | A public area set aside as a pedestrian walk. => A large shopping center.
+mannequin | A woman who wears clothes to display fashions. => A life-size dummy used to display clothes.
+mansion | One of 12 equal areas into which the zodiac is divided. => A very large, grand house.
+marathon | Any long and arduous undertaking. => A long-distance running race.
+marcher | An inhabitant of a border district. => A person who walks in a protest or parade.
+masculine | Male (of grammatical gender). => Relating to men; manly.
+measurable | Of distinguished importance. => Large enough to notice.
+mechanize | Equip with armed and armored motor vehicles. => To equip with machines.
+medallion | Any of various large ancient Greek coins. => A large medal worn as a pendant.
+metabolism | The marked and rapid transformation of a larva into an adult that occurs in some animals. => The chemical processes that turn food into energy in the body.
+meteoric | Of or pertaining to atmospheric phenomena, especially weather and weather conditions. => Very fast and brilliant, like a shooting star.
+mince | Make less severe or harsh. => To chop meat into tiny pieces.
+minuscule | Of or relating to a small cursive script developed from uncial; 7th to 9th centuries. => Extremely small.
+misdirection | An incorrect charge to a jury given by a judge. => Sending someone the wrong way or distracting them.
+mite | A slight but appreciable amount. => A tiny eight-legged creature related to spiders.
+mitt | The (prehensile) extremity of the superior limb. => A thick padded glove, as for baseball.
+mixer | A party of people assembled to promote sociability and communal activity. => A machine for mixing food.
+moderator | Any substance used to slow down neutrons in nuclear reactors. => A person who runs a debate or online forum.
+mortar | A muzzle-loading high-angle gun with a short barrel that fires shells at high elevations for a short range. => A paste of cement used to hold bricks together.
+mortified | Suffering from tissue death. => Deeply embarrassed.
+mortify | Practice self-denial of one's body and appetites. => To embarrass deeply.
+mound | The slight elevation on which the pitcher stands. => A small hill or heap of earth.
+mutation | An organism that has characteristics resulting from chromosomal alteration. => A change in a living thing's genes.
+muzzle | The open circular discharging end of a gun. => The nose and mouth of an animal such as a dog.
+nab | Tag the base runner to get them out. => To catch or arrest someone.
+naturalist | An advocate of the doctrine that the world can be understood in scientific terms. => A person who studies plants and animals.
+naturalization | The quality of being brought into conformity with nature. => Granting citizenship to someone from another country.
+naturalized | Introduced from another region and persisting without cultivation. => Given citizenship of a new country.
+nebula | A medicinal liquid preparation intended for use in an atomizer. => A huge cloud of gas and dust in space.
+neophyte | A plant that is found in an area where it had not been recorded previously. => A beginner.
+nibble | A small byte. => A small bite.
+nippy | A sharp biting taste. => Chilly.
+nit | A luminance unit equal to 1 candle per square meter measured perpendicular to the rays from the source. => The egg of a louse.
+noose | A trap for birds or small mammals. => A loop of rope with a sliding knot.
+octave | A feast day and the seven days following it. => The span from one musical note to the next of the same name.
+offload | Transfer to a peripheral device, of computer data. => To unload or get rid of something.
+opossum | Small furry Australian arboreal marsupials having long usually prehensile tails. => An American animal that plays dead when threatened.
+orphanage | The condition of being a child without living parents. => A home for children without parents.
+orthogonal | Not pertinent to the matter under consideration. => At right angles.
+outfit | Any cohesive unit such as a military company. => A set of clothes worn together.
+overhaul | Travel past. => To repair and improve thoroughly.
+overkill | The capability to obliterate a target with more weapons (especially nuclear weapons) than are required. => Much more than is needed.
+pacemaker | A leading instance in its field. => A device that keeps the heart beating steadily.
+paradigm | Systematic arrangement of all the inflected forms of a word. => A typical example or model.
+parental | Designating the generation of organisms from which hybrid offspring are produced. => Relating to mothers and fathers.
+parole | A promise. => Early release from prison on good behavior.
+parted | Having a margin incised almost to the base so as to create distinct divisions or lobes. => Separated; divided.
+passageway | A path or channel or duct through or along which something may pass. => A corridor or path.
+pastel | Lacking in body or vigor. => Soft and pale in color.
+pathway | A bundle of myelinated nerve fibers following a path through the brain. => A path or track.
+patriarch | Title for the heads of the Eastern Orthodox Churches (in Istanbul and Alexandria and Moscow and Jerusalem). => The male head of a family.
+patrimony | A church endowment. => Property inherited from your father.
+peacock | European butterfly having reddish-brown wings each marked with a purple eyespot. => A large bird; the male has a huge, colorful fanned tail.
+peeled | Completely unclothed. => With the skin taken off.
+perversion | A curve that reverses the direction of something. => Twisting something away from its proper use.
+phlegm | Apathy demonstrated by an absence of emotional reactions. => Thick mucus from the throat.
+picket | A person employed to keep watch for some anticipated event. => A person protesting outside a workplace during a strike.
+picnic | A day devoted to an outdoor social gathering. => A meal eaten outdoors.
+pike | A broad highway designed for high-speed traffic. => A long heavy spear once used by soldiers.
+placenta | That part of the ovary of a flowering plant where the ovules form. => The organ that feeds a baby in the womb.
+plunger | Someone who risks losses for the possibility of considerable gains. => A tool with a rubber cup used to unblock drains.
+polemics | The branch of Christian theology devoted to the refutation of errors. => The practice of fierce argument.
+pony | A range horse of the western United States. => A small breed of horse.
+portrait | A word picture of a person's appearance and character. => A painting or photo of a person.
+potency | The power or right to give orders or make decisions. => Strength or power.
+precursor | A substance from which another substance is formed (especially by a metabolic reaction). => Something that comes before another.
+prey | A person who is the aim of an attack (especially a victim of ridicule or exploitation) by some hostile person or influence. => An animal hunted by another for food.
+primate | A senior clergyman and dignitary. => A mammal of the group that includes monkeys, apes and humans.
+procession | The origination of the Holy Spirit at Pentecost. => A line of people moving forward in a ceremony.
+protagonist | A person who backs a politician or a team etc. => The main character in a story.
+puddle | A mixture of wet clay and sand that can be used to line a pond and that is impervious to water when dry. => A small pool of rainwater on the ground.
+pugnacious | Tough and callous by virtue of experience. => Eager to fight.
+pulsation | A sharp transient wave in the normal electrical state (or a series of such transients). => A rhythmic beat.
+pulsing | A sharp transient wave in the normal electrical state (or a series of such transients). => A rhythmic beat.
+pundit | Someone who has been admitted to membership in a scholarly field. => An expert who gives opinions in the media.
+quadruplet | The cardinal number that is the sum of three and one. => One of four babies born at the same birth.
+quarry | A person who is the aim of an attack (especially a victim of ridicule or exploitation) by some hostile person or influence. => A place where stone is dug out of the ground.
+quartet | The cardinal number that is the sum of three and one. => A group of four musicians.
+quicksand | A treacherous situation that tends to entrap and destroy. => Wet sand that sucks in anything heavy.
+quintuplet | The cardinal number that is the sum of four and one. => One of five babies born at the same birth.
+quizzical | Playfully vexing (especially by ridicule). => Puzzled and questioning, as a look.
+raccoon | The fur of the North American racoon. => A masked, ring-tailed animal of North America.
+ramification | The act of branching out or dividing into branches. => A consequence.
+randomness | A thermodynamic quantity representing the amount of energy in a system that is no longer available for doing mechanical work. => Lack of pattern or order.
+rasher | A commercially important fish of the Pacific coast of North America. => A thin slice of bacon.
+ratty | Of or characteristic of rats. => Shabby and run-down.
+realist | A philosopher who believes that universals are real and exist independently of anyone thinking of them. => A person who sees things as they really are.
+redraft | A draft for the amount of a dishonored draft plus the costs and charges of drafting again. => A new version of a document.
+reeking | Wet with secreted or exuded moisture such as sweat or tears. => Smelling very bad.
+registrar | A person employed to keep a record of the owners of stocks and bonds issued by the company. => An official who keeps records, as at a college.
+regularity | A property of polygons: the property of having equal sides and equal angles. => Steadiness and evenness.
+rejuvenate | Cause (a stream or river) to erode, as by an uplift of the land. => To make young or fresh again.
+relaxation | The gradual lengthening of inactive muscle or muscle fibers. => Rest and freedom from stress.
+relegate | Refer to another person for decision or judgment. => To move to a lower position.
+renewal | The conversion of wasteland into land suitable for use of habitation or cultivation. => Restoring or extending something.
+replicate | Bend or turn backward. => To make an exact copy.
+resonance | An excited state of a stable particle causing a sharp maximum in the probability of absorption of electromagnetic radiation. => A deep, rich, echoing quality of sound.
+responsive | Alternating. => Quick to react.
+rift | A gap between cloud masses. => A crack or split; a break in a friendship.
+roach | A roll of hair brushed back from the forehead. => A cockroach.
+roulette | A line generated by a point on one figure rolling around a second figure. => A casino game with a spinning wheel and a ball.
+roundness | The fullness of a tone of voice. => The quality of having a circular shape.
+runner | A person who is employed to deliver messages or documents. => A person who runs, as in races.
+runway | A bar or pair of parallel bars of rolled steel making the railway along which railroad cars or other vehicles can roll. => A long strip where planes take off and land.
+salon | Gallery where works of art can be displayed. => A shop where hair is styled.
+salty | Engagingly stimulating or provocative. => Tasting like seawater.
+salute | Propose a toast to. => To raise your hand to your forehead in respect.
+saucer | Something with a round shape resembling a flat circular plate. => A small dish that a cup sits on.
+savory | Morally wholesome or acceptable. => Salty or spicy rather than sweet.
+scaffold | A platform from which criminals are executed (hanged or beheaded). => A temporary framework used by builders working on a building.
+scavenger | A chemical agent that is added to a chemical mixture to counteract the effects of impurities. => An animal that feeds on dead animals or garbage.
+scented | Having the sense of smell. => Having a pleasant smell.
+schooner | A large beer glass. => A sailing ship with two or more masts.
+scruple | A unit of apothecary weight equal to 20 grains. => A feeling of doubt about whether something is right.
+secession | An Austrian school of art and architecture parallel to the French art nouveau in the 1890s. => Formally breaking away from a country or group.
+segmentation | The repeated division of a fertilised ovum. => Division into parts.
+segregation | The separation of paired alleles during meiosis so that members of each pair of alleles appear in different gametes. => Separating people by race or religion.
+seizing | Small stuff that is used for lashing two or more ropes together. => Taking hold of something suddenly.
+servicing | The act of mating by male animals. => Maintaining and repairing machines.
+setter | One who sets written material into type. => A long-haired hunting dog.
+settlement | Inhabitants remain nationals of their home state but are not literally under the home state's system of government. => A place where people have built a new community.
+shepherd | A clergyman who watches over a group of people. => A person who looks after sheep.
+shingling | Sediment in which flat pebbles are uniformly tilted in the same direction. => Covering a roof with thin overlapping tiles.
+shrimp | Disparaging terms for small people. => A small shellfish eaten as food.
+shutter | A mechanical device on a camera that opens and closes to control the time of a photographic exposure. => A hinged cover for a window.
+sinewy | Especially impossible to chew. => Lean and muscular.
+sinus | An abnormal passage leading from a suppurating cavity to the body surface. => An air-filled space in the bones of the face.
+sitter | An organism (person or animal) that sits. => A babysitter.
+skipper | A student who fails to attend classes. => The captain of a ship or team.
+sleazy | Of cloth; thin and loosely woven. => Sordid and disreputable.
+smudge | A smoky fire to drive away insects. => A blurred dirty mark.
+soda | A sodium salt of carbonic acid; used in making soap powders and glass and paper. => A sweet fizzy drink.
+spade | A playing card in the major suit that has one or more black figures on it. => A tool with a flat blade for digging.
+spar | Any of various nonmetallic minerals (calcite or feldspar) that are light in color and transparent or translucent and cleavable. => A strong pole on a ship, such as a mast.
+sparkler | Diamonds. => A handheld firework that fizzes with bright light.
+specter | A mental representation of some haunting experience. => A ghost.
+speculator | Someone who makes conjectures without knowing the facts. => A person who invests riskily hoping for big profits.
+sphinx | An inscrutable person who keeps their thoughts and intentions secret. => An ancient statue with a lion's body and a human head.
+spooky | Unpredictably excitable (especially of horses). => Eerie and frightening.
+spunk | Material for starting a fire. => Courage and spirit.
+squadron | A cavalry unit consisting of two or more troops and headquarters and supporting arms. => A unit of military aircraft or ships.
+squatter | Someone who settles lawfully on government land with the intent to acquire title to it. => A person who lives on land without permission.
+squint | Cross one's eyes as if in strabismus. => To look with half-closed eyes.
+steamroller | A massive inexorable force that seems to crush everything in its way. => A heavy vehicle with a roller for flattening roads.
+stellar | Indicating the most important performer or role. => Outstanding.
+stew | Agitation resulting from active worry. => A dish of meat and vegetables cooked slowly in liquid.
+sticker | A small sharp-pointed tip resembling a spike on a stem or leaf. => A label with glue on the back.
+stigma | The apical end of the style where deposited pollen enters the pistil. => A mark of shame.
+stinger | A cocktail made of made of creme de menthe and brandy. => The sharp point a bee or wasp jabs with.
+stopper | An act so striking or impressive that the show must be delayed until the audience quiets down. => A plug for closing a bottle.
+strand | A pattern forming a unity within a larger structural whole. => A single thread or string.
+streaming | Exuding a bodily fluid in profuse amounts. => Flowing continuously.
+stroller | Someone who walks at a leisurely pace. => A baby's pushchair.
+stubble | Material consisting of seed coverings and small pieces of stem or leaves that have been separated from the seeds. => Short hairs growing on a man's face after shaving.
+subscriber | Someone who expresses strong approval. => Someone who pays regularly to receive a service or magazine.
+swollen | Characteristic of false pride; having an exaggerated sense of self-importance. => Puffed up and bigger than normal.
+tally | A score in baseball made by a runner touching all four bases safely. => A count or record of a score.
+tanner | A small coin of the United Kingdom worth six pennies; not minted since 1970. => A person who turns animal hides into leather.
+tantalize | Harass with persistent criticism or carping. => To tease with something out of reach.
+tattoo | A drumbeat or bugle call that signals the military to return to their quarters. => A design inked permanently into the skin.
+teller | An official appointed to count the votes (especially in legislative assembly). => A bank clerk who handles money.
+tenacious | Good at remembering. => Holding on firmly; persistent.
+thorn | Something that causes irritation and annoyance. => A sharp point on a plant's stem.
+thrift | Any of numerous sun-loving low-growing evergreens of the genus Armeria having round heads of pink or white flowers. => Careful use of money.
+tightness | A state occasioned by scarcity of money and a shortage of credit. => Being firmly stretched or close-fitting.
+tinny | Of or containing tin. => Thin and metallic in sound.
+toaster | Someone who who drinks to the health of someone or the success of some venture. => A kitchen device that browns bread.
+tonnage | A tax imposed on ships that enter the US. => The weight of cargo a ship can carry.
+topology | Topographic study of a given place (especially the history of the place as indicated by its topography). => A branch of math studying shapes that are stretched or bent.
+tot | A small amount (especially of a drink). => A small child.
+trailer | Someone who takes more time than necessary; someone who lags behind. => A vehicle towed behind a car or truck.
+transparency | Permitting the free passage of electromagnetic radiation. => Being clear enough to see through.
+transpire | Pass through the tissue or substance or its pores or interstices, as of gas. => To happen or become known.
+trimmer | A worker who thins out and trims trees and shrubs. => A tool for cutting hedges or hair.
+trio | The cardinal number that is the sum of one and one and one. => A group of three, especially musicians.
+triplet | The cardinal number that is the sum of one and one and one. => One of three babies born at the same birth.
+trophy | An award for success in war or hunting. => A cup or prize awarded for a win.
+trounce | Beat severely with a whip or rod. => To defeat heavily.
+tumbler | A gymnast who performs rolls and somersaults and twists etc. => A drinking glass with a flat bottom.
+tuna | Tropical American prickly pear of Jamaica. => A large ocean fish often eaten from a can.
+tunic | An enveloping or covering membrane or layer of body tissue. => A loose garment reaching the hips or knees.
+turnpike | Gates set across a road to prevent passage until a toll had been paid. => A toll road.
+uncontrollable | Difficult to solve or alleviate. => Impossible to rein in.
+uncover | Remove all or part of one's clothes to show one's body. => To take the cover off; to reveal.
+undressed | Of lumber or stone or hides; not finished or dressed. => Not wearing clothes.
+undue | Not yet payable. => More than is appropriate.
+unintentional | Done or made or performed with purpose and intent. => Not done on purpose.
+unionized | Not converted into ions. => Organized into a labor union.
+uplifting | The rise of something. => Inspiring and cheering.
+vaporize | Kill with or as if with a burst of gunfire or electric current or as if by shooting. => To turn into gas.
+varsity | A British abbreviation of ‘university’; usually refers to Oxford University or Cambridge University. => A school's main sports team.
+ventricle | One of four connected cavities in the brain; is continuous with the central canal of the spinal cord and contains cerebrospinal fluid. => One of the chambers of the heart.
+wafer | A small adhesive disk of paste; used to seal letters. => A thin crisp biscuit.
+waltz | An assured victory (especially in an election). => A graceful ballroom dance in three-beat time.
+wart | Any small rounded protuberance (as on certain plants or animals). => A small hard growth on the skin.
+wildcat | An exploratory oil well drilled in land not known to be an oil field. => A small wild cat, like a lynx.
+wilderness | A state of disfavor. => A wild, uninhabited area.
+windfall | Fruit that has fallen from the tree. => An unexpected gain of money.
+wink | Gleam or glow intermittently. => To close one eye quickly.
+witless | To the utmost degree. => Foolish; stupid.
+woof | The yarn woven across the warp yarn in weaving. => The bark of a dog.
+yak | Noisy talk. => A long-haired ox of Tibet.
+yarn | The act of giving an account describing incidents or a course of events. => Thread spun for knitting.
+yearling | A young child who is just beginning to walk. => An animal between one and two years old.
+zoology | All the animal life in a particular region or period. => The study of animals.
+backup | An accumulation caused by clogging or a stoppage. => A spare copy kept in case the original is lost.
+blusher | Yellowish edible agaric that usually turns red when touched. => Makeup that adds color to the cheeks.
+bombshell | An entertainer who has a sensational effect. => A shocking surprise.
+browser | A viewer who looks around casually without seeking anything in particular. => A program for viewing websites.
+bulletproof | Without flaws or loopholes. => Able to stop bullets.
+carousel | A conveyer belt that carries luggage to be claimed by air travelers. => A merry-go-round.
+cervix | The part of an organism (human or animal) that connects the head to the rest of the body. => The narrow lower end of the womb.
+chit | A dismissive term for a girl who is immature or who lacks respect. => A short note or slip, such as a bill.
+cleanup | A very large profit. => Making a place tidy again.
+clipper | A nonlinear electronic circuit whose output is limited in amplitude. => A tool for trimming hair or nails.
+cloakroom | A private lounge off of a legislative chamber. => A room where visitors leave their coats.
+collectible | Subject to or requiring payment especially as specified. => Sought after by hobbyists who gather such things.
+comforter | A person who commiserates with someone who has had misfortune. => A thick padded quilt for a bed.
+craps | Expressions used when two dice are thrown and both come up showing one spot. => A gambling game played with two dice.
+crossover | The interchange of sections between pairing homologous chromosomes during the prophase of meiosis. => A mix of two different styles or genres.
+determiner | An argument that is conclusive. => A word like "the" or "some" placed before a noun.
+divider | A taxonomist who classifies organisms into many groups on the basis of relatively minor characteristics. => A screen or wall that splits a space.
+doormat | A person who is physically weak and ineffectual. => A mat at an entrance for wiping your shoes.
+episodic | Of writing or narration. => Told in separate installments.
+exorcist | One of the minor orders in the unreformed Western Church but now suppressed in the Roman Catholic Church. => Someone who drives out evil spirits.
+fieldwork | A temporary fortification built by troops in the field. => Research done out in the real world, not in a lab.
+firewall | The application of maximum thrust. => Security software that blocks unwanted network traffic.
+fishtail | Slow down by moving the tail sideways. => To skid with the back of a car swinging side to side.
+follicle | Any small spherical group of cells containing a cavity. => A small sac in the skin from which a hair grows.
+geek | A carnival performer who does disgusting acts. => A person obsessed with computers or a niche hobby.
+giveaway | A gift of public land or resources for the private gain of a limited group. => Something given for free.
+grad | One-hundredth of a right angle. => Someone who has finished school or college.
+gumbo | Any of various fine-grained silty soils that become waxy and very sticky mud when saturated with water. => A thick spicy stew from Louisiana.
+hickey | A small inflamed elevation of the skin; a pustule or papule; common symptom in acne. => A love bite.
+histrionics | A performance of a play. => Overly dramatic behavior.
+hospice | A lodging for travelers (especially one kept by a monastic order). => A care home for people who are dying.
+idealism | The philosophical theory that ideas are the only reality. => Belief in noble principles and perfect goals.
+individualistic | With minimally restricted freedom in commerce. => Independent; doing things your own way.
+inspirational | Imparting a divine influence on the mind and soul. => Giving encouragement and motivation.
+jowl | The jaw in vertebrates that is hinged to open the mouth. => The loose flesh of the lower cheek.
+lineup | A list of batters in the order in which they will bat. => The order of players in a game.
+meld | A form of rummy using two decks of cards and four jokers; jokers and deuces are wild; the object is to form groups of the same rank. => A blend of different things.
+memorabilia | A record of things worth remembering. => Souvenirs and objects kept because of their link to a famous person or event.
+midterm | The middle of the gestation period. => An exam halfway through a school term.
+monotone | Of a sequence or function; consistently increasing and never decreasing or consistently decreasing and never increasing in value. => Unvarying in pitch; flat.
+mortarboard | A square board with a handle underneath; used by masons to hold or carry mortar. => A flat square graduation cap.
+multiplex | Many and varied; having many features or forms. => A cinema with several screens.
+nationalization | The action of forming or becoming a nation. => A government taking over private industry.
+occult | Hidden and difficult to see. => Relating to magic and the supernatural.
+oddness | The parity of odd numbers (not divisible by two). => Strangeness.
+ordinal | Of or relating to a taxonomic order. => Showing position in a series, like first or second.
+organically | As an important constituent. => Naturally, without chemicals.
+outage | The amount of something (as whiskey or oil) lost in storage or transportation. => A power cut.
+outpouring | A natural flow of ground water. => A flood of emotion.
+picker | A person who chooses or selects out. => Someone who gathers fruit or crops.
+potpourri | A collection containing a variety of sorts of things. => A mix of dried petals for scent.
+potty | Marked by foolish or unreasoning fondness. => A small toilet for toddlers.
+promoter | Someone who is an active supporter and advocate. => Someone who organizes and advertises events.
+pylon | A tower for guiding pilots or marking the turning point in a race. => A tall tower that carries power lines.
+regurgitation | Backflow of blood through a defective heart valve. => Bringing swallowed food back up.
+secondhand | Derived from what is primary or original; not firsthand. => Used before; not new.
+stalker | Someone who walks with long stiff strides. => Someone who obsessively follows another person.
+stilt | A column of wood or steel or concrete that is driven into the ground to provide support for a structure. => One of a pair of poles for walking high off the ground.
+stoplight | A red light on the rear of a motor vehicle that signals when the brakes are applied to slow or stop. => A traffic light.
+subservience | The condition of being something that is useful in reaching an end or carrying out a plan. => Excessive obedience.
+sympathizer | A person who commiserates with someone who has had misfortune. => A supporter of a cause.
+thumbnail | The nail of the thumb. => A small preview image.
+tracer | An investigator who is employed to find missing persons or missing goods. => A bullet that leaves a visible trail.
+ultrasound | Very high frequency sound. => A scan using high-frequency sound.
+woebegone | Worn and broken down by hard use. => Sad and miserable.
+worksheet | A sheet of paper with multiple columns; used by an accountant to assemble figures for financial statements. => A sheet of school exercises.
+wrongful | Having no legally established claim. => Unjust and illegal.
+yeah | Not only so, but. => Yes.
+abracadabra | Gibberish and nonsense. => A magic word said by conjurers.
+absolutism | Dominance through threat of punishment and violence. => Rule by one person with unlimited power.
+abstainer | Someone who practices self denial as a spiritual discipline. => Someone who does not drink alcohol.
+abutment | Point of contact between two objects or parts. => A support at the end of a bridge.
+accession | A process of increasing by addition (as to a collection or group). => Coming to the throne.
+accumulator | A person who is employed to collect payments (as for rent or taxes). => A rechargeable battery.
+adder | A person who adds numbers. => A small poisonous snake.
+aficionado | A fan of bull fighting. => An enthusiastic fan.
+agglutination | The building of words from component morphemes that retain their form and meaning in the process of combining. => Clumping together.
+airway | A duct that provides ventilation (as in mines). => The passage air travels to the lungs.
+albumen | A simple water-soluble protein found in many animal tissues and liquids. => Egg white.
+alchemy | The way two individuals relate to each other. => Medieval chemistry that tried to turn metal into gold.
+ambrosia | A mixture of nectar and pollen prepared by worker bees and fed to larvae. => The food of the Greek gods.
+angina | Any disease of the throat or fauces marked by spasmodic attacks of intense suffocative pain. => Chest pain caused by a lack of blood to the heart.
+animator | Someone who imparts energy and vitality and spirit to other people. => Someone who makes cartoons.
+anime | A hard copal derived from an African tree. => A style of cartoon made in Japan.
+anodyne | Capable of relieving pain. => Bland and inoffensive.
+aptness | A disposition to behave in a certain way. => Suitability.
+argyle | A covered gravy holder of silver or other metal containing a detachable central vessel for hot water to keep the gravy warm. => A diamond pattern on socks or sweaters.
+aridity | The quality of yielding nothing of value. => Dryness.
+arranger | A person who brings order and organization to an enterprise. => Someone who adapts music for performers.
+attrition | Erosion by friction. => Gradual wearing down.
+auricle | A small conical pouch projecting from the upper anterior part of each atrium of the heart. => The outer ear.
+avatar | A new personification of a familiar idea. => A figure that represents a player online.
+baccalaureate | A farewell sermon to a graduating class at their commencement ceremonies. => A bachelor's degree.
+backpedal | Pedal backwards on a bicycle. => To change your position or retreat from a promise.
+backwater | A body of water that was created by a flood or tide or by being held or forced back by a dam. => A quiet, isolated place.
+bagatelle | A light piece of music for piano. => A trifle.
+bailiwick | The area over which a bailiff has jurisdiction. => Your area of expertise.
+bastion | A group that defends a principle. => A stronghold.
+batten | Stuffing made of rolls or sheets of cotton wool or synthetic fiber. => A strip of wood.
+bauble | A mock scepter carried by a court jester. => A cheap trinket.
+bilges | In a vessel with two hulls, an enclosed area between the frames at each side. => The lowest inner part of a ship's hull.
+billet | A short personal letter. => Lodging for soldiers.
+bisexuality | Showing characteristics of both sexes. => Attraction to more than one sex.
+blandness | The trait of exhibiting no personal embarrassment or concern. => Dullness.
+bluebottle | An annual Eurasian plant cultivated in North America having showy heads of blue or purple or pink or white flowers. => A large buzzing blue fly.
+bluenose | A native or inhabitant of Nova Scotia. => A prudish person.
+bodkin | A dagger with a slender blade. => A thick blunt needle.
+boisterousness | A turbulent and stormy state of the sea. => Rowdiness.
+bola | A cord fastened around the neck with an ornamental clasp and worn as a necktie. => A throwing weapon of cords with weights at the ends.
+bole | A soft oily clay used as a pigment (especially a reddish brown pigment). => The trunk of a tree.
+bombardier | A noncommissioned officer in the British artillery. => The crew member who drops bombs from a plane.
+breaker | A quarry worker who splits off blocks of stone. => A large wave that crashes on the shore.
+bromide | Any of the salts of hydrobromic acid; formerly used as a sedative but now generally replaced by safer drugs. => A trite remark.
+brownout | Darkness resulting from the extinction of lights (as in a city invisible to enemy aircraft). => A partial power cut.
+buckskin | Horse of a light yellowish dun color with dark mane and tail. => Soft leather made from deer hide.
+bugbear | An imaginary monster used to frighten children. => A pet hate.
+bunting | A loosely woven fabric used for flags, etc. => Decorative flags strung in a line.
+calamine | A white mineral; a common ore of zinc. => A pink lotion for itchy skin.
+canto | The highest part (usually the melody) in a piece of choral music. => A section of a long poem.
+cantor | The musical director of a choir. => The singer who leads prayers in a synagogue.
+carbuncle | Deep-red cabochon garnet cut without facets. => A large boil.
+carver | Makes decorative wooden panels. => Someone who shapes wood or stone.
+castor | A shaker with a perforated top for sprinkling powdered sugar. => A small swivel wheel on furniture.
+catbird | Any of various birds of the Australian region whose males build ornamented structures resembling bowers in order to attract females. => A gray songbird whose call sounds like a cat's mew.
+catgut | Perennial subshrub of eastern North America having downy leaves yellowish and rose flowers and; source of rotenone. => Cord made from animal intestines, used for strings.
+chaise | For reclining. => A light horse-drawn carriage.
+chamberlain | The treasurer of a municipal corporation. => An officer who manages a royal household.
+chaser | A person who is pursuing and trying to overtake or capture. => A drink taken right after a strong one.
+chiaroscuro | A monochrome picture made by using several different shades of the same color. => Strong contrast of light and shade in art.
+choker | Someone who kills by strangling. => A tight necklace.
+chromatic | Able to refract light without spectral color separation. => Relating to colors.
+cirrus | Usually coiled. => A thin, wispy high cloud.
+codex | An official list of chemicals or medicines etc. => An ancient handwritten book.
+colonoscopy | Requires sedation. => An exam of the bowel with a camera.
+coloration | The timbre of a musical sound. => The natural colors of an animal or plant.
+concertina | Coiled barbed wire used as an obstacle. => A small accordion with buttons.
+conglomeration | A rounded spherical form. => A jumbled mixture.
+contrariwise | In a contrary disobedient manner. => On the other hand.
+convolution | The shape of something rotating rapidly. => A twist or coil.
+cornflower | Plant of southern and southeastern United States grown for its yellow flowers that can be dried. => A blue wildflower.
+cornice | A decorative framework to conceal curtain fixtures at the top of a window casing. => A decorative molding along the top of a wall.
+couplet | Two items of the same kind. => Two rhyming lines of verse.
+cowl | Protective covering consisting of a metal part that covers the engine. => A monk's hood.
+crier | A person who weeps. => An official who shouts public announcements.
+crotchet | A sharp curve or crook; a shape resembling a hook. => A musical note of one beat; a quarter note.
+cupola | A vertical cylindrical furnace for melting iron for casting. => A small dome on a roof.
+cusp | Point formed by two intersecting arcs (as from the intrados of a Gothic arch). => The point where two things meet; the brink.
+cutout | A switch that interrupts an electric circuit in the event of an overload. => A shape cut out of paper.
+cyberpunk | A programmer who breaks into computer systems in order to steal or change or destroy information as a form of cyber-terrorism. => Science fiction set in a gritty high-tech future.
+cynosure | Something that provides guidance (as Polaris guides mariners). => The center of attention.
+dalliance | The deliberate act of delaying and playing instead of working. => A brief romance.
+davenport | A small decorative writing desk. => A large sofa.
+deepness | The intellectual ability to penetrate deeply into ideas. => Depth.
+defaulter | Someone who fails to make a required appearance in court. => Someone who fails to pay a debt.
+demoralization | Destroying the moral basis for a doctrine or policy. => Loss of morale.
+denotation | The act of indicating or pointing out by name. => The literal meaning of a word.
+deprecation | A prayer to avert or remove some evil or disaster. => Disapproval.
+diametrical | Related to or along a diameter. => Completely opposite.
+discursive | Proceeding to a conclusion by reason or argument rather than intuition. => Rambling.
+dispatcher | The official who signals the beginning of a race or competition. => Someone who sends out taxis or emergency services.
+divination | Successful conjecture by unusual insight or good luck. => Foretelling the future.
+docent | A teacher at some universities. => A guide in a museum.
+dogfight | A fiercely disputed contest. => An aerial battle between fighter planes.
+dogfish | Primitive long-bodied carnivorous freshwater fish with a very long dorsal fin; found in sluggish waters of North America. => A small shark.
+drachma | A unit of apothecary weight equal to an eighth of an ounce or to 60 grains. => The former currency of Greece.
+dram | A unit of apothecary weight equal to an eighth of an ounce or to 60 grains. => A small drink of whiskey.
+ductile | Easily influenced. => Able to be drawn out into wire.
+earful | An outpouring of gossip. => A long scolding.
+effacement | Shortening of the uterine cervix and thinning of its walls as it is dilated during labor. => Wiping out or erasing.
+eggbeater | An aircraft without wings that obtains its lift from the rotation of overhead blades. => A hand tool for whisking eggs.
+egress | The reappearance of a celestial body after an eclipse. => A way out.
+electrification | The activity of thrilling or markedly exciting some person or group. => Supplying with electric power.
+embolism | An insertion into a calendar. => A blockage in a blood vessel.
+emu | Any of various systems of units for measuring electricity and magnetism. => A large flightless Australian bird.
+enfranchisement | Freedom from political subjugation or servitude. => Gaining the right to vote.
+escutcheon | A flat protective covering (on a door or wall etc.) to prevent soiling by dirty fingers. => A shield with a coat of arms.
+espousal | Archaic terms for a wedding or wedding feast. => Support for a cause.
+expansiveness | A quality characterized by magnificence of scale or the tendency to expand. => Openness and friendliness.
+eyeful | A strikingly beautiful woman. => A good long look.
+fingerboard | A guidepost resembling a hand with a pointing index finger. => The strip on a guitar neck where strings are pressed.
+finisher | A relief pitcher who can protect a lead in the last inning or two of the game. => Someone who completes a race.
+fishwife | A female who sells fish. => A loud, coarse woman.
+flakiness | Informal terms for insanity. => Unreliability.
+florin | The basic unit of money in Suriname; equal to 100 cents. => An old British coin worth two shillings.
+fob | A vest pocket to hold a pocket watch. => A small device or charm on a key ring.
+folio | The system of numbering pages. => A large book made of sheets folded once.
+fondue | Cubes of meat or seafood cooked in hot oil and then dipped in any of various sauces. => Melted cheese for dipping bread.
+frontispiece | An ornamental facade. => An illustration facing a book's title page.
+fruitlessness | A lack of creative imagination. => Futility.
+fugue | Dissociative disorder in which a person forgets who they are and leaves home to create a new life. => A piece of music in which a tune is repeated in overlapping parts.
+gaff | A sharp metal spike or spur that is fastened to the leg of a gamecock. => A hooked pole for landing fish.
+gameness | Disability of walking due to crippling of the legs or feet. => Willingness to try.
+gamine | A homeless girl who roams the streets. => A slim, boyish girl.
+gestate | Have the idea for. => To carry a baby in the womb.
+glacially | By a glacier. => Extremely slowly.
+grandness | A prominent status. => Splendor.
+granularity | The quality of being composed of relatively large particles. => Level of detail.
+granulation | New connective tissue and tiny blood vessels that form on the surfaces of a wound during the healing process. => Forming into grains.
+gravelly | Abounding in small stones. => Rough and deep, of a voice.
+guilder | The basic unit of money in Suriname; equal to 100 cents. => The former currency of the Netherlands.
+gusset | A piece of chain mail covering a place unprotected by armor plate. => A triangle of cloth sewn in to strengthen a seam.
+hairdressing | A toiletry for the hair. => Cutting and styling hair.
+handmaid | In a subordinate position. => A female servant.
+handmaiden | In a subordinate position. => A female servant.
+headword | A content word that can be qualified by a modifier. => A word listed at the start of a dictionary entry.
+heraldic | Indicative of or announcing something to come. => Relating to coats of arms.
+hermaphroditic | Of or relating to monoclinous plants. => Having both male and female parts.
+hob | A small grotesque supernatural creature that makes trouble for human beings. => A flat cooktop on a stove.
+housecleaning | The act of reforming by the removal of unwanted personnel or practices or conditions. => Cleaning a home.
+howler | A joke that seems extremely funny. => A silly, laughable mistake.
+hundredweight | A unit of weight equal to 100 kilograms in the metric system. => A unit of weight, about 50 kilograms.
+hydra | Trouble that cannot be overcome by a single effort because of its many aspects or its persistent and pervasive quality. => A many-headed serpent of Greek myth.
+incorrectness | Lack of conformity to social expectations. => Inaccuracy.
+indenture | A concave cut into a surface or edge (as in a coastline). => A contract binding a worker to a master.
+ingress | The disappearance of a celestial body prior to an eclipse. => Entry.
+inoperable | Not able to perform its normal function. => Unable to be treated by surgery.
+introversion | The condition of being folded inward or sheathed. => Shyness; being inward-looking.
+inviolate | Having the hymen unbroken. => Untouched and intact.
+irksome | So lacking in interest as to cause mental weariness. => Annoying.
+jejune | Of insufficient quantity to meet a need. => Dull and naive.
+juicer | A person who drinks alcoholic beverages (especially to excess). => A machine that squeezes liquid from fruit.
+jujube | Spiny tree having dark red edible fruits. => A chewy fruit candy.
+justness | Conformity with some esthetic standard of correctness or propriety. => Fairness.
+kale | Informal terms for money. => A leafy green cabbage.
+labyrinthine | Relating to or affecting or originating in the inner ear. => Like a maze.
+lambaste | Beat with a cane. => To criticize harshly.
+lanyard | A cord with an attached hook that is used to fire certain types of cannon. => A cord worn around the neck to hold a badge.
+largeness | The capacity to understand a broad range of topics. => Great size.
+lea | A unit of length of thread or yarn. => A grassy meadow.
+lira | The basic unit of money on Malta; equal to 100 cents. => The former currency of Italy.
+loaner | Someone who lends money or gives credit in business matters. => Something lent to replace an item being repaired.
+longitudinally | Across time. => Lengthwise.
+looseness | Frequent and watery bowel movements; can be a symptom of infection or food poisoning or colitis or a gastrointestinal tumor. => Slackness.
+lousiness | Infestation with lice (Pediculus humanus) resulting in severe itching. => Awfulness.
+lupus | Any of several forms of ulcerative skin disease. => A disease in which the immune system attacks the body.
+mackintosh | A lightweight waterproof (usually rubberized) fabric. => A raincoat.
+mademoiselle | Small silvery drumfish often mistaken for white perch; found along coasts of United States from New York to Mexico. => A French title for a young unmarried woman.
+magisterial | Of or relating to a magistrate. => Authoritative.
+manna | Hardened sugary exudation of various trees. => Food from heaven.
+manse | A large and imposing house. => A minister's house.
+meme | A cultural unit (an idea or value or pattern of behavior) that is passed from one person to another by non-genetic means (as by imitation). => A funny image or idea shared widely online.
+metrics | The study of poetic meter and the art of versification. => Measurements used to track performance.
+mil | A Cypriot monetary unit equal to one thousandth of a pound. => A thousandth of an inch.
+mindfulness | The trait of staying aware of (paying close attention to) your responsibilities. => Calm awareness of the present moment.
+minim | A British imperial capacity measure (liquid or dry) equal to 1/60th fluid dram or 0.059194 cubic centimeters. => A half note in music.
+misbegotten | Born out of wedlock. => Badly planned.
+mocha | Soft suede glove leather from goatskin. => Coffee flavored with chocolate.
+modulus | An integer that can be divided without remainder into the difference between two other integers. => The absolute value of a number.
+mogul | A bump on a ski slope. => A powerful business tycoon.
+monstrance | Proof by a process of argument or a series of proposition proving an asserted conclusion. => A vessel for displaying the communion host.
+moonshine | The light of the Moon. => Illegally distilled whiskey.
+moonstruck | Insane and believed to be affected by the phases of the moon. => Dreamy and in love.
+morbidity | The relative incidence of a particular disease. => Gruesome interest in death.
+nabob | A governor in India during the Mogul empire. => A rich and important person.
+naiad | Submerged aquatic plant having narrow leaves and small flowers; of fresh or brackish water. => A water nymph in Greek myth.
+nautilus | A submarine that is propelled by nuclear power. => A sea creature with a spiral shell.
+needlepoint | Lace worked with a needle in a buttonhole stitch on a paper pattern. => Embroidery on canvas.
+nemesis | Something causing misery or death. => An archenemy.
+nonconformity | Lack of harmony or correspondence. => Refusal to conform.
+nullification | The states'-rights doctrine that a state can refuse to recognize or to enforce a federal law passed by the United States Congress. => Cancellation.
+obverse | The more conspicuous of two alternatives or cases or sides. => The front side of a coin.
+octet | The cardinal number that is the sum of seven and one. => A group of eight.
+online | On a regular route of a railroad or bus or airline system. => Connected to the internet.
+orb | The ball-shaped capsule containing the vertebrate eye. => A sphere.
+outfitter | Someone who sells men's clothes. => A shop that sells outdoor gear.
+overweening | Unrestrained, especially with regard to feelings. => Arrogant.
+palaver | Flattery intended to persuade. => Fuss and chatter.
+pallet | The range of colour characteristic of a particular artist or painting or school of art. => A wooden platform for stacking goods.
+parabolic | Resembling or expressed by parables. => U-shaped, like the path of a thrown ball.
+peripatetic | Of or relating to Aristotle or his philosophy. => Traveling from place to place.
+persnickety | Overly conceited or arrogant. => Fussy about small details.
+peso | The basic unit of money in Uruguay; equal to 100 centesimos. => The currency of Mexico.
+pestle | Machine consisting of a heavy bar that moves vertically for pounding or crushing ores. => A club-shaped tool for grinding in a bowl.
+phylum | A large group of languages that are historically related. => A major group in the classification of animals.
+pickings | The act of someone who picks up or takes something. => Things available to take, as in "slim ___".
+pip | A disease of poultry. => A small seed in a fruit.
+pith | Soft spongelike central cylinder of the stems of most flowering plants. => The white spongy layer under citrus peel.
+placeholder | A person authorized to act for another. => Something that temporarily stands in for another thing.
+plainness | The state of being unmixed with other material. => Simplicity.
+platen | Work table of a machine tool. => The roller of a typewriter.
+pluperfect | More than perfect. => Relating to the past perfect tense.
+polonaise | A woman's dress with a tight bodice and an overskirt drawn back to reveal a colorful underskirt. => A stately Polish dance.
+polymorphic | Relating to the crystallization of a compound in two or more different forms. => Taking many forms.
+polyphonic | Having two or more phonetic values. => Having several melodies at once.
+portage | The cost of carrying or transporting. => Carrying a boat overland between waters.
+proactive | Descriptive of any event or stimulus or process that has an effect on events or stimuli or processes that occur subsequently. => Acting ahead to deal with problems.
+prophylactic | Capable of preventing conception or impregnation. => Preventing disease.
+pullback | A device (as a decorative loop of cord or fabric) for holding or drawing something back. => A withdrawal.
+pursuance | A search for an alternative that meets cognitive criteria. => The carrying out of something.
+pyx | A chest in which coins from the mint are held to await assay. => A box for holding communion bread.
+raffish | Marked by up-to-dateness in dress and manners. => Disreputable but charming.
+rattrap | A difficult entangling situation. => A filthy, run-down building.
+redcap | A member of the military police in Britain. => A railway porter.
+reeve | Female ruff. => A medieval local official.
+refresher | A fee (in addition to that marked on the brief) paid to counsel in a case that lasts more than one day. => A short course that updates skills.
+relegation | Authorizing subordinates to make certain decisions. => Moving down to a lower league.
+repertory | A storehouse where a stock of things is kept. => A theater company that performs several plays in rotation.
+respire | Breathe easily again, as after exertion or anxiety. => To breathe.
+retrenchment | Entrenchment consisting of an additional interior fortification to prolong the defense. => Cutting back on spending.
+rheumy | Moist, damp, wet (especially of air). => Watery, of eyes.
+rollback | The act of forcing the enemy to withdraw. => A reduction to an earlier level.
+roominess | Intellectual breadth. => Spaciousness.
+ruble | The basic unit of money in Tajikistan. => The currency of Russia.
+rupee | The basic unit of money in Sri Lanka; equal to 100 cents. => The currency of India.
+sainthood | Saints collectively. => The state of being a saint.
+samba | Large west African tree having large palmately lobed leaves and axillary cymose panicles of small white flowers and one-winged seeds. => A lively Brazilian dance.
+sandbox | Mold consisting of a box with sand shaped to mold metal. => A box of sand for children to play in.
+sappy | Abounding in sap. => Overly sentimental.
+scenically | With respect to stage scenery. => Picturesquely.
+sconce | A shelter or screen providing protection from enemy fire or from the weather. => A wall bracket for candles or lights.
+seaward | Coming from the land. => Toward the ocean.
+selvage | Border consisting of an ornamental fringe at either end of an oriental carpet. => The edge of woven fabric.
+septet | The cardinal number that is the sum of six and one. => A group of seven.
+sextant | A unit of angular distance equal to 60 degrees. => An instrument for navigation by the stars.
+shaker | A person who wields power and influence. => A container for sprinkling salt or pepper.
+shilling | The basic unit of money in Uganda; equal to 100 cents. => An old British coin.
+shtick | A little; a piece. => A comic routine.
+sideboard | A removable board fitted on the side of a wagon to increase its capacity. => A low cabinet for dishes in a dining room.
+sinker | A small ring-shaped friedcake. => A weight that pulls a fishing line down.
+slammer | A person who closes things violently. => Prison, informally.
+slicer | A golfer whose shots typically curve right (for right-handed golfers). => A machine that cuts meat into thin pieces.
+sloppiness | The wetness of ground that is covered or soaked with water. => Carelessness.
+slough | Necrotic tissue; a mortified or gangrenous part or mass. => A swamp.
+smartness | A kind of pain such as that caused by a wound or a burn or a sore. => Cleverness.
+snapper | The person who plays center on the line of scrimmage and snaps the ball to the quarterback. => A reddish ocean fish.
+snowdrop | Common anemone of eastern North America with solitary pink-tinged white flowers. => A small white flower that blooms in late winter.
+soapbox | A crate for packing soap. => A platform for speeches, as in "get on your ___".
+socialization | The action of establishing on a socialist basis. => Learning how to behave in society.
+spiky | Having or as if having especially high-pitched spots. => Covered in sharp points.
+spindle | Tiny fibers that are seen in cell division; the fibers radiate from two poles and meet at the equator in the middle. => A rod for spinning thread.
+spiritualism | Any doctrine that asserts the separate existence of God. => Belief in contact with the dead.
+spirituality | Property or income owned by a church. => Concern with the soul and religion.
+splenetic | Of or relating to the spleen. => Bad-tempered.
+spoiler | A candidate with no chance of winning but who may draw enough votes to prevent one of the leading candidates from winning. => Information that reveals a plot twist.
+spotter | A worker employed at a dry-cleaning establishment to remove spots. => Someone who watches out for something.
+startup | The act of setting in operation. => A new young company.
+stile | An upright that is a member in a door or window frame. => Steps for climbing over a fence.
+stringency | A state occasioned by scarcity of money and a shortage of credit. => Strictness.
+stringer | A member of a squad on a team. => A part-time correspondent for a newspaper.
+stylist | An artist who is a master of a particular style. => Someone who cuts and arranges hair.
+subsidence | An abatement in intensity or degree (as in the manifestations of a disease). => Sinking of the ground.
+sugarcoat | Coat with something sweet, such as a hard sugar glaze. => To make something seem nicer than it is.
+surety | Something clearly established. => A guarantee.
+swallowtail | A man's full-dress jacket with two long tapering tails at the back. => A butterfly with tail-like wings.
+syncopation | The loss of sounds from within a word (as in ‘fo'c'sle’ for ‘forecastle’). => Stressing the offbeat in music.
+tectonics | The science of architecture. => The study of the earth's moving plates.
+tenderloin | A city district known for its vice and high crime rate. => A soft, choice cut of beef from the back.
+thrasher | A farm machine for separating seeds or grain from the husks and straw. => A long-tailed songbird.
+thrower | A person who twists silk or rayon filaments into a thread or yarn. => Someone who hurls a ball or javelin.
+thrush | Candidiasis of the oral cavity; seen mostly in infants or debilitated adults. => A songbird with a speckled breast.
+tiller | A shoot that sprouts from the base of a grass. => A lever for steering a boat.
+titular | Of or relating to a legal title to something. => In name only.
+toner | A solution containing chemicals that can change the color of a photographic print. => Powdered ink for printers.
+trafficker | Someone who promotes or exchanges goods or services for money. => A dealer in illegal goods.
+tram | A conveyance that transports passengers or freight in carriers suspended from cables and supported by a series of towers. => A streetcar.
+transpiration | The passage of gases through fine tubes because of differences in pressure or temperature. => Water evaporating from leaves.
+transposition | Any abnormal position of the organs of the body. => Swapping the order of things.
+travail | Concluding state of pregnancy; from the onset of contractions to the birth of a child. => Painful effort.
+twofold | Having more than one decidedly dissimilar aspects or qualities. => Double.
+uncoordinated | Lacking in cooperative planning and organization. => Clumsy.
+uncork | Release a feeling. => To pull the stopper from a bottle.
+underbelly | Lower side. => A weak or hidden side.
+unfathomable | Of depth; not capable of being sounded or measured. => Incomprehensible.
+unhorse | Alight from (a horse). => To throw from a saddle.
+unmatched | Of the remaining member of a pair. => Unrivaled.
+unpainted | Not having makeup on. => Bare, with no coat of color.
+unrecorded | Actually being performed at the time of hearing or viewing. => Not written down.
+untapped | Not subjected to tapping. => Not yet used.
+untitled | Not of the nobility. => Having no name.
+unvarnished | Not having a coating of stain or varnish. => Plain and honest, as in "the ___ truth".
+unvoiced | Produced without vibration of the vocal cords. => Unspoken.
+uproarious | Uncontrollably noisy. => Hilarious.
+usurpation | Entry to another's property without right or permission. => Seizing power illegally.
+vibrancy | Having the character of a loud deep sound; the quality of being resonant. => Liveliness.
+vitriol | A highly corrosive acid made from sulfur dioxide; widely used in the chemical industry. => Bitter criticism.
+wakeful | Carefully observant or attentive; on the lookout for possible danger. => Sleepless.
+walleye | Strabismus in which one or both eyes are directed outward. => A North American freshwater fish.
+wallflower | Any of numerous plants of the genus Erysimum having fragrant yellow or orange or brownish flowers. => A shy person at a party.
+warbler | A singer; usually a singer who adds embellishments to the song. => A small songbird.
+watercraft | Skill in the management of boats. => A boat.
+watercress | Of a moderate yellow-green color that is greener and deeper than moss green and yellower and darker than pea green. => A peppery salad plant.
+waxwork | Twining shrub of North America having yellow capsules enclosing scarlet seeds. => A lifelike wax figure.
+welterweight | A weight of 28 pounds; sometimes imposed as a handicap in a horse race (such as a steeplechase). => A boxer in a middle weight class.
+wraith | A mental representation of some haunting experience. => A ghost.
+yammer | Cry loudly, as of animals. => To complain noisily.
+yeoman | Officer in the (ceremonial) bodyguard of the British monarch. => A small landowning farmer.
+zing | A brief high-pitched buzzing or humming sound. => Zest.
+
+## FLAGGED (182)
+animal | pinned to the rare adjective sense; the noun (a living creature) is the common meaning
+despite | pinned to the rare noun sense (contempt); the word is almost always a preposition
+except | pinned to a rare verb sense; the word is almost always a preposition
+lager | pinned to a rare sense (a camp ringed by wagons); the common meaning is the beer
+gig | pinned to a rare sense (a rowing boat); the common meaning is a live performance
+peanut | pinned to the rare adjective sense (of little importance); the noun is the common meaning
+pedal | pinned to the rare adjective sense (of the feet); the noun (a bicycle pedal) is the common meaning
+physic | archaic word (a purging medicine)
+sang | obscure plant sense (a ginseng herb); the word is far more familiar as the past tense of sing
+scotch | pinned to a rare adjective sense (thrifty)
+shook | obscure sense (the parts of a dismantled barrel); the word is far more familiar as the past tense of shake
+staggers | obscure word (a livestock disease)
+sunrise | pinned to the rare adjective sense (a new industry); the noun is the common meaning
+textbook | pinned to the rare adjective sense (typical); the noun is the common meaning
+thou | pinned to a rare sense (one thousand); the word is far more familiar as the old pronoun
+tore | obscure sense (a molding on a column); the word is far more familiar as the past tense of tear
+tripos | obscure word (Cambridge exams)
+aback | nearly always used in the phrase "taken aback"; the sailing sense is rare
+ail | obscure noun sense (garlic); the word is far more familiar as the verb to ail
+anon | archaic word (soon)
+asteroid | pinned to the rare adjective sense (star-shaped); the noun (a space rock) is the common meaning
+belling | obscure word (a mock serenade for newlyweds)
+blinks | obscure plant sense
+bombard | pinned to an obscure noun sense (an old wind instrument); the verb (to attack) is the common meaning
+boon | pinned to the rare adjective sense (close, as friends); the noun (a blessing) is the common meaning
+broach | pinned to a noun sense that is a variant spelling of brooch; the verb (to raise a subject) is the common meaning
+bully | pinned to the rare adjective sense (excellent); the noun is the common meaning
+bundling | obscure sense (an old courtship custom)
+calk | obscure word (a cleat on a horseshoe)
+canary | pinned to the rare adjective sense (a yellow color); the noun (the songbird) is the common meaning
+carnation | pinned to the rare adjective sense (pink); the noun (the flower) is the common meaning
+cheesing | slang sense; check whether to keep this word
+cherry | pinned to the rare adjective sense (red); the noun (the fruit) is the common meaning
+cleavers | obscure plant name
+cod | pinned to the rare adjective sense (cash on delivery); the noun (the fish) is the common meaning
+coral | pinned to a color sense; the sea creature is the common meaning
+corking | dated slang word (excellent)
+crank | pinned to an obscure adjective sense (a boat that tips easily); the noun (a handle you turn) is the common meaning
+creeps | obscure sense (a livestock disease)
+dandy | pinned to the rare adjective sense (excellent); the noun (a stylish man) is the common meaning
+defile | pinned to the noun (a mountain pass); the verb (to make dirty) is more common
+divers | archaic word (several, varied)
+fawn | pinned to a color sense; the baby deer is the common meaning
+gee | pinned to a unit of force; the word is more familiar as an exclamation
+ginger | pinned to the rare adjective sense (a color); the noun (the spice) is the common meaning
+grizzly | pinned to an adjective sense (gray-haired); the noun (the bear) is the common meaning
+groovy | dated slang word
+heckle | pinned to an obscure noun (a flax comb); the verb (to interrupt a speaker) is the common meaning
+hogged | obscure sense (a ship sagging at both ends)
+hooter | slang sense (the nose)
+mainline | drug slang sense
+maria | plural of mare (a moon plain); obscure as a game word
+mete | archaic noun (a boundary)
+meridian | pinned to a rare adjective sense (at noon); the noun is the common meaning
+mural | pinned to the rare adjective sense (of walls); the noun (a wall painting) is the common meaning
+necking | obscure sense (a molding on a column)
+non | not a standalone word; it is a prefix
+pave | pinned to an obscure noun sense (a jewel setting); the verb is the common meaning
+pendant | pinned to the rare adjective sense (hanging); the noun (a necklace pendant) is the common meaning
+pinning | obscure sense (a college dating custom)
+pique | pinned to a fabric sense; the noun or verb for irritation is more common
+plum | pinned to an adverb sense (exactly); the fruit is the common meaning
+pyramid | pinned to a rare verb sense (investing); the noun (the shape) is the common meaning
+quail | pinned to the verb (to cower); the noun (the bird) is equally common
+quartering | obscure heraldry sense
+raped | sensitive word; consider adding it to the blocked list
+renege | pinned to a rare card-game sense; the verb (to break a promise) is the common meaning
+revoke | pinned to a rare card-game sense; the verb (to cancel) is the common meaning
+rum | pinned to an adjective sense (strange); the drink is the common meaning
+rummy | pinned to an adjective sense (strange); the card game is the common meaning
+scours | obscure word (livestock diarrhea)
+scribe | pinned to a rare verb sense; the noun (a copyist) is the common meaning
+smut | sensitive word; consider adding it to the blocked list
+snuff | pinned to a color sense; tobacco snuff or the verb is the common meaning
+sodding | vulgar British slang; consider adding it to the blocked list
+stater | obscure word (an ancient coin)
+strangles | obscure word (a horse disease)
+stripper | common sense is adult entertainment; consider reviewing
+sulky | pinned to an obscure noun (a carriage); the adjective (sulking) is the common meaning
+sunset | pinned to the rare adjective sense (declining); the noun is the common meaning
+sup | obscure noun sense
+thong | common sense is underwear; consider reviewing
+throwback | pinned to the rare adjective sense; the noun is the common meaning
+tonic | pinned to the rare adjective sense; the noun (a drink) is the common meaning
+topping | pinned to an adjective sense (excellent); the noun is the common meaning
+trembles | obscure word (a livestock disease)
+vest | pinned to a rare verb sense (to grant power); the noun (a garment) is the common meaning
+wigging | British slang word
+baas | regional word (South African)
+cahoot | obscure singular; the word is almost always "cahoots"
+fucked | vulgar word; consider removing it from the game
+fagged | British slang, and close to a slur; consider removing it
+meg | informal and obscure in this sense (one million)
+pissed | vulgar word; consider removing it from the game
+pussycat | the word could read as vulgar; consider removing it
+pussyfoot | the word could read as vulgar; consider removing it
+transsexual | sensitive word; consider removing it from the game
+skinheads | linked to extremist groups; consider removing it
+spastic | can be read as an offensive slur; consider removing it
+pooch | pinned to a rare verb sense (to pout); the noun (a dog) is the common meaning
+abed | archaic word
+aught | archaic word
+aery | archaic spelling of "airy"
+aright | archaic word
+assize | archaic legal word
+wino | can read as a slur on homeless people; consider removing it
+besom | archaic word
+betwixt | archaic word
+bethink | archaic word
+betide | archaic word
+bounden | archaic word
+clew | archaic spelling of "clue"
+bordello | adult content; consider removing it
+cozen | archaic word
+dickey | British slang
+dipsomaniac | old-fashioned medical term
+fain | archaic word
+finis | archaic word
+forsooth | archaic word
+fourscore | archaic word
+eventide | archaic word
+gad | obscure sense (a spur); the word is mostly known as an exclamation
+gimpy | offensive word for disabled people; consider removing it
+eugenics | sensitive topic; consider removing it
+gook | ethnic slur; remove this word from the game
+imbecilic | offensive word; consider removing it
+hearken | archaic word
+hereof | archaic legal word
+hereto | archaic legal word
+hereupon | archaic word
+hie | archaic word
+grippe | dated word
+mongolism | offensive outdated term; remove this word from the game
+miscegenation | offensive, racist term; consider removing it
+jihad | sensitive word; consider removing it
+lief | archaic word
+larboard | archaic word
+lancers | obscure word
+niggard | sounds like a racial slur; consider removing it
+niggardliness | sounds like a racial slur; consider removing it
+niggardly | sounds like a racial slur; consider removing it
+papoose | can be offensive; consider removing it
+nubile | sexual connotation; consider removing it
+nonce | also an offensive British slang word; consider removing it
+morrow | archaic word
+nigher | archaic word
+nighest | archaic word
+nowise | archaic word
+oft | archaic word
+perforce | archaic word
+queerly | the word can be read as a slur; consider removing it
+queerness | the word can be read as a slur; consider removing it
+poesy | archaic word
+prate | archaic word
+quondam | archaic word
+raiment | archaic word
+rapine | archaic word
+squaw | racial slur; remove this word from the game
+sahib | colonial term; consider removing it
+shagged | vulgar British slang; consider removing it
+shrive | archaic word
+threesome | sexual connotation; consider removing it
+transphobic | sensitive topic; consider removing it
+twerk | slang with sexual connotation; consider removing it
+thither | archaic word
+therefrom | archaic word
+thereto | archaic word
+therewith | archaic word
+twain | archaic word
+troth | archaic word
+swain | archaic word
+whorehouse | vulgar word; consider removing it
+wench | dated and sexist; consider removing it
+womanize | sexual connotation; consider removing it
+womanish | sexist; consider removing it
+wroth | archaic word
+wend | archaic word
+welkin | archaic word
+withal | archaic word
+wheresoever | archaic word
+yea | archaic word
+yore | archaic word

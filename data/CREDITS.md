@@ -1,6 +1,6 @@
 # Word database: credits
 
-Every word description in `words.json` is a definition from
+Every word description in `words.json` is based on a definition from
 **Open English WordNet 2025** (https://en-word.net,
 https://github.com/globalwordnet/english-wordnet), © the Open English WordNet
 contributors, based on Princeton WordNet 3.0 (© Princeton University).
@@ -8,10 +8,15 @@ contributors, based on Princeton WordNet 3.0 (© Princeton University).
 Licence: Creative Commons Attribution 4.0 International (CC BY 4.0),
 https://creativecommons.org/licenses/by/4.0/
 
-Changes made: the first letter is capitalised and a full stop added; a leading
-subject label such as "(astronomy)" is removed; clauses that contain the
-answer word, and trailing clauses that don't fit the card, are dropped. Each
-entry's `sense` field names the WordNet synset its description comes from.
+Changes made: each definition is reworded in plain, shorter English for the
+game's clue card (`scripts/descriptions.txt`), so it never contains the answer
+word. Each entry's `sense` field names the WordNet synset its description is
+based on. For some words (listed in `scripts/words-review.txt`) the
+description uses a more common meaning than that synset. Words without a
+rewrite keep the definition with only these changes: the first letter is
+capitalised and a full stop added; a leading subject label such as
+"(astronomy)" is removed; clauses that contain the answer word, and trailing
+clauses that don't fit the card, are dropped.
 
 The choice of words and how common each one is (`rarity`) come from
 **SCOWL** (Spell Checker Oriented Word Lists, http://wordlist.aspell.net),
