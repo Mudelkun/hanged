@@ -33,7 +33,7 @@ describe('player names', () => {
   });
 
   it('blocks offensive words, however they are dressed up', () => {
-    for (const name of ['fuuuuck', 'F.U.C.K', 'xXcuntXx', 'BigDick', 'big dick', 'a s s', 'Sh1t', 'N1gger', 'b00bs', 'NAZI', 'Héil'])
+    for (const name of ['fuuuuck', 'F.U.C.K', 'xXcuntXx', 'BigDick', 'big dick', 'a s s', 'Sh1t', 'N1gger', 'b00bs', 'NAZI', 'Héil', 'f u c k', 'Wh0re', 'b1tch', 'Hitler', 'KYS'])
       assert.equal(problem(name), 'blocked', name);
   });
 
@@ -42,7 +42,7 @@ describe('player names', () => {
   });
 
   it("doesn't block harmless names that hide a bad word", () => {
-    for (const name of ['Titan', 'Grape', 'Sussex', 'Hancock', 'Yoshito', 'Nazir', 'Nigeria', 'Swanky', 'Torpedo', 'Bob', 'As Good', 'Cassandra', 'Dickens'])
+    for (const name of ['Titan', 'Grape', 'Sussex', 'Hancock', 'Yoshito', 'Nazir', 'Nigeria', 'Swanky', 'Torpedo', 'Bob', 'As Good', 'Cassandra', 'Dickens', 'Scunthorpe', 'Analise', 'Classic', 'Therapist'])
       assert.equal(problem(name), null, name);
   });
 });

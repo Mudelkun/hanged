@@ -38,9 +38,10 @@ tabs (the mockup draws one; a pushed page covering it is the iOS way and leaves 
 
 ## Player names
 
-The rules live in [server/src/names.ts](../server/src/names.ts) and are **shared**, like `contract.ts`: plain
-code, **no imports**. The app checks a name before saving it (the reducer's `rename`), and the server checks it
-again on every sync, because a modified app could skip the first check. A name the server refuses is stored as
+The rules live in [server/src/names.ts](../server/src/names.ts) and are **shared**, like `contract.ts`. Its
+only import is the [`obscenity`](https://github.com/jo3-l/obscenity) filter (MIT, no dependencies), which is
+in both `package.json` files: keep the two versions the same. The app checks a name before saving it (the reducer's `rename`), and the server checks it
+again on every sync, because a modified app could skip the first check.
 null, and boards show the default name.
 
 - `cleanName`: drops control and invisible characters, single spaces, trims.
@@ -52,17 +53,21 @@ null, and boards show the default name.
   - `characters`: letters in any language, digits, spaces and `- _ . '` (and `’`, which iOS types for `'`).
     At least one letter. No emoji.
   - `blocked`: the filter.
-- **The filter errs on the side of blocking**: a blocked player picks another name, and a slur on the
-  leaderboard is far worse. It reads the name as plain a–z (accents off, look-alikes swapped back:
-  `0→o 1→i 3→e 4→a 5→s 7→t 8→b 9→g @→a $→s !→i`, everything else dropped), and each blocked word
-  matches with its letters repeated (`f+u+c+k+`: "fuuuck" is caught, "Nigeria" isn't "nigger").
-  - `BLOCKED_ANYWHERE`: caught even inside a word or spelled out ("xXcuntXx", "f.u.c.k"). Only words that
-    are almost never part of a harmless name, plus names that pose as the game (admin, moderator, official).
-  - `BLOCKED_WORDS`: caught only as a **whole word**, split at spaces, punctuation and lower→upper case
-    ("Big Dick", "BigDick"), or as the whole name spelled out ("a s s"). These hide in harmless names:
-    Titan, grape, Sussex, torpedo, Hancock, Swanky, Yoshito ("shit"), Nazir ("nazi").
-  - **Adding a word**: put it in `BLOCKED_WORDS` unless you're sure it never sits inside a real name, then add
-    it and a harmless name that contains it to `server/test/names.test.ts`.
+- **The filter is a library, not ours** (owner's call, 2026-10-22: don't build a filter from scratch).
+  `isBlocked` runs obscenity's `RegExpMatcher` with its English list (about 70 words, each with its own
+  harmless exceptions: Scunthorpe, Cassandra, Dickens, Titan) and its recommended transformers (leetspeak,
+  look-alike characters, repeated letters: "fuuuck", "Sh1t", "b00bs"). It errs on the side of blocking: a
+  blocked player picks another name, and a slur on the leaderboard is far worse.
+  - Our part is small: accents off first ("Héil"), and the name is checked twice: with camelCase split
+    ("BigDick" → "Big Dick") and with spaces and punctuation removed ("f.u.c.k", "a s s").
+  - `EXTRA_WORDS`: what its list leaves out (nazi, hitler, heil, kys, …) and names that pose as the game
+    (admin, moderator, official, Hanged, support, staff, mod, …), in obscenity's pattern syntax: `|nazi|` is a
+    whole word only (Nazir passes), `nazi[s]` an optional letter. **The library reads a double letter as one,
+    except b e o l s g**, so write "official" as `oficial`. That's also why "kkk" can't be blocked (it reads
+    as a single "k").
+  - `ALLOWED_NAMES`: real names its list blocks (Analise, because of "anal").
+  - **Adding a word**: add it to `EXTRA_WORDS` (or a name to `ALLOWED_NAMES`), then add it and a harmless
+    name that contains it to `server/test/names.test.ts`.
   - It's an English list. Other languages will need their own words.
 - **Names aren't unique** (open question in CLAUDE.md). Players can't report a name yet (Guideline 1.2: plan it
   before the leaderboard goes live).

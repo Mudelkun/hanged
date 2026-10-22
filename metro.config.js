@@ -1,5 +1,6 @@
 // The server (server/) has its own node_modules and dev database: keep Metro
-// from watching them. The app only imports server/src/contract.ts (types and limits).
+// from watching them. The app only imports server/src/contract.ts (types and limits)
+// and server/src/names.ts, whose `obscenity` comes from the app's own node_modules.
 const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);

@@ -148,5 +148,7 @@ is an indexed count, which is O(rank). Cache it if it ever shows up in the metri
   because `pg` returns bigints as strings. Multi-statement SQL goes through `exec`, because PGlite's
   `query` takes one statement.
 - Keep the app's checks and the server's schemas in step with `LIMITS` in `contract.ts`.
-- **`names.ts` is shared like `contract.ts`**: the app imports it, so no imports in it. The server
-  re-checks names because the app's check can be skipped by a modified app.
+- **`names.ts` is shared like `contract.ts`**: the app imports it, so its only import is the `obscenity`
+  filter, which is in **both** `package.json` files (Metro can't see `server/node_modules`, so the app
+  bundles its own copy; keep the two versions the same). The server re-checks names because the app's check
+  can be skipped by a modified app.
