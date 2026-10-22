@@ -33,15 +33,18 @@ game save (`unlockedCharacterIds`, `characterId`), like tokens. The server only 
 
 The owner chose a steady pace after descriptions became free: the first paid character in
 about **20-30 rounds**, and the full collection in **1,500-2,000 rounds for a regular player**.
-Mochi and Bun remain free. The paid collection totals **5,925 tokens** (previously 2,430).
+Mochi, Bun and Coco are free. **Coco became free on 2026-10-22** (owner's call) so onboarding can offer
+Coco and Bun as the two starters (design: `design/onboarding/onboarding.html`); Biscuit took Coco's old
+50 so the first paid character still lands at about round 21. The paid collection totals **5,825 tokens**
+(previously 2,430).
 Prices are still tuning values; observed play should guide future adjustments.
 
 | Character | Previous tokens | Current tokens |
 |---|---:|---:|
 | Mochi | 0 | 0 |
 | Bun | 0 | 0 |
-| Coco | 30 | 50 |
-| Biscuit | 50 | 100 |
+| Coco | 30 | 0 |
+| Biscuit | 50 | 50 |
 | Pip | 75 | 150 |
 | Bao | 100 | 200 |
 | Koa | 125 | 250 |
@@ -91,9 +94,9 @@ Median collection-completion rounds with the new prices:
 
 | Profile | First paid character | No letter purchases | 5% letter use | 10% letter use |
 |---|---:|---:|---:|---:|
-| Casual | 25 | 1,729 | 2,172 | 2,947 |
-| Regular | 21 | 1,462 | 1,769 | 2,248 |
-| Strong | 16 | 1,208 | 1,406 | 1,694 |
+| Casual | 25 | 1,701 | 2,134 | 2,900 |
+| Regular | 21 | 1,437 | 1,741 | 2,212 |
+| Strong | 16 | 1,188 | 1,381 | 1,664 |
 
 The regular 5% scenario is the calibration target; its previous prices gave the first character
 at round 11 and the collection at round 668. The check exits with an error when the current

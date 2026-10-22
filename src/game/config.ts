@@ -64,8 +64,8 @@ export const DEFAULT_CHARACTER = 'mochi';
 export const CHARACTER_PRICES: Readonly<Record<string, number>> = {
   mochi: 0,
   bun: 0,
-  coco: 50,
-  biscuit: 100,
+  coco: 0,
+  biscuit: 50,
   pip: 150,
   bao: 200,
   koa: 250,
