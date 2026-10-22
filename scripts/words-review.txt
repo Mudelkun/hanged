@@ -7,12 +7,10 @@
 # scripts/words-source.txt (`--senses <word>`) to fix them.
 # Format: word | old dictionary description => new description
 #
-# FLAGGED: archaic or obscure words, words pinned to a rare part of speech, and
-# words that may not belong in a family game. They kept a description; decide
-# whether to keep, re-sense or block them (scripts/blocked-words.txt).
-# Format: word | reason
+# The words flagged in that review (archaic, obscure, unsuitable, or pinned to a
+# rare part of speech) were removed from the game: scripts/removed-words.txt.
 
-## MEANING CHANGED (975)
+## MEANING CHANGED (974)
 above | At an earlier place. => In or to a higher place; overhead.
 academic | Hypothetical or theoretical and not expected to produce an immediate or practical result. => Relating to school, college and study.
 active | Tending to become more severe or wider in scope. => Busy moving or doing things; full of energy.
@@ -69,7 +67,6 @@ double | A base hit on which the batter stops safely at second base. => An amoun
 draw | Cause to move by pulling. => To make a picture with a pencil or pen.
 easily | Without doubt. => Without difficulty.
 economic | Using the minimum of time or resources necessary for effectiveness. => Relating to money, trade and industry.
-except | Object to. => To leave something out; exclude it.
 exchange | Chemical process in which one atom or ion or group changes places with another. => Giving one thing and receiving another in return; a swap.
 execute | Kill as a means of socially sanctioned punishment. => To carry out a plan, order or task.
 exist | Support oneself. => To be real or present.
@@ -988,187 +985,3 @@ wraith | A mental representation of some haunting experience. => A ghost.
 yammer | Cry loudly, as of animals. => To complain noisily.
 yeoman | Officer in the (ceremonial) bodyguard of the British monarch. => A small landowning farmer.
 zing | A brief high-pitched buzzing or humming sound. => Zest.
-
-## FLAGGED (182)
-animal | pinned to the rare adjective sense; the noun (a living creature) is the common meaning
-despite | pinned to the rare noun sense (contempt); the word is almost always a preposition
-except | pinned to a rare verb sense; the word is almost always a preposition
-lager | pinned to a rare sense (a camp ringed by wagons); the common meaning is the beer
-gig | pinned to a rare sense (a rowing boat); the common meaning is a live performance
-peanut | pinned to the rare adjective sense (of little importance); the noun is the common meaning
-pedal | pinned to the rare adjective sense (of the feet); the noun (a bicycle pedal) is the common meaning
-physic | archaic word (a purging medicine)
-sang | obscure plant sense (a ginseng herb); the word is far more familiar as the past tense of sing
-scotch | pinned to a rare adjective sense (thrifty)
-shook | obscure sense (the parts of a dismantled barrel); the word is far more familiar as the past tense of shake
-staggers | obscure word (a livestock disease)
-sunrise | pinned to the rare adjective sense (a new industry); the noun is the common meaning
-textbook | pinned to the rare adjective sense (typical); the noun is the common meaning
-thou | pinned to a rare sense (one thousand); the word is far more familiar as the old pronoun
-tore | obscure sense (a molding on a column); the word is far more familiar as the past tense of tear
-tripos | obscure word (Cambridge exams)
-aback | nearly always used in the phrase "taken aback"; the sailing sense is rare
-ail | obscure noun sense (garlic); the word is far more familiar as the verb to ail
-anon | archaic word (soon)
-asteroid | pinned to the rare adjective sense (star-shaped); the noun (a space rock) is the common meaning
-belling | obscure word (a mock serenade for newlyweds)
-blinks | obscure plant sense
-bombard | pinned to an obscure noun sense (an old wind instrument); the verb (to attack) is the common meaning
-boon | pinned to the rare adjective sense (close, as friends); the noun (a blessing) is the common meaning
-broach | pinned to a noun sense that is a variant spelling of brooch; the verb (to raise a subject) is the common meaning
-bully | pinned to the rare adjective sense (excellent); the noun is the common meaning
-bundling | obscure sense (an old courtship custom)
-calk | obscure word (a cleat on a horseshoe)
-canary | pinned to the rare adjective sense (a yellow color); the noun (the songbird) is the common meaning
-carnation | pinned to the rare adjective sense (pink); the noun (the flower) is the common meaning
-cheesing | slang sense; check whether to keep this word
-cherry | pinned to the rare adjective sense (red); the noun (the fruit) is the common meaning
-cleavers | obscure plant name
-cod | pinned to the rare adjective sense (cash on delivery); the noun (the fish) is the common meaning
-coral | pinned to a color sense; the sea creature is the common meaning
-corking | dated slang word (excellent)
-crank | pinned to an obscure adjective sense (a boat that tips easily); the noun (a handle you turn) is the common meaning
-creeps | obscure sense (a livestock disease)
-dandy | pinned to the rare adjective sense (excellent); the noun (a stylish man) is the common meaning
-defile | pinned to the noun (a mountain pass); the verb (to make dirty) is more common
-divers | archaic word (several, varied)
-fawn | pinned to a color sense; the baby deer is the common meaning
-gee | pinned to a unit of force; the word is more familiar as an exclamation
-ginger | pinned to the rare adjective sense (a color); the noun (the spice) is the common meaning
-grizzly | pinned to an adjective sense (gray-haired); the noun (the bear) is the common meaning
-groovy | dated slang word
-heckle | pinned to an obscure noun (a flax comb); the verb (to interrupt a speaker) is the common meaning
-hogged | obscure sense (a ship sagging at both ends)
-hooter | slang sense (the nose)
-mainline | drug slang sense
-maria | plural of mare (a moon plain); obscure as a game word
-mete | archaic noun (a boundary)
-meridian | pinned to a rare adjective sense (at noon); the noun is the common meaning
-mural | pinned to the rare adjective sense (of walls); the noun (a wall painting) is the common meaning
-necking | obscure sense (a molding on a column)
-non | not a standalone word; it is a prefix
-pave | pinned to an obscure noun sense (a jewel setting); the verb is the common meaning
-pendant | pinned to the rare adjective sense (hanging); the noun (a necklace pendant) is the common meaning
-pinning | obscure sense (a college dating custom)
-pique | pinned to a fabric sense; the noun or verb for irritation is more common
-plum | pinned to an adverb sense (exactly); the fruit is the common meaning
-pyramid | pinned to a rare verb sense (investing); the noun (the shape) is the common meaning
-quail | pinned to the verb (to cower); the noun (the bird) is equally common
-quartering | obscure heraldry sense
-raped | sensitive word; consider adding it to the blocked list
-renege | pinned to a rare card-game sense; the verb (to break a promise) is the common meaning
-revoke | pinned to a rare card-game sense; the verb (to cancel) is the common meaning
-rum | pinned to an adjective sense (strange); the drink is the common meaning
-rummy | pinned to an adjective sense (strange); the card game is the common meaning
-scours | obscure word (livestock diarrhea)
-scribe | pinned to a rare verb sense; the noun (a copyist) is the common meaning
-smut | sensitive word; consider adding it to the blocked list
-snuff | pinned to a color sense; tobacco snuff or the verb is the common meaning
-sodding | vulgar British slang; consider adding it to the blocked list
-stater | obscure word (an ancient coin)
-strangles | obscure word (a horse disease)
-stripper | common sense is adult entertainment; consider reviewing
-sulky | pinned to an obscure noun (a carriage); the adjective (sulking) is the common meaning
-sunset | pinned to the rare adjective sense (declining); the noun is the common meaning
-sup | obscure noun sense
-thong | common sense is underwear; consider reviewing
-throwback | pinned to the rare adjective sense; the noun is the common meaning
-tonic | pinned to the rare adjective sense; the noun (a drink) is the common meaning
-topping | pinned to an adjective sense (excellent); the noun is the common meaning
-trembles | obscure word (a livestock disease)
-vest | pinned to a rare verb sense (to grant power); the noun (a garment) is the common meaning
-wigging | British slang word
-baas | regional word (South African)
-cahoot | obscure singular; the word is almost always "cahoots"
-fucked | vulgar word; consider removing it from the game
-fagged | British slang, and close to a slur; consider removing it
-meg | informal and obscure in this sense (one million)
-pissed | vulgar word; consider removing it from the game
-pussycat | the word could read as vulgar; consider removing it
-pussyfoot | the word could read as vulgar; consider removing it
-transsexual | sensitive word; consider removing it from the game
-skinheads | linked to extremist groups; consider removing it
-spastic | can be read as an offensive slur; consider removing it
-pooch | pinned to a rare verb sense (to pout); the noun (a dog) is the common meaning
-abed | archaic word
-aught | archaic word
-aery | archaic spelling of "airy"
-aright | archaic word
-assize | archaic legal word
-wino | can read as a slur on homeless people; consider removing it
-besom | archaic word
-betwixt | archaic word
-bethink | archaic word
-betide | archaic word
-bounden | archaic word
-clew | archaic spelling of "clue"
-bordello | adult content; consider removing it
-cozen | archaic word
-dickey | British slang
-dipsomaniac | old-fashioned medical term
-fain | archaic word
-finis | archaic word
-forsooth | archaic word
-fourscore | archaic word
-eventide | archaic word
-gad | obscure sense (a spur); the word is mostly known as an exclamation
-gimpy | offensive word for disabled people; consider removing it
-eugenics | sensitive topic; consider removing it
-gook | ethnic slur; remove this word from the game
-imbecilic | offensive word; consider removing it
-hearken | archaic word
-hereof | archaic legal word
-hereto | archaic legal word
-hereupon | archaic word
-hie | archaic word
-grippe | dated word
-mongolism | offensive outdated term; remove this word from the game
-miscegenation | offensive, racist term; consider removing it
-jihad | sensitive word; consider removing it
-lief | archaic word
-larboard | archaic word
-lancers | obscure word
-niggard | sounds like a racial slur; consider removing it
-niggardliness | sounds like a racial slur; consider removing it
-niggardly | sounds like a racial slur; consider removing it
-papoose | can be offensive; consider removing it
-nubile | sexual connotation; consider removing it
-nonce | also an offensive British slang word; consider removing it
-morrow | archaic word
-nigher | archaic word
-nighest | archaic word
-nowise | archaic word
-oft | archaic word
-perforce | archaic word
-queerly | the word can be read as a slur; consider removing it
-queerness | the word can be read as a slur; consider removing it
-poesy | archaic word
-prate | archaic word
-quondam | archaic word
-raiment | archaic word
-rapine | archaic word
-squaw | racial slur; remove this word from the game
-sahib | colonial term; consider removing it
-shagged | vulgar British slang; consider removing it
-shrive | archaic word
-threesome | sexual connotation; consider removing it
-transphobic | sensitive topic; consider removing it
-twerk | slang with sexual connotation; consider removing it
-thither | archaic word
-therefrom | archaic word
-thereto | archaic word
-therewith | archaic word
-twain | archaic word
-troth | archaic word
-swain | archaic word
-whorehouse | vulgar word; consider removing it
-wench | dated and sexist; consider removing it
-womanize | sexual connotation; consider removing it
-womanish | sexist; consider removing it
-wroth | archaic word
-wend | archaic word
-welkin | archaic word
-withal | archaic word
-wheresoever | archaic word
-yea | archaic word
-yore | archaic word

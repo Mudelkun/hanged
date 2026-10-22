@@ -3,7 +3,8 @@
  * can hold every common English word instead of a hand-made list:
  * - the words: Open English WordNet lemmas of 3–15 letters a–z that SCOWL
  *   (scripts/scowl.js) counts as common, minus names, slurs and obscenities;
- * - nothing from scripts/blocked-words.txt in the word or its description;
+ * - nothing from scripts/blocked-words.txt in the word or its description,
+ *   and none of the words in scripts/removed-words.txt;
  * - the sense: the most used one (Princeton tag counts) whose definition makes
  *   a usable description (describe in scripts/words-rules.js), among
  *   the word's main senses only (a word whose main senses all fail is left out);
@@ -51,11 +52,13 @@ const CONCRETE_LEXFILES = new Set([
 ]);
 
 const BLOCKED_PATH = path.join(__dirname, 'blocked-words.txt');
+const REMOVED_PATH = path.join(__dirname, 'removed-words.txt');
 
-const readBlocked = () =>
+/** A one-term-per-line list, `#` comments skipped. */
+const readList = (file) =>
   new Set(
     fs
-      .readFileSync(BLOCKED_PATH, 'utf8')
+      .readFileSync(file, 'utf8')
       .split(/\r?\n/)
       .map((l) => l.replace(/#.*/, '').trim().toLowerCase())
       .filter(Boolean),
@@ -86,9 +89,10 @@ function isPlural(wn, word) {
  * and how many candidates each check turned away.
  */
 function generateWords(wn, scowl) {
-  const blocked = readBlocked();
+  const blocked = readList(BLOCKED_PATH);
+  const removed = readList(REMOVED_PATH);
   const words = [];
-  const rejected = { blocked: 0, offensive: 0, noSense: 0 };
+  const rejected = { blocked: 0, removed: 0, offensive: 0, noSense: 0 };
   for (const word of [...wn.lemmas()].sort()) {
     const size = scowl.sizeOf(word);
     if (!/^[a-z]+$/.test(word) || word.length < MIN_LENGTH || word.length > MAX_LENGTH || !(size <= MAX_WORD_SIZE)) continue;
@@ -97,6 +101,10 @@ function generateWords(wn, scowl) {
     if (!senses.length) continue;
     if (blocked.has(word)) {
       rejected.blocked++;
+      continue;
+    }
+    if (removed.has(word)) {
+      rejected.removed++;
       continue;
     }
     if (senses.some((s) => exemplifies(wn.synset(s.synset), OFFENSIVE))) {

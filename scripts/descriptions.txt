@@ -189,7 +189,6 @@ personification | 07122808-n | Describing an object or idea as if it were a pers
 characteristics | 04738737-n | Typical features or qualities that help identify someone or something.
 child | 09937706-n | A son or daughter, at any age.
 aardvark | 02085443-n | An African animal with a long snout and tongue that eats termites at night.
-aback | 00076005-r | With the wind blowing against the front of the sails.
 abacus | 02668977-n | A frame of beads on rods used for counting.
 abaft | 00276839-r | Toward the back of a ship.
 abalone | 01945510-n | An edible sea snail with a pearly shell.
@@ -217,7 +216,6 @@ abduct | 01473673-v | To take someone away by force.
 abducting | 00002956-a | Pulling away from the middle of the body, as some muscles do.
 abduction | 00776957-n | Kidnapping someone.
 abeam | 00076147-r | At right angles to a ship's side.
-abed | 00230832-r | In bed.
 aberrant | 01600704-s | Abnormal.
 aberration | 14527267-n | Something very different from what is normal.
 abet | 02554908-v | To help someone do something wrong.
@@ -615,7 +613,6 @@ aerodynamics | 06123958-n | The study of how air flows around moving objects.
 aeronautics | 06106520-n | The science of flight.
 aerosol | 11442711-n | A mist of tiny particles in a gas, as from a spray can.
 aerospace | 08519192-n | The earth's atmosphere and the space beyond it.
-aery | 00628872-s | Light and insubstantial.
 aesthete | 10084344-n | Someone who greatly loves art and beauty.
 aesthetic | 00070140-a | Relating to beauty and good taste.
 aesthetically | 00262662-r | In a way that relates to beauty.
@@ -744,7 +741,6 @@ ahem | 07141229-n | A throat-clearing sound to get attention.
 aid | 02553283-v | To help someone or give them support.
 aide | 09789602-n | An assistant.
 aided | 02362263-a | Helped.
-ail | 07834253-n | Garlic.
 aileron | 02688112-n | A hinged flap on an airplane wing.
 ailing | 02553095-s | Sick.
 ailment | 14078890-n | An illness.
@@ -1058,7 +1054,6 @@ anguish | 07511895-n | Severe mental suffering.
 anguished | 01367501-s | Suffering great pain or distress.
 angular | 02941929-a | Measured by angles.
 angularity | 13887384-n | Sharp, bony shape.
-animal | 01783117-s | Driven by physical needs and instincts, like hunger or strength.
 animate | 00121062-a | Alive.
 animated | 00119378-a | Lively.
 animating | 01359780-s | Giving life and energy.
@@ -1105,7 +1100,6 @@ anointing | 00714085-n | Applying oil in a religious ceremony.
 anointment | 00714085-n | Applying holy oil.
 anomalous | 01601037-s | Unusual.
 anomaly | 14529423-n | Something that is different from what is normal or expected.
-anon | 00035707-r | Soon; in a little while.
 anonymous | 00121384-a | Having no known name or identity.
 anonymously | 00264086-r | Without giving a name.
 anorak | 03896748-n | A warm waterproof jacket with a hood.
@@ -1384,7 +1378,6 @@ argyle | 02740171-n | A diamond pattern on socks or sweaters.
 aria | 07063554-n | A solo song in an opera.
 arid | 02563185-s | Very dry.
 aridity | 05155433-n | Dryness.
-aright | 00205350-r | Correctly.
 arise | 02630344-v | To come into being or start to happen.
 aristocracy | 08404938-n | The highest social class, with inherited titles.
 arithmetic | 06013397-n | Basic math with numbers: adding, subtracting, multiplying and dividing.
@@ -1554,7 +1547,6 @@ assist | 02553283-v | To help.
 assistance | 01210099-n | Help given to someone.
 assistant | 09835195-n | A person who helps someone else with their work.
 assisted | 02362263-a | Helped.
-assize | 06677098-n | An old law fixing the weights and prices of goods.
 assizes | 08347770-n | Former county courts in England.
 associate | 00715072-v | To connect one thing with another in your mind.
 association | 08066153-n | An organized group of people with a shared purpose.
@@ -1574,7 +1566,6 @@ assuredly | 00268242-r | Certainly.
 assuring | 00198839-s | Giving someone confidence; comforting.
 asterisk | 06841439-n | A star-shaped symbol (*) used in printing.
 astern | 00277302-r | Backward, on a ship.
-asteroid | 02055764-s | Shaped like a star.
 asthma | 14169393-n | A lung condition that makes breathing hard and causes wheezing.
 asthmatic | 01177592-s | Wheezing.
 astigmatism | 14577182-n | Blurry eyesight from a misshapen cornea.
@@ -1689,7 +1680,6 @@ auditor | 10185041-n | A person who checks a company's accounts.
 auditorium | 02761139-n | The part of a theater where the audience sits.
 auditory | 02879986-a | Relating to hearing.
 auger | 03975218-n | A drilling tool.
-aught | 13762308-n | Anything at all.
 augment | 00154196-v | To increase.
 augmentation | 07384070-n | An increase.
 augmented | 00883828-s | Increased.
@@ -1809,7 +1799,6 @@ axon | 05476501-n | The long fiber of a nerve cell.
 azalea | 12265836-n | A shrub with bright flowers.
 azure | 00371329-s | Bright sky-blue.
 baa | 07390768-n | The sound a sheep makes.
-baas | 09846568-n | A boss, in South Africa.
 babble | 01067652-v | To talk in a fast, meaningless way.
 babbler | 09931028-n | Someone who talks nonsense.
 babbling | 06622496-n | Meaningless chatter.
@@ -2260,7 +2249,6 @@ belligerence | 07564161-n | Aggression.
 belligerency | 07564161-n | Hostility.
 belligerent | 01247720-s | Aggressive and ready to fight.
 belligerently | 00243937-r | Aggressively.
-belling | 07068162-n | A noisy mock serenade for newlyweds.
 bellow | 01050441-v | To shout loudly.
 bellowing | 07136069-n | A loud roar.
 bellwether | 09868757-n | A leader or trendsetter.
@@ -2328,7 +2316,6 @@ besieged | 01661555-s | Surrounded by enemies.
 besieger | 09870382-n | An attacker who surrounds a city.
 besieging | 01077041-n | Surrounding a place to attack it.
 besmirch | 00848188-v | To stain a reputation.
-besom | 02835099-n | A broom made of twigs.
 besot | 02120101-v | To make foolish with drink or love.
 bespeak | 00923271-v | To be a sign of.
 bespoke | 00675647-s | Custom-made.
@@ -2344,8 +2331,6 @@ bestride | 01927367-v | To straddle.
 bestseller | 06424140-n | A very popular book.
 bet | 13364541-n | Money you risk on the result of a game or race.
 beta | 06847295-n | The second letter of the Greek alphabet.
-bethink | 02171205-v | To remind yourself.
-betide | 00345654-v | To happen to.
 betoken | 00923271-v | To be a sign of.
 betray | 00938362-v | To reveal something by accident.
 betrayer | 10225792-n | A traitor.
@@ -2357,7 +2342,6 @@ betterment | 07371988-n | Improvement.
 betting | 01300894-s | Fond of gambling and placing wagers.
 bettor | 09871284-n | A person who places bets.
 between | 00500585-r | In the space or time separating two things.
-betwixt | 00500585-r | Between.
 beverage | 07897775-n | A drink.
 bevy | 08432731-n | A large group.
 bewail | 00913303-v | To lament.
@@ -2576,7 +2560,6 @@ blindside | 02602727-v | To catch off guard.
 bling | 02855302-n | Flashy jewelry.
 blink | 00007739-v | To shut and open your eyes quickly.
 blinker | 02855432-n | A light that flashes on and off as a signal.
-blinks | 11881956-n | A small wild lettuce-like plant.
 blintz | 07656600-n | A thin pancake rolled around a filling.
 blintze | 07656600-n | A thin pancake rolled around a filling.
 blip | 07313821-n | A small, brief problem.
@@ -2722,7 +2705,6 @@ bologna | 07692018-n | A large smoked sausage, often sliced for sandwiches.
 bolster | 00223800-v | To support and strengthen.
 bolt | 11539554-n | A flash of lightning.
 bomb | 02869918-n | A device that explodes.
-bombard | 02870607-n | An old wind instrument with a deep sound.
 bombardier | 09883835-n | The crew member who drops bombs from a plane.
 bombardment | 07097633-n | A flood of words or questions.
 bombast | 07101969-n | Pompous talk.
@@ -2770,7 +2752,6 @@ bookworm | 10431101-n | A person who loves reading.
 boom | 02191956-v | To make a deep, loud sound.
 boomerang | 02009792-v | To come back to where it started.
 booming | 02339849-s | Lively and successful.
-boon | 00454053-s | Very close, as good friends.
 boondocks | 08519693-n | A remote area.
 boondoggle | 00042352-n | Pointless, wasteful work.
 boorish | 01956681-s | Rude and rough.
@@ -2792,7 +2773,6 @@ boozing | 00749813-n | Heavy drinking.
 boozy | 00802062-s | Fond of drinking.
 bop | 07077141-n | An early style of modern jazz.
 borax | 14693245-n | A white mineral used in cleaning.
-bordello | 04588881-n | A brothel.
 border | 08529808-n | A line separating two countries or areas.
 bordered | 00258608-a | Having an edge of a different color or material.
 borderline | 01499606-s | Only just acceptable.
@@ -2835,7 +2815,6 @@ bouncing | 07365001-n | Springing back after hitting something.
 bouncy | 00847134-s | Springy.
 bound | 00253820-a | Tied up or tightly held.
 boundary | 08529331-n | A line that marks the edge of an area.
-bounden | 00851799-s | Obligatory.
 bounteous | 01115129-s | Generous.
 bountiful | 01115129-s | Plentiful.
 bouquet | 02882329-n | A bunch of flowers.
@@ -3011,7 +2990,6 @@ bristled | 00146351-s | Covered with stiff hairs or spines.
 bristly | 01138920-s | Irritable.
 brittle | 00711942-s | Hard but easily broken.
 brittleness | 04946724-n | Being easily broken.
-broach | 02909763-n | A decorative pin; another spelling of brooch.
 broached | 01664188-s | Opened, like a tapped barrel.
 broad | 02571278-a | Wide.
 broadcast | 06264137-n | A program sent out on radio or television.
@@ -3151,7 +3129,6 @@ bullish | 01668381-s | Expecting prices to rise.
 bullock | 02406472-n | A young castrated bull.
 bullpen | 02921348-n | The warm-up area for baseball pitchers.
 bullring | 02921496-n | An arena for bullfights.
-bully | 01127641-s | Excellent.
 bullying | 00791587-s | Domineering.
 bulrush | 12176290-n | A tall marsh plant.
 bulwark | 04058937-n | A defensive wall.
@@ -3167,7 +3144,6 @@ bumpy | 02251311-a | Uneven and jolting.
 bun | 07696677-n | A small round bread roll.
 bunch | 07976557-n | A group of things together, like grapes or flowers.
 bundle | 08024575-n | A collection of things tied or wrapped together.
-bundling | 07203639-n | An old courtship custom.
 bung | 02923032-n | A stopper for a barrel.
 bungalow | 02923176-n | A small one-story house.
 bungle | 00075610-n | A clumsy mistake.
@@ -3307,7 +3283,6 @@ caffeine | 14785301-n | The stimulating substance in coffee and tea.
 cage | 02940098-n | An enclosure with bars for keeping animals or birds.
 cagey | 00440992-s | Secretive and cautious.
 cagily | 00282667-r | Cautiously.
-cahoot | 07191771-n | Collusion.
 cairn | 07288507-n | A pile of stones marking a path or grave.
 caisson | 03068446-n | A sunken panel in a ceiling.
 cajole | 00770823-v | To persuade with flattery.
@@ -3332,7 +3307,6 @@ calibrated | 03159654-a | Marked with measuring lines.
 calibration | 01001187-n | Checking that a measuring instrument is accurate.
 caliper | 02943283-n | A tool for measuring thickness.
 caliph | 09906948-n | A Muslim ruler.
-calk | 02943560-n | A metal spike on a horseshoe to stop slipping.
 call | 01030757-v | To give someone or something a name.
 callable | 00137678-s | Able to be demanded for early payment.
 caller | 09907302-n | A visitor.
@@ -3384,7 +3358,6 @@ campy | 02403054-s | Amusingly over the top.
 camshaft | 02950279-n | A rotating rod in an engine.
 canal | 09255224-n | A man-made waterway for boats or for watering crops.
 canard | 06770846-n | A false rumor.
-canary | 00373715-s | Bright yellow, like the songbird.
 canasta | 00498071-n | A card game like rummy.
 cancan | 00532114-n | A high-kicking French dance.
 cancel | 02483178-v | To call off a planned event.
@@ -3533,7 +3506,6 @@ carjacking | 00228351-n | Stealing a car by force.
 carmine | 00382159-s | Deep red.
 carnage | 00224850-n | The killing of many people.
 carnal | 01783117-s | Relating to the body's desires.
-carnation | 00374022-s | Pink.
 carnelian | 14825764-n | A reddish semiprecious stone.
 carnival | 00512566-n | A festival with parades and fun.
 carnivore | 02077948-n | An animal that eats meat.
@@ -3893,7 +3865,6 @@ cheery | 00365018-s | Bright and happy.
 cheese | 07866305-n | A food made from pressed milk curds.
 cheeseburger | 07713058-n | A burger with melted cheese.
 cheesecloth | 03016027-n | A thin loose cotton cloth.
-cheesing | 90016241-n | Winning a game with a cheap, easy tactic.
 cheesy | 02354508-s | Corny and cheap.
 cheetah | 02132960-n | A spotted wild cat, the fastest land animal.
 chef | 09983053-n | A professional cook.
@@ -3906,7 +3877,6 @@ chenille | 03017646-n | A fuzzy yarn.
 cherish | 01780135-v | To love and care for.
 cherished | 01465547-s | Dearly loved.
 cheroot | 03017773-n | A cigar with both ends cut square.
-cherry | 00382159-s | Bright red.
 cherub | 09935035-n | A sweet, innocent baby.
 chervil | 12953466-n | A herb like parsley.
 chess | 12131755-n | A board game in which two players move pieces such as kings and queens.
@@ -4177,7 +4147,6 @@ cleat | 03045250-n | A stud on the sole of a sports shoe.
 cleavage | 13943045-n | A split.
 cleave | 01559354-v | To split with a sharp tool.
 cleaver | 03045617-n | A butcher's knife with a wide blade.
-cleavers | 12686920-n | A sticky wild plant with hooked prickles.
 clef | 06875612-n | A music symbol showing the pitch of notes.
 cleft | 13931215-n | A split or dent, as in a chin.
 clemency | 14546010-n | Mercy shown to someone being punished.
@@ -4191,7 +4160,6 @@ clerk | 10567784-n | A salesperson in a shop.
 clerking | 00620470-n | Doing office paperwork.
 clever | 00440992-s | Quick to learn and understand; smart.
 cleverness | 05641517-n | Creative intelligence.
-clew | 07977993-n | A ball of thread.
 click | 01897764-v | To make a short, sharp sound.
 client | 10004605-n | A person who pays for a professional service, like a lawyer's.
 cliff | 09269370-n | A tall, steep rock face.
@@ -4342,7 +4310,6 @@ cocoa | 07939004-n | A hot chocolate drink made from cacao powder.
 coconut | 07789214-n | The large hard-shelled nut of a palm, with white flesh and milky juice.
 cocoon | 02315396-n | A silky case spun by a caterpillar.
 cocooning | 01204396-n | Staying home in comfort and privacy.
-cod | 00137816-s | Paid for on delivery.
 coda | 07053224-n | The closing part of a piece of music.
 coddle | 02576182-v | To pamper.
 code | 06680062-n | A set of rules that people must follow.
@@ -5092,7 +5059,6 @@ copy | 06517508-n | A reproduction of a document or record.
 copycat | 09983941-n | An imitator.
 copyright | 06484839-n | The legal right to control copies of a creative work.
 copywriter | 09984551-n | A writer of advertisements.
-coral | 04979087-n | A deep pink color.
 cord | 03110761-n | A thin rope or string.
 corded | 02248019-s | Having raised ridges, like some fabrics.
 cordial | 01078866-s | Warm and friendly.
@@ -5104,7 +5070,6 @@ corduroy | 03111373-n | A cotton fabric with raised ridges.
 core | 08259144-n | The central or most important part of something.
 coriander | 12957229-n | A herb with fragrant leaves and seeds.
 cork | 14847397-n | The light bark of a tree, used for bottle stoppers.
-corking | 01127641-s | Excellent.
 corkscrew | 03113801-n | A spiral tool for pulling stoppers out of bottles.
 corm | 13155439-n | A bulb-like underground stem.
 cormorant | 02056690-n | A dark seabird that dives for fish.
@@ -5309,7 +5274,6 @@ coy | 01542280-s | Pretending to be shy.
 coyly | 00293230-r | Shyly and playfully.
 coyness | 04795387-n | Playful shyness.
 coyote | 02117507-n | A wild dog of North America.
-cozen | 02581157-v | To trick.
 cozily | 00188632-r | Comfortably.
 coziness | 14469764-n | Warm comfort.
 cozy | 00479274-s | Warm and comfortable.
@@ -5338,7 +5302,6 @@ cramp | 14383864-n | A sudden painful tightening of a muscle.
 cramped | 00478653-s | Uncomfortably small or crowded.
 crane | 00028160-v | To stretch your neck to see better.
 cranium | 05548146-n | The skull.
-crank | 02300153-s | Tending to tip over easily, as a sailboat.
 crankcase | 03131854-n | The casing around an engine's crankshaft.
 crankiness | 04649226-n | Grumpiness.
 crankshaft | 03132059-n | An engine shaft turned by pistons.
@@ -5397,7 +5360,6 @@ creek | 09252316-n | A small stream.
 creel | 03134499-n | A fisherman's basket.
 creep | 01889838-v | To move slowly and quietly, close to the ground.
 creeping | 00295712-n | Crawling slowly.
-creeps | 14286591-n | A disease of cattle and sheep.
 creepy | 01629941-s | Strange and a little scary.
 cremate | 00379825-v | To burn a dead body to ashes.
 cremation | 00379688-n | Burning a dead body.
@@ -5734,7 +5696,6 @@ dancing | 00429255-n | Moving your body in rhythm to music.
 dander | 09285704-n | Tiny skin flakes from pets that cause allergies.
 dandle | 01869712-v | To bounce a baby on your knee.
 dandruff | 14254689-n | Flakes of dead skin from the scalp.
-dandy | 01127641-s | Excellent.
 danger | 14564367-n | The chance of being harmed or hurt.
 dangerous | 02066198-a | Likely to cause harm or injury.
 dangle | 02723347-v | To hang loosely.
@@ -6006,7 +5967,6 @@ defiantly | 00200090-r | Rebelliously.
 deficiency | 14472871-n | A lack of something needed.
 deficient | 00052252-s | Lacking.
 deficit | 05121671-n | A shortfall.
-defile | 09286818-n | A narrow pass between mountains.
 defiled | 01911731-s | Spoiled; impure.
 defilement | 14521988-n | Pollution.
 definable | 00742566-s | Able to be defined.
@@ -6332,7 +6292,6 @@ despicable | 01136517-s | Disgraceful.
 despise | 01778720-v | To strongly dislike and look down on someone.
 despised | 01466459-s | Hated.
 despising | 07563140-n | Scornful hatred.
-despite | 07518219-n | Strong dislike and lack of respect; contempt.
 despoil | 02349564-v | To plunder.
 despoiled | 00739253-s | Plundered.
 despondency | 07553783-n | Hopelessness.
@@ -6482,7 +6441,6 @@ dice | 03195713-n | Small cubes with one to six dots, used in games.
 dicey | 02066785-s | Risky.
 dichotomy | 07956120-n | A split into two opposite parts.
 dicker | 02264636-v | To haggle.
-dickey | 01277851-s | Faulty.
 dictate | 00749139-v | To give orders with authority.
 dictated | 02137288-s | Decided by authority.
 dictation | 07182782-n | Saying words aloud for someone to write down.
@@ -6590,7 +6548,6 @@ dipole | 09289852-n | A pair of opposite charges.
 dipped | 01023733-s | Briefly lowered into a liquid.
 dipper | 03208990-n | A long-handled ladle.
 dipsomania | 09204890-n | An uncontrollable craving for alcohol.
-dipsomaniac | 09801608-n | An alcoholic.
 dipstick | 03209120-n | A rod used to check the oil level in an engine.
 dire | 00654473-s | Extremely serious or dangerous.
 direct | 00764460-a | Going straight from one place to another without stopping.
@@ -7001,7 +6958,6 @@ diver | 10039277-n | A person who works underwater.
 diverge | 02036260-v | To move apart.
 divergence | 01006014-n | Moving apart.
 diverging | 00615275-a | Moving apart.
-divers | 02075123-s | Several and varied.
 diverse | 02075123-s | Varied and different.
 diversification | 00196418-n | Spreading investments or products across many types.
 diversified | 00786685-a | Varied.
@@ -8177,7 +8133,6 @@ ethos | 04730562-n | The spirit of a culture.
 etiology | 07342208-n | The cause of a disease.
 etiquette | 06677590-n | Rules of polite behavior.
 etymology | 06526612-n | The history of where a word comes from.
-eugenics | 06052017-n | Selective breeding to "improve" humans.
 eulogistic | 00909321-s | Praising.
 eulogize | 00882301-v | To praise highly.
 eulogy | 06707104-n | A speech praising someone who has died.
@@ -8211,7 +8166,6 @@ evening | 15191509-n | The time of day between late afternoon and night.
 evenly | 00333793-r | In equal amounts.
 evenness | 13812704-n | Being divisible by two.
 event | 13966452-n | Something that happens, especially something important.
-eventide | 15191509-n | Evening.
 eventual | 01583264-s | Happening in the end.
 eventuality | 07305484-n | A possible event.
 eventually | 00048676-r | In the end, after a long time.
@@ -8272,7 +8226,6 @@ excel | 02679754-v | To be very good at something.
 excellence | 04736044-n | Being outstanding.
 excellent | 02351216-s | Extremely good.
 excellently | 00183802-r | Wonderfully.
-except | 00809603-v | To leave something out; exclude it.
 exception | 05715216-n | Something left out of a general rule.
 exceptionable | 00018888-s | Objectionable.
 exceptional | 01680620-s | Unusually good.
@@ -8588,11 +8541,9 @@ faddish | 00975415-s | Briefly trendy.
 fade | 00225077-v | To slowly disappear.
 faded | 00406038-s | Lighter in color than before.
 fading | 07442134-n | Weakening.
-fagged | 02442263-s | Exhausted.
 fail | 02534950-v | To not do something that should be done.
 failing | 02089958-s | Not good enough; below the standard.
 failure | 00067456-n | A lack of success.
-fain | 02576155-s | Glad and willing.
 faint | 01751837-s | Hard to see or hear; not strong.
 fainthearted | 00266855-s | Timid.
 fair | 00959321-a | Treating everyone equally and honestly.
@@ -8729,7 +8680,6 @@ favorably | 00232060-r | With approval.
 favored | 01465804-s | Preferred over others.
 favorite | 01821720-s | Liked more than all others.
 favoritism | 06209181-n | Unfairly treating some people better than others.
-fawn | 04980377-n | A light grayish-brown color.
 fawning | 02188861-s | Flattering to win favor.
 fax | 03321050-n | A machine that sends copies of documents by phone line.
 faze | 01787700-v | To unsettle.
@@ -8948,7 +8898,6 @@ fingerboard | 06807394-n | The strip on a guitar neck where strings are pressed.
 fingered | 00949257-a | Having digits on the hand.
 fingerprint | 06657156-n | The mark left by the ridges of a fingertip.
 finicky | 00987815-s | Fussy.
-finis | 15292365-n | The end.
 finish | 00353212-v | To complete something.
 finished | 01008652-a | Done and complete.
 finisher | 09949715-n | Someone who completes a race.
@@ -9403,7 +9352,6 @@ formulate | 00927844-v | To develop a theory.
 formulated | 00745747-s | Carefully developed.
 formulation | 07083988-n | The way something is expressed.
 forsake | 00615748-v | To abandon.
-forsooth | 00038658-r | Indeed, used mockingly.
 forswear | 00800379-v | To give up a belief.
 forswearing | 00205928-n | Giving something up.
 forsythia | 12323600-n | A shrub with yellow spring flowers.
@@ -9453,7 +9401,6 @@ fountain | 03392889-n | A structure that shoots water into the air.
 fountainhead | 06688724-n | A source.
 four | 02194304-s | The number after three.
 fourfold | 02227002-s | Four times as many.
-fourscore | 02201790-s | Eighty.
 foursome | 08003822-n | A group of four.
 foursquare | 01998111-s | Firm and steady.
 fourteen | 02195338-s | The number after thirteen.
@@ -9627,7 +9574,6 @@ fry | 02744116-v | To cook food in hot oil or fat.
 fryer | 07661078-n | A young chicken for cooking.
 frying | 00247807-n | Cooking in hot oil in a pan.
 fuchsia | 12363997-n | A shrub with drooping pink flowers.
-fucked | 91000631-a | Severely damaged.
 fuddle | 14524151-n | A muddle.
 fudge | 07621083-n | A soft, creamy candy.
 fuel | 14899228-n | A substance burned to produce energy, like gas or coal.
@@ -9728,7 +9674,6 @@ gabardine | 03414207-n | A sturdy twill fabric.
 gabble | 01038676-v | To jabber.
 gabby | 02392645-s | Talkative.
 gaberdine | 03263433-n | A long loose coat.
-gad | 04297397-n | A spur.
 gadabout | 10136562-n | Someone always going out.
 gadget | 02732963-n | A small handy device.
 gadgetry | 03414830-n | Clever little devices.
@@ -9866,7 +9811,6 @@ gearbox | 03436480-n | The casing of a car's gears.
 gearing | 03436655-n | A set of toothed wheels that pass motion and power through a machine.
 gearshift | 03437039-n | A lever for changing gears.
 gecko | 01677631-n | A small lizard that climbs walls.
-gee | 13670214-n | A unit of force equal to Earth's gravity.
 geek | 10143152-n | A person obsessed with computers or a niche hobby.
 geezer | 10143248-n | An old man.
 geisha | 10142395-n | A Japanese woman trained in traditional entertainment.
@@ -9976,7 +9920,6 @@ giddily | 00083273-r | Dizzily.
 giddiness | 04655797-n | Silliness.
 giddy | 02554818-s | Dizzy.
 gifted | 01122955-a | Talented.
-gig | 03441801-n | A light, narrow rowing boat, often used for racing.
 gigabit | 13650593-n | A billion bits of data.
 gigabyte | 13650416-n | A unit of computer data, a billion bytes.
 gigahertz | 15303677-n | A billion cycles per second.
@@ -9991,9 +9934,7 @@ gilt | 00371003-s | Golden.
 gimcrack | 02402358-s | Cheap and showy.
 gimlet | 07931235-n | A gin and lime cocktail.
 gimmick | 05172200-n | A trick to attract attention.
-gimpy | 01022380-s | Limping.
 gin | 07920635-n | A strong clear alcoholic drink flavored with juniper berries.
-ginger | 00399036-s | Bright orange-brown, like the spice root.
 gingerbread | 07648755-n | A cake or cookie flavored with ginger.
 gingerly | 00326893-s | Very carefully.
 gingham | 03442651-n | A checked cotton fabric.
@@ -10181,7 +10122,6 @@ goodness | 05149427-n | The quality of being kind and good.
 goodwill | 13353835-n | The value of a business's good reputation.
 goody | 07572730-n | A tasty treat.
 gooey | 00054349-s | Soft and sticky.
-gook | 14980800-n | Sticky gunk.
 goon | 10294336-n | A clumsy, foolish person.
 goop | 14980800-n | Sticky gunk.
 gooseberry | 12826775-n | A tart green berry.
@@ -10361,7 +10301,6 @@ grinning | 06891121-n | A broad smile.
 grip | 01226565-v | To hold on tightly.
 gripe | 07224625-n | A complaint.
 griping | 14349141-n | Stomach pain.
-grippe | 14145979-n | Influenza.
 gripping | 01347019-s | Exciting.
 grisly | 00197276-s | Gruesome.
 grist | 07818743-n | Grain for grinding.
@@ -10371,7 +10310,6 @@ grit | 14724755-n | Tiny hard bits of sand or stone.
 grits | 07720173-n | Coarsely ground corn, eaten for breakfast in the southern US.
 gritty | 02239247-s | Rough and sandy.
 grizzled | 00246619-s | Gray-haired.
-grizzly | 01650120-s | Gray-haired.
 groan | 01047291-v | To make a low sound of pain or unhappiness.
 grocer | 10167230-n | A person who sells food.
 grog | 07921105-n | Rum mixed with water.
@@ -10382,7 +10320,6 @@ groom | 10167555-n | A man on his wedding day.
 groomed | 02435899-a | Neat and tidy.
 grooming | 00895653-n | Keeping yourself or an animal clean and neat.
 groove | 01028686-n | A dull routine.
-groovy | 01127641-s | Excellent.
 grope | 01317398-v | To feel around blindly.
 groping | 00339173-s | Unsure.
 grosbeak | 01542874-n | A finch with a thick bill.
@@ -10824,7 +10761,6 @@ heap | 07978094-n | A pile of things.
 hear | 02174146-v | To notice sounds with your ears.
 hearer | 10185041-n | A listener.
 hearing | 14508362-n | A chance to explain your side of a case.
-hearken | 02194034-v | To listen.
 hearsay | 00772368-s | Heard from others.
 hearse | 03512024-n | A vehicle that carries a coffin.
 heart | 05927857-n | The center of your feelings and emotions.
@@ -10866,7 +10802,6 @@ heaving | 07385568-n | Rising and falling.
 heavy | 01188475-a | Weighing a lot.
 heavyset | 02395981-s | Stocky.
 heavyweight | 10186845-n | A boxer in the heaviest class.
-heckle | 03504010-n | A comb for separating flax fibers.
 heckling | 01070557-n | Shouting rude remarks at a speaker.
 hectare | 13635266-n | A unit of land area of 10,000 square meters.
 hectic | 00086895-s | Very busy.
@@ -10967,13 +10902,10 @@ hereafter | 00357692-r | From now on.
 hereby | 00257094-r | By means of this, as in a formal statement.
 heredity | 13514602-n | Passing traits from parents to children.
 herein | 00109681-r | In this.
-hereof | 00358029-r | Of this.
 heresy | 06222157-n | A belief that goes against official teachings.
 heretic | 10191427-n | A person whose beliefs go against official teaching.
 heretical | 01695927-s | Against accepted beliefs.
-hereto | 00358116-r | To this.
 heretofore | 00028314-r | Until now.
-hereupon | 00358208-r | Right after this.
 herewith | 00257094-r | With this.
 heritage | 05677641-n | Traditions passed down from the past.
 hermaphrodite | 01482488-s | Having both male and female parts.
@@ -11021,7 +10953,6 @@ hideous | 01630743-s | Very ugly or horrible.
 hideousness | 04698409-n | Ugliness.
 hideout | 08601745-n | A hiding place for criminals.
 hiding | 01050836-n | Keeping something secret or out of sight.
-hie | 02062918-v | To hurry.
 hierarchical | 01205960-a | Arranged in levels from top to bottom.
 hierarchy | 08394537-n | A system of ranks, one above another.
 high | 01213526-a | Greater than normal in amount.
@@ -11115,7 +11046,6 @@ hodgepodge | 08416934-n | A jumble.
 hoe | 03529754-n | A garden tool with a flat blade on a long handle.
 hog | 02309842-v | To take more than your share.
 hogan | 03530020-n | A Navajo dwelling.
-hogged | 00540104-s | Sagging at both ends.
 hoggish | 00011346-s | Greedy.
 hogshead | 13644486-n | A large barrel.
 hogwash | 06624034-n | Nonsense.
@@ -11208,7 +11138,6 @@ hooliganism | 01252403-n | Rowdy vandalism.
 hoop | 03539609-n | A large ring.
 hoopla | 07263175-n | Commotion.
 hooray | 06705718-n | A cheer of joy.
-hooter | 05606462-n | The nose.
 hop | 01970868-v | To jump lightly.
 hope | 01830665-v | To wish and expect that something will happen.
 hopeful | 01231403-a | Full of hope.
@@ -11571,7 +11500,6 @@ imaging | 05775730-n | Forming pictures in the mind.
 imam | 10218870-n | A Muslim prayer leader.
 imbalance | 14027634-n | A lack of balance.
 imbalanced | 00898050-a | Out of balance.
-imbecilic | 01846795-s | Stupid.
 imbibe | 01541851-v | To drink.
 imbibing | 00844789-n | Drinking.
 imbroglio | 13959186-n | A confusing mess.
@@ -12837,7 +12765,6 @@ jigger | 04213292-n | A small measure for spirits.
 jiggered | 02367453-s | Surprised.
 jiggle | 00348185-n | A small shake.
 jigsaw | 04128822-n | A power saw for cutting curves.
-jihad | 00998599-n | A Muslim holy struggle.
 jilt | 00614762-v | To dump a lover.
 jilted | 01466668-s | Dumped by a lover.
 jimmies | 07619791-n | Chocolate sprinkles.
@@ -13173,7 +13100,6 @@ ladybug | 02168108-n | A small red beetle with black spots.
 ladyfinger | 07652566-n | A finger-shaped sponge cookie.
 ladylike | 01955543-s | Polite and refined.
 lag | 02001894-v | To fall behind.
-lager | 03635148-n | A camp defended by a ring of wagons.
 laggard | 10012790-n | Someone who falls behind.
 lagging | 14811102-n | Insulation wrapped around pipes.
 lagniappe | 13292820-n | A small bonus gift.
@@ -13205,7 +13131,6 @@ lamppost | 03642472-n | A post holding a streetlight.
 lamprey | 01480166-n | An eel-like fish with a sucking mouth.
 lampshade | 03642609-n | A cover that softens a lamp's light.
 lance | 04278001-n | A long spear.
-lancers | 00541653-n | A square dance.
 land | 09358146-n | The soil at the surface of the earth, where plants grow.
 landfall | 09358599-n | The first land sighted on a voyage.
 landfill | 09358715-n | A site where trash is buried.
@@ -13242,7 +13167,6 @@ lapsed | 01789111-s | No longer active.
 lapsing | 00069153-n | Slipping back.
 laptop | 03648120-n | A portable computer.
 lapwing | 02027417-n | A crested plover.
-larboard | 02041149-s | On the left side of a ship.
 larcenous | 04883130-n | Thieving.
 larceny | 00782543-n | Theft.
 lard | 07688166-n | Pig fat used in cooking.
@@ -13519,7 +13443,6 @@ lid | 05321347-n | The fold of skin that covers the eye.
 lidded | 01449348-a | Having a cover.
 lie | 02696550-v | To be located in a certain place.
 lied | 07065660-n | A German song for voice and piano from the 1800s.
-lief | 00349906-r | Gladly.
 liege | 00965495-s | Owed feudal loyalty.
 lien | 13422186-n | A legal claim on property until a debt is paid.
 lieu | 00722683-n | Place, as in instead of.
@@ -14025,7 +13948,6 @@ maimed | 07967372-n | People who have been badly injured.
 main | 01280536-s | The most important.
 mainframe | 03717250-n | A large, powerful computer used by many people at once.
 mainland | 09369017-n | The main land of a country, not its islands.
-mainline | 01202003-v | To inject into a vein.
 mainly | 00074163-r | Mostly; for the most part.
 mainmast | 03717538-n | The main mast of a ship.
 mainsail | 03717876-n | The principal sail on a ship.
@@ -14187,7 +14109,6 @@ margarine | 07688659-n | A butter substitute made from vegetable oils.
 margarita | 07932158-n | A tequila and lime cocktail.
 margin | 13926393-n | The blank edge around the text on a page.
 marginal | 00332787-s | Near the edge.
-maria | 09369510-n | Dark flat plains on the moon.
 mariachi | 08267330-n | A Mexican street band.
 marigold | 12040976-n | A plant with bright yellow or orange flowers.
 marimba | 03726875-n | A wooden xylophone.
@@ -14405,7 +14326,6 @@ meekness | 07524564-n | Humility.
 meet | 02026953-v | To come together with someone.
 meeting | 08324519-n | A planned gathering of people to discuss something.
 meetinghouse | 03104273-n | A building where Quakers worship.
-meg | 13773673-n | A million.
 megabyte | 13649707-n | A unit of computer data equal to a million bytes.
 megacycle | 15305175-n | A million cycles per second.
 megahertz | 15305175-n | A million cycles per second.
@@ -14489,7 +14409,6 @@ merge | 00368338-v | To join together.
 merged | 02487032-s | Joined into one.
 merger | 01240989-n | Two companies joining into one.
 merging | 00147676-n | Joining together.
-meridian | 02877465-a | Happening at noon.
 meringue | 07636749-n | A light topping of whipped egg whites and sugar.
 merino | 02416936-n | A sheep with very fine wool.
 merit | 02652462-v | To deserve something.
@@ -14533,7 +14452,6 @@ metaphysical | 01581122-s | Beyond the physical world.
 metaphysics | 06172369-n | The study of being and reality.
 metastasis | 13536556-n | The spread of cancer.
 metastasize | 00104421-v | To spread through the body.
-mete | 08529808-n | A boundary line.
 meteor | 09376006-n | A space rock that burns up as a shooting star.
 meteoric | 02876761-a | Very fast and brilliant, like a shooting star.
 meteoroid | 09376006-n | A small rock in space.
@@ -14740,7 +14658,6 @@ miscall | 00973356-v | To call by the wrong name.
 miscarriage | 07334252-n | A failure of a plan.
 miscarry | 02534046-v | To fail.
 miscast | 01714932-v | To give an actor the wrong role.
-miscegenation | 00851398-n | Marriage between races.
 miscellaneous | 01202626-s | Made of many different kinds.
 miscellany | 08415730-n | A mixed collection.
 mischance | 11447956-n | Bad luck.
@@ -14948,7 +14865,6 @@ money | 13405730-n | Coins and bills used to buy things.
 moneymaker | 10348103-n | Someone who makes a lot of cash.
 moneymaking | 00079213-n | Earning cash.
 monger | 10740102-n | A dealer.
-mongolism | 14183105-n | An outdated term for Down syndrome.
 mongoose | 02140201-n | A small animal that hunts snakes.
 moniker | 06349063-n | A nickname.
 monitor | 02167732-v | To watch something closely over time.
@@ -15040,7 +14956,6 @@ moroseness | 07567833-n | Gloominess.
 morpheme | 06317223-n | The smallest unit of meaning in a word.
 morphological | 02961268-a | Relating to the forms of words.
 morphology | 06087877-n | The study of the forms of living things.
-morrow | 15181271-n | The next day.
 morsel | 13793174-n | A small bite.
 mortal | 01562007-a | Certain to die someday.
 mortally | 00405983-r | Fatally.
@@ -15193,7 +15108,6 @@ municipality | 08643858-n | A town or city with its own government.
 munificence | 04839947-n | Great generosity.
 munificent | 01115676-s | Very generous.
 munition | 04573543-n | Weapons and ammunition.
-mural | 02890728-a | Relating to walls.
 murdered | 00098759-s | Killed unlawfully.
 murderous | 00249704-s | Likely to kill.
 murk | 14545250-n | Gloom.
@@ -15375,7 +15289,6 @@ necessitate | 02634015-v | To make necessary.
 necessity | 14474157-n | Something you cannot do without.
 neck | 05554173-n | The part of the body that joins the head to the shoulders.
 neckerchief | 03820357-n | A scarf worn around the neck.
-necking | 03453435-n | A molding at the top of a column.
 necklace | 03820446-n | A chain or string of beads worn around the neck.
 neckline | 03820818-n | The edge of a garment around the neck.
 necktie | 03821155-n | A long strip of cloth worn knotted under a shirt collar.
@@ -15508,14 +15421,9 @@ nickname | 06349063-n | A casual name for someone, often shortened from their re
 nicotine | 14738978-n | A poisonous substance in tobacco.
 niece | 10377312-n | The daughter of your brother or sister.
 nifty | 01127641-s | Clever and handy.
-niggard | 10377436-n | A miser.
-niggardliness | 04840918-n | Stinginess.
-niggardly | 01117378-s | Stingy.
 niggle | 01797944-v | To worry about small things.
 niggling | 01284018-s | Small but nagging.
 nigh | 00446553-a | Near.
-nigher | 00409712-r | Closer.
-nighest | 00409931-r | Closest.
 nightcap | 07928859-n | A drink before bed.
 nightclothes | 03830620-n | Pajamas.
 nightclub | 02934801-n | A place open late for dancing and drinks.
@@ -15591,13 +15499,11 @@ nominate | 00881061-v | To suggest someone for an award or position.
 nomination | 00164973-n | Proposing a candidate.
 nominative | 02780235-a | Relating to the subject of a verb.
 nominee | 09909143-n | A candidate.
-non | 00024432-r | Not.
 nonabsorbent | 00007832-a | Not soaking up liquid.
 nonagenarian | 01650562-s | In their nineties.
 nonalcoholic | 01163075-a | Containing no alcohol.
 nonaligned | 00735481-a | Neutral.
 nonbeliever | 10035642-n | An atheist.
-nonce | 15160386-n | The present, as in "for the ___".
 nonchalance | 04680827-n | Calm unconcern.
 nonchalant | 00547966-s | Relaxed and unconcerned.
 nonchalantly | 00296859-r | Casually.
@@ -15731,13 +15637,11 @@ novitiate | 15320127-n | The period of being a novice.
 now | 00049971-r | At the present time.
 nowadays | 15144478-n | These days; at the present time.
 nowhere | 00025873-r | Not anywhere.
-nowise | 00413480-r | Not at all.
 noxious | 01615595-a | Harmful.
 nozzle | 03839104-n | A spout at the end of a hose.
 nth | 02220813-s | The latest in a long series, as in "to the ___ degree".
 nuance | 06618544-n | A subtle difference.
 nub | 13918315-n | A small lump.
-nubile | 01492688-s | Of marriageable age.
 nuclear | 00612923-a | Using the energy released by splitting atoms.
 nucleus | 05442503-n | The center of a cell that holds its DNA.
 nudge | 01233816-v | To push gently.
@@ -15972,7 +15876,6 @@ offshore | 00141083-r | Away from the shore.
 offside | 01656600-a | Ahead of the ball illegally.
 offspring | 10393697-n | A person's children.
 offstage | 04600289-n | Out of sight of the audience.
-oft | 00035445-r | Frequently.
 often | 00035445-r | Many times.
 oftentimes | 00035445-r | Often.
 ogle | 02168498-v | To stare at someone with desire.
@@ -16588,7 +16491,6 @@ papering | 00719825-n | Putting up wallpaper.
 paperweight | 03893494-n | A weight that holds papers down.
 paperwork | 00583108-n | Forms and documents.
 papilla | 11840660-n | A tiny bump on a surface.
-papoose | 10417091-n | A Native American baby.
 paprika | 12922024-n | A red spice made from dried peppers.
 papyrus | 15000157-n | A paper made from reeds by the ancient Egyptians.
 par | 13617999-n | The standard number of strokes for a golf hole.
@@ -16792,7 +16694,6 @@ paunchy | 00989648-s | Potbellied.
 pauperism | 14517300-n | Poverty.
 pauperize | 02322950-v | To make poor.
 pause | 02647119-v | To stop for a short time before continuing.
-pave | 03906471-n | A setting of jewels packed close together.
 paved | 01743942-a | Covered with a hard surface.
 pavement | 03906828-n | The hard surface of a road.
 pavilion | 03907057-n | A large tent or open building in a park.
@@ -16831,7 +16732,6 @@ peak | 13675520-n | The highest point or amount.
 peaked | 02553095-s | Looking pale and unwell.
 peal | 07403930-n | A loud ringing of bells or thunder.
 pealing | 07403930-n | A loud ringing of bells.
-peanut | 01476496-s | Small and unimportant.
 peanuts | 13434189-n | A very small amount of money.
 pear | 07783823-n | A sweet juicy fruit, narrow at the top and round at the bottom.
 pearl | 13393576-n | A smooth round gem formed inside an oyster.
@@ -16851,7 +16751,6 @@ peculiarly | 00249967-r | Strangely.
 pecuniary | 02786741-a | Financial.
 pedagogue | 10065521-n | A teacher.
 pedagogy | 05668782-n | The method and practice of teaching.
-pedal | 02786981-a | Relating to the feet.
 pedant | 10431101-n | Someone who is too fussy about small rules.
 pedantic | 02091054-s | Too concerned with small details and rules.
 pedantry | 06903178-n | Showing off small details of knowledge.
@@ -16898,7 +16797,6 @@ penalize | 02505278-v | To punish.
 penalty | 13321578-n | A punishment for breaking a rule or contract.
 penance | 07552258-n | Regret for wrongdoing.
 penchant | 07513449-n | A strong liking.
-pendant | 02359909-s | Hanging down.
 pendent | 02359909-s | Hanging.
 pending | 01008292-s | Waiting to be decided.
 pendulous | 01241359-s | Drooping.
@@ -16982,7 +16880,6 @@ perfidy | 04887159-n | Betrayal.
 perforate | 00665326-s | Having a hole.
 perforated | 00665326-s | Full of small holes.
 perforation | 03922019-n | A line of small holes for tearing.
-perforce | 00261520-r | Necessarily.
 performance | 06904543-n | A show, such as a play or concert, put on for an audience.
 perfume | 05722413-n | A pleasant smell.
 perfunctorily | 00261760-r | Without care.
@@ -17197,7 +17094,6 @@ phrase | 06327041-n | A small group of words that go together.
 phraseology | 07095931-n | Choice of words.
 phrenology | 06055378-n | Judging character from skull shape.
 phylum | 08120601-n | A major group in the classification of animals.
-physic | 04032142-n | A medicine that clears out the bowels.
 physical | 01782757-a | Relating to the body rather than the mind.
 physician | 10040615-n | A doctor.
 physics | 06100457-n | The science of matter, energy and motion.
@@ -17305,7 +17201,6 @@ pinkie | 05575360-n | The little finger.
 pinkish | 00380657-s | Slightly rosy.
 pinnacle | 03949542-n | A slender spire on a building.
 pinnate | 02181192-s | Feather-like.
-pinning | 07243009-n | A promise between a couple to date only each other.
 pinochle | 00495111-n | A card game.
 pinpoint | 02292225-v | To locate exactly.
 pinprick | 14430615-n | A minor annoyance.
@@ -17323,12 +17218,10 @@ piping | 03953957-n | A thin strip of covered cord used to trim clothes.
 pipit | 01531295-n | A brown songbird.
 piquancy | 05000286-n | A sharp, tangy flavor.
 piquant | 02407127-s | Pleasantly sharp and tangy.
-pique | 03954074-n | A fabric with raised cords.
 piracy | 00785181-n | Robbery at sea.
 piratical | 03111483-a | Like a pirate.
 pirouette | 00344556-n | A spin on one foot in ballet.
 piscatorial | 03111772-a | Relating to fishing.
-pissed | 01811355-s | Angry.
 pistachio | 12782462-n | A small green nut.
 pistil | 11696951-n | The female part of a flower.
 pistillate | 00316943-a | Having only female flower parts.
@@ -17502,7 +17395,6 @@ pluckiness | 04867047-n | Courage.
 plucky | 00267500-a | Brave.
 plug | 03974274-n | Something that fits into a hole to block it, like a stopper.
 plugged | 03164146-a | Blocked with a plug.
-plum | 00010003-r | Exactly; squarely.
 plumage | 01898672-n | A bird's feathers.
 plumb | 00732632-v | To measure the depth of.
 plumber | 10462606-n | A person who fixes pipes and toilets.
@@ -17546,7 +17438,6 @@ podiatrist | 09938755-n | A foot doctor.
 podiatry | 06071626-n | The medical care of feet.
 podium | 03164306-n | A raised platform.
 poem | 06389065-n | A piece of writing with rhythm, often in short lines that rhyme.
-poesy | 07107220-n | Poetry.
 poetess | 10466829-n | A female poet.
 poetic | 01423210-s | Beautiful and imaginative in expression.
 poetical | 02868188-a | Relating to poetry.
@@ -17658,7 +17549,6 @@ pontificate | 08070012-n | The office of the pope.
 pontoon | 03987924-n | A floating platform.
 pony | 02382987-n | A small breed of horse.
 ponytail | 05267863-n | Hair tied back and hanging down.
-pooch | 00145843-v | To push the lips out, as in a pout.
 poodle | 02115987-n | A dog with a curly coat.
 pool | 03988418-n | A large tank filled with water for swimming.
 poor | 01054589-s | Deserving pity; unfortunate.
@@ -17831,7 +17721,6 @@ pram | 02769539-n | A baby carriage.
 prance | 01920627-v | To walk proudly.
 prancer | 02381522-n | A lively horse.
 prank | 00514412-n | A practical joke.
-prate | 07151837-n | Idle chatter.
 pratfall | 00077989-n | A fall on your behind.
 prattle | 01038676-v | To chatter.
 prawn | 07810135-n | A shellfish like a large shrimp.
@@ -18531,8 +18420,6 @@ pushover | 10515465-n | Someone easily persuaded.
 pushy | 00105117-s | Aggressively forceful.
 pusillanimity | 04868216-n | Cowardice.
 pusillanimous | 00267286-s | Cowardly.
-pussycat | 10515560-n | A gentle, easygoing person.
-pussyfoot | 01915881-v | To tiptoe around an issue.
 pustule | 14357527-n | A pimple.
 put | 01496398-v | To place something in a certain position.
 putative | 00028584-s | Supposed.
@@ -18550,7 +18437,6 @@ puzzling | 00536744-s | Hard to understand.
 pygmy | 10516211-n | An unusually small person.
 pylon | 04035240-n | A tall tower that carries power lines.
 pyorrhea | 14234370-n | A gum disease.
-pyramid | 02295717-v | To build up investments using profits.
 pyre | 07980108-n | A pile of wood for burning a body.
 pyrite | 14716843-n | Fool's gold.
 pyromania | 09205826-n | An urge to start fires.
@@ -18578,7 +18464,6 @@ quadrupling | 13565636-n | Increasing fourfold.
 quaff | 07900157-n | A hearty drink.
 quagmire | 09378747-n | A bog.
 quahog | 07802832-n | A hard-shelled clam.
-quail | 02064997-v | To shrink back in fear.
 quaint | 00972745-s | Charmingly old-fashioned.
 quaintly | 00438424-r | Charmingly old-fashioned.
 quake | 07443554-n | An earthquake; a shaking of the ground.
@@ -18601,7 +18486,6 @@ quart | 13640873-n | A unit of liquid equal to two pints.
 quarter | 13759620-n | One of four equal parts.
 quarterdeck | 04038246-n | The rear upper deck of a ship.
 quarterfinal | 07482352-n | A round of four matches before the semifinals.
-quartering | 04038525-n | Combining four coats of arms on one shield.
 quartermaster | 10518571-n | An army supplies officer.
 quartet | 13766444-n | A group of four musicians.
 quarto | 05104082-n | A book size.
@@ -18615,8 +18499,6 @@ quavering | 02312668-s | Shaky.
 quay | 04039558-n | A platform where ships load and unload.
 queasiness | 14383725-n | Mild nausea.
 queasy | 02570765-s | Feeling sick.
-queerly | 00439274-r | Strangely.
-queerness | 04805073-n | Strangeness.
 quell | 00464147-v | To crush or calm.
 quelled | 00472518-s | Calmed or put down.
 quelling | 01081528-n | Putting down by force.
@@ -18675,7 +18557,6 @@ quixotic | 01842899-s | Idealistic but impractical.
 quiz | 07213851-n | A short test of knowledge.
 quizzical | 02130499-s | Puzzled and questioning, as a look.
 quoits | 00468388-n | A ring-tossing game.
-quondam | 01733798-s | Former.
 quorum | 08374919-n | The minimum number of members needed to hold a meeting.
 quota | 13620591-n | A fixed number or amount.
 quotable | 01970783-a | Worth repeating.
@@ -18747,7 +18628,6 @@ railing | 04054513-n | A fence of bars.
 raillery | 06790633-n | Teasing.
 railroad | 04055680-n | A track of steel rails on which trains run.
 railway | 04055680-n | A system of tracks on which trains carry people and goods.
-raiment | 02745327-n | Fine clothing.
 raincoat | 04056517-n | A waterproof coat.
 raindrop | 11522067-n | A single drop of water falling from a cloud.
 rainfall | 11521799-n | The amount of rain that falls.
@@ -18806,11 +18686,9 @@ rap | 01416942-v | To knock sharply.
 rapacious | 00084491-s | Greedy.
 rapaciousness | 04893597-n | Greed.
 rapacity | 04893597-n | Greed.
-raped | 00739253-s | Plundered and destroyed.
 rapid | 00982888-s | Very fast.
 rapidly | 00086161-r | Very quickly.
 rapier | 04061473-n | A thin sword.
-rapine | 00968488-n | Plunder.
 rapper | 10527075-n | A rap musician.
 rapport | 13833952-n | Mutual understanding.
 rapprochement | 01208317-n | Renewed friendly relations.
@@ -19388,7 +19266,6 @@ rendezvous | 01234113-n | A planned meeting.
 rending | 00301335-s | Like the sound of something being torn apart.
 rendition | 06906604-n | A performance of a song or role.
 renegade | 00967047-s | Disloyal.
-renege | 01261891-n | Failing to follow suit in a card game.
 renegotiate | 00764374-v | To negotiate anew.
 renew | 01634614-v | To make something new again.
 renewable | 01969807-a | Able to be renewed.
@@ -19723,7 +19600,6 @@ revivify | 00024272-v | To bring back to life.
 reviving | 01360590-s | Refreshing.
 revocable | 01764644-a | Able to be canceled.
 revocation | 14587637-n | Cancellation.
-revoke | 01261891-n | Failing to follow suit in a card game.
 revolt | 00964240-n | An uprising against those in power.
 revoltingly | 00315534-r | Disgustingly.
 revolution | 07438709-n | A huge change in the way people think or act.
@@ -20048,14 +19924,12 @@ ruinous | 01165179-s | Disastrous.
 rule | 05854581-n | A guideline that controls behavior.
 ruled | 02337757-s | Under the control of a king or government.
 ruling | 01193648-n | The reasoning behind a court's decision.
-rum | 00971199-s | Strange.
 rumble | 07407083-n | A low rolling noise.
 rumbling | 01459887-s | Deep and rolling.
 ruminate | 01176852-v | To chew cud.
 rumination | 05793513-n | Deep thought.
 rummage | 01321709-v | To search through.
 rummer | 04126454-n | A large drinking glass.
-rummy | 00971199-s | Strange.
 rumor | 07238110-n | A story passed from person to person that may not be true; gossip.
 rumple | 01390147-v | To crumple.
 rumpled | 02433993-s | Crumpled.
@@ -20137,7 +20011,6 @@ sage | 10565759-n | A wise person.
 sagebrush | 11949496-n | A shrub of the American West.
 sagging | 02412661-s | Drooping.
 sago | 15079174-n | A starch from palm trees.
-sahib | 09707171-n | A colonial-era title for a European man in India.
 said | 02076134-s | Already mentioned, as in a legal document.
 sail | 01850600-v | To travel across water in a boat.
 sailboat | 04135600-n | A boat with sails.
@@ -20231,7 +20104,6 @@ sandstorm | 11468490-n | A storm of strong wind carrying sand.
 sandy | 00245055-s | Pale yellowish-brown, especially of hair.
 sane | 02080847-a | Mentally healthy.
 sanely | 00217109-r | Sensibly.
-sang | 11820489-n | A North American woodland herb used like ginseng.
 sanguinary | 00249970-s | Bloody.
 sanguine | 01668920-s | Optimistic.
 sanitarium | 04140580-n | A hospital for recovering patients.
@@ -20443,12 +20315,10 @@ scorned | 01466459-s | Treated with contempt.
 scornful | 02002388-s | Contemptuous.
 scornfully | 00080884-r | Contemptuously.
 scorpion | 01773034-n | A creature with pincers and a stinging tail.
-scotch | 02430138-s | Careful with money; thrifty.
 scour | 01319936-v | To search thoroughly.
 scoured | 02592502-s | Worn away.
 scourge | 04157033-n | A whip.
 scouring | 00995574-n | Searching an area.
-scours | 14295849-n | Diarrhea in farm animals.
 scout | 02172015-v | To explore to find something.
 scouting | 00987192-n | Exploring for information.
 scoutmaster | 10582742-n | The leader of a troop of Scouts.
@@ -20485,7 +20355,6 @@ screwdriver | 04161626-n | A tool for turning screws.
 screwy | 02085034-s | Odd.
 scribble | 01008284-v | To write quickly and messily.
 scribbler | 10584088-n | A hack writer.
-scribe | 01278756-v | To mark a line with a pointed tool.
 scrimmage | 00899825-n | A practice game.
 scrimp | 02350494-v | To save money carefully.
 scrimshaw | 04162796-n | Carved whalebone.
@@ -20863,7 +20732,6 @@ shadowed | 00277728-s | Shaded.
 shadowing | 00321312-n | Following someone secretly.
 shadowy | 00277728-s | Dim.
 shady | 02097241-s | Sheltered from the sun.
-shagged | 02250631-s | Rough and unkempt.
 shagginess | 14523537-n | Unkempt hair.
 shaggy | 02437422-s | Long and messy, of hair.
 shah | 10604948-n | The former king of Iran.
@@ -21024,7 +20892,6 @@ shoemaker | 09952556-n | A cobbler.
 shoeshine | 04708615-n | A polish on shoes.
 shoestring | 04207680-n | A cord for tying shoes.
 shogun | 10610480-n | A Japanese military ruler.
-shook | 04208661-n | The parts of a barrel packed for shipping.
 shoot | 01139564-v | To hit with a bullet or arrow from a weapon.
 shooting | 00123481-n | Firing a gun.
 shop | 04209460-n | A place where goods are sold; a store.
@@ -21095,7 +20962,6 @@ shrink | 00242575-v | To get smaller.
 shrinkable | 02165504-a | Able to get smaller in the wash.
 shrinkage | 07327604-n | Getting smaller.
 shrinking | 07327604-n | Getting smaller.
-shrive | 00905665-v | To absolve.
 shrivel | 00242575-v | To wither.
 shriveled | 02564004-s | Withered.
 shrub | 13133423-n | A bush.
@@ -21318,7 +21184,6 @@ skimpiness | 92419003-n | Scantiness.
 skimpy | 02345258-s | Scanty.
 skin | 05245612-n | The outer covering of the body.
 skinflint | 10377436-n | A miser.
-skinheads | 08388127-n | A youth movement with shaved heads.
 skinless | 02608096-a | Without skin.
 skinned | 02607811-a | Having skin of a certain kind.
 skinniness | 05008889-n | Thinness.
@@ -21538,7 +21403,6 @@ smuggle | 02350852-v | To move goods secretly and illegally across a border.
 smuggled | 01405584-s | Brought in illegally.
 smuggling | 01114037-n | Bringing goods in illegally.
 smugness | 07547386-n | Self-satisfaction.
-smut | 14817703-n | Black powdery soot.
 snack | 07592939-n | A small amount of food eaten between meals.
 snaffle | 04255004-n | A simple bit for a horse.
 snafu | 01673870-s | Chaotic.
@@ -21605,7 +21469,6 @@ snowshoe | 04259441-n | A racket-like frame for walking on snow.
 snowstorm | 11529988-n | A storm with heavy snow.
 snowsuit | 04259670-n | A child's winter overall.
 snub | 01061436-v | To ignore deliberately.
-snuff | 00385019-s | Grayish brown.
 snuffer | 04260278-n | A tool for putting out candles.
 snuffle | 00837810-n | Noisy breathing.
 snuffling | 02483232-s | Sniffly.
@@ -21646,7 +21509,6 @@ socket | 05288330-n | A hollow in a bone into which another part fits.
 sod | 09487049-n | A layer of earth with grass growing in it.
 soda | 15069411-n | A sweet fizzy drink.
 sodden | 02559802-s | Soaked.
-sodding | 01524174-s | Damned.
 sodium | 14679550-n | A soft metal found in salt.
 sofa | 04263630-n | A couch.
 soft | 01156249-a | Easy to press or squash; not hard.
@@ -21860,7 +21722,6 @@ spartan | 01998544-s | Austere and disciplined.
 spasm | 14383864-n | A sudden muscle cramp.
 spasmodic | 02311435-s | Jerky.
 spasmodically | 00465509-r | In fits and starts.
-spastic | 03131276-a | Relating to muscle spasms.
 spat | 07199395-n | A petty quarrel.
 spate | 13796604-n | A flood.
 spatial | 02851951-a | Relating to space.
@@ -22100,7 +21961,6 @@ squashed | 03166154-a | Crushed flat.
 squashy | 02587356-s | Soft and squishy.
 squatter | 10662616-n | A person who lives on land without permission.
 squatting | 00631311-n | Exercising by crouching down and standing up.
-squaw | 10662798-n | A derogatory term for a Native American woman.
 squawk | 01050811-v | To screech.
 squeak | 02176108-v | To make a high-pitched noise.
 squeaking | 01217277-s | High-pitched.
@@ -22146,7 +22006,6 @@ stagflation | 13581941-n | Stagnant growth with rising prices.
 stagger | 01928835-v | To walk unsteadily.
 staggering | 01286247-s | Astonishing.
 staggeringly | 00197952-r | Astonishingly.
-staggers | 14299266-n | A disease that makes horses and cattle stumble.
 staging | 07020287-n | Putting on a play.
 stagnant | 01244121-s | Not flowing.
 stagnate | 02731161-v | To stop developing.
@@ -22228,7 +22087,6 @@ stateless | 02135074-s | Without citizenship.
 stateliness | 04919071-n | Grandeur.
 stately | 01286600-s | Grand.
 statement | 06735202-n | Something said or written that gives facts or an opinion.
-stater | 13414328-n | An ancient Greek coin.
 stateroom | 04312710-n | A cabin on a ship.
 statesman | 85900704-n | A respected political leader.
 statesmanship | 04898060-n | Wise leadership.
@@ -22459,7 +22317,6 @@ strange | 00970318-a | Unusual or odd.
 strangeness | 04804731-n | Oddness.
 strangled | 01319762-s | Held back.
 stranglehold | 05201049-n | Complete control.
-strangles | 14287854-n | A disease of horses.
 strangling | 00226653-n | Choking.
 strangulate | 01573763-v | To strangle.
 strangulation | 00226653-n | Choking.
@@ -22522,7 +22379,6 @@ stringy | 00994814-s | Lean and wiry.
 strip | 09472659-n | A long, narrow piece of something.
 stripling | 09791452-n | A youth.
 stripped | 01500110-s | Reduced to the basics.
-stripper | 15086117-n | A chemical that removes paint.
 stripping | 00395611-n | Removing a covering.
 strive | 02536865-v | To try very hard.
 striving | 00790427-n | Trying hard.
@@ -22776,7 +22632,6 @@ sulfur | 14680398-n | A yellow chemical element that smells like rotten eggs whe
 sulk | 07566964-n | A sullen mood.
 sulkily | 00472843-r | Moodily.
 sulkiness | 07566964-n | Moodiness.
-sulky | 04360651-n | A light two-wheeled carriage pulled by one horse.
 sullen | 01140878-s | Gloomy and bad-tempered.
 sullenness | 07567833-n | Gloominess.
 sully | 01540747-v | To tarnish.
@@ -22814,17 +22669,14 @@ sunlamp | 04363859-n | A lamp for tanning.
 sunless | 00464004-s | Dark and cloudy.
 sunlight | 11505767-n | The light of the sun.
 sunny | 00365018-s | Bright and cheerful.
-sunrise | 01647393-s | New and growing, like a young industry.
 sunroof | 04364208-n | A car roof panel that opens.
 sunscreen | 04364401-n | A cream that protects skin from the sun.
-sunset | 01644845-s | Declining, as an industry.
 sunshine | 11505767-n | Warm light from the sun.
 sunspot | 11531422-n | A dark spot on the sun.
 sunstroke | 14228068-n | Collapse from heat.
 suntan | 14314036-n | A tan from the sun.
 suntanned | 00245814-s | Tanned.
 sunup | 15193837-n | Dawn.
-sup | 07594841-n | A sip of liquid food.
 super | 02349970-s | Excellent.
 superabundance | 05126667-n | Excess.
 superabundant | 00016285-s | Excessive.
@@ -22969,7 +22821,6 @@ swag | 13392363-n | Loot.
 swagger | 01920627-v | To walk proudly.
 swaggerer | 10701485-n | A show-off.
 swaggering | 01897176-s | Arrogant.
-swain | 09890770-n | A young lover.
 swallow | 01204494-v | To make food or drink go down your throat.
 swallowtail | 04375583-n | A butterfly with tail-like wings.
 swami | 09704279-n | A Hindu religious teacher.
@@ -23462,7 +23313,6 @@ tetanus | 14209285-n | A serious infection from dirty wounds.
 tethered | 00254623-s | Tied up.
 tetrahedron | 13938146-n | A pyramid with four faces.
 text | 06399623-n | Written words.
-textbook | 02303186-s | Typical.
 textile | 03314753-n | Woven cloth.
 texting | 90004021-n | Sending messages by phone.
 textual | 02937192-a | Relating to a text.
@@ -23509,12 +23359,9 @@ thereabouts | 00469848-r | Around that time or place.
 thereafter | 00147317-r | After that.
 thereby | 00121886-r | By that means.
 therefore | 00043413-r | For that reason; so.
-therefrom | 00044204-r | From that.
 therein | 00242166-r | In that place or thing.
 thereof | 00470062-r | Of that.
 thereon | 00470165-r | On that.
-thereto | 00470257-r | To that.
-therewith | 00470364-r | With that.
 thermal | 02825392-a | Relating to heat.
 thermodynamics | 06124185-n | The physics of heat and energy.
 thermonuclear | 00613125-s | Using nuclear fusion.
@@ -23557,8 +23404,6 @@ thirteenth | 02211432-s | Coming after the twelfth.
 thirtieth | 02213507-s | Coming after the twenty-ninth.
 thirty | 02196945-s | Three times ten.
 thistle | 11964665-n | A prickly plant with purple flowers.
-thither | 00110073-r | There.
-thong | 03649221-n | A strip of leather.
 thorax | 05561251-n | The middle body section of an insect.
 thorium | 14682288-n | A radioactive metal.
 thorn | 05840108-n | A sharp point on a plant's stem.
@@ -23569,7 +23414,6 @@ thoroughfare | 04433753-n | A main road.
 thoroughgoing | 00524524-s | Complete.
 thoroughly | 00057795-r | Completely and carefully.
 thoroughness | 04680215-n | Carefulness.
-thou | 13772984-n | The number one followed by three zeros.
 though | 00120034-r | However.
 thought | 05842164-n | An idea or something you are thinking about.
 thoughtful | 01879263-s | Deep-thinking.
@@ -23590,7 +23434,6 @@ threateningly | 00401712-r | Menacingly.
 three | 02194219-s | The number after two.
 threefold | 02226692-s | Triple.
 threescore | 02199823-s | Sixty.
-threesome | 13766184-n | A group of three.
 threnody | 07064659-n | A lament.
 thresh | 01894785-v | To thrash around.
 thresher | 04435326-n | A machine that separates grain from straw.
@@ -23620,7 +23463,6 @@ throughout | 00103637-r | From start to finish.
 throughput | 04436890-n | The amount of work done in a given time.
 throw | 02101482-v | To send something flying with a toss of your hand.
 throwaway | 02538401-s | Disposable.
-throwback | 01883281-s | Like an earlier type.
 thrower | 10729394-n | Someone who hurls a ball or javelin.
 thrown | 02503073-s | Knocked to the ground.
 thrush | 14206050-n | A songbird with a speckled breast.
@@ -23820,7 +23662,6 @@ toneless | 02439050-a | Flat.
 toner | 15100578-n | Powdered ink for printers.
 tongue | 05308571-n | The soft muscle in your mouth used for tasting and speaking.
 tongued | 02439167-a | Having a certain kind of speech, as sharp or sweet.
-tonic | 02827827-a | Strengthening.
 tonight | 00079765-r | This evening or the coming night.
 tonnage | 13338291-n | The weight of cargo a ship can carry.
 tonne | 13747698-n | A metric ton, 1,000 kilograms.
@@ -23855,7 +23696,6 @@ topography | 05071710-n | The shape and features of the land.
 topologically | 00518683-r | In terms of topology.
 topology | 06132354-n | A branch of math studying shapes that are stretched or bent.
 topped | 02450846-a | Having a top.
-topping | 02353167-s | Excellent.
 topple | 01980502-v | To fall over.
 topsail | 04462923-n | A sail above the lowest one.
 topsoil | 14719898-n | The top layer of soil.
@@ -23863,7 +23703,6 @@ toque | 04463282-n | A tall chef's hat.
 tor | 09483176-n | A rocky hilltop.
 torch | 04463386-n | A burning stick carried as a light.
 torchlight | 11536282-n | Light from torches.
-tore | 04465534-n | A rounded molding at the base of a column.
 toreador | 09855548-n | A bullfighter.
 torment | 14356838-n | Severe pain.
 tormented | 01367501-s | Suffering.
@@ -24036,7 +23875,6 @@ transom | 04480343-n | A window above a door.
 transparency | 11541052-n | Being clear enough to see through.
 transparent | 00433489-s | Clear enough to see through.
 transparently | 00482882-r | Obviously.
-transphobic | 90011351-s | Prejudiced against transgender people.
 transpiration | 13591108-n | Water evaporating from leaves.
 transpire | 02070685-v | To happen or become known.
 transpiring | 03166797-a | Passing through.
@@ -24051,7 +23889,6 @@ transporter | 04481270-n | A truck for carrying cars.
 transpose | 00381095-v | To swap the order of.
 transposed | 00203553-s | Swapped.
 transposition | 14127480-n | Swapping the order of things.
-transsexual | 02608757-a | Identifying with the gender opposite to the one assigned at birth.
 transship | 02017015-v | To transfer cargo.
 transshipment | 00317286-n | Transferring cargo.
 transverse | 01448808-s | Crosswise.
@@ -24101,7 +23938,6 @@ trefoil | 12568785-n | A plant with three-part leaves.
 trek | 00311342-n | A long, hard journey on foot.
 trellis | 04485747-n | A frame for climbing plants.
 tremble | 01892504-v | To shake.
-trembles | 14299703-n | A livestock disease.
 trembling | 02312246-s | Shaking.
 tremendous | 01388189-s | Very great.
 tremendously | 00197952-r | Enormously.
@@ -24172,7 +24008,6 @@ triplet | 13766184-n | One of three babies born at the same birth.
 triplicate | 04492036-n | One of three identical copies.
 tripling | 13591675-n | Increasing threefold.
 tripod | 04492338-n | A three-legged stand.
-tripos | 07214116-n | The final honors exams at Cambridge University.
 tripping | 02027224-s | Light and quick.
 triptych | 04492679-n | A painting on three panels.
 trisect | 01553874-v | To divide into three.
@@ -24200,7 +24035,6 @@ trophy | 06722381-n | A cup or prize awarded for a win.
 tropism | 00863289-n | A turning toward a stimulus.
 troposphere | 09485730-n | The lowest layer of the atmosphere.
 trot | 01905440-v | To run at a steady pace.
-troth | 07242871-n | A pledge to marry.
 trotter | 02442199-n | A pig's foot.
 troubadour | 10118862-n | A wandering singer.
 trouble | 05695143-n | Something that causes difficulty or worry.
@@ -24334,7 +24168,6 @@ tutor | 09950876-n | A private teacher.
 tutu | 02783838-n | A ballet skirt.
 tux | 03206460-n | A man's formal black evening suit.
 tuxedo | 03206460-n | A formal suit for men.
-twain | 13765745-n | Two.
 twang | 07413473-n | A sharp vibrating sound.
 tweak | 00358101-n | A pinch.
 twee | 01954782-s | Overly cute.
@@ -24347,7 +24180,6 @@ twelve | 02195104-s | The number after eleven.
 twenties | 15173544-n | The years of life from 20 to 30.
 twentieth | 02212385-s | Coming after the nineteenth.
 twenty | 02195956-s | Two times ten.
-twerk | 90000471-v | To dance with thrusting hips.
 twice | 00065694-r | Two times.
 twiddle | 02052840-v | To twirl.
 twig | 13184889-n | A small branch.
@@ -25547,7 +25379,6 @@ vesicle | 05525229-n | A small sac.
 vesper | 01036603-n | An evening service.
 vespers | 15254976-n | Evening prayers.
 vessel | 05404676-n | A tube in the body that carries blood.
-vest | 02391530-v | To give power to.
 vested | 00559334-s | Fixed and secure.
 vestibule | 02718424-n | An entrance hall.
 vestige | 06659391-n | A trace.
@@ -26032,7 +25863,6 @@ welcoming | 01246980-s | Warm and friendly.
 weld | 01598751-v | To join metal by heating.
 welding | 00150328-n | Joining metal with heat.
 welfare | 01088869-n | Government money given to people in need.
-welkin | 08538450-n | The sky.
 well | 00013241-r | In a good or thorough way.
 wellspring | 08525757-n | A source.
 welsh | 02580147-v | To avoid paying a debt.
@@ -26040,8 +25870,6 @@ welt | 14322122-n | A raised mark on the skin.
 welter | 14524151-n | A jumble.
 welterweight | 13741634-n | A boxer in a middle weight class.
 wen | 14226245-n | A cyst on the skin.
-wench | 10008583-n | A young woman, in old use.
-wend | 01845289-v | To make your way.
 werewolf | 09526253-n | A person who turns into a wolf in legends.
 west | 13856598-n | The direction where the sun sets.
 westbound | 00828077-s | Heading west.
@@ -26084,7 +25912,6 @@ whelk | 07798780-n | An edible sea snail.
 whelp | 01324834-n | A puppy or cub.
 whence | 00497507-r | From where.
 whereabouts | 08701121-n | Location.
-wheresoever | 00497575-r | Wherever.
 wherever | 00497575-r | In any place at all.
 wherewithal | 13375169-n | The means.
 whet | 02122017-v | To sharpen.
@@ -26151,7 +25978,6 @@ whoopee | 00520307-n | Noisy celebration.
 whoosh | 07411130-n | The sound of something rushing past.
 whopper | 06770387-n | A huge lie.
 whopping | 01390996-s | Huge.
-whorehouse | 04588881-n | A brothel.
 whorl | 13898609-n | A spiral.
 whorled | 02325276-s | Spiral.
 wick | 04589330-n | The string in a candle.
@@ -26177,7 +26003,6 @@ wife | 10800308-n | A married woman; a man's partner in marriage.
 wig | 04591493-n | A covering of false hair.
 wigeon | 01851289-n | A freshwater duck.
 wigged | 02575276-a | Wearing a wig.
-wigging | 06726038-n | A scolding.
 wiggle | 01902275-v | To wriggle.
 wiggler | 10800912-n | A fidgety child.
 wiggly | 02324670-s | Squiggly.
@@ -26246,7 +26071,6 @@ winner | 10802616-n | The person who wins.
 winning | 02341306-s | Having won.
 winnow | 01463566-v | To separate grain from chaff.
 winnowing | 01256638-n | Separating grain from chaff.
-wino | 10057110-n | A homeless alcoholic.
 winsome | 00170318-s | Charming.
 winsomely | 00238567-r | Charmingly.
 wintergreen | 12276629-n | A plant with a minty flavor.
@@ -26274,7 +26098,6 @@ witch | 10075105-n | A woman believed to have magic powers.
 witchcraft | 05988217-n | Magic.
 witchery | 05988217-n | Sorcery.
 witching | 01580464-s | Magical.
-withal | 00027761-r | Nevertheless.
 withdraw | 01998474-v | To pull back or move away.
 withdrawal | 07220962-n | Taking back something you said.
 withdrawn | 02258435-s | Shy and keeping to yourself.
@@ -26311,8 +26134,6 @@ wolfish | 02850891-a | Predatory.
 wolfram | 14683691-n | Tungsten.
 wolverine | 02451981-n | A strong, fierce animal of the north.
 womanhood | 14449119-n | Being a woman.
-womanish | 01479823-s | Effeminate.
-womanize | 02597066-v | To chase women.
 womankind | 08494923-n | Women.
 womanlike | 01488708-s | Feminine.
 womanliness | 04675017-n | Femininity.
@@ -26466,7 +26287,6 @@ wrongfulness | 04861835-n | Injustice.
 wrongheaded | 00636777-s | Misguided.
 wrongly | 00206334-r | Unfairly.
 wrongness | 04909173-n | Incorrectness.
-wroth | 00117056-s | Angry.
 wrought | 02157202-s | Shaped.
 wry | 01269202-s | Dryly humorous.
 wryly | 00226460-r | With dry humor.
@@ -26495,7 +26315,6 @@ yaw | 07425950-n | A swerve off course.
 yawl | 04619861-n | A small ship's boat.
 yawn | 00838954-n | Opening your mouth wide and breathing in deeply when tired or bored.
 yawning | 01657821-s | Gaping.
-yea | 07218668-n | Yes.
 yeah | 00499758-r | Yes.
 year | 15228587-n | A period of twelve months.
 yearling | 10734114-n | An animal between one and two years old.
@@ -26528,7 +26347,6 @@ yoke | 04620372-n | A fitted part at the top of a garment.
 yokel | 10823706-n | An unsophisticated country person.
 yolk | 07857321-n | The yellow center of an egg.
 yonder | 00448792-s | Over there.
-yore | 15146030-n | Long ago, as in "days of ___".
 young | 01651383-a | In an early stage of life.
 youth | 10824010-n | A young person.
 youthful | 01654162-s | Young and fresh.

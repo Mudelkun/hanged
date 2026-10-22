@@ -11,7 +11,8 @@ statistics ([server.md](server.md)).
 - Descriptions: [scripts/descriptions.txt](../scripts/descriptions.txt), one `word | sense | description`
   per word; words to review: [scripts/words-review.txt](../scripts/words-review.txt) (below).
 - Generated words: [scripts/auto-words.js](../scripts/auto-words.js) (below). Terms kept out of the
-  game: [scripts/blocked-words.txt](../scripts/blocked-words.txt).
+  game: [scripts/blocked-words.txt](../scripts/blocked-words.txt) (also keeps out words whose
+  description uses them); words removed one by one: [scripts/removed-words.txt](../scripts/removed-words.txt).
 - Builder/checker: [scripts/check-words.js](../scripts/check-words.js); the rules both share:
   [scripts/words-rules.js](../scripts/words-rules.js); difficulty: [scripts/difficulty.js](../scripts/difficulty.js). Sources, downloaded once into `scripts/.cache/`
   (gitignored) by [scripts/download.js](../scripts/download.js): [scripts/wordnet.js](../scripts/wordnet.js)
@@ -51,7 +52,7 @@ definitions were vague ("Grow worse."), awkward, technical, or about an uncommon
 poor clues. So the dictionary still decides *what* each description says (the pinned sense), and
 [scripts/descriptions.txt](../scripts/descriptions.txt) says it in plain English.
 
-- **The rewrites:** `word | sense | description`, one per word (all 26,571 today). The build
+- **The rewrites:** `word | sense | description`, one per word (all 26,389 today). The build
   replaces the dictionary's text with them. It **fails** if a listed word left the list or its sense
   changed (the generator picked another sense, or `words-source.txt` re-pinned it): the rewrite
   described the old sense, so re-check it against the new one and update the line. A word with no
@@ -59,14 +60,16 @@ poor clues. So the dictionary still decides *what* each description says (the pi
 - **How they're written:** the most common modern meaning of the sense, concise (one line where
   possible), informative enough to find the word, one meaning only, no giveaways (the checker's rule
   below, and no obvious variant such as "heat" for reheat). Verbs start with "To …".
-- **Review list:** [scripts/words-review.txt](../scripts/words-review.txt). *Meaning changed*: 975
+- **Review list:** [scripts/words-review.txt](../scripts/words-review.txt). *Meaning changed*: 974
   words whose pinned sense was an odd meaning (donkey as the Democratic Party symbol, lettuce as money,
   center as a baseball position); their description now gives the common meaning of the same part of
   speech, but `sense` and `subject` still come from the old sense until someone pins the right sense
-  in `words-source.txt` (then update the rewrite's sense id). *Flagged*: 182 archaic or obscure
-  words, words pinned to a rare part of speech, and words that may not belong in a family game (slurs
-  the filters missed, such as "gook" and "squaw", and vulgar words): they still have a description,
-  but the owner should decide whether to keep, re-sense or block each one.
+  in `words-source.txt` (then update the rewrite's sense id). - **Removed after the review (owner, 2026-10-22):** the 182 words the rewrite flagged are out of
+  the game, listed by reason in [removed-words.txt](../scripts/removed-words.txt): slurs and vulgar or
+  sexual words the filters missed ("gook", "squaw", "whorehouse"), dated slang, archaic or obscure
+  words ("forsooth", "tripos"), and words the generator had pinned to a rare part of speech
+  ("animal" as an adjective, "cherry" as a colour). Those last ones are common words: to bring one back,
+  pin its common sense in `words-source.txt`, write its description, and delete it from the list.
 - The source is **Open English WordNet 2025** (https://en-word.net), the maintained successor of
   Princeton WordNet.
 - **Licence: CC BY 4.0.** Commercial use is fine, but the app **must credit it**:
@@ -94,7 +97,7 @@ poor clues. So the dictionary still decides *what* each description says (the pi
 **Why:** the owner wants as many English words as possible, partly to know how many words a language
 needs before adding others. Hand-picking a sense for every word doesn't scale, so
 `--build` adds every common English word it can describe from the dictionaries
-([auto-words.js](../scripts/auto-words.js)). Today: **183 hand-written + 26,388 generated = 26,571 words**.
+([auto-words.js](../scripts/auto-words.js)). Today: **183 hand-written + 26,206 generated = 26,389 words**.
 
 - **Which words:** OEWN lemmas of 3–15 letters a–z, not capitalised (no names), that SCOWL lists at
   size ≤ 50 (common to medium) in its `english` or `american` lists. American spelling only, so
@@ -109,11 +112,12 @@ needs before adding others. Hand-picking a sense for every word doesn't scale, s
 - **Kept out**: words with any sense the dictionary labels obscenity or ethnic slur; senses labelled
   disparagement, slang, archaism, trademark, plural or acronym; and any word that is, or whose
   description uses, a term in [blocked-words.txt](../scripts/blocked-words.txt) (sexual, drug,
-  violent, hurtful). That list catches what the labels miss (OEWN even links "capricious" to sexual
+  violent, hurtful), or a word in [removed-words.txt](../scripts/removed-words.txt), which removes only
+  the word itself. The blocked list catches what the labels miss (OEWN even links "capricious" to sexual
   activity). Its cost is a few innocent words ("child" is "a young person of either **sex**"): add
   those by hand with another sense, as child is.
 - **Hand-written words win**: a word in `words-source.txt` keeps its sense. It isn't
-  checked against the blocked list, so review those by eye.
+  checked against either list, so review those by eye.
 - The build is deterministic: the sources are pinned releases, so rebuilding gives the same file.
   Changing the generator's rules can drop words. That's fine for ids (see below), but say so in the commit.
 
@@ -127,7 +131,7 @@ counted from adult text, rates "owl" or "zebra" 35.
 for animals, food, plants, the body, made things, natural things, materials or people
 (`CONCRETE_LEXFILES` in auto-words.js). Phenomena, places and times are left out, because they mix
 "storm" with "effect". Hand-written words count as concrete, for the same reason as their rarity.
-6,569 words are concrete.
+6,528 words are concrete.
 
 `difficulty` is **how many misses the word costs a typical player**, measured at build time by
 [scripts/difficulty.js](../scripts/difficulty.js) (no clues, no miss limit). The simulated player knows
@@ -196,8 +200,9 @@ or to fix a generated word's sense, write it by hand:
 5. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
    can show the new words by name ([server.md](server.md)).
 
-To keep a generated word out, add it (or the term that makes it unsuitable) to
-`blocked-words.txt` and rebuild.
+To keep a generated word out, add it to `removed-words.txt` and rebuild, and delete its line from
+`descriptions.txt` (the build fails on a rewrite for a word that left the list). To also keep out
+every word whose description uses a term, add the term to `blocked-words.txt` instead.
 
 The build fails on a sense that doesn't exist, that isn't for this word, or whose definition
 is unusable. The check fails on any word that:
@@ -216,13 +221,13 @@ is unusable. The check fails on any word that:
 
 It also prints how many words there are at each length and rarity. **Every level in
 `src/game/levels.ts` needs words in its length range, kind and rarity cap.** A test (`has words for
-every level`) fails if a level has none. Today there are 26,571 words of 3–15 letters: from 469 of 3 letters
-up to 4,137 of 7, and still 143 of 15.
+every level`) fails if a level has none. Today there are 26,389 words of 3–15 letters: from 457 of 3 letters
+up to 4,109 of 7, and still 143 of 15.
 
 ## Why the words stay on the device
 
-The owner's call is **offline first**. Bundling the words also costs nothing to serve. The rebuilt 26,571
-words use about 5.7 MB of JSON (1.1 MB gzipped); the old Hermes bytecode measurements predate
+The owner's call is **offline first**. Bundling the words also costs nothing to serve. The rebuilt 26,389
+words use about 5 MB of JSON (0.8 MB gzipped); the old Hermes bytecode measurements predate
 this rebuild and need remeasuring for a release. Another language adds to the bundle, so if several languages ship, load only the
 player's language ([words.ts](../src/game/words.ts) is the one place to change). Fetching words per round or in batches would put load on
 the server and break offline play. It would also make the "never repeat" rule depend on the server
