@@ -5,6 +5,7 @@
  * the next stop or slides back down to the one before, the camera following
  * it, while the road fills or empties behind it. When it lands, the stop pops
  * (with sparkles going up) and `onLanded` lets the header show the new level.
+ * The card has no button: it lingers a moment, then fades out by itself.
  */
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
@@ -18,7 +19,6 @@ import { colors, fonts, levelColor } from '../theme';
 import { Avatar } from './GameHeader';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
-import { BigButton } from './RoundParts';
 import { SparkBurst } from './SparkBurst';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -38,6 +38,9 @@ const SHOW_MS = 280;
 /** Card shown → the character sets off. */
 const START_MS = 450;
 const TRAVEL_MS = { up: 950, down: 1150 };
+/** Landed → the card fades out by itself, so the stop's pop and sparkles play out first. */
+const HOLD_MS = 1300;
+const HIDE_MS = 220;
 const SAMPLES = 8;
 const FADE = 40;
 
@@ -144,7 +147,7 @@ interface Props {
   width: number;
   compact: boolean;
   onLanded: () => void;
-  /** After the card fades out. The Play screen deals the next word here. */
+  /** After the card has faded out by itself. The Play screen unmounts it here. */
   onClose: () => void;
 }
 
@@ -197,10 +200,12 @@ export function LevelChange({ from, to, character, width, compact, onLanded, onC
   }, [open, up, fx]);
 
   useEffect(() => {
-    if (landed) onLanded();
-  }, [landed, onLanded]);
-
-  const close = () => Animated.timing(fx.show, { toValue: 0, duration: 180, useNativeDriver: true }).start(onClose);
+    if (!landed) return;
+    onLanded();
+    const hide = Animated.timing(fx.show, { toValue: 0, duration: HIDE_MS, delay: HOLD_MS, useNativeDriver: true });
+    hide.start(({ finished }) => finished && onClose());
+    return () => hide.stop();
+  }, [landed, onLanded, onClose, fx]);
 
   if (!open) return null;
   const at = (input: number[]) => fx.travel.interpolate({ inputRange: geo.inputRange, outputRange: input });
@@ -263,7 +268,6 @@ export function LevelChange({ from, to, character, width, compact, onLanded, onC
             <Fade id="levelFadeTop" style={styles.fadeTop} />
             <Fade id="levelFadeBottom" style={styles.fadeBottom} />
           </View>
-          <BigButton label={t(`level.${word}.button`)} onPress={close} />
         </Raised>
       </Animated.View>
     </Animated.View>
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  card: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, padding: 16, paddingBottom: 8 },
+  card: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, padding: 16 },
   title: { fontFamily: fonts.display700, fontSize: 30, textAlign: 'center' },
   body: { fontFamily: fonts.body800, fontSize: 14, color: colors.muted, textAlign: 'center', marginTop: 2 },
   window: { marginTop: 12, borderRadius: 20, overflow: 'hidden', backgroundColor: colors.paper },

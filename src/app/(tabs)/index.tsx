@@ -67,6 +67,9 @@ export default function PlayScreen() {
   const levelMoved = status !== 'playing' && level !== round.level && round.id !== restoredId;
   const [landedFor, setLandedFor] = useState<string | null>(null);
   const onLevelLanded = useCallback(() => setLandedFor(round.id), [round.id]);
+  // The card closes by itself after the landing, leaving the result and its "Next word" button.
+  const [levelGone, setLevelGone] = useState<string | null>(null);
+  const onLevelGone = useCallback(() => setLevelGone(round.id), [round.id]);
 
   const streak = state.streak;
   useEffect(() => {
@@ -179,8 +182,7 @@ export default function PlayScreen() {
         )}
       </View>
       <TabBar active="play" compact={compact} />
-      {/* Its button deals the next word, so the new round unmounts it: one tap, not two */}
-      {showResult && levelMoved && (
+      {showResult && levelMoved && levelGone !== round.id && (
         <LevelChange
           key={round.id}
           from={round.level}
@@ -189,7 +191,7 @@ export default function PlayScreen() {
           width={available}
           compact={compact}
           onLanded={onLevelLanded}
-          onClose={startNextRound}
+          onClose={onLevelGone}
         />
       )}
     </View>

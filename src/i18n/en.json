@@ -62,10 +62,8 @@
 
   "level.up.title": "Level up!",
   "level.up.body": "Welcome to level {level}. The words get a little harder.",
-  "level.up.button": "Let's go!",
   "level.down.title": "Back to level {level}",
   "level.down.body": "Take a breath. You've got this!",
-  "level.down.button": "Keep going",
   "level.a11y.path": "Level path: from level {from} to level {to}",
 
   "tabs.play": "Play",

@@ -67,13 +67,15 @@ and raised in their colour; stops ahead are pale and dashed. The player's **char
 on its stop and travels to the new one: it hops up (the road fills in the new level's colour, the stop
 pops, sparkles burst, success haptic) or slides down (the road empties, the old stop turns pale again,
 a light tap). The window's "camera" follows the character, so all 8 levels fit any phone; its top and
-bottom fade into the paper. The button ("Let's go!" / "Keep going") fades the card out and **deals the
-next word**, so the player taps once, not "Let's go!" and then "Next word" (owner's call).
+bottom fade into the paper. **The card has no button** (owner's call): `HOLD_MS` (1.3 s) after the
+character lands, it fades out by itself (`onClose` → `levelGone`), leaving the result, and the player
+taps **Next word** as after any round. It blocks taps on the result while it's up.
 
 - **The header waits for it**: until the character lands, the header keeps the round's level, then
   `Lv N` changes colour and pops (`onLanded`), the same idea as tokens waiting for their flight.
-- **It plays once**: not for a round restored already finished (`restoredId`). The new round its
-  button deals unmounts it. "Next word" before the card appears skips it.
+- **It plays once**: not for a round restored already finished (`restoredId`), and not again once it
+  has closed (`levelGone`, by `round.id`). "Next word" before the card appears skips it.
+  `onLanded`/`onClose` must stay stable (`useCallback`): the closing timer's effect depends on them.
 - **The card has `zIndex: 10`.** On iOS, `zIndex` becomes a native layer depth that ignores the
   parent's stacking order, so the stamp's `zIndex: 2` drew over the card on a phone even though the
   card comes later in the tree. Anything drawn over the result needs a zIndex above 2.
