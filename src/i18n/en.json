@@ -152,6 +152,7 @@
 
   "delete.title": "Delete your account?",
   "delete.body": "Your name, words guessed, tokens, level and characters will be erased from this phone and from the leaderboard. This can't be undone.",
+  "delete.typeToConfirm": "Type DELETE in capital letters to confirm.",
   "delete.confirm": "Delete everything",
   "delete.keep": "Keep my account",
   "delete.working": "Deleting…",

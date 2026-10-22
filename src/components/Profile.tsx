@@ -6,7 +6,7 @@
  * No photo upload (owner's call, 2026-10-22): the avatar is the character.
  */
 import { memo, ReactNode, useEffect, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { Character, faceXml } from '../characters/rig';
@@ -312,15 +312,24 @@ export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSh
   const audio = useSoundScope();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [confirmation, setConfirmation] = useState('');
+  const canDelete = confirmation === 'DELETE';
+
+  // Reset while hidden so a reopened sheet cannot reuse an earlier confirmation.
+  if (!visible && (confirmation !== '' || failed)) {
+    setConfirmation('');
+    setFailed(false);
+  }
 
   const close = () => {
     if (busy) return;
+    setConfirmation('');
     setFailed(false);
     audio.play('panel-close');
     onClose();
   };
   const confirm = async () => {
-    if (busy) return;
+    if (!visible || busy || !canDelete) return;
     audio.play('delete-confirm');
     setBusy(true);
     setFailed(false);
@@ -335,27 +344,44 @@ export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSh
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={close} statusBarTranslucent>
-      <View style={styles.backdrop}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={close} accessibilityLabel={t('delete.keep')} />
-        <View style={styles.sheet} accessibilityViewIsModal>
-          <View style={[styles.sadFace, { backgroundColor: characterTint[character.id] ?? colors.coralL }]}>
-            <SvgXml xml={faceXml(character, 'worried')} width={70} height={70} />
-          </View>
-          <Text style={styles.sheetTitle} accessibilityRole="header">
-            {t('delete.title')}
-          </Text>
-          <Text style={styles.sheetBody}>{t('delete.body')}</Text>
-          {failed && (
-            <Text style={styles.sheetError} accessibilityLiveRegion="assertive">
-              {t('delete.offline')}
+      <KeyboardAvoidingView style={styles.backdrop} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView style={styles.flex} contentContainerStyle={styles.sheetScroll} keyboardShouldPersistTaps="handled">
+          <Pressable style={StyleSheet.absoluteFill} onPress={close} accessibilityLabel={t('delete.keep')} />
+          <View style={styles.sheet} accessibilityViewIsModal>
+            <View style={[styles.sadFace, { backgroundColor: characterTint[character.id] ?? colors.coralL }]}>
+              <SvgXml xml={faceXml(character, 'worried')} width={70} height={70} />
+            </View>
+            <Text style={styles.sheetTitle} accessibilityRole="header">
+              {t('delete.title')}
             </Text>
-          )}
-          <View style={styles.sheetButtons}>
-            <BigButton cue={false} label={busy ? t('delete.working') : t('delete.confirm')} onPress={confirm} />
-            <BigButton cue={false} ghost label={t('delete.keep')} onPress={close} />
+            <Text style={styles.sheetBody}>{t('delete.body')}</Text>
+            <Text style={styles.confirmLabel}>{t('delete.typeToConfirm')}</Text>
+            <TextInput
+              value={confirmation}
+              onChangeText={setConfirmation}
+              editable={!busy}
+              autoCapitalize="characters"
+              autoCorrect={false}
+              autoComplete="off"
+              spellCheck={false}
+              returnKeyType="done"
+              placeholder="DELETE"
+              placeholderTextColor={colors.muted}
+              accessibilityLabel={t('delete.typeToConfirm')}
+              style={[styles.input, styles.confirmInput]}
+            />
+            {failed && (
+              <Text style={styles.sheetError} accessibilityLiveRegion="assertive">
+                {t('delete.offline')}
+              </Text>
+            )}
+            <View style={styles.sheetButtons}>
+              <BigButton cue={false} label={busy ? t('delete.working') : t('delete.confirm')} onPress={confirm} disabled={busy || !canDelete} />
+              <BigButton cue={false} ghost label={t('delete.keep')} onPress={close} disabled={busy} />
+            </View>
           </View>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -442,7 +468,8 @@ const styles = StyleSheet.create({
   footText: { flexShrink: 1, fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted },
   delete: display('600', 13, colors.coralD),
 
-  backdrop: { flex: 1, backgroundColor: 'rgba(75,58,53,0.45)', alignItems: 'center', justifyContent: 'center', padding: 20 },
+  backdrop: { flex: 1, backgroundColor: 'rgba(75,58,53,0.45)' },
+  sheetScroll: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
   sheet: {
     width: '100%',
     maxWidth: 380,
@@ -458,6 +485,8 @@ const styles = StyleSheet.create({
   sadFace: { width: 84, height: 84, borderRadius: 42, borderWidth: 4, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   sheetTitle: { ...display('700', 23), marginTop: 10, textAlign: 'center' },
   sheetBody: { fontFamily: fonts.body700, fontSize: 15, lineHeight: 21, color: colors.muted, textAlign: 'center', marginTop: 6 },
+  confirmLabel: { ...display('500', 15), textAlign: 'center', marginTop: 16 },
+  confirmInput: { alignSelf: 'stretch', height: 48, marginTop: 8, textAlign: 'center', letterSpacing: 2 },
   sheetError: { ...display('600', 14, colors.coralD), textAlign: 'center', marginTop: 10 },
   sheetButtons: { alignSelf: 'stretch', marginTop: 10 },
 });

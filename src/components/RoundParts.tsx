@@ -165,9 +165,9 @@ export function DescriptionCard({ text, compact }: DescriptionProps) {
 
 // ---- big button ----
 
-export function BigButton({ label, onPress, ghost, cue }: { label: string; onPress: () => void; ghost?: boolean; cue?: Cue | false }) {
+export function BigButton({ label, onPress, ghost, cue, disabled = false }: { label: string; onPress: () => void; ghost?: boolean; cue?: Cue | false; disabled?: boolean }) {
   return (
-    <Pressable onPress={() => { sound.unlock(); if (cue !== false) sound.play(cue ?? (ghost ? 'tap' : 'primary')); onPress(); }} accessibilityRole="button">
+    <Pressable onPress={() => { sound.unlock(); if (cue !== false) sound.play(cue ?? (ghost ? 'tap' : 'primary')); onPress(); }} disabled={disabled} accessibilityRole="button" accessibilityState={{ disabled }} style={disabled && styles.btnDisabled}>
       {({ pressed }) => (
         <Raised
           depth={5}
@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
   chip: { fontFamily: fonts.display600, fontSize: 12, letterSpacing: 1, color: colors.butterT },
   descText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink, marginTop: 1 },
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
+  btnDisabled: { opacity: 0.45 },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
   btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },
 });

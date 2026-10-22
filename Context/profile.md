@@ -86,7 +86,9 @@ null, and boards show the default name.
 ## Deleting the account (App Store Guideline 5.1.1(v))
 
 "Delete account" opens `DeleteSheet` (the character's worried face, what will be erased, "Delete everything" /
-"Keep my account"). Then `useGame().deleteAccount()`:
+"Keep my account"). The player must type exactly `DELETE` in capital letters before "Delete everything"
+is enabled. Closing the sheet clears the confirmation; the keyboard's Done key never deletes the account.
+Then `useGame().deleteAccount()`:
 
 1. `sync.deleteAccount()` ([src/net/sync.ts](../src/net/sync.ts)): stops syncs (`latest = null`), waits for
    the one in flight (so it can't bring the old account back), calls `DELETE /v1/players/me`, then removes the
