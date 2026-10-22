@@ -167,15 +167,13 @@ export default function PlayScreen() {
               />
             )}
             <DescriptionCard text={round.description} compact={compact} />
-            <View style={[styles.keyboardWrap, { paddingTop: compact ? 8 : 12 }]}>
-              <LetterKeyboard
-                keyState={(c) => keyState(round, c)}
-                locked={status !== 'playing'}
-                onPress={onKey}
-                available={available}
-                compact={compact}
-              />
-            </View>
+            <LetterKeyboard
+              keyState={(c) => keyState(round, c)}
+              locked={status !== 'playing'}
+              onPress={onKey}
+              available={available}
+              compact={compact}
+            />
           </>
         )}
         {streakShown && streakGone !== round.id && (
@@ -291,7 +289,6 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
   playScene: { flexGrow: 1, flexShrink: 1, maxHeight: 230 },
-  keyboardWrap: { marginTop: 'auto' },
   resultScene: { flexGrow: 1, flexShrink: 1, maxHeight: 340 },
   over: { marginTop: 14, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   overText: { fontFamily: fonts.display500, fontSize: 15, color: colors.muted, textAlign: 'center' },

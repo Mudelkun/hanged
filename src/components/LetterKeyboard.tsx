@@ -7,8 +7,8 @@
  * slot, so the QWERTY layout doesn't shift. A used key, or any key once the
  * round is over, cannot be pressed.
  */
-import { memo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { memo, useState } from 'react';
+import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { KeyState, Letter } from '../game/engine';
 import { t } from '../i18n';
@@ -79,12 +79,40 @@ interface Props {
   compact: boolean;
 }
 
+// The keyboard reaches a little past the screen's side padding, like the iOS one, for wider keys.
+const BLEED = 10;
+const PAD_BOTTOM = 4;
+const DEPTH = 4; // Raised's shadow under each key
+// Last height the keyboard was given, so a new round's keyboard starts at the right size (no clipped frame).
+let lastHeight = 0;
+
+/*
+ * Keys are as big as they like (`h` up to 1.6 × width) when there is room, and shrink
+ * (down to `minH`) only when the screen runs out of it. The keyboard asks for its
+ * full size as a flex basis and may shrink; the scene gives up its height first
+ * (it is the only part that grows), so anything added to the Play screen later
+ * takes the scene's spare room, then the keys', and nothing ever overflows.
+ */
 export function LetterKeyboard({ keyState, locked, onPress, available, compact }: Props) {
-  const w = Math.floor(Math.min(44, (available - GAP * (PER_ROW - 1)) / PER_ROW));
+  const [height, setHeight] = useState(lastHeight);
+  const w = Math.floor(Math.min(48, (available + 2 * BLEED - GAP * (PER_ROW - 1)) / PER_ROW));
   // iOS keys are taller than wide; 10 keys per row makes them narrow.
-  const h = compact ? Math.min(42, Math.round(w * 1.35)) : Math.min(48, Math.round(w * 1.45));
+  const maxH = compact ? Math.min(48, Math.round(w * 1.45)) : Math.min(58, Math.round(w * 1.6));
+  const minH = compact ? 34 : 38;
+  const rowGap = compact ? 6 : 8;
+  const padTop = compact ? 8 : 12;
+  const chrome = padTop + PAD_BOTTOM + 2 * rowGap + 3 * DEPTH;
+  const fits = height ? Math.floor((height - chrome) / 3) : maxH;
+  const h = Math.max(minH, Math.min(maxH, fits));
+  const onLayout = (e: LayoutChangeEvent) => {
+    lastHeight = e.nativeEvent.layout.height;
+    setHeight(lastHeight);
+  };
   return (
-    <View style={[styles.kb, { gap: compact ? 5 : 7 }]}>
+    <View
+      onLayout={onLayout}
+      style={[styles.kb, { gap: rowGap, paddingTop: padTop, flexBasis: chrome + 3 * maxH, minHeight: chrome + 3 * minH }]}
+    >
       {ROWS.map((row) => (
         <View key={row} style={styles.row}>
           {row.split('').map((c) => (
@@ -97,7 +125,15 @@ export function LetterKeyboard({ keyState, locked, onPress, available, compact }
 }
 
 const styles = StyleSheet.create({
-  kb: { alignItems: 'center', marginBottom: 4 },
+  kb: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 'auto',
+    marginHorizontal: -BLEED,
+    paddingBottom: PAD_BOTTOM,
+    flexGrow: 0,
+    flexShrink: 1,
+  },
   row: { flexDirection: 'row', gap: GAP },
   key: { borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   keyNo: { backgroundColor: colors.keyUsed, borderColor: colors.keyUsed },

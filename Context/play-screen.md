@@ -198,8 +198,15 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
   reads as two words). Tile width = what fits, capped at the mockup's 50; the gap
   shrinks too (8 → 6 over 6 letters → 3 over 10). A 15-letter word is about 20 pt
   tiles on a 375 pt phone. Font and the clue sparkle scale with the tile width.
-- Keys: 10 fit across the widest row, so width = what fits (max 44, about 30 on a phone). Taller than wide like iOS keys: height = 1.45 × width (max 48), radius 30% of width.
-- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys 1.35 × width (max 42) tall,
+- Keys: 10 fit across the widest row, so width = what fits (max 48, about 33-35 on a phone). The
+  keyboard reaches 10 pt past the screen's side padding (like the iOS one) for wider keys. Taller
+  than wide like iOS keys: height up to 1.6 × width (max 58), radius 30% of width.
+- **The keyboard shrinks before anything overflows** (owner, 2026-10-22: bigger keys, but leave
+  room for features to come). It asks for its full size as a flex basis, may shrink, and sizes its
+  keys from the height it is given (`onLayout`), down to 38 pt (34 compact). The scene is the only
+  part that grows, so anything new on the Play screen takes the scene's spare room first, then the
+  keys'. Don't give the keyboard a fixed height or wrap it in a sized view.
+- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys up to 1.45 × width (max 48) tall,
   tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
   (`flexGrow` between a minimum and the mockup's height), so every layout fits
   without scrolling. Checked at 393×852 and 375×667.
