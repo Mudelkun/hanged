@@ -30,6 +30,7 @@ npm test                  # jest (jest-expo preset): engine + progression tests
 npm run typecheck         # tsc --noEmit
 npx eslint .              # lint (see trap below)
 npm run check:economy     # model character unlock pace with the live rewards and prices
+npm run check:web         # execute startup modules from the running Metro web bundle (:8081)
 npm run check:words       # validate data/words.json (add -- --build to regenerate it)
 cd server && npm test     # server tests (its own package: npm install there first)
 cd server && npm run dev  # local API on :3000 with an embedded database
@@ -67,6 +68,14 @@ Run tests, typecheck and lint before calling a task done (in `server/` too when 
   300×150. Always also pass `width="100%" height="100%"`.
 
 ## Previewing without a Mac
+
+**`obscenity` 0.4.6's ESM wrapper crashes under Metro web** with "Cannot read properties of
+undefined (reading 'DataSet')". Its CommonJS entry marks `__esModule` without a default export,
+but the wrapper default-imports it. `metro.config.js` resolves only this package on web to its
+public CommonJS entry, using the app's dependency. Keep the shared name filter and native imports
+unchanged. Restart Metro after changing its resolver. A successful export alone misses this runtime
+failure: `npm run check:web` executes the bundled name filter and initial game state with Metro's
+actual module loader. It also accepts a saved development bundle path after `--`.
 
 `react-native-web` is installed so the screen can be checked in a browser:
 `npx expo start --web`. To capture phone-sized screenshots, run headless Chrome with
