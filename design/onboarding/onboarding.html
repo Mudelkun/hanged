@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hanged Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Same "Sunny meadow" palette as ui-mockup.html */
+  :root{
+    --page1:#d7f0ff; --page2:#fff3e3; --paper:#fffaf1; --ink:#4b3a35; --muted:#a8948a;
+    --line:#f3e6d6; --shadow:#ecd9c3;
+    --coral:#ff7b6b; --coral-d:#e85c4d; --coral-l:#ffe5df;
+    --mint:#5fd3a5; --mint-d:#38b283; --mint-l:#dcf7ea; --mint-t:#2a9a6e;
+    --butter:#ffd667; --butter-d:#f0b43a; --butter-l:#fff3cc; --butter-t:#9a6a00;
+    --sky:#6cc4ff; --sky-d:#3ea6ec; --sky-l:#e0f3ff; --sky-t:#2a86c8;
+    --sign-d:#c99558;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(180deg,var(--page1) 0%,#eaf7ff 30%,var(--page2) 100%);font-family:Nunito,"Segoe UI",sans-serif;color:var(--ink);
+    width:1900px;height:2700px;padding:56px 64px 0;position:relative;overflow:hidden}
+  .fd{font-family:Fredoka,Nunito,sans-serif}
+
+  /* page header */
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+  .kicker{font-weight:900;font-size:13px;letter-spacing:2.4px;color:#9b847a}
+  h1{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:46px;line-height:1.05;margin-top:8px}
+  h1 em{font-style:normal;color:var(--coral-d)}
+  .lead{font-weight:800;font-size:17px;color:#9b847a;margin-top:10px;max-width:880px;line-height:1.4}
+  .flow{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);border-radius:22px;padding:12px 16px}
+  .fstep{display:flex;align-items:center;gap:7px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:16px}
+  .fstep b{width:26px;height:26px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .fstep.ghost b{background:var(--sky-l);color:var(--sky-t)}
+  .farrow{color:#d3bfae;font-weight:900}
+  .offline{display:flex;align-items:center;gap:6px;margin-left:10px;padding:5px 11px 5px 8px;border-radius:13px;background:var(--mint-l);color:var(--mint-t);font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px}
+
+  .sec{display:flex;align-items:baseline;gap:12px;margin:40px 0 18px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px}
+  .sec small{font-weight:500;font-size:17px;color:#9b847a}
+  .row{display:flex;gap:34px}
+  .cap{width:400px;margin-top:16px;display:flex;gap:10px}
+  .cap .n{flex:none;width:28px;height:28px;border-radius:9px;background:#fff;border:2px solid var(--line);font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:14px;color:var(--sky-t);display:flex;align-items:center;justify-content:center}
+  .cap b{display:block;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:18px}
+  .cap span{display:block;font-weight:800;font-size:13.5px;color:#9b847a;line-height:1.38;margin-top:2px}
+  .cap.pg .n{background:var(--coral);border-color:var(--coral);color:#fff}
+
+  /* phones, as in ui-mockup.html */
+  .phone{width:400px;height:860px;border-radius:58px;background:#3a2d29;padding:11px;box-shadow:0 34px 60px -24px rgba(150,95,50,.45),inset 0 0 0 2px #574540}
+  .screen{width:100%;height:100%;border-radius:47px;background:var(--paper);background-image:radial-gradient(#f5e8d6 1.3px,transparent 1.6px);background-size:18px 18px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:20px;background:#3a2d29;z-index:9}
+  .status{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-weight:800;font-size:15px;flex:none;position:relative;z-index:8}
+  .sicons{display:flex;gap:6px;align-items:center}
+  .abs{position:absolute}
+
+  /* shared pieces (ui-mockup.html) */
+  .btn{height:56px;border-radius:20px;background:var(--coral);color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:21px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 5px 0 var(--coral-d);flex:none;letter-spacing:.2px}
+  .btn.off{background:#eadfd2;color:#b9a595;box-shadow:0 5px 0 #dccdbc}
+  .back{width:44px;height:44px;border-radius:15px;background:#fff;box-shadow:0 3px 0 var(--shadow);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none}
+  .dots{display:flex;gap:7px;justify-content:center;align-items:center}
+  .dots i{width:9px;height:9px;border-radius:5px;background:#ead9c4}
+  .dots i.on{width:26px;background:var(--coral)}
+  .dots i.done{background:var(--mint)}
+  .foot{text-align:center;font-weight:800;font-size:12.5px;color:var(--muted)}
+  .tile{width:44px;height:50px;border-radius:14px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:27px;color:var(--ink);position:relative;flex:none}
+  .tile.ok{background:var(--mint-l);border-color:#bdecd6;box-shadow:0 4px 0 #a5dfc4;color:var(--mint-t)}
+  .tile.clue{background:var(--butter-l);border-color:#ffe39a;box-shadow:0 4px 0 #f2d27a;color:var(--butter-t)}
+  .tile.h{background:rgba(255,255,255,.6);border:2.5px dashed #e6d1b8;box-shadow:none}
+  .tile.h::after{content:"";position:absolute;bottom:9px;width:18px;height:4px;border-radius:2px;background:#ead9c4}
+  .tile .spark{position:absolute;top:-8px;right:-8px}
+
+  /* 1. the buddy: the welcome sky */
+  .sky{position:absolute;left:0;right:0;top:0;height:520px;background:linear-gradient(180deg,#8fd3ff 0%,#bfe6ff 45%,#e6f6ff 100%);overflow:hidden}
+  .sun{position:absolute;width:52px;height:52px;border-radius:50%;background:#ffe27a;box-shadow:0 0 0 10px rgba(255,226,122,.35),0 0 0 22px rgba(255,226,122,.16)}
+  .logo{position:absolute;top:58px;left:0;right:0;display:flex;flex-direction:column;align-items:center;z-index:3}
+  .logo .word{display:flex;gap:5px}
+  .logo .tile{width:40px;height:46px;font-size:27px;border-radius:13px}
+  .logo .sub{margin-top:9px;padding:3px 12px;border-radius:10px;background:rgba(255,255,255,.75);font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:13px;letter-spacing:2.6px;color:var(--sky-t)}
+  .glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,0) 70%)}
+  .say{position:absolute;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);border-radius:15px;padding:5px 11px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14.5px;white-space:nowrap;z-index:4}
+  .say::after{content:"";position:absolute;bottom:-7px;width:11px;height:11px;background:#fff;border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+  .say.l::after{left:16px}.say.r::after{right:16px}
+  .deck{position:absolute;left:0;right:0;bottom:0;top:478px;background:var(--paper);background-image:radial-gradient(#f5e8d6 1.3px,transparent 1.6px);background-size:18px 18px;border-radius:30px 30px 0 0;
+    box-shadow:0 -8px 22px -14px rgba(60,120,170,.55);padding:22px 16px 30px;display:flex;flex-direction:column}
+  .q{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:28px;line-height:1.08;text-align:center}
+  .qs{font-weight:800;font-size:14.5px;color:var(--muted);text-align:center;margin-top:5px}
+  .picks{display:flex;gap:12px;margin-top:16px}
+  .pick{flex:1;height:96px;border-radius:22px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;gap:10px;padding:0 12px;position:relative}
+  .pick.on{border-color:var(--coral);box-shadow:0 0 0 1.5px var(--coral),0 5px 0 1.5px var(--coral-d)}
+  .pick .nm{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:21px;line-height:1}
+  .pick .sp{white-space:nowrap;font-family:Fredoka,Nunito,sans-serif;font-weight:500;font-size:13px;color:var(--muted);margin-top:3px}
+  .check{position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 2px 0 var(--mint-d)}
+  .radio{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:2.5px solid #e6d5c4}
+
+  /* 2. the name */
+  .bar{height:56px;display:flex;align-items:center;padding:0 16px;flex:none;gap:12px}
+  .bar .dots{flex:1;margin-right:56px}
+  .page{padding:0 16px;flex:1;display:flex;flex-direction:column;min-height:0}
+  .q.left{text-align:left;font-size:29px}
+  .qs.left{text-align:left;margin-top:4px}
+  .stagebox{height:232px;border-radius:28px;background:linear-gradient(180deg,#a9dfff 0%,#d4efff 55%,#eef9ff 100%);border:3px solid #fff;box-shadow:0 4px 0 var(--shadow),0 12px 20px -14px rgba(60,130,190,.6);position:relative;overflow:hidden;flex:none;margin-top:14px}
+  .stagebox > svg{position:absolute;inset:0}
+  .post{position:absolute;width:10px;border-radius:4px;background:linear-gradient(90deg,#d6a46a,#b98450);border:2px solid #9c6a3c;border-bottom:none}
+  .sign{position:absolute;background:linear-gradient(180deg,#f6d9a8,#e9bf82);border:2px solid var(--sign-d);box-shadow:0 4px 0 var(--sign-d),0 8px 14px -6px rgba(90,50,20,.4);border-radius:14px;padding:5px 14px 4px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:25px;white-space:nowrap;transform-origin:50% 0}
+  .sign::before,.sign::after{content:"";position:absolute;top:8px;width:6px;height:6px;border-radius:50%;background:#b98450}
+  .sign::before{left:7px}.sign::after{right:7px}
+  .namecard{margin-top:16px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);border-radius:24px;padding:11px 12px 10px;flex:none}
+  .label{font-family:Fredoka,Nunito,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--muted);margin:0 4px 6px}
+  .field{display:flex;align-items:center;gap:8px}
+  .input{flex:1;height:52px;border-radius:16px;background:#fffaf3;border:2.5px solid var(--sky);display:flex;align-items:center;padding:0 14px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:23px}
+  .input .caret{width:2.5px;height:26px;border-radius:2px;background:var(--sky-d);margin-left:2px}
+  .input.bad{border-color:var(--coral);background:#fff6f3}
+  .input.bad .caret{background:var(--coral)}
+  .dice{width:52px;height:52px;border-radius:16px;background:var(--sky-l);border:2px solid #cbe8fb;box-shadow:0 3px 0 #bfe2f8;display:flex;align-items:center;justify-content:center;flex:none}
+  .help{display:flex;justify-content:space-between;margin:8px 4px 0;font-family:Fredoka,Nunito,sans-serif;font-size:13.5px;font-weight:500;color:var(--muted)}
+  .help.bad{color:var(--coral-d)}
+  .consent{margin-top:12px;display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);border-radius:20px;padding:12px 14px;flex:none;font-weight:800;font-size:14.5px;line-height:1.35;position:relative}
+  .consent a{color:var(--coral-d);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+  .box{width:30px;height:30px;border-radius:10px;border:2.5px solid #dfcbb8;background:#fffaf3;flex:none;display:flex;align-items:center;justify-content:center}
+  .box.on{background:var(--mint);border-color:var(--mint);box-shadow:0 3px 0 var(--mint-d)}
+  .consent.nudge{border-color:var(--coral);box-shadow:0 0 0 1.5px var(--coral),0 4px 0 1.5px #f6b8ab;transform:rotate(-1.2deg)}
+  .consent.nudge .box{border-color:var(--coral);background:#fff6f3}
+  .wig{position:absolute;top:50%;width:12px;height:22px;transform:translateY(-50%)}
+  .nudgetxt{margin:8px 4px 0;font-family:Fredoka,Nunito,sans-serif;font-size:13.5px;font-weight:600;color:var(--coral-d);text-align:center}
+
+  /* 3. lift-off */
+  .rush{position:absolute;inset:0;background:linear-gradient(180deg,#5db4f2 0%,#8fd3ff 40%,#d2eeff 100%);overflow:hidden}
+  .speed{position:absolute;width:5px;border-radius:3px;background:rgba(255,255,255,.75)}
+  .big{position:absolute;left:0;right:0;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:40px;color:#fff;text-shadow:0 3px 0 rgba(42,134,200,.55)}
+  .bigsub{position:absolute;left:0;right:0;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px;color:#fff;opacity:.95}
+
+  /* 4. the first round (Play, as in ui-mockup.html, with the balloon scene) */
+  .head{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;flex:none;height:60px}
+  .hl,.hr{display:flex;align-items:center;gap:9px}
+  .me-btn{width:46px;height:46px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2.5px var(--coral),0 4px 8px -2px rgba(232,92,77,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+  .uname{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:25px;line-height:1}
+  .usub{font-size:11.5px;font-weight:800;color:var(--muted);margin-top:3px}
+  .lvl{display:flex;align-items:center;gap:4px;background:var(--mint-l);color:var(--mint-t);font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;border-radius:13px;padding:6px 10px 6px 7px;border:2px solid #c3eedb}
+  .pill{display:flex;align-items:center;gap:5px;background:#fff;border:2px solid #ffe39a;box-shadow:0 3px 0 #f6dc9c;border-radius:17px;padding:5px 11px 5px 6px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:19px;color:var(--butter-t)}
+  .body{flex:1;padding:0 16px;display:flex;flex-direction:column;min-height:0}
+  .scene{height:212px;border-radius:28px;background:linear-gradient(180deg,#a9dfff 0%,#d4efff 55%,#eef9ff 100%);position:relative;overflow:hidden;flex:none;border:3px solid #fff;box-shadow:0 4px 0 var(--shadow),0 12px 20px -14px rgba(60,130,190,.6)}
+  .scene > svg{position:relative;z-index:1}
+  .misses{display:flex;align-items:center;gap:10px;margin:11px 4px 0;flex:none}
+  .pips{display:flex;gap:4px;flex:1}
+  .pipx{flex:1;height:11px;border-radius:6px;background:#f1e5d6}
+  .mtxt{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+  .tiles{display:flex;gap:8px;justify-content:center;margin:14px 0 14px;flex:none}
+  .tiles .tile{width:50px;height:58px;font-size:30px;border-radius:16px}
+  .desc{border-radius:22px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);padding:10px;display:flex;align-items:center;gap:11px;flex:none}
+  .bulb{width:42px;height:42px;border-radius:14px;background:var(--butter-l);display:flex;align-items:center;justify-content:center;flex:none}
+  .chip{font-family:Fredoka,Nunito,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--butter-t)}
+  .dtxt{font-weight:800;font-size:14.5px;margin-top:2px;color:#6d5a52;line-height:1.25}
+  .kb{margin-top:auto;margin-bottom:4px;display:flex;flex-direction:column;gap:7px;align-items:center}
+  .kr{display:flex;gap:5px}
+  .k{width:30px;height:44px;border-radius:9px;background:#fff;border:1.5px solid var(--line);box-shadow:0 4px 0 var(--shadow);display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:20px;color:var(--ink)}
+  .k.clue{background:var(--butter);border-color:var(--butter);box-shadow:0 4px 0 var(--butter-d);color:#7a5300}
+  .k.off{background:transparent;border:2px dashed #e6d5c4;box-shadow:none;color:transparent}
+  .tabs{flex:none;margin:6px 12px 14px;height:68px;border-radius:26px;background:#fff;box-shadow:0 0 0 1.5px var(--line),0 10px 22px -10px rgba(150,95,50,.35);display:flex;justify-content:space-around;align-items:center;padding:0 6px}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:12px;color:#c4b0a0;width:80px}
+  .tab .ib{width:50px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+  .tab.on{color:var(--coral-d)}
+  .tab.on .ib{background:var(--coral-l)}
+  .toast{position:absolute;left:28px;right:28px;top:526px;z-index:6;background:#fff;border:2px solid #bdecd6;box-shadow:0 5px 0 #a5dfc4,0 16px 26px -12px rgba(40,120,90,.45);border-radius:20px;padding:8px 12px 8px 8px;display:flex;align-items:center;gap:10px}
+  .toast b{display:block;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:18px;color:var(--mint-t);line-height:1.1}
+  .toast span{display:block;font-weight:800;font-size:12.5px;color:var(--muted);margin-top:1px}
+
+  /* the policy sheet */
+  .dim{position:absolute;inset:0;background:rgba(75,58,53,.42);z-index:10}
+  .sheet{position:absolute;left:0;right:0;bottom:0;height:560px;z-index:11;background:var(--paper);border-radius:30px 30px 0 0;padding:10px 18px 28px;display:flex;flex-direction:column}
+  .grab{width:44px;height:5px;border-radius:3px;background:#e2d2c1;margin:0 auto 14px}
+  .shead{display:flex;align-items:center;gap:11px}
+  .sicon{width:42px;height:42px;border-radius:14px;background:var(--sky-l);display:flex;align-items:center;justify-content:center;flex:none}
+  .stitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px}
+  .stabs{display:flex;background:#f6ebdd;border-radius:17px;padding:4px;margin-top:14px}
+  .stabs div{flex:1;text-align:center;padding:8px 0;border-radius:13px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;color:#b29c8c}
+  .stabs .on{background:#fff;color:var(--coral-d);box-shadow:0 3px 0 var(--shadow)}
+  .doc{margin-top:14px;flex:1;background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 14px;overflow:hidden;display:flex;flex-direction:column;gap:9px}
+  .doc h4{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:16px}
+  .ln{height:9px;border-radius:5px;background:#f1e7db}
+  .todo{margin-top:4px;border-radius:14px;background:var(--butter-l);border:1.5px dashed #f2cf6a;padding:8px 11px;font-weight:800;font-size:12.5px;color:var(--butter-t);line-height:1.35}
+
+  /* notes */
+  .notes{display:grid;grid-template-columns:1.05fr 1.15fr 1fr;gap:26px;margin-top:44px}
+  .panel{background:#fff;border:2px solid var(--line);border-radius:26px;box-shadow:0 5px 0 var(--shadow);padding:20px 22px}
+  .ptitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:21px;display:flex;align-items:center;gap:9px}
+  .li{display:flex;gap:10px;font-weight:800;font-size:14px;line-height:1.4;margin-top:10px}
+  .li .d{flex:none;width:22px;height:22px;border-radius:50%;background:var(--butter-l);border:1.5px solid #ffe39a;color:var(--butter-t);font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .li i{font-style:normal;color:var(--muted)}
+  .li code{font-family:Consolas,monospace;font-size:12.5px;background:#f6ebdd;border-radius:6px;padding:1px 5px}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <div class="kicker">HANGED · ONBOARDING</div>
+    <h1>Two screens, then <em>straight into the game.</em></h1>
+    <div class="lead">Pick a buddy, give yourself a name and accept the terms. The buddy you pick floats up into the first round, and the Play header shows your name. Every step works in airplane mode.</div>
+  </div>
+  <div class="flow" id="flow"></div>
+</div>
+
+<div class="sec">The happy path <small>about 20 seconds, 3 taps if the random name is fine</small></div>
+<div class="row" id="main"></div>
+<div class="sec">The moments around it <small>same two screens, no extra steps</small></div>
+<div class="row" id="states"></div>
+<div class="notes" id="notes"></div>
+
+<script src="../characters/rig.js"></script>
+<script src="../characters/balloons.js"></script>
+<script>
+/*
+ * Onboarding, design study. Every character and the balloon scene come from
+ * design/characters (rig.js + balloons.js), the same code the app draws with.
+ * The pieces on top are copied from ui-mockup.html (tiles, buttons, Play) and
+ * level-top.html (the wooden sign), as the app would reuse its components.
+ */
+const INK = '#4b3a35';
+const CH = Object.fromEntries(HangedRig.CHARACTERS.map(c => [c.id, c]));
+/** The two free starters the player picks from (the app: CHARACTER_PRICES 0). */
+const PICKS = ['coco', 'bun'];
+const SAYS = { coco: 'Ready when you are!', bun: 'Let’s float!' };
+const NAME = 'SunnyOtter';
+const TINT = { bun: '#ffeef4', coco: '#f6e7da', mochi: '#ffeedd' };
+
+/* ---------- icons ---------- */
+const coin = (s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12.6" r="10.4" fill="#f0b43a"/><circle cx="12" cy="11.4" r="10.4" fill="#ffd667"/><circle cx="12" cy="11.4" r="7.4" fill="#ffe593"/><path d="M12 6.4l1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.6l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke="#f0b43a" stroke-width="1" stroke-linejoin="round"/></svg>`;
+const chev = (d = 'l', c = INK, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="${d === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const checkI = (s = 14) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const spark = (s = 18, c = '#ffc93c') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5-.9-5.6-4.9-9.6-10.5-10.5C7.1 11.1 11.1 7.1 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+const starI = (s = 15, c = '#38b283') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+const bulbI = `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.5a7 7 0 0 0-4.2 12.6c.8.6 1.2 1.4 1.2 2.4h6c0-1 .4-1.8 1.2-2.4A7 7 0 0 0 12 2.5z" fill="#ffd667" stroke="#f0b43a" stroke-width="1.6"/><rect x="9" y="18.5" width="6" height="3" rx="1.5" fill="#f0b43a"/><path d="M9.5 9.5a3 3 0 0 1 2.5-2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`;
+const diceI = `<svg width="28" height="28" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="#fff" stroke="#3ea6ec" stroke-width="2"/><circle cx="8" cy="8" r="1.7" fill="#3ea6ec"/><circle cx="16" cy="8" r="1.7" fill="#3ea6ec"/><circle cx="12" cy="12" r="1.7" fill="#3ea6ec"/><circle cx="8" cy="16" r="1.7" fill="#3ea6ec"/><circle cx="16" cy="16" r="1.7" fill="#3ea6ec"/></svg>`;
+const docI = `<svg width="22" height="22" viewBox="0 0 24 24"><path d="M6 2.5h8l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4a1.5 1.5 0 0 1 1-1.5z" fill="#fff" stroke="#2a86c8" stroke-width="2" stroke-linejoin="round"/><path d="M14 2.5V8h5M8.5 12.5h7M8.5 16h7" fill="none" stroke="#2a86c8" stroke-width="2" stroke-linecap="round"/></svg>`;
+const planeOff = (c = '#2a9a6e') => `<svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0v5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z" fill="${c}"/></svg>`;
+const balloonI = `<svg width="20" height="24" viewBox="0 0 20 24"><path d="M10 1.5c4.7 0 7.5 3.5 7.5 7.6 0 4.6-3.6 7.6-7.5 8.6-3.9-1-7.5-4-7.5-8.6 0-4.1 2.8-7.6 7.5-7.6z" fill="#fff"/><path d="M8.5 19.5h3l-1.5-2z" fill="#fff"/><path d="M10 20c-1 1.4 1 2.2 0 3.5" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`;
+const cloud = (w, fill = '#fff', op = 1) => `<svg width="${w}" height="${w * 0.5}" viewBox="0 0 100 50" style="opacity:${op}"><g fill="${fill}"><circle cx="28" cy="32" r="15"/><circle cx="48" cy="22" r="19"/><circle cx="70" cy="29" r="15"/><rect x="14" y="30" width="72" height="17" rx="8.5"/></g></svg>`;
+const statusIcons = (c = INK) => `<div class="sicons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="${c}"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="${c}"/><rect x="10" y="3" width="3" height="9" rx="1" fill="${c}"/><rect x="15" y="0" width="3" height="12" rx="1" fill="${c}"/></svg>${planeOff(c)}<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".7" y=".7" width="22" height="11.6" rx="3.6" fill="none" stroke="${c}" stroke-opacity=".4" stroke-width="1.4"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="2" fill="${c}"/><rect x="24" y="4.3" width="2" height="4.4" rx="1" fill="${c}" fill-opacity=".4"/></svg></div>`;
+const tabIcon = {
+  play: (c) => `<svg width="28" height="24" viewBox="0 0 30 26"><path d="M8 5h14a7 7 0 0 1 6.6 9.3l-1.4 4.2a3.6 3.6 0 0 1-6 1.4L18.3 17h-6.6l-2.9 2.9a3.6 3.6 0 0 1-6-1.4L1.4 14.3A7 7 0 0 1 8 5z" fill="${c}"/><path d="M9 9v5M6.5 11.5h5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="10" r="1.7" fill="#fff"/><circle cx="23" cy="13" r="1.7" fill="#fff"/></svg>`,
+  vs: (c) => `<svg width="28" height="24" viewBox="0 0 30 26"><circle cx="20.5" cy="11" r="8" fill="${c}" opacity=".5"/><circle cx="10" cy="13" r="8.5" fill="${c}"/><circle cx="7.4" cy="12" r="1.3" fill="#fff"/><circle cx="12.6" cy="12" r="1.3" fill="#fff"/><path d="M7.6 15.4q2.4 2.2 4.8 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+  board: (c) => `<svg width="26" height="24" viewBox="0 0 28 26"><path d="M7 2h14v7a7 7 0 0 1-14 0z" fill="${c}"/><path d="M7 4H2.5a4.5 4.5 0 0 0 5.2 6.2M21 4h4.5a4.5 4.5 0 0 1-5.2 6.2" fill="none" stroke="${c}" stroke-width="2.4"/><rect x="12" y="15" width="4" height="5" fill="${c}"/><rect x="7.5" y="20" width="13" height="4.5" rx="1.6" fill="${c}"/></svg>`,
+  chars: (c) => `<svg width="27" height="24" viewBox="0 0 28 26"><path d="M4 4.5l6.2 3.6a10 10 0 0 1 7.6 0L24 4.5l-.6 7.7A10 9.4 0 1 1 4.6 12.2z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10.2" cy="14.5" r="1.5" fill="#fff"/><circle cx="17.8" cy="14.5" r="1.5" fill="#fff"/><path d="M12 18q2 1.6 4 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+};
+const tabs = (on) => `<div class="tabs">${[['play', 'Play'], ['vs', 'Versus'], ['board', 'Leaderboard'], ['chars', 'Characters']].map(([k, l]) =>
+  `<div class="tab ${k === on ? 'on' : ''}"><div class="ib">${tabIcon[k](k === on ? '#ff7b6b' : '#d6c5b7')}</div>${l}</div>`).join('')}</div>`;
+
+/* ---------- characters (shared rig + balloon scene) ---------- */
+/** The profile picture (HangedRig.avatar), `s` px. */
+const avatar = (id, s, ring = false) => HangedRig.avatar(CH[id], { ring }).replace('<svg ', `<svg width="${s}" height="${s}" `);
+const face = (id, s, expr = 'happy') => `<svg width="${s}" height="${s}" viewBox="30 4 140 140">${HangedRig.render(CH[id], { bare: true, expr })}</svg>`;
+/**
+ * The balloon scene's stage 0 (all 10 balloons), cropped to `vb` and drawn w × h.
+ * `t` picks a moment of the stage's wave loop; `edit` changes the frame (a face, a standing spot).
+ */
+function balloons(id, vb, w, h, { t = 0, edit, fit = 'meet' } = {}) {
+  const f = BalloonAnim.frame(0, 0, 1, t);
+  if (edit) edit(f);
+  return BalloonAnim.scene(CH[id], f, { sky: false, clouds: false })
+    .replace(/viewBox="[^"]*"/, `viewBox="${vb}" width="${w}" height="${h}" preserveAspectRatio="xMidYMax ${fit}"`);
+}
+// Floating: the bunch and the character, no ground (cropped above it)
+const FLOAT_VB = '118 2 180 330';
+const floating = (id, h, opts) => balloons(id, FLOAT_VB, Math.round(h * 180 / 330), h, opts);
+
+/* ---------- phone frame ---------- */
+const phone = (inner, { light = false } = {}) => `<div class="phone"><div class="screen"><div class="island"></div>
+  <div class="status" style="${light ? 'color:#fff' : ''}"><span>9:41</span>${statusIcons(light ? '#fff' : INK)}</div>${inner}</div></div>`;
+const shot = (inner, n, title, text, opts = {}) => `<div>${phone(inner, opts)}<div class="cap ${opts.page ? 'pg' : ''}"><div class="n">${n}</div><div><b>${title}</b><span>${text}</span></div></div></div>`;
+const dots = (step) => `<div class="dots">${[1, 2].map(i => `<i class="${i === step ? 'on' : i < step ? 'done' : ''}"></i>`).join('')}</div>`;
+
+/* ---------- screen 1: pick your buddy (also the welcome) ---------- */
+function buddyScreen(pick) {
+  const other = PICKS.find(p => p !== pick);
+  const left = PICKS[0], right = PICKS[1];
+  // The picked buddy is in front, bigger, cheering; the other floats a little behind
+  const fig = (id, x) => {
+    const on = id === pick, h = on ? 300 : 236, top = on ? 160 : 196;
+    const w = Math.round(h * 180 / 330);
+    return `${on ? `<div class="glow" style="left:${x + w / 2 - 120}px;top:${top + 80}px;width:240px;height:240px"></div>` : ''}
+      <div class="abs" style="left:${x}px;top:${top}px;z-index:${on ? 3 : 2};${on ? '' : 'opacity:.92'}">
+        ${floating(id, h, { t: on ? 0.35 : 1.6, edit: (f) => { f.expr = on ? 'joy' : 'happy'; } })}</div>
+      ${on ? `<div class="say ${x < 150 ? 'l' : 'r'}" style="top:${top + 4}px;${x < 150 ? `left:${x + 4}px` : `right:${378 - x - w - 4}px`}">${SAYS[id]}</div>` : ''}`;
+  };
+  const card = (id) => {
+    const on = id === pick, c = CH[id];
+    return `<div class="pick ${on ? 'on' : ''}">${avatar(id, 56, true)}<div><div class="nm">${c.name}</div><div class="sp">${c.species}</div></div>
+      ${on ? `<div class="check">${checkI(13)}</div>` : '<div class="radio"></div>'}</div>`;
+  };
+  return `
+    <div class="sky">
+      <div class="sun" style="right:-14px;top:132px"></div>
+      <div class="abs" style="left:-14px;top:148px">${cloud(92, '#fff', .85)}</div>
+      <div class="abs" style="right:-18px;top:250px">${cloud(110, '#fff', .9)}</div>
+      <div class="abs" style="left:150px;top:420px">${cloud(70, '#fff', .7)}</div>
+      <div class="abs" style="right:14px;top:436px;transform:rotate(10deg);z-index:4"><div class="tile clue">A<span class="spark">${spark(16)}</span></div></div>
+      ${fig(left, 22)}${fig(right, 200)}
+      <div class="abs" style="left:-20px;right:-20px;bottom:-12px;height:110px">${['-10,38,150', '96,52,140', '210,30,170', '300,48,130'].map(s => { const [x, y, w] = s.split(','); return `<div class="abs" style="left:${x}px;top:${y}px">${cloud(+w)}</div>`; }).join('')}</div>
+    </div>
+    <div class="logo"><div class="word">${[...'HANGED'].map((ch, i) => `<div class="tile ${i % 3 === 1 ? 'clue' : 'ok'}" style="transform:translateY(${[0, -4, 2, -3, 1, -2][i]}px) rotate(${[-6, 4, -3, 5, -4, 6][i]}deg)">${ch}</div>`).join('')}</div>
+      <div class="sub">WORD GUESSING GAME</div></div>
+    <div class="deck">
+      <div class="q">Who’s coming with you?</div>
+      <div class="qs">Guess words to keep your buddy in the air.</div>
+      <div class="picks">${card(left)}${card(right)}</div>
+      <div style="flex:1"></div>
+      <div class="btn">Let’s go, ${CH[pick].name}! ${chev('r', '#fff', 20)}</div>
+      <div style="height:14px"></div>
+      ${dots(1)}
+      <div class="foot" style="margin-top:9px">Switch anytime in Characters.</div>
+    </div>`;
+}
+
+/* ---------- screen 2: your name + the terms ---------- */
+// Standing on the grass: feet on the ground line (balloons.js GROUND = 560, feet 14 below the body)
+const STAND_VB = '0 290 450 300';
+function nameScreen(pick, { name = NAME, problem = null, ticked = true, nudge = false, sheet = false } = {}) {
+  const bad = !!problem;
+  const scene = balloons(pick, STAND_VB, 340, 226, {
+    t: 0.5, fit: 'slice',
+    edit: (f) => { f.tx = 330; f.ty = 546; f.expr = bad ? 'worried' : 'joy'; f.rot = 0; if (bad) f.a.armL = 20; },
+  });
+  // The wooden sign from the level path, on two posts; a refused name hangs from one nail
+  const signW = Math.max(120, name.length * 15 + 34);
+  const sign = `<div class="post" style="left:${100 - signW / 2 + 24}px;top:118px;height:92px"></div><div class="post" style="left:${100 + signW / 2 - 34}px;top:118px;height:92px"></div>
+    <div class="sign" style="left:${100 - signW / 2}px;top:96px;min-width:${signW}px;text-align:center;${bad ? 'transform:rotate(-13deg);transform-origin:12px 10px;color:#b4573f' : ''}">${name}</div>`;
+  const able = !bad && ticked;
+  return `
+    <div class="bar"><div class="back">${chev('l')}</div>${dots(2)}</div>
+    <div class="page">
+      <div class="q left">What should we call you?</div>
+      <div class="qs left">Everyone on the leaderboard sees it.</div>
+      <div class="stagebox">
+        <div class="sun" style="left:22px;top:18px;width:40px;height:40px"></div>
+        <div class="abs" style="left:96px;top:30px">${cloud(70)}</div>
+        <div class="abs" style="left:180px;top:12px">${cloud(46, '#fff', .75)}</div>
+        ${scene}${sign}
+      </div>
+      <div class="namecard">
+        <div class="label">PLAYER NAME</div>
+        <div class="field"><div class="input ${bad ? 'bad' : ''}">${name}<span class="caret"></span></div><div class="dice">${diceI}</div></div>
+        <div class="help ${bad ? 'bad' : ''}"><span>${problem || '2 to 15 letters · everyone can see it'}</span><span>${name.length} / 15</span></div>
+      </div>
+      <div class="consent ${nudge ? 'nudge' : ''}">
+        <div class="box ${ticked ? 'on' : ''}">${ticked ? checkI(16) : ''}</div>
+        <div>I accept the <a>Terms of use</a> and the <a>Privacy policy</a>.</div>
+      </div>
+      ${nudge ? '<div class="nudgetxt">Tick the box to start playing</div>' : ''}
+      <div style="flex:1"></div>
+      <div class="btn ${able ? '' : 'off'}">${able ? balloonI : ''}Let’s play!</div>
+      <div class="foot" style="margin:12px 0 30px">You can change it anytime in Profile.</div>
+    </div>
+    ${sheet ? policySheet() : ''}`;
+}
+
+/* The terms and the policy ship inside the app: they open offline, in a sheet over screen 2 */
+function policySheet() {
+  const lines = (ws) => ws.map(w => `<div class="ln" style="width:${w}%"></div>`).join('');
+  return `<div class="dim"></div><div class="sheet">
+    <div class="grab"></div>
+    <div class="shead"><div class="sicon">${docI}</div><div class="stitle">Terms of use</div></div>
+    <div class="stabs"><div class="on">Terms of use</div><div>Privacy policy</div></div>
+    <div class="doc">
+      <h4>1. Playing Hanged</h4>${lines([96, 88, 93, 54])}
+      <h4>2. Your player name</h4>${lines([91, 97, 72])}
+      <h4>3. The leaderboard</h4>${lines([94, 86, 60])}
+      <div class="todo">The real text goes here before release. It ships inside the app, so it reads offline. The same pages open from Profile › Info &amp; legal.</div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="btn">Got it</div>
+  </div>`;
+}
+
+/* ---------- 3: lift-off (a transition, not a page) ---------- */
+function liftScreen(pick) {
+  const speed = [[30, 120, 90], [64, 380, 130], [98, 610, 70], [300, 90, 120], [336, 330, 90], [270, 560, 140], [180, 700, 80], [350, 640, 60], [20, 520, 70]]
+    .map(([x, y, h]) => `<div class="speed" style="left:${x}px;top:${y}px;height:${h}px"></div>`).join('');
+  const trail = [0.12, 0.22].map((o, i) => `<div class="abs" style="left:104px;top:${300 + (2 - i) * 70}px;opacity:${o}">${floating(pick, 300, { t: 0.2, edit: f => { f.expr = 'joy'; f.a.armL = 150; } })}</div>`).join('');
+  return `<div class="rush">${speed}
+      <div class="abs" style="left:-30px;top:160px">${cloud(120, '#fff', .55)}</div>
+      <div class="abs" style="right:-40px;top:470px">${cloud(150, '#fff', .7)}</div>
+      ${trail}
+      <div class="abs" style="left:104px;top:190px;z-index:2">${floating(pick, 300, { t: 0.2, edit: f => { f.expr = 'joy'; f.a.armL = 150; f.rot = -4; } })}</div>
+      <div class="big" style="top:96px">Up we go!</div>
+      <div class="abs" style="left:-40px;right:-40px;bottom:-30px;height:150px">${['0,40,170', '120,20,190', '250,46,170'].map(s => { const [x, y, w] = s.split(','); return `<div class="abs" style="left:${x}px;top:${y}px">${cloud(+w)}</div>`; }).join('')}</div>
+      <div class="bigsub" style="bottom:46px;color:var(--sky-t)">Off to the first word…</div>
+    </div>`;
+}
+
+/* ---------- 4: the first round (Play) ---------- */
+const PLAY_VB = '-60 0 520 330';
+function firstRound(pick) {
+  const scene = BalloonAnim.scene(CH[pick], BalloonAnim.frame(0, 0, 1, 0.9), { sky: false, clouds: false, camera: true })
+    .replace(/viewBox="[^"]*"/, `viewBox="${PLAY_VB}" preserveAspectRatio="xMidYMax slice" width="100%" height="100%"`);
+  const off = new Set([...'QJXZVKW']); // level 1 takes some wrong letters off the keyboard
+  const kb = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'].map(r => `<div class="kr">${[...r].map(ch =>
+    `<div class="k ${ch === 'F' ? 'clue' : off.has(ch) ? 'off' : ''}">${ch}</div>`).join('')}</div>`).join('');
+  return `
+    <div class="head"><div class="hl"><div class="me-btn" style="background:${TINT[pick]}">${face(pick, 44)}</div><div><div class="uname">${NAME}</div><div class="usub">0 words guessed</div></div></div>
+      <div class="hr"><div class="lvl">${starI()}Lv 1</div><div class="pill">${coin(24)}0</div></div></div>
+    <div class="toast">${avatar(pick, 44, true)}<div><b>Nice to meet you, ${NAME}!</b><span>Your first word is ready.</span></div></div>
+    <div class="body">
+      <div class="scene"><div class="sun" style="right:34px;top:22px;width:46px;height:46px"></div><div class="abs" style="left:150px;top:18px">${cloud(84)}</div><div class="abs" style="left:16px;top:58px">${cloud(48, '#fff', .7)}</div>${scene}</div>
+      <div class="misses"><div class="pips">${Array.from({ length: 10 }, () => '<div class="pipx"></div>').join('')}</div><div class="mtxt">0 / 10 misses</div></div>
+      <div class="tiles"><div class="tile clue">F<span class="spark">${spark(18)}</span></div><div class="tile h"></div><div class="tile h"></div><div class="tile h"></div></div>
+      <div class="desc"><div class="bulb">${bulbI}</div><div><div class="chip">DESCRIPTION</div><div class="dtxt">An animal that lives in water and swims with fins.</div></div></div>
+      <div class="kb">${kb}</div>
+    </div>
+    ${tabs('play')}`;
+}
+
+/* ---------- page ---------- */
+document.getElementById('flow').innerHTML =
+  [['1', 'Pick a buddy'], ['2', 'Name + accept'], ['', 'Lift-off'], ['', 'First word']].map(([n, l], i) =>
+    `${i ? '<span class="farrow">→</span>' : ''}<div class="fstep ${n ? '' : 'ghost'}"><b>${n || (i === 2 ? '↑' : '★')}</b>${l}</div>`).join('') +
+  `<div class="offline">${planeOff()}No internet needed</div>`;
+
+const [A, B] = PICKS;
+document.getElementById('main').innerHTML =
+  shot(buddyScreen(A), 1, 'Pick your buddy', `This is also the welcome screen: the logo, the sky, and both free buddies floating under their 10 balloons. Tap a card or a buddy. The one picked comes forward, cheers and talks.`, { page: true }) +
+  shot(nameScreen(A), 2, 'Name it, accept, play', `The name editor from Profile: a random name is already in (tap the dice for another), the same filter and messages, 15 letters max. Your buddy holds the level path's wooden sign with your name on it as you type.`, { page: true }) +
+  shot(liftScreen(A), '↑', 'Lift-off', `Not a page: a 1.5 s transition. "Let's play!" lets go, the balloons pull your buddy up, the sky scrolls past and the clouds part.`, { light: true }) +
+  shot(firstRound(A), '★', 'The first word', `Your buddy floats down into the Play scene. Your name is in the header, and the Profile's "Nice to meet you" line drops in for 2.4 s. A level 1 word, so some wrong keys are off.`);
+
+document.getElementById('states').innerHTML =
+  shot(buddyScreen(B), 'a', `${CH[B].name} picked`, `Same screen: ${CH[B].name} comes forward and the button says their name. Nothing is locked, there's no price, and no "boy or girl" label: they're just two buddies.`) +
+  shot(nameScreen(A, { name: 'Admin', problem: 'Let’s pick a friendlier name' }), 'b', 'A name the filter refuses', `Checked on the phone with Profile's rules. The sign drops to one nail, your buddy looks worried and the button waits. Names don't need to be unique, so there's never a "taken".`) +
+  shot(nameScreen(A, { ticked: false, nudge: true }), 'c', 'The box isn’t ticked', `The button stays pale. Tapping it anyway wiggles the box, and a short line says what to do. Nothing is ticked for the player.`) +
+  shot(nameScreen(A, { sheet: true }), 'd', 'Reading the terms', `A link opens a sheet over the screen: the texts ship inside the app, so they open offline. "Got it" closes it and keeps what you typed and ticked.`);
+
+document.getElementById('notes').innerHTML = `
+  <div class="panel"><div class="ptitle">${planeOff('#4b3a35')} Saved on the phone, no network</div>
+    <div class="li"><div class="d">1</div><div><b>The buddy</b>: the selected character <i>(<code>characterId</code> in the save)</i>. Coco and Bun are both free.</div></div>
+    <div class="li"><div class="d">2</div><div><b>The name</b>: checked by the same <code>checkName</code> as Profile; the server checks it again on the first sync.</div></div>
+    <div class="li"><div class="d">3</div><div><b>The terms accepted</b>: which version and when, so a new version of the texts can ask again later.</div></div>
+    <div class="li"><div class="d">4</div><div><b>Who's who</b>: names aren't unique. The server tells players apart by the hidden player id it gives on the first sync (already built). The player never sees it.</div></div>
+  </div>
+  <div class="panel"><div class="ptitle">${spark(20, '#ffc93c')} Reused, not redrawn</div>
+    <div class="li"><div class="d">1</div><div><b>Characters, avatars, balloons</b>: <i>rig.js</i> and <i>balloons.js</i>, stage 0 (10 balloons) with its wave.</div></div>
+    <div class="li"><div class="d">2</div><div><b>The name editor</b>: Profile's field, dice, random names, the 15-letter limit and its messages.</div></div>
+    <div class="li"><div class="d">3</div><div><b>The wooden sign</b> from the level path, and the Play <b>letter tiles</b> for the logo.</div></div>
+    <div class="li"><div class="d">4</div><div><b>The legal pages</b>: the same Info pages Profile opens, shown in a sheet.</div></div>
+    <div class="li"><div class="d">5</div><div><b>Buttons, cards, the check badge</b> from the Characters page, and the "Nice to meet you" line from Profile.</div></div>
+  </div>
+  <div class="panel"><div class="ptitle">${bulbI} To decide</div>
+    <div class="li"><div class="d">1</div><div><b>The legal texts</b> must be written before release, and Apple needs the privacy policy at a public URL too.</div></div>
+    <div class="li"><div class="d">2</div><div><b>Old players</b> who already have a save: skip the buddy and name, but still ask them to accept the terms once.</div></div>
+  </div>`;
+</script>
+</body>
+</html>
