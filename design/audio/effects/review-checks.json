@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-22T19:29:14.719Z",
+  "inventory": {
+    "cues": 65,
+    "voices": 90,
+    "characters": 15,
+    "scenes": 14,
+    "assets": 240
+  },
+  "decode": {
+    "decoded": 243,
+    "maxPeak": 0.5269546508789062,
+    "minRms": 0.010346541299638927,
+    "maxDurationError": 0.0009583333333333388
+  },
+  "sceneRenders": [
+    {
+      "scene": "correct",
+      "peakDb": -14.940516456230045,
+      "rmsDb": -30.361108334585047
+    },
+    {
+      "scene": "wrong",
+      "peakDb": -9.165338609849169,
+      "rmsDb": -26.22698481838862
+    },
+    {
+      "scene": "fall",
+      "peakDb": -8.11926743832806,
+      "rmsDb": -25.914527446411483
+    },
+    {
+      "scene": "win",
+      "peakDb": -7.317327121800301,
+      "rmsDb": -23.685095693002573
+    },
+    {
+      "scene": "letters",
+      "peakDb": -11.00751893837424,
+      "rmsDb": -28.26713278906281
+    },
+    {
+      "scene": "streak",
+      "peakDb": -8.56166534883198,
+      "rmsDb": -26.69423751737622
+    },
+    {
+      "scene": "unlock",
+      "peakDb": -8.313518350439882,
+      "rmsDb": -21.994973483811634
+    },
+    {
+      "scene": "choose",
+      "peakDb": -12.56009904151947,
+      "rmsDb": -25.010343675860568
+    },
+    {
+      "scene": "level-up",
+      "peakDb": -6.426822354448686,
+      "rmsDb": -24.615286351083
+    },
+    {
+      "scene": "level-down",
+      "peakDb": -13.519927554713595,
+      "rmsDb": -29.680451785295617
+    },
+    {
+      "scene": "summit",
+      "peakDb": -8.154913760361204,
+      "rmsDb": -25.419340937799383
+    },
+    {
+      "scene": "name",
+      "peakDb": -13.51525652321376,
+      "rmsDb": -31.04821265311068
+    },
+    {
+      "scene": "leaderboard",
+      "peakDb": -16.43561967735623,
+      "rmsDb": -34.75301442527846
+    },
+    {
+      "scene": "next",
+      "peakDb": -14.488247198604363,
+      "rmsDb": -31.697373293167523
+    }
+  ],
+  "controls": {
+    "add": true,
+    "delay": true,
+    "simultaneous": true,
+    "sceneToMixer": true,
+    "clear": true,
+    "keepHeardTake": true,
+    "filter": true,
+    "searchCount": 6,
+    "characterVoice": true,
+    "musicAndFx": true,
+    "scheduledStop": true
+  },
+  "layouts": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "scrollWidth": 1425,
+      "svgInvalid": false,
+      "cards": 65
+    },
+    {
+      "name": "mobile",
+      "width": 393,
+      "scrollWidth": 393,
+      "svgInvalid": false,
+      "cards": 65
+    },
+    {
+      "name": "compact",
+      "width": 320,
+      "scrollWidth": 320,
+      "svgInvalid": false,
+      "cards": 65
+    }
+  ],
+  "runtimeErrors": [],
+  "repositoryChecks": {
+    "lint": "passed: npx eslint .",
+    "typecheck": "passed: npm run typecheck",
+    "tests": "passed: 130 tests across 5 suites",
+    "diffCheck": "passed: git diff --check"
+  }
+}

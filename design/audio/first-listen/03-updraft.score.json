@@ -1,0 +1,1253 @@
+{
+  "title": "Updraft",
+  "tempos": [
+    76,
+    78,
+    77,
+    73,
+    76,
+    79,
+    77,
+    73,
+    76,
+    77,
+    75,
+    72,
+    74,
+    75,
+    70,
+    64
+  ],
+  "parts": {
+    "0": {
+      "name": "Cello",
+      "gm_program_zero_based": 42,
+      "volume": 76,
+      "pan": 58
+    },
+    "1": {
+      "name": "Harp",
+      "gm_program_zero_based": 46,
+      "volume": 72,
+      "pan": 74
+    },
+    "2": {
+      "name": "Soft piano",
+      "gm_program_zero_based": 0,
+      "volume": 70,
+      "pan": 54
+    },
+    "3": {
+      "name": "String halo",
+      "gm_program_zero_based": 48,
+      "volume": 49,
+      "pan": 69
+    }
+  },
+  "notes": [
+    {
+      "part": "Cello",
+      "beat": 1.1111,
+      "pitch": "G3",
+      "duration": 0.8898,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 2.0851,
+      "pitch": "Bb3",
+      "duration": 0.8648,
+      "velocity": 59
+    },
+    {
+      "part": "Cello",
+      "beat": 3.107,
+      "pitch": "D4",
+      "duration": 0.8848,
+      "velocity": 62
+    },
+    {
+      "part": "Soft piano",
+      "beat": 0.112,
+      "pitch": "Eb3",
+      "duration": 2.399,
+      "velocity": 44
+    },
+    {
+      "part": "Soft piano",
+      "beat": 0.1112,
+      "pitch": "G3",
+      "duration": 2.3925,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 0.1228,
+      "pitch": "Bb3",
+      "duration": 2.3942,
+      "velocity": 41
+    },
+    {
+      "part": "Soft piano",
+      "beat": 0.1404,
+      "pitch": "F4",
+      "duration": 2.3925,
+      "velocity": 39
+    },
+    {
+      "part": "Cello",
+      "beat": 4.097,
+      "pitch": "Eb4",
+      "duration": 1.31,
+      "velocity": 62
+    },
+    {
+      "part": "Cello",
+      "beat": 5.5852,
+      "pitch": "D4",
+      "duration": 0.4397,
+      "velocity": 63
+    },
+    {
+      "part": "Cello",
+      "beat": 6.1108,
+      "pitch": "C4",
+      "duration": 0.8958,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 7.1131,
+      "pitch": "Bb3",
+      "duration": 0.8654,
+      "velocity": 62
+    },
+    {
+      "part": "Soft piano",
+      "beat": 4.4032,
+      "pitch": "Ab2",
+      "duration": 2.3987,
+      "velocity": 44
+    },
+    {
+      "part": "Soft piano",
+      "beat": 4.4233,
+      "pitch": "G3",
+      "duration": 2.4052,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 4.4313,
+      "pitch": "C4",
+      "duration": 2.4057,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 4.4507,
+      "pitch": "Eb4",
+      "duration": 2.3978,
+      "velocity": 39
+    },
+    {
+      "part": "Cello",
+      "beat": 8.0918,
+      "pitch": "G3",
+      "duration": 0.8827,
+      "velocity": 62
+    },
+    {
+      "part": "Cello",
+      "beat": 9.1027,
+      "pitch": "Ab3",
+      "duration": 0.4408,
+      "velocity": 63
+    },
+    {
+      "part": "Cello",
+      "beat": 9.5965,
+      "pitch": "Bb3",
+      "duration": 0.4445,
+      "velocity": 57
+    },
+    {
+      "part": "Cello",
+      "beat": 10.0918,
+      "pitch": "F4",
+      "duration": 1.335,
+      "velocity": 60
+    },
+    {
+      "part": "Soft piano",
+      "beat": 8.8029,
+      "pitch": "F3",
+      "duration": 2.3971,
+      "velocity": 46
+    },
+    {
+      "part": "Soft piano",
+      "beat": 8.812,
+      "pitch": "Ab3",
+      "duration": 2.3847,
+      "velocity": 44
+    },
+    {
+      "part": "Soft piano",
+      "beat": 8.8466,
+      "pitch": "C4",
+      "duration": 2.4087,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 8.8531,
+      "pitch": "Eb4",
+      "duration": 2.4044,
+      "velocity": 42
+    },
+    {
+      "part": "Cello",
+      "beat": 12.0926,
+      "pitch": "Eb4",
+      "duration": 0.866,
+      "velocity": 63
+    },
+    {
+      "part": "Cello",
+      "beat": 13.0922,
+      "pitch": "D4",
+      "duration": 0.4432,
+      "velocity": 57
+    },
+    {
+      "part": "Cello",
+      "beat": 13.5853,
+      "pitch": "C4",
+      "duration": 0.4248,
+      "velocity": 59
+    },
+    {
+      "part": "Cello",
+      "beat": 14.0911,
+      "pitch": "Bb3",
+      "duration": 0.8924,
+      "velocity": 57
+    },
+    {
+      "part": "Soft piano",
+      "beat": 12.2532,
+      "pitch": "Bb2",
+      "duration": 2.4004,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 12.2714,
+      "pitch": "Ab3",
+      "duration": 2.4141,
+      "velocity": 45
+    },
+    {
+      "part": "Soft piano",
+      "beat": 12.2943,
+      "pitch": "C4",
+      "duration": 2.4124,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 12.3028,
+      "pitch": "D4",
+      "duration": 2.4096,
+      "velocity": 40
+    },
+    {
+      "part": "Cello",
+      "beat": 16.0871,
+      "pitch": "C4",
+      "duration": 0.87,
+      "velocity": 70
+    },
+    {
+      "part": "Cello",
+      "beat": 17.106,
+      "pitch": "Eb4",
+      "duration": 0.6447,
+      "velocity": 70
+    },
+    {
+      "part": "Cello",
+      "beat": 17.8444,
+      "pitch": "G4",
+      "duration": 0.2256,
+      "velocity": 70
+    },
+    {
+      "part": "Cello",
+      "beat": 18.0892,
+      "pitch": "F4",
+      "duration": 0.8649,
+      "velocity": 67
+    },
+    {
+      "part": "Cello",
+      "beat": 19.1013,
+      "pitch": "Eb4",
+      "duration": 0.8798,
+      "velocity": 70
+    },
+    {
+      "part": "Soft piano",
+      "beat": 16.5854,
+      "pitch": "C3",
+      "duration": 2.404,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 16.6219,
+      "pitch": "G3",
+      "duration": 2.3923,
+      "velocity": 45
+    },
+    {
+      "part": "Soft piano",
+      "beat": 16.6226,
+      "pitch": "Bb3",
+      "duration": 2.396,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 16.6525,
+      "pitch": "Eb4",
+      "duration": 2.3877,
+      "velocity": 43
+    },
+    {
+      "part": "Cello",
+      "beat": 20.0873,
+      "pitch": "D4",
+      "duration": 0.8911,
+      "velocity": 71
+    },
+    {
+      "part": "Cello",
+      "beat": 21.0885,
+      "pitch": "Bb3",
+      "duration": 0.4485,
+      "velocity": 65
+    },
+    {
+      "part": "Cello",
+      "beat": 21.5925,
+      "pitch": "C4",
+      "duration": 0.4352,
+      "velocity": 65
+    },
+    {
+      "part": "Cello",
+      "beat": 22.0953,
+      "pitch": "D4",
+      "duration": 0.8885,
+      "velocity": 67
+    },
+    {
+      "part": "Soft piano",
+      "beat": 20.1909,
+      "pitch": "G2",
+      "duration": 2.4072,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 20.2148,
+      "pitch": "F3",
+      "duration": 2.4046,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 20.2438,
+      "pitch": "Bb3",
+      "duration": 2.4016,
+      "velocity": 38
+    },
+    {
+      "part": "Soft piano",
+      "beat": 20.2634,
+      "pitch": "D4",
+      "duration": 2.3893,
+      "velocity": 38
+    },
+    {
+      "part": "Cello",
+      "beat": 24.1043,
+      "pitch": "Eb4",
+      "duration": 0.6568,
+      "velocity": 73
+    },
+    {
+      "part": "Cello",
+      "beat": 24.8512,
+      "pitch": "F4",
+      "duration": 0.233,
+      "velocity": 69
+    },
+    {
+      "part": "Cello",
+      "beat": 25.1081,
+      "pitch": "G4",
+      "duration": 0.8655,
+      "velocity": 68
+    },
+    {
+      "part": "Cello",
+      "beat": 26.0946,
+      "pitch": "Bb4",
+      "duration": 0.8665,
+      "velocity": 69
+    },
+    {
+      "part": "Cello",
+      "beat": 27.0945,
+      "pitch": "G4",
+      "duration": 0.4449,
+      "velocity": 69
+    },
+    {
+      "part": "Cello",
+      "beat": 27.6019,
+      "pitch": "F4",
+      "duration": 0.4274,
+      "velocity": 70
+    },
+    {
+      "part": "Soft piano",
+      "beat": 24.5003,
+      "pitch": "Ab2",
+      "duration": 2.4128,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 24.5298,
+      "pitch": "G3",
+      "duration": 2.3864,
+      "velocity": 41
+    },
+    {
+      "part": "Soft piano",
+      "beat": 24.5252,
+      "pitch": "C4",
+      "duration": 2.3992,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 24.5656,
+      "pitch": "Eb4",
+      "duration": 2.3992,
+      "velocity": 37
+    },
+    {
+      "part": "Cello",
+      "beat": 28.0919,
+      "pitch": "Eb4",
+      "duration": 1.3308,
+      "velocity": 69
+    },
+    {
+      "part": "Cello",
+      "beat": 29.5901,
+      "pitch": "D4",
+      "duration": 0.4478,
+      "velocity": 64
+    },
+    {
+      "part": "Cello",
+      "beat": 30.0873,
+      "pitch": "C4",
+      "duration": 0.8941,
+      "velocity": 69
+    },
+    {
+      "part": "Soft piano",
+      "beat": 28.8893,
+      "pitch": "Bb2",
+      "duration": 2.3975,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 28.917,
+      "pitch": "Ab3",
+      "duration": 2.406,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 28.9346,
+      "pitch": "D4",
+      "duration": 2.4023,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 28.9496,
+      "pitch": "F4",
+      "duration": 2.4015,
+      "velocity": 40
+    },
+    {
+      "part": "Cello",
+      "beat": 32.1131,
+      "pitch": "Ab3",
+      "duration": 0.8792,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 33.11,
+      "pitch": "C4",
+      "duration": 0.8688,
+      "velocity": 59
+    },
+    {
+      "part": "Cello",
+      "beat": 34.1105,
+      "pitch": "Eb4",
+      "duration": 0.8692,
+      "velocity": 59
+    },
+    {
+      "part": "Cello",
+      "beat": 35.0884,
+      "pitch": "F4",
+      "duration": 0.4258,
+      "velocity": 59
+    },
+    {
+      "part": "Soft piano",
+      "beat": 32.0884,
+      "pitch": "Ab2",
+      "duration": 2.4092,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 32.1061,
+      "pitch": "G3",
+      "duration": 2.3873,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 32.1326,
+      "pitch": "C4",
+      "duration": 2.3918,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 32.1469,
+      "pitch": "Eb4",
+      "duration": 2.3866,
+      "velocity": 37
+    },
+    {
+      "part": "Cello",
+      "beat": 36.1022,
+      "pitch": "G4",
+      "duration": 0.4473,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 36.607,
+      "pitch": "F4",
+      "duration": 0.4528,
+      "velocity": 58
+    },
+    {
+      "part": "Cello",
+      "beat": 37.1035,
+      "pitch": "Eb4",
+      "duration": 0.8742,
+      "velocity": 57
+    },
+    {
+      "part": "Cello",
+      "beat": 38.0891,
+      "pitch": "D4",
+      "duration": 0.8684,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 39.0917,
+      "pitch": "Bb3",
+      "duration": 0.8878,
+      "velocity": 57
+    },
+    {
+      "part": "Soft piano",
+      "beat": 36.693,
+      "pitch": "G2",
+      "duration": 2.3863,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 36.7266,
+      "pitch": "Bb3",
+      "duration": 2.3902,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 36.7262,
+      "pitch": "D4",
+      "duration": 2.3905,
+      "velocity": 44
+    },
+    {
+      "part": "Soft piano",
+      "beat": 36.7408,
+      "pitch": "F4",
+      "duration": 2.3974,
+      "velocity": 43
+    },
+    {
+      "part": "Cello",
+      "beat": 40.0872,
+      "pitch": "C4",
+      "duration": 0.8721,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 41.1145,
+      "pitch": "Eb4",
+      "duration": 0.4249,
+      "velocity": 58
+    },
+    {
+      "part": "Cello",
+      "beat": 41.5976,
+      "pitch": "D4",
+      "duration": 0.4442,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 42.1014,
+      "pitch": "C4",
+      "duration": 0.8691,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 43.0912,
+      "pitch": "G3",
+      "duration": 0.4324,
+      "velocity": 58
+    },
+    {
+      "part": "Soft piano",
+      "beat": 40.4061,
+      "pitch": "F3",
+      "duration": 2.4127,
+      "velocity": 46
+    },
+    {
+      "part": "Soft piano",
+      "beat": 40.4152,
+      "pitch": "Ab3",
+      "duration": 2.397,
+      "velocity": 45
+    },
+    {
+      "part": "Soft piano",
+      "beat": 40.4335,
+      "pitch": "C4",
+      "duration": 2.4,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 40.4417,
+      "pitch": "Eb4",
+      "duration": 2.394,
+      "velocity": 42
+    },
+    {
+      "part": "Cello",
+      "beat": 44.0853,
+      "pitch": "Bb3",
+      "duration": 0.8779,
+      "velocity": 65
+    },
+    {
+      "part": "Cello",
+      "beat": 45.0851,
+      "pitch": "D4",
+      "duration": 0.6535,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 45.8577,
+      "pitch": "F4",
+      "duration": 0.2292,
+      "velocity": 59
+    },
+    {
+      "part": "Cello",
+      "beat": 46.1029,
+      "pitch": "Eb4",
+      "duration": 0.8701,
+      "velocity": 58
+    },
+    {
+      "part": "Soft piano",
+      "beat": 45.0063,
+      "pitch": "Bb2",
+      "duration": 2.4121,
+      "velocity": 44
+    },
+    {
+      "part": "Soft piano",
+      "beat": 45.0324,
+      "pitch": "Ab3",
+      "duration": 2.3855,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 45.0472,
+      "pitch": "C4",
+      "duration": 2.3997,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 45.0446,
+      "pitch": "D4",
+      "duration": 2.394,
+      "velocity": 43
+    },
+    {
+      "part": "Cello",
+      "beat": 48.093,
+      "pitch": "G3",
+      "duration": 0.4368,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 48.5851,
+      "pitch": "Bb3",
+      "duration": 0.4451,
+      "velocity": 60
+    },
+    {
+      "part": "Cello",
+      "beat": 49.087,
+      "pitch": "D4",
+      "duration": 0.8874,
+      "velocity": 58
+    },
+    {
+      "part": "Cello",
+      "beat": 50.0882,
+      "pitch": "Eb4",
+      "duration": 0.8934,
+      "velocity": 63
+    },
+    {
+      "part": "Cello",
+      "beat": 51.0875,
+      "pitch": "G4",
+      "duration": 0.451,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 51.5877,
+      "pitch": "F4",
+      "duration": 0.4454,
+      "velocity": 62
+    },
+    {
+      "part": "Soft piano",
+      "beat": 48.3001,
+      "pitch": "Eb3",
+      "duration": 2.3925,
+      "velocity": 43
+    },
+    {
+      "part": "Soft piano",
+      "beat": 48.3184,
+      "pitch": "G3",
+      "duration": 2.3946,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 48.3393,
+      "pitch": "Bb3",
+      "duration": 2.3917,
+      "velocity": 41
+    },
+    {
+      "part": "Soft piano",
+      "beat": 48.3502,
+      "pitch": "D4",
+      "duration": 2.4001,
+      "velocity": 39
+    },
+    {
+      "part": "Cello",
+      "beat": 52.0933,
+      "pitch": "Eb4",
+      "duration": 0.887,
+      "velocity": 65
+    },
+    {
+      "part": "Cello",
+      "beat": 53.0976,
+      "pitch": "C4",
+      "duration": 0.4259,
+      "velocity": 57
+    },
+    {
+      "part": "Cello",
+      "beat": 53.6037,
+      "pitch": "Bb3",
+      "duration": 0.4499,
+      "velocity": 58
+    },
+    {
+      "part": "Cello",
+      "beat": 54.097,
+      "pitch": "Ab3",
+      "duration": 0.8921,
+      "velocity": 59
+    },
+    {
+      "part": "Soft piano",
+      "beat": 52.6135,
+      "pitch": "Ab2",
+      "duration": 2.388,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 52.6048,
+      "pitch": "G3",
+      "duration": 2.3853,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 52.6278,
+      "pitch": "C4",
+      "duration": 2.4082,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 52.6593,
+      "pitch": "Eb4",
+      "duration": 2.3932,
+      "velocity": 37
+    },
+    {
+      "part": "Cello",
+      "beat": 56.0925,
+      "pitch": "Bb3",
+      "duration": 0.8724,
+      "velocity": 66
+    },
+    {
+      "part": "Cello",
+      "beat": 57.0942,
+      "pitch": "D4",
+      "duration": 0.4448,
+      "velocity": 62
+    },
+    {
+      "part": "Cello",
+      "beat": 57.5946,
+      "pitch": "F4",
+      "duration": 0.4248,
+      "velocity": 61
+    },
+    {
+      "part": "Cello",
+      "beat": 58.0921,
+      "pitch": "Eb4",
+      "duration": 0.663,
+      "velocity": 63
+    },
+    {
+      "part": "Cello",
+      "beat": 58.8441,
+      "pitch": "D4",
+      "duration": 0.2176,
+      "velocity": 58
+    },
+    {
+      "part": "Cello",
+      "beat": 59.0871,
+      "pitch": "Bb3",
+      "duration": 0.448,
+      "velocity": 59
+    },
+    {
+      "part": "Soft piano",
+      "beat": 56.1013,
+      "pitch": "Bb2",
+      "duration": 2.4046,
+      "velocity": 45
+    },
+    {
+      "part": "Soft piano",
+      "beat": 56.1047,
+      "pitch": "Ab3",
+      "duration": 2.4107,
+      "velocity": 39
+    },
+    {
+      "part": "Soft piano",
+      "beat": 56.1253,
+      "pitch": "C4",
+      "duration": 2.4149,
+      "velocity": 40
+    },
+    {
+      "part": "Soft piano",
+      "beat": 56.1536,
+      "pitch": "D4",
+      "duration": 2.4118,
+      "velocity": 37
+    },
+    {
+      "part": "Cello",
+      "beat": 60.0982,
+      "pitch": "Eb4",
+      "duration": 3.0711,
+      "velocity": 60
+    },
+    {
+      "part": "Soft piano",
+      "beat": 60.1928,
+      "pitch": "Eb3",
+      "duration": 3.8143,
+      "velocity": 45
+    },
+    {
+      "part": "Soft piano",
+      "beat": 60.2162,
+      "pitch": "G3",
+      "duration": 3.7915,
+      "velocity": 42
+    },
+    {
+      "part": "Soft piano",
+      "beat": 60.2503,
+      "pitch": "Bb3",
+      "duration": 3.8022,
+      "velocity": 38
+    },
+    {
+      "part": "Soft piano",
+      "beat": 60.2647,
+      "pitch": "F4",
+      "duration": 3.7844,
+      "velocity": 37
+    },
+    {
+      "part": "Harp",
+      "beat": 2.2098,
+      "pitch": "Bb4",
+      "duration": 0.7929,
+      "velocity": 55
+    },
+    {
+      "part": "Harp",
+      "beat": 3.3626,
+      "pitch": "F5",
+      "duration": 0.5877,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 4.4937,
+      "pitch": "G4",
+      "duration": 0.9928,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 6.894,
+      "pitch": "C5",
+      "duration": 1.0104,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 9.7965,
+      "pitch": "Eb5",
+      "duration": 0.795,
+      "velocity": 52
+    },
+    {
+      "part": "Harp",
+      "beat": 14.8141,
+      "pitch": "C5",
+      "duration": 0.5002,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 15.4092,
+      "pitch": "D5",
+      "duration": 0.5055,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 16.2376,
+      "pitch": "G4",
+      "duration": 1.4978,
+      "velocity": 54
+    },
+    {
+      "part": "Harp",
+      "beat": 22.5854,
+      "pitch": "F5",
+      "duration": 0.7994,
+      "velocity": 54
+    },
+    {
+      "part": "Harp",
+      "beat": 24.6924,
+      "pitch": "C5",
+      "duration": 0.8905,
+      "velocity": 50
+    },
+    {
+      "part": "Harp",
+      "beat": 27.0095,
+      "pitch": "Eb5",
+      "duration": 0.7953,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 29.8934,
+      "pitch": "D5",
+      "duration": 1.0107,
+      "velocity": 52
+    },
+    {
+      "part": "Harp",
+      "beat": 33.1932,
+      "pitch": "G4",
+      "duration": 0.7034,
+      "velocity": 54
+    },
+    {
+      "part": "Harp",
+      "beat": 35.1996,
+      "pitch": "Bb4",
+      "duration": 0.6113,
+      "velocity": 56
+    },
+    {
+      "part": "Harp",
+      "beat": 36.3607,
+      "pitch": "D5",
+      "duration": 1.2947,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 42.498,
+      "pitch": "Eb5",
+      "duration": 0.7842,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 46.8917,
+      "pitch": "C5",
+      "duration": 0.4865,
+      "velocity": 53
+    },
+    {
+      "part": "Harp",
+      "beat": 47.4983,
+      "pitch": "D5",
+      "duration": 0.4965,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 48.4903,
+      "pitch": "G4",
+      "duration": 0.9846,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 51.0095,
+      "pitch": "F5",
+      "duration": 0.7074,
+      "velocity": 54
+    },
+    {
+      "part": "Harp",
+      "beat": 53.6987,
+      "pitch": "C5",
+      "duration": 1.0004,
+      "velocity": 56
+    },
+    {
+      "part": "Harp",
+      "beat": 58.8933,
+      "pitch": "D5",
+      "duration": 0.7938,
+      "velocity": 50
+    },
+    {
+      "part": "Harp",
+      "beat": 60.298,
+      "pitch": "G4",
+      "duration": 2.213,
+      "velocity": 51
+    },
+    {
+      "part": "Harp",
+      "beat": 61.5138,
+      "pitch": "Bb4",
+      "duration": 2.0078,
+      "velocity": 51
+    },
+    {
+      "part": "String halo",
+      "beat": 16.391,
+      "pitch": "G4",
+      "duration": 3.7917,
+      "velocity": 42
+    },
+    {
+      "part": "String halo",
+      "beat": 16.4212,
+      "pitch": "Bb4",
+      "duration": 3.8035,
+      "velocity": 41
+    },
+    {
+      "part": "String halo",
+      "beat": 20.386,
+      "pitch": "F4",
+      "duration": 3.4871,
+      "velocity": 42
+    },
+    {
+      "part": "String halo",
+      "beat": 20.4243,
+      "pitch": "Bb4",
+      "duration": 3.5079,
+      "velocity": 41
+    },
+    {
+      "part": "String halo",
+      "beat": 24.4086,
+      "pitch": "G4",
+      "duration": 3.785,
+      "velocity": 48
+    },
+    {
+      "part": "String halo",
+      "beat": 24.4193,
+      "pitch": "C5",
+      "duration": 3.7952,
+      "velocity": 45
+    },
+    {
+      "part": "String halo",
+      "beat": 28.3856,
+      "pitch": "F4",
+      "duration": 2.8112,
+      "velocity": 44
+    },
+    {
+      "part": "String halo",
+      "beat": 28.4268,
+      "pitch": "Bb4",
+      "duration": 2.7951,
+      "velocity": 47
+    },
+    {
+      "part": "String halo",
+      "beat": 48.3904,
+      "pitch": "G4",
+      "duration": 3.487,
+      "velocity": 47
+    },
+    {
+      "part": "String halo",
+      "beat": 48.4277,
+      "pitch": "Bb4",
+      "duration": 3.4967,
+      "velocity": 45
+    },
+    {
+      "part": "String halo",
+      "beat": 52.3908,
+      "pitch": "G4",
+      "duration": 3.3924,
+      "velocity": 46
+    },
+    {
+      "part": "String halo",
+      "beat": 52.4201,
+      "pitch": "C5",
+      "duration": 3.3966,
+      "velocity": 44
+    },
+    {
+      "part": "String halo",
+      "beat": 56.3903,
+      "pitch": "F4",
+      "duration": 3.3918,
+      "velocity": 45
+    },
+    {
+      "part": "String halo",
+      "beat": 56.4313,
+      "pitch": "Bb4",
+      "duration": 3.3894,
+      "velocity": 47
+    },
+    {
+      "part": "String halo",
+      "beat": 60.4078,
+      "pitch": "G4",
+      "duration": 3.7113,
+      "velocity": 46
+    },
+    {
+      "part": "String halo",
+      "beat": 60.4162,
+      "pitch": "Bb4",
+      "duration": 3.7032,
+      "velocity": 41
+    }
+  ]
+}

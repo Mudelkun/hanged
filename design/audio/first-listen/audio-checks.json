@@ -1,0 +1,29 @@
+[
+  {
+    "file": "01-little-detours.mp3",
+    "duration_seconds": 51.829333,
+    "integrated_lufs": -19.26,
+    "true_peak_dbtp": -7.05,
+    "loudness_range_lu": 2.6,
+    "decode": "pass",
+    "mono_non_silent": true
+  },
+  {
+    "file": "02-sunday-window.mp3",
+    "duration_seconds": 49.344,
+    "integrated_lufs": -19.27,
+    "true_peak_dbtp": -4.64,
+    "loudness_range_lu": 2.0,
+    "decode": "pass",
+    "mono_non_silent": true
+  },
+  {
+    "file": "03-updraft.mp3",
+    "duration_seconds": 54.982,
+    "integrated_lufs": -19.26,
+    "true_peak_dbtp": -7.66,
+    "loudness_range_lu": 4.0,
+    "decode": "pass",
+    "mono_non_silent": true
+  }
+]

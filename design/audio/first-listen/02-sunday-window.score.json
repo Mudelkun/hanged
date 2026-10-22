@@ -1,0 +1,1458 @@
+{
+  "title": "Sunday Window",
+  "tempos": [
+    94,
+    96,
+    95,
+    91,
+    94,
+    97,
+    96,
+    90,
+    95,
+    98,
+    96,
+    92,
+    95,
+    94,
+    93,
+    89,
+    92,
+    81
+  ],
+  "parts": {
+    "0": {
+      "name": "Piano melody",
+      "gm_program_zero_based": 0,
+      "volume": 91,
+      "pan": 61
+    },
+    "1": {
+      "name": "Piano harmony",
+      "gm_program_zero_based": 0,
+      "volume": 74,
+      "pan": 61
+    },
+    "2": {
+      "name": "Acoustic bass",
+      "gm_program_zero_based": 32,
+      "volume": 90,
+      "pan": 65
+    },
+    "3": {
+      "name": "Vibraphone answers",
+      "gm_program_zero_based": 11,
+      "volume": 59,
+      "pan": 76
+    }
+  },
+  "notes": [
+    {
+      "part": "Piano melody",
+      "beat": 0.5894,
+      "pitch": "A4",
+      "duration": 0.6501,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 1.3594,
+      "pitch": "C5",
+      "duration": 0.2073,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 1.5951,
+      "pitch": "D5",
+      "duration": 0.4414,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 2.1114,
+      "pitch": "C5",
+      "duration": 0.8931,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 3.0855,
+      "pitch": "A4",
+      "duration": 0.4363,
+      "velocity": 60
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 0.1101,
+      "pitch": "A3",
+      "duration": 1.4004,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 0.1051,
+      "pitch": "D4",
+      "duration": 1.4056,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 0.1493,
+      "pitch": "G4",
+      "duration": 1.4064,
+      "velocity": 40
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 2.6942,
+      "pitch": "A3",
+      "duration": 0.7063,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 2.7209,
+      "pitch": "D4",
+      "duration": 0.7049,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 2.734,
+      "pitch": "G4",
+      "duration": 0.7156,
+      "velocity": 45
+    },
+    {
+      "part": "Piano melody",
+      "beat": 4.1143,
+      "pitch": "G4",
+      "duration": 0.4545,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 4.6055,
+      "pitch": "A4",
+      "duration": 0.4509,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 5.1029,
+      "pitch": "Bb4",
+      "duration": 0.6594,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 5.8524,
+      "pitch": "D5",
+      "duration": 0.2051,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 6.0881,
+      "pitch": "C5",
+      "duration": 0.8957,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 7.0953,
+      "pitch": "G4",
+      "duration": 0.4245,
+      "velocity": 64
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 5.1138,
+      "pitch": "Bb3",
+      "duration": 1.6991,
+      "velocity": 48
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 5.1313,
+      "pitch": "D4",
+      "duration": 1.6859,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 5.1467,
+      "pitch": "F4",
+      "duration": 1.7092,
+      "velocity": 46
+    },
+    {
+      "part": "Piano melody",
+      "beat": 9.0868,
+      "pitch": "A4",
+      "duration": 0.4541,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 9.6038,
+      "pitch": "C5",
+      "duration": 0.4329,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 10.1016,
+      "pitch": "E5",
+      "duration": 0.6687,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 10.8465,
+      "pitch": "D5",
+      "duration": 0.2137,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 11.092,
+      "pitch": "C5",
+      "duration": 0.4314,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 11.5924,
+      "pitch": "A4",
+      "duration": 0.4347,
+      "velocity": 60
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 8.3363,
+      "pitch": "G3",
+      "duration": 1.1934,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 8.3641,
+      "pitch": "C4",
+      "duration": 1.1912,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 8.3945,
+      "pitch": "E4",
+      "duration": 1.1889,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 10.8425,
+      "pitch": "G3",
+      "duration": 0.6035,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 10.8824,
+      "pitch": "C4",
+      "duration": 0.6057,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 10.8773,
+      "pitch": "E4",
+      "duration": 0.5952,
+      "velocity": 40
+    },
+    {
+      "part": "Piano melody",
+      "beat": 12.1133,
+      "pitch": "G4",
+      "duration": 0.664,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 12.8506,
+      "pitch": "F4",
+      "duration": 0.2327,
+      "velocity": 60
+    },
+    {
+      "part": "Piano melody",
+      "beat": 13.0999,
+      "pitch": "E4",
+      "duration": 0.4352,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 13.5917,
+      "pitch": "D4",
+      "duration": 0.4535,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 14.0863,
+      "pitch": "F4",
+      "duration": 0.878,
+      "velocity": 60
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 12.8406,
+      "pitch": "F3",
+      "duration": 1.9103,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 12.872,
+      "pitch": "A3",
+      "duration": 1.8973,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 12.8837,
+      "pitch": "C4",
+      "duration": 1.8935,
+      "velocity": 42
+    },
+    {
+      "part": "Piano melody",
+      "beat": 16.1045,
+      "pitch": "Bb4",
+      "duration": 0.6739,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 16.8574,
+      "pitch": "A4",
+      "duration": 0.2132,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 17.0931,
+      "pitch": "G4",
+      "duration": 0.8701,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 18.0999,
+      "pitch": "D5",
+      "duration": 0.4479,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 18.5885,
+      "pitch": "F5",
+      "duration": 0.4276,
+      "velocity": 63
+    },
+    {
+      "part": "Piano melody",
+      "beat": 19.0869,
+      "pitch": "E5",
+      "duration": 0.4426,
+      "velocity": 63
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 16.1108,
+      "pitch": "F3",
+      "duration": 1.7071,
+      "velocity": 48
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 16.1055,
+      "pitch": "Bb3",
+      "duration": 1.6868,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 16.135,
+      "pitch": "D4",
+      "duration": 1.7122,
+      "velocity": 46
+    },
+    {
+      "part": "Piano melody",
+      "beat": 20.0886,
+      "pitch": "Eb5",
+      "duration": 0.4318,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 20.6137,
+      "pitch": "D5",
+      "duration": 0.4271,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 21.0957,
+      "pitch": "Bb4",
+      "duration": 0.6656,
+      "velocity": 63
+    },
+    {
+      "part": "Piano melody",
+      "beat": 21.8439,
+      "pitch": "A4",
+      "duration": 0.21,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 22.1036,
+      "pitch": "G4",
+      "duration": 0.8649,
+      "velocity": 65
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 21.3517,
+      "pitch": "G3",
+      "duration": 0.9952,
+      "velocity": 48
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 21.3596,
+      "pitch": "Bb3",
+      "duration": 0.9973,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 21.3835,
+      "pitch": "Eb4",
+      "duration": 1.0089,
+      "velocity": 46
+    },
+    {
+      "part": "Piano melody",
+      "beat": 24.094,
+      "pitch": "A4",
+      "duration": 0.8936,
+      "velocity": 68
+    },
+    {
+      "part": "Piano melody",
+      "beat": 25.0856,
+      "pitch": "C5",
+      "duration": 0.4322,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 25.6,
+      "pitch": "D5",
+      "duration": 0.4528,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 26.0924,
+      "pitch": "G5",
+      "duration": 0.4277,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 26.5873,
+      "pitch": "F5",
+      "duration": 0.4265,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 27.1089,
+      "pitch": "E5",
+      "duration": 0.4307,
+      "velocity": 66
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 24.5889,
+      "pitch": "A3",
+      "duration": 1.3864,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 24.6195,
+      "pitch": "C4",
+      "duration": 1.3911,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 24.6338,
+      "pitch": "E4",
+      "duration": 1.3904,
+      "velocity": 41
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 27.1071,
+      "pitch": "A3",
+      "duration": 0.4901,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 27.1305,
+      "pitch": "C4",
+      "duration": 0.514,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 27.1494,
+      "pitch": "E4",
+      "duration": 0.5044,
+      "velocity": 43
+    },
+    {
+      "part": "Piano melody",
+      "beat": 28.1007,
+      "pitch": "D5",
+      "duration": 0.4546,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 28.5886,
+      "pitch": "C5",
+      "duration": 0.652,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 29.3467,
+      "pitch": "A4",
+      "duration": 0.2168,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 29.6057,
+      "pitch": "G4",
+      "duration": 0.8861,
+      "velocity": 66
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 28.3554,
+      "pitch": "G3",
+      "duration": 1.5046,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 28.3722,
+      "pitch": "Bb3",
+      "duration": 1.5155,
+      "velocity": 41
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 28.3846,
+      "pitch": "E4",
+      "duration": 1.5042,
+      "velocity": 42
+    },
+    {
+      "part": "Piano melody",
+      "beat": 32.5883,
+      "pitch": "F5",
+      "duration": 0.4542,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 33.0895,
+      "pitch": "E5",
+      "duration": 0.4348,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 33.6065,
+      "pitch": "D5",
+      "duration": 0.4373,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 34.0937,
+      "pitch": "C5",
+      "duration": 0.6687,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 34.8638,
+      "pitch": "A4",
+      "duration": 0.211,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 35.1147,
+      "pitch": "Bb4",
+      "duration": 0.4303,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 35.5994,
+      "pitch": "C5",
+      "duration": 0.4485,
+      "velocity": 67
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 32.0976,
+      "pitch": "F3",
+      "duration": 1.5154,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 32.1312,
+      "pitch": "A3",
+      "duration": 1.4888,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 32.1259,
+      "pitch": "D4",
+      "duration": 1.5071,
+      "velocity": 42
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 34.6079,
+      "pitch": "F3",
+      "duration": 0.7857,
+      "velocity": 48
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 34.6326,
+      "pitch": "A3",
+      "duration": 0.7987,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 34.6475,
+      "pitch": "D4",
+      "duration": 0.7845,
+      "velocity": 44
+    },
+    {
+      "part": "Piano melody",
+      "beat": 36.0866,
+      "pitch": "B4",
+      "duration": 0.449,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 36.595,
+      "pitch": "D5",
+      "duration": 0.433,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 37.1004,
+      "pitch": "F5",
+      "duration": 0.4386,
+      "velocity": 67
+    },
+    {
+      "part": "Piano melody",
+      "beat": 37.5897,
+      "pitch": "A5",
+      "duration": 0.4242,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 38.1038,
+      "pitch": "G5",
+      "duration": 0.8951,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 39.0932,
+      "pitch": "F5",
+      "duration": 0.4471,
+      "velocity": 68
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 36.8516,
+      "pitch": "F3",
+      "duration": 1.5067,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 36.8605,
+      "pitch": "A3",
+      "duration": 1.5001,
+      "velocity": 42
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 36.8898,
+      "pitch": "B3",
+      "duration": 1.4874,
+      "velocity": 40
+    },
+    {
+      "part": "Piano melody",
+      "beat": 40.0964,
+      "pitch": "E5",
+      "duration": 0.6694,
+      "velocity": 73
+    },
+    {
+      "part": "Piano melody",
+      "beat": 40.8473,
+      "pitch": "D5",
+      "duration": 0.2041,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 41.0877,
+      "pitch": "C5",
+      "duration": 0.8941,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 42.0916,
+      "pitch": "G4",
+      "duration": 0.4538,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 42.6054,
+      "pitch": "A4",
+      "duration": 0.4522,
+      "velocity": 68
+    },
+    {
+      "part": "Piano melody",
+      "beat": 43.0882,
+      "pitch": "C5",
+      "duration": 0.4241,
+      "velocity": 70
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 40.3443,
+      "pitch": "E3",
+      "duration": 1.7879,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 40.3534,
+      "pitch": "G3",
+      "duration": 1.8147,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 40.386,
+      "pitch": "C4",
+      "duration": 1.8136,
+      "velocity": 42
+    },
+    {
+      "part": "Piano melody",
+      "beat": 44.097,
+      "pitch": "Db5",
+      "duration": 0.4482,
+      "velocity": 73
+    },
+    {
+      "part": "Piano melody",
+      "beat": 44.6029,
+      "pitch": "C5",
+      "duration": 0.4504,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 45.1103,
+      "pitch": "Bb4",
+      "duration": 0.877,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 46.0929,
+      "pitch": "G4",
+      "duration": 0.6454,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 46.8502,
+      "pitch": "E4",
+      "duration": 0.2315,
+      "velocity": 68
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 45.1013,
+      "pitch": "E3",
+      "duration": 1.4005,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 45.1256,
+      "pitch": "Bb3",
+      "duration": 1.3933,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 45.1493,
+      "pitch": "Db4",
+      "duration": 1.4106,
+      "velocity": 44
+    },
+    {
+      "part": "Piano melody",
+      "beat": 48.0917,
+      "pitch": "A4",
+      "duration": 0.433,
+      "velocity": 68
+    },
+    {
+      "part": "Piano melody",
+      "beat": 48.6079,
+      "pitch": "C5",
+      "duration": 0.4265,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 49.1036,
+      "pitch": "D5",
+      "duration": 0.6738,
+      "velocity": 70
+    },
+    {
+      "part": "Piano melody",
+      "beat": 49.8616,
+      "pitch": "E5",
+      "duration": 0.2189,
+      "velocity": 68
+    },
+    {
+      "part": "Piano melody",
+      "beat": 50.1071,
+      "pitch": "F5",
+      "duration": 0.8681,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 51.09,
+      "pitch": "C5",
+      "duration": 0.4297,
+      "velocity": 65
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 48.0981,
+      "pitch": "A3",
+      "duration": 1.2089,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 48.1098,
+      "pitch": "C4",
+      "duration": 1.2034,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 48.1502,
+      "pitch": "G4",
+      "duration": 1.199,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 50.8422,
+      "pitch": "A3",
+      "duration": 0.7124,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 50.856,
+      "pitch": "C4",
+      "duration": 0.7146,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 50.8815,
+      "pitch": "G4",
+      "duration": 0.7102,
+      "velocity": 44
+    },
+    {
+      "part": "Piano melody",
+      "beat": 52.0957,
+      "pitch": "D5",
+      "duration": 0.6558,
+      "velocity": 74
+    },
+    {
+      "part": "Piano melody",
+      "beat": 52.8362,
+      "pitch": "F5",
+      "duration": 0.2146,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 53.1024,
+      "pitch": "A5",
+      "duration": 0.4287,
+      "velocity": 65
+    },
+    {
+      "part": "Piano melody",
+      "beat": 53.6103,
+      "pitch": "G5",
+      "duration": 0.4385,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 54.0912,
+      "pitch": "F5",
+      "duration": 0.4431,
+      "velocity": 67
+    },
+    {
+      "part": "Piano melody",
+      "beat": 54.6018,
+      "pitch": "D5",
+      "duration": 0.4496,
+      "velocity": 71
+    },
+    {
+      "part": "Piano melody",
+      "beat": 55.0951,
+      "pitch": "Bb4",
+      "duration": 0.4317,
+      "velocity": 68
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 52.586,
+      "pitch": "A3",
+      "duration": 1.689,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 52.6253,
+      "pitch": "D4",
+      "duration": 1.7134,
+      "velocity": 43
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 52.6232,
+      "pitch": "F4",
+      "duration": 1.6967,
+      "velocity": 46
+    },
+    {
+      "part": "Piano melody",
+      "beat": 56.1081,
+      "pitch": "C5",
+      "duration": 0.8651,
+      "velocity": 69
+    },
+    {
+      "part": "Piano melody",
+      "beat": 57.1009,
+      "pitch": "A4",
+      "duration": 0.4348,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 57.6052,
+      "pitch": "G4",
+      "duration": 0.4462,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 58.0885,
+      "pitch": "F4",
+      "duration": 0.6533,
+      "velocity": 60
+    },
+    {
+      "part": "Piano melody",
+      "beat": 58.8354,
+      "pitch": "E4",
+      "duration": 0.2307,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 59.1128,
+      "pitch": "D4",
+      "duration": 0.4292,
+      "velocity": 62
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 56.1119,
+      "pitch": "A3",
+      "duration": 0.9976,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 56.1192,
+      "pitch": "C4",
+      "duration": 1.0102,
+      "velocity": 46
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 56.1372,
+      "pitch": "F4",
+      "duration": 1.0082,
+      "velocity": 40
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 58.6127,
+      "pitch": "A3",
+      "duration": 0.6064,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 58.6202,
+      "pitch": "C4",
+      "duration": 0.5949,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 58.6446,
+      "pitch": "F4",
+      "duration": 0.5867,
+      "velocity": 45
+    },
+    {
+      "part": "Piano melody",
+      "beat": 60.1028,
+      "pitch": "E4",
+      "duration": 0.4522,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 60.5967,
+      "pitch": "G4",
+      "duration": 0.4437,
+      "velocity": 60
+    },
+    {
+      "part": "Piano melody",
+      "beat": 61.0851,
+      "pitch": "Bb4",
+      "duration": 0.6694,
+      "velocity": 63
+    },
+    {
+      "part": "Piano melody",
+      "beat": 61.8493,
+      "pitch": "A4",
+      "duration": 0.2113,
+      "velocity": 62
+    },
+    {
+      "part": "Piano melody",
+      "beat": 62.1144,
+      "pitch": "G4",
+      "duration": 0.8786,
+      "velocity": 62
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 61.0891,
+      "pitch": "G3",
+      "duration": 1.491,
+      "velocity": 42
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 61.1141,
+      "pitch": "Bb3",
+      "duration": 1.4884,
+      "velocity": 45
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 61.1286,
+      "pitch": "E4",
+      "duration": 1.4993,
+      "velocity": 45
+    },
+    {
+      "part": "Piano melody",
+      "beat": 64.1096,
+      "pitch": "A4",
+      "duration": 0.6594,
+      "velocity": 67
+    },
+    {
+      "part": "Piano melody",
+      "beat": 64.8413,
+      "pitch": "C5",
+      "duration": 0.2238,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 65.0944,
+      "pitch": "D5",
+      "duration": 0.4307,
+      "velocity": 60
+    },
+    {
+      "part": "Piano melody",
+      "beat": 65.5964,
+      "pitch": "C5",
+      "duration": 0.8914,
+      "velocity": 60
+    },
+    {
+      "part": "Piano melody",
+      "beat": 66.6015,
+      "pitch": "A4",
+      "duration": 0.4313,
+      "velocity": 61
+    },
+    {
+      "part": "Piano melody",
+      "beat": 67.0851,
+      "pitch": "G4",
+      "duration": 0.428,
+      "velocity": 65
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 64.1081,
+      "pitch": "A3",
+      "duration": 1.4843,
+      "velocity": 42
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 64.1095,
+      "pitch": "C4",
+      "duration": 1.4933,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 64.1312,
+      "pitch": "D4",
+      "duration": 1.5128,
+      "velocity": 40
+    },
+    {
+      "part": "Piano melody",
+      "beat": 68.1133,
+      "pitch": "F4",
+      "duration": 0.8643,
+      "velocity": 68
+    },
+    {
+      "part": "Piano melody",
+      "beat": 69.1036,
+      "pitch": "A4",
+      "duration": 0.4245,
+      "velocity": 64
+    },
+    {
+      "part": "Piano melody",
+      "beat": 69.5944,
+      "pitch": "G4",
+      "duration": 0.4275,
+      "velocity": 66
+    },
+    {
+      "part": "Piano melody",
+      "beat": 70.1073,
+      "pitch": "F4",
+      "duration": 1.764,
+      "velocity": 60
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 68.0971,
+      "pitch": "A3",
+      "duration": 4.0032,
+      "velocity": 47
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 68.125,
+      "pitch": "C4",
+      "duration": 4.0142,
+      "velocity": 44
+    },
+    {
+      "part": "Piano harmony",
+      "beat": 68.1217,
+      "pitch": "F4",
+      "duration": 4.0125,
+      "velocity": 44
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 0.1094,
+      "pitch": "F2",
+      "duration": 2.3125,
+      "velocity": 69
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 4.5897,
+      "pitch": "Bb2",
+      "duration": 1.9937,
+      "velocity": 71
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 8.1098,
+      "pitch": "A2",
+      "duration": 2.1847,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 13.098,
+      "pitch": "D2",
+      "duration": 2.4137,
+      "velocity": 67
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 16.0913,
+      "pitch": "G2",
+      "duration": 2.4971,
+      "velocity": 67
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 20.8467,
+      "pitch": "C3",
+      "duration": 1.9911,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 24.3546,
+      "pitch": "F2",
+      "duration": 1.7928,
+      "velocity": 70
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 29.5901,
+      "pitch": "C2",
+      "duration": 1.4005,
+      "velocity": 68
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 32.1108,
+      "pitch": "D2",
+      "duration": 2.7918,
+      "velocity": 67
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 36.5992,
+      "pitch": "G2",
+      "duration": 2.0866,
+      "velocity": 65
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 40.1115,
+      "pitch": "C3",
+      "duration": 1.9978,
+      "velocity": 68
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 45.1139,
+      "pitch": "C2",
+      "duration": 1.7954,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 48.0948,
+      "pitch": "F2",
+      "duration": 2.5848,
+      "velocity": 69
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 52.5879,
+      "pitch": "Bb2",
+      "duration": 2.0131,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 56.1148,
+      "pitch": "A2",
+      "duration": 1.6024,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 58.7978,
+      "pitch": "D3",
+      "duration": 0.7861,
+      "velocity": 67
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 60.8491,
+      "pitch": "C3",
+      "duration": 2.3107,
+      "velocity": 66
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 64.0888,
+      "pitch": "F2",
+      "duration": 2.5144,
+      "velocity": 71
+    },
+    {
+      "part": "Acoustic bass",
+      "beat": 68.1074,
+      "pitch": "F2",
+      "duration": 3.7925,
+      "velocity": 70
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 14.6109,
+      "pitch": "A5",
+      "duration": 0.435,
+      "velocity": 45
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 15.0866,
+      "pitch": "C6",
+      "duration": 0.4496,
+      "velocity": 49
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 30.088,
+      "pitch": "E5",
+      "duration": 0.4359,
+      "velocity": 49
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 30.6047,
+      "pitch": "D5",
+      "duration": 0.4533,
+      "velocity": 49
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 31.087,
+      "pitch": "C5",
+      "duration": 0.4521,
+      "velocity": 48
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 46.6066,
+      "pitch": "G5",
+      "duration": 0.4297,
+      "velocity": 46
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 47.0919,
+      "pitch": "E5",
+      "duration": 0.4339,
+      "velocity": 49
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 62.5874,
+      "pitch": "D5",
+      "duration": 0.4252,
+      "velocity": 51
+    },
+    {
+      "part": "Vibraphone answers",
+      "beat": 63.093,
+      "pitch": "E5",
+      "duration": 0.4486,
+      "velocity": 47
+    }
+  ]
+}

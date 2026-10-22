@@ -1,0 +1,2754 @@
+{
+  "version": 1,
+  "title": "Hanged sound playground",
+  "sampleRate": 48000,
+  "channels": 1,
+  "format": "16-bit PCM WAV masters; 128 kbps MP3 previews",
+  "groups": [
+    "Play & balloons",
+    "Tokens",
+    "Streaks & levels",
+    "Characters",
+    "Navigation",
+    "Profile",
+    "Leaderboard"
+  ],
+  "cues": [
+    {
+      "id": "key",
+      "name": "Soft key press",
+      "group": "Play & balloons",
+      "recipe": "key",
+      "variants": 5,
+      "peak": -20,
+      "visual": "key",
+      "element": "Letter keyboard",
+      "trigger": "On an accepted key press; light enough for many guesses.",
+      "source": "src/components/LetterKeyboard.tsx"
+    },
+    {
+      "id": "correct",
+      "name": "Letter found",
+      "group": "Play & balloons",
+      "recipe": "correct",
+      "variants": 3,
+      "peak": -13,
+      "visual": "correct",
+      "element": "Mint letter key",
+      "trigger": "A correct guess; use one cue even when the letter occurs several times.",
+      "source": "src/app/(tabs)/index.tsx"
+    },
+    {
+      "id": "wrong",
+      "name": "Not that letter",
+      "group": "Play & balloons",
+      "recipe": "wrong",
+      "variants": 3,
+      "peak": -16,
+      "visual": "wrong",
+      "element": "Grey letter key",
+      "trigger": "A wrong guess: a gentle wooden knock before the balloon pops.",
+      "source": "src/app/(tabs)/index.tsx"
+    },
+    {
+      "id": "tile",
+      "name": "Tile settles",
+      "group": "Play & balloons",
+      "recipe": "tile",
+      "variants": 3,
+      "peak": -19,
+      "visual": "tile",
+      "element": "Word tiles",
+      "trigger": "A newly revealed letter settles into place; keep below the correct-guess cue.",
+      "source": "src/components/RoundParts.tsx"
+    },
+    {
+      "id": "deal",
+      "name": "A new word",
+      "group": "Play & balloons",
+      "recipe": "deal",
+      "variants": 3,
+      "peak": -16,
+      "visual": "tiles",
+      "element": "Next word",
+      "trigger": "Tiles arrive for a new round; also covers the initial word deal.",
+      "source": "src/app/(tabs)/index.tsx"
+    },
+    {
+      "id": "letters",
+      "name": "Two letters revealed",
+      "group": "Play & balloons",
+      "recipe": "letters",
+      "variants": 2,
+      "peak": -13,
+      "visual": "gold-tiles",
+      "element": "Reveal 2 hidden letters",
+      "trigger": "The two bought letters appear, alongside the spending sound.",
+      "source": "src/components/RoundParts.tsx"
+    },
+    {
+      "id": "win",
+      "name": "Word complete",
+      "group": "Play & balloons",
+      "recipe": "win",
+      "variants": 2,
+      "peak": -10,
+      "visual": "win",
+      "element": "You saved your character",
+      "trigger": "The winning guess; leave room for the selected character to celebrate.",
+      "source": "src/app/(tabs)/index.tsx"
+    },
+    {
+      "id": "loss",
+      "name": "A gentle try again",
+      "group": "Play & balloons",
+      "recipe": "loss",
+      "variants": 2,
+      "peak": -14,
+      "visual": "loss",
+      "element": "Round lost",
+      "trigger": "A warm unresolved-to-resolved response after the landing, never an alarm.",
+      "source": "src/app/(tabs)/index.tsx"
+    },
+    {
+      "id": "stamp",
+      "name": "Result stamp",
+      "group": "Play & balloons",
+      "recipe": "stamp",
+      "variants": 3,
+      "peak": -12,
+      "visual": "stamp",
+      "element": "HANGING / DROPPED stamp",
+      "trigger": "The result stamp lands: 700 ms after a normal win, 2600 ms after a loss.",
+      "source": "src/components/GameScene.tsx"
+    },
+    {
+      "id": "stretch",
+      "name": "Rubber stretches",
+      "group": "Play & balloons",
+      "recipe": "stretch",
+      "variants": 3,
+      "peak": -21,
+      "visual": "balloon",
+      "element": "Balloon swell",
+      "trigger": "The first 144 ms of an ordinary 900 ms balloon transition.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "pop",
+      "name": "Balloon pop",
+      "group": "Play & balloons",
+      "recipe": "pop",
+      "variants": 5,
+      "peak": -10,
+      "visual": "pop",
+      "element": "One balloon bursts",
+      "trigger": "At 16% of a normal transition: 144 ms. Rounded snap, rubber body, air.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "last-stretch",
+      "name": "Last balloon strains",
+      "group": "Play & balloons",
+      "recipe": "last-stretch",
+      "variants": 1,
+      "peak": -20,
+      "visual": "balloon",
+      "element": "Last balloon swell",
+      "trigger": "The 352 ms lead-in to the final pop (16% of the 2200 ms fall).",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "last-pop",
+      "name": "Last balloon pop",
+      "group": "Play & balloons",
+      "recipe": "last-pop",
+      "variants": 2,
+      "peak": -10,
+      "visual": "pop",
+      "element": "The last balloon",
+      "trigger": "At 352 ms in the final transition. A little fuller, without a frightening bang.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "string",
+      "name": "Empty string drops",
+      "group": "Play & balloons",
+      "recipe": "string",
+      "variants": 2,
+      "peak": -22,
+      "visual": "string",
+      "element": "Dangling string",
+      "trigger": "The scrap and string droop while the character notices the missing lift.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "sink",
+      "name": "Little elastic drop",
+      "group": "Play & balloons",
+      "recipe": "sink",
+      "variants": 3,
+      "peak": -20,
+      "visual": "sink",
+      "element": "Character sinks",
+      "trigger": "After an ordinary pop, the character drops and gently rebounds.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "fall",
+      "name": "Falling air",
+      "group": "Play & balloons",
+      "recipe": "fall",
+      "variants": 2,
+      "peak": -16,
+      "visual": "fall",
+      "element": "The final fall",
+      "trigger": "From 836 ms to 1320 ms in the last-balloon animation.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "impact",
+      "name": "Cushioned thud",
+      "group": "Play & balloons",
+      "recipe": "impact",
+      "variants": 3,
+      "peak": -9,
+      "visual": "impact",
+      "element": "Landing on the ground",
+      "trigger": "At 1320 ms: round low thump, soft grit, and a springy body. Dazed, never hurt.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "bounce",
+      "name": "Small rebound",
+      "group": "Play & balloons",
+      "recipe": "bounce",
+      "variants": 3,
+      "peak": -17,
+      "visual": "bounce",
+      "element": "Landing bounce",
+      "trigger": "The second, smaller contact at about 1584 ms.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "dust",
+      "name": "Dust settles",
+      "group": "Play & balloons",
+      "recipe": "dust",
+      "variants": 2,
+      "peak": -23,
+      "visual": "dust",
+      "element": "Dust and flying clods",
+      "trigger": "A quiet supporting layer behind the impact and rebound.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "stars",
+      "name": "Seeing little stars",
+      "group": "Play & balloons",
+      "recipe": "stars",
+      "variants": 2,
+      "peak": -20,
+      "visual": "stars",
+      "element": "Dazed stars",
+      "trigger": "One brief orbit after landing; no continuous ringing loop.",
+      "source": "design/characters/balloons.js"
+    },
+    {
+      "id": "token-gain",
+      "name": "Reward appears",
+      "group": "Tokens",
+      "recipe": "token-gain",
+      "variants": 3,
+      "peak": -13,
+      "visual": "coin-plus",
+      "element": "+ tokens badge",
+      "trigger": "The reward badge appears before its 300 ms hold.",
+      "source": "src/components/TokenFlight.tsx"
+    },
+    {
+      "id": "token-spend",
+      "name": "Tokens leave the purse",
+      "group": "Tokens",
+      "recipe": "token-spend",
+      "variants": 3,
+      "peak": -14,
+      "visual": "coin-minus",
+      "element": "Paid unlock button",
+      "trigger": "A successful spend; distinct from an unaffordable purchase.",
+      "source": "src/components/PayButton.tsx"
+    },
+    {
+      "id": "token-flight",
+      "name": "Coin in flight",
+      "group": "Tokens",
+      "recipe": "token-flight",
+      "variants": 2,
+      "peak": -21,
+      "visual": "coin-flight",
+      "element": "Flying token chip",
+      "trigger": "A 620 ms flight. Launch is 540 ms after a gain appears, or 360 ms for a spend.",
+      "source": "src/components/TokenFlight.tsx"
+    },
+    {
+      "id": "token-land",
+      "name": "Reward lands",
+      "group": "Tokens",
+      "recipe": "token-land",
+      "variants": 3,
+      "peak": -12,
+      "visual": "coin-plus",
+      "element": "Header token counter",
+      "trigger": "The flight reaches the counter and the balance begins to change.",
+      "source": "src/components/TokenPill.tsx"
+    },
+    {
+      "id": "spend-land",
+      "name": "Payment settles",
+      "group": "Tokens",
+      "recipe": "spend-land",
+      "variants": 2,
+      "peak": -16,
+      "visual": "coin-minus",
+      "element": "Balance decreases",
+      "trigger": "The spending flight reaches the header; a compact, lower coin response.",
+      "source": "src/components/TokenPill.tsx"
+    },
+    {
+      "id": "count",
+      "name": "Counter tick",
+      "group": "Tokens",
+      "recipe": "count",
+      "variants": 5,
+      "peak": -23,
+      "visual": "counter",
+      "element": "Counting balance",
+      "trigger": "Supporting ticks during the count, capped to a short burst instead of one per token.",
+      "source": "src/components/TokenPill.tsx"
+    },
+    {
+      "id": "refused",
+      "name": "Not enough tokens",
+      "group": "Tokens",
+      "recipe": "refused",
+      "variants": 2,
+      "peak": -17,
+      "visual": "refused",
+      "element": "Beige purchase button",
+      "trigger": "One soft double knock on a refused purchase; no harsh buzzer.",
+      "source": "src/components/PayButton.tsx"
+    },
+    {
+      "id": "streak-open",
+      "name": "Streak opens",
+      "group": "Streaks & levels",
+      "recipe": "streak-open",
+      "variants": 1,
+      "peak": -18,
+      "visual": "streak",
+      "element": "Streak takeover",
+      "trigger": "The celebration card enters over the game.",
+      "source": "src/components/StreakTakeover.tsx"
+    },
+    {
+      "id": "streak-fill",
+      "name": "Meter fills",
+      "group": "Streaks & levels",
+      "recipe": "streak-fill",
+      "variants": 2,
+      "peak": -18,
+      "visual": "meter",
+      "element": "Streak progress cell",
+      "trigger": "A 620 ms rising texture: 280 ms entrance, then 380 ms waiting, then fill.",
+      "source": "src/components/StreakTakeover.tsx"
+    },
+    {
+      "id": "star-land",
+      "name": "Star clicks home",
+      "group": "Streaks & levels",
+      "recipe": "star-land",
+      "variants": 2,
+      "peak": -13,
+      "visual": "star",
+      "element": "Filled streak cell",
+      "trigger": "At the end of the fill, the cell star lands.",
+      "source": "src/components/StreakTakeover.tsx"
+    },
+    {
+      "id": "streak-bonus",
+      "name": "Bonus blooms",
+      "group": "Streaks & levels",
+      "recipe": "streak-bonus",
+      "variants": 2,
+      "peak": -10,
+      "visual": "bonus",
+      "element": "Streak bonus",
+      "trigger": "A full meter celebrates 260 ms after the star lands.",
+      "source": "src/components/StreakTakeover.tsx"
+    },
+    {
+      "id": "confetti",
+      "name": "Confetti puff",
+      "group": "Streaks & levels",
+      "recipe": "confetti",
+      "variants": 3,
+      "peak": -18,
+      "visual": "confetti",
+      "element": "Celebration confetti",
+      "trigger": "A light paper puff and flutter for streaks, unlocks, and the summit.",
+      "source": "src/components/Confetti.tsx"
+    },
+    {
+      "id": "level-rise",
+      "name": "Climb the path",
+      "group": "Streaks & levels",
+      "recipe": "level-rise",
+      "variants": 1,
+      "peak": -18,
+      "visual": "level-up",
+      "element": "Ascending level marker",
+      "trigger": "950 ms of travel, after the card waits 450 ms.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "level-slide",
+      "name": "Slide down the path",
+      "group": "Streaks & levels",
+      "recipe": "level-slide",
+      "variants": 1,
+      "peak": -19,
+      "visual": "level-down",
+      "element": "Descending level marker",
+      "trigger": "1150 ms of travel; playful and gentle.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "level-up",
+      "name": "New level reached",
+      "group": "Streaks & levels",
+      "recipe": "level-up",
+      "variants": 2,
+      "peak": -10,
+      "visual": "level-up",
+      "element": "New level stop",
+      "trigger": "On landing, with the stop pop and sparkles.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "level-down",
+      "name": "A softer landing",
+      "group": "Streaks & levels",
+      "recipe": "level-down",
+      "variants": 1,
+      "peak": -15,
+      "visual": "level-down",
+      "element": "Back one level",
+      "trigger": "An encouraging settling sound; no failure alarm.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "map-open",
+      "name": "Unfold the world",
+      "group": "Streaks & levels",
+      "recipe": "map-open",
+      "variants": 2,
+      "peak": -18,
+      "visual": "map",
+      "element": "Level map",
+      "trigger": "Tap the level pill to open the map.",
+      "source": "src/components/LevelMap.tsx"
+    },
+    {
+      "id": "map-close",
+      "name": "Fold the world",
+      "group": "Streaks & levels",
+      "recipe": "map-close",
+      "variants": 2,
+      "peak": -20,
+      "visual": "map",
+      "element": "Close level map",
+      "trigger": "The map closes with a short soft sweep.",
+      "source": "src/components/LevelMap.tsx"
+    },
+    {
+      "id": "fog",
+      "name": "Clouds part",
+      "group": "Streaks & levels",
+      "recipe": "fog",
+      "variants": 1,
+      "peak": -20,
+      "visual": "cloud",
+      "element": "Summit fog",
+      "trigger": "A 700 ms airy reveal as the fog lifts from the castle.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "summit",
+      "name": "The whole sky opens",
+      "group": "Streaks & levels",
+      "recipe": "summit",
+      "variants": 1,
+      "peak": -9,
+      "visual": "crown",
+      "element": "Top level reached",
+      "trigger": "The largest musical reward in the set; reserved for reaching the summit.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "crown",
+      "name": "Crown settles",
+      "group": "Streaks & levels",
+      "recipe": "crown",
+      "variants": 2,
+      "peak": -15,
+      "visual": "crown",
+      "element": "Crown on the character",
+      "trigger": "A small golden contact after the summit reveal.",
+      "source": "src/components/LevelChange.tsx"
+    },
+    {
+      "id": "browse",
+      "name": "Meet the next character",
+      "group": "Characters",
+      "recipe": "browse",
+      "variants": 3,
+      "peak": -18,
+      "visual": "character",
+      "element": "Shop arrows and cards",
+      "trigger": "The viewed character changes; a short swish without speaking on every fast swipe.",
+      "source": "src/components/CharacterShop.tsx"
+    },
+    {
+      "id": "choose",
+      "name": "Character chosen",
+      "group": "Characters",
+      "recipe": "choose",
+      "variants": 2,
+      "peak": -14,
+      "visual": "character",
+      "element": "Choose character",
+      "trigger": "A confident little confirmation, with that character’s greeting.",
+      "source": "src/app/(tabs)/characters.tsx"
+    },
+    {
+      "id": "latch",
+      "name": "Lock opens",
+      "group": "Characters",
+      "recipe": "latch",
+      "variants": 3,
+      "peak": -14,
+      "visual": "lock",
+      "element": "Character unlock",
+      "trigger": "The lock releases after a successful purchase.",
+      "source": "src/components/CharacterShop.tsx"
+    },
+    {
+      "id": "unlock",
+      "name": "Welcome to the collection",
+      "group": "Characters",
+      "recipe": "unlock",
+      "variants": 2,
+      "peak": -10,
+      "visual": "character",
+      "element": "New character unlocked",
+      "trigger": "A joyful reveal under the character’s voice and confetti.",
+      "source": "src/components/CharacterShop.tsx"
+    },
+    {
+      "id": "ribbon",
+      "name": "Welcome ribbon",
+      "group": "Characters",
+      "recipe": "ribbon",
+      "variants": 2,
+      "peak": -20,
+      "visual": "ribbon",
+      "element": "Unlocked ribbon",
+      "trigger": "A soft ribbon flick as the banner settles.",
+      "source": "src/components/CharacterShop.tsx"
+    },
+    {
+      "id": "tap",
+      "name": "Soft button",
+      "group": "Navigation",
+      "recipe": "tap",
+      "variants": 4,
+      "peak": -20,
+      "visual": "button",
+      "element": "Secondary buttons",
+      "trigger": "An accepted ordinary button press. Avoid layering it under another dedicated cue.",
+      "source": "src/components/Raised.tsx"
+    },
+    {
+      "id": "primary",
+      "name": "Raised button press",
+      "group": "Navigation",
+      "recipe": "primary",
+      "variants": 3,
+      "peak": -17,
+      "visual": "primary",
+      "element": "Primary action",
+      "trigger": "A deeper tactile press for Next word, Play, and other prominent actions.",
+      "source": "src/components/RoundParts.tsx"
+    },
+    {
+      "id": "tab",
+      "name": "Change tab",
+      "group": "Navigation",
+      "recipe": "tab",
+      "variants": 3,
+      "peak": -19,
+      "visual": "tabs",
+      "element": "Play / Leaderboard / Characters",
+      "trigger": "Only when changing to a different enabled tab.",
+      "source": "src/components/TabBar.tsx"
+    },
+    {
+      "id": "back",
+      "name": "Back one page",
+      "group": "Navigation",
+      "recipe": "back",
+      "variants": 2,
+      "peak": -20,
+      "visual": "back",
+      "element": "Back arrow",
+      "trigger": "Back navigation, including Profile and info pages.",
+      "source": "src/components/GameHeader.tsx"
+    },
+    {
+      "id": "panel-open",
+      "name": "Open a panel",
+      "group": "Navigation",
+      "recipe": "panel-open",
+      "variants": 2,
+      "peak": -20,
+      "visual": "panel",
+      "element": "Avatar and info rows",
+      "trigger": "Profile, game rules, privacy, terms, support, and credits open.",
+      "source": "src/components/GameHeader.tsx; src/app/profile.tsx"
+    },
+    {
+      "id": "panel-close",
+      "name": "Close or cancel",
+      "group": "Navigation",
+      "recipe": "panel-close",
+      "variants": 2,
+      "peak": -21,
+      "visual": "panel",
+      "element": "Close / Cancel",
+      "trigger": "Dismiss a sheet or cancel editing; also suitable for skipping the streak card.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "link",
+      "name": "Open a link",
+      "group": "Navigation",
+      "recipe": "link",
+      "variants": 2,
+      "peak": -21,
+      "visual": "link",
+      "element": "Dictionary credit links",
+      "trigger": "A subtle outward flick for an external link.",
+      "source": "src/components/InfoPages.tsx"
+    },
+    {
+      "id": "edit",
+      "name": "Ready to edit",
+      "group": "Profile",
+      "recipe": "edit",
+      "variants": 2,
+      "peak": -21,
+      "visual": "name",
+      "element": "Name pencil",
+      "trigger": "The player opens the name field. OS keyboard clicks should remain OS-controlled.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "dice",
+      "name": "Roll a friendly name",
+      "group": "Profile",
+      "recipe": "dice",
+      "variants": 3,
+      "peak": -17,
+      "visual": "dice",
+      "element": "Random name dice",
+      "trigger": "A little tumble with a definite final settle.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "name-save",
+      "name": "Name saved",
+      "group": "Profile",
+      "recipe": "name-save",
+      "variants": 2,
+      "peak": -15,
+      "visual": "name",
+      "element": "Save and greeting badge",
+      "trigger": "After a valid changed name is saved.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "name-invalid",
+      "name": "Name needs a change",
+      "group": "Profile",
+      "recipe": "name-invalid",
+      "variants": 2,
+      "peak": -19,
+      "visual": "warning",
+      "element": "Name validation",
+      "trigger": "Only on a refused Save, not every keystroke or live validation update.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "delete-open",
+      "name": "A moment to consider",
+      "group": "Profile",
+      "recipe": "delete-open",
+      "variants": 1,
+      "peak": -21,
+      "visual": "delete",
+      "element": "Delete account sheet",
+      "trigger": "An understated opening sound for the confirmation sheet.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "delete-confirm",
+      "name": "Confirm deletion",
+      "group": "Profile",
+      "recipe": "delete-confirm",
+      "variants": 1,
+      "peak": -21,
+      "visual": "delete",
+      "element": "Delete everything",
+      "trigger": "A restrained acknowledgement when confirmation is accepted.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "delete-complete",
+      "name": "A fresh page",
+      "group": "Profile",
+      "recipe": "delete-complete",
+      "variants": 1,
+      "peak": -19,
+      "visual": "name",
+      "element": "Account reset completed",
+      "trigger": "A quiet page turn after successful deletion, without a celebration.",
+      "source": "src/state/GameContext.tsx"
+    },
+    {
+      "id": "operation-failed",
+      "name": "Could not finish",
+      "group": "Profile",
+      "recipe": "operation-failed",
+      "variants": 2,
+      "peak": -19,
+      "visual": "warning",
+      "element": "Offline deletion failure",
+      "trigger": "A soft interruption when a user-requested operation fails.",
+      "source": "src/components/Profile.tsx"
+    },
+    {
+      "id": "period",
+      "name": "Switch ranking period",
+      "group": "Leaderboard",
+      "recipe": "period",
+      "variants": 3,
+      "peak": -19,
+      "visual": "period",
+      "element": "This week / All time",
+      "trigger": "A compact sliding click when the period changes.",
+      "source": "src/components/Leaderboard.tsx"
+    },
+    {
+      "id": "refresh",
+      "name": "Pull and release",
+      "group": "Leaderboard",
+      "recipe": "refresh",
+      "variants": 2,
+      "peak": -19,
+      "visual": "refresh",
+      "element": "Refresh / Try again",
+      "trigger": "At release of a deliberate refresh, or tap on Try again.",
+      "source": "src/app/(tabs)/leaderboard.tsx"
+    },
+    {
+      "id": "board-ready",
+      "name": "Scores refreshed",
+      "group": "Leaderboard",
+      "recipe": "board-ready",
+      "variants": 2,
+      "peak": -18,
+      "visual": "leaderboard",
+      "element": "Updated leaderboard",
+      "trigger": "One quiet acknowledgement after a user-requested refresh succeeds.",
+      "source": "src/app/(tabs)/leaderboard.tsx"
+    },
+    {
+      "id": "offline",
+      "name": "Connection unavailable",
+      "group": "Leaderboard",
+      "recipe": "offline",
+      "variants": 2,
+      "peak": -21,
+      "visual": "offline",
+      "element": "Offline feedback",
+      "trigger": "Only after an explicit failed refresh; silent background failures stay silent.",
+      "source": "src/app/(tabs)/leaderboard.tsx"
+    }
+  ],
+  "characters": [
+    {
+      "id": "mochi",
+      "name": "Mochi",
+      "identity": "Silky mews with a little purr",
+      "f0": 370,
+      "scale": 1.23,
+      "air": 0.035,
+      "rough": 0.03,
+      "pulse": 27,
+      "shape": "cat",
+      "pace": 0.95
+    },
+    {
+      "id": "bun",
+      "name": "Bun",
+      "identity": "Soft, airy nose sounds and quick bright answers",
+      "f0": 305,
+      "scale": 1.34,
+      "air": 0.1,
+      "rough": 0.01,
+      "pulse": 0,
+      "shape": "bunny",
+      "pace": 0.9
+    },
+    {
+      "id": "coco",
+      "name": "Coco",
+      "identity": "Warm chesty hums with a velvety little growl",
+      "f0": 165,
+      "scale": 0.81,
+      "air": 0.055,
+      "rough": 0.18,
+      "pulse": 0,
+      "shape": "bear",
+      "pace": 1.06
+    },
+    {
+      "id": "biscuit",
+      "name": "Biscuit",
+      "identity": "Breathy puppy yips with a smiling upward finish",
+      "f0": 335,
+      "scale": 1.1,
+      "air": 0.12,
+      "rough": 0.11,
+      "pulse": 0,
+      "shape": "puppy",
+      "pace": 0.88
+    },
+    {
+      "id": "pip",
+      "name": "Pip",
+      "identity": "Nasal double calls with a crisp penguin chatter",
+      "f0": 415,
+      "scale": 1.07,
+      "air": 0.035,
+      "rough": 0.09,
+      "pulse": 19,
+      "shape": "penguin",
+      "pace": 0.83
+    },
+    {
+      "id": "bao",
+      "name": "Bao",
+      "identity": "Deep, round, unhurried panda murmurs",
+      "f0": 145,
+      "scale": 0.88,
+      "air": 0.065,
+      "rough": 0.035,
+      "pulse": 0,
+      "shape": "panda",
+      "pace": 1.14
+    },
+    {
+      "id": "koa",
+      "name": "Koa",
+      "identity": "Sleepy breath, low rounded vowels, a lazy wobble",
+      "f0": 122,
+      "scale": 0.91,
+      "air": 0.16,
+      "rough": 0.07,
+      "pulse": 0,
+      "shape": "koala",
+      "pace": 1.23
+    },
+    {
+      "id": "lolo",
+      "name": "Lolo",
+      "identity": "Liquid vowel bubbles and buoyant little gurgles",
+      "f0": 325,
+      "scale": 1.24,
+      "air": 0.025,
+      "rough": 0.015,
+      "pulse": 13,
+      "shape": "water",
+      "pace": 0.96
+    },
+    {
+      "id": "rocco",
+      "name": "Rocco",
+      "identity": "Grainy raccoon chatter with cheeky clipped endings",
+      "f0": 250,
+      "scale": 0.97,
+      "air": 0.085,
+      "rough": 0.19,
+      "pulse": 22,
+      "shape": "raccoon",
+      "pace": 0.87
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "identity": "Bright fox chirrups with quick, curling inflections",
+      "f0": 290,
+      "scale": 1.18,
+      "air": 0.05,
+      "rough": 0.065,
+      "pulse": 0,
+      "shape": "fox",
+      "pace": 0.9
+    },
+    {
+      "id": "sage",
+      "name": "Sage",
+      "identity": "Rounded two-part hoots with a thoughtful low finish",
+      "f0": 210,
+      "scale": 0.82,
+      "air": 0.025,
+      "rough": 0.01,
+      "pulse": 0,
+      "shape": "owl",
+      "pace": 1.14
+    },
+    {
+      "id": "rexy",
+      "name": "Rexy",
+      "identity": "A tiny chesty roar with gravel and a proud bounce",
+      "f0": 108,
+      "scale": 0.74,
+      "air": 0.07,
+      "rough": 0.29,
+      "pulse": 31,
+      "shape": "dino",
+      "pace": 1.03
+    },
+    {
+      "id": "vesper",
+      "name": "Vesper",
+      "identity": "Whispery, narrow little calls with a fluttering tail",
+      "f0": 445,
+      "scale": 1.12,
+      "air": 0.11,
+      "rough": 0.025,
+      "pulse": 34,
+      "shape": "bat",
+      "pace": 0.88
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "identity": "Hollow woody syllables with a curious nasal pop",
+      "f0": 238,
+      "scale": 1.05,
+      "air": 0.025,
+      "rough": 0.045,
+      "pulse": 9,
+      "shape": "sprite",
+      "pace": 0.96
+    },
+    {
+      "id": "ribbit",
+      "name": "Ribbit",
+      "identity": "Round throaty croaks with a fluttering royal flourish",
+      "f0": 138,
+      "scale": 0.77,
+      "air": 0.025,
+      "rough": 0.15,
+      "pulse": 24,
+      "shape": "frog",
+      "pace": 1.02
+    }
+  ],
+  "emotions": [
+    {
+      "id": "hello",
+      "name": "Picked / hello",
+      "expression": "happy",
+      "use": "Chosen in the shop; a restrained greeting on a new session."
+    },
+    {
+      "id": "joy",
+      "name": "Win / delight",
+      "expression": "joy",
+      "use": "A completed word, a new unlock, or a level-up."
+    },
+    {
+      "id": "worry",
+      "name": "Oops / worried",
+      "expression": "worried",
+      "use": "Occasional reaction after a balloon pops; not every key."
+    },
+    {
+      "id": "fall",
+      "name": "Falling",
+      "expression": "scared",
+      "use": "The short air-drop portion of the final fall."
+    },
+    {
+      "id": "land",
+      "name": "Landing grunt",
+      "expression": "ko",
+      "use": "A brief comic exertion sound on impact, not a cry of pain."
+    },
+    {
+      "id": "recover",
+      "name": "Dazed / recovery",
+      "expression": "nervous",
+      "use": "A small puzzled vocal after the bounce, then quiet."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "correct",
+      "name": "A correct letter",
+      "description": "A soft key, a warm answer, and the tile opening.",
+      "visual": "correct",
+      "events": [
+        {
+          "id": "key",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "correct",
+          "at": 0.035,
+          "gain": 1
+        },
+        {
+          "id": "tile",
+          "at": 0.08,
+          "gain": 0.65
+        }
+      ]
+    },
+    {
+      "id": "wrong",
+      "name": "One balloon pops",
+      "description": "The wrong key, rubber tension, a pop, then a little worried reaction.",
+      "visual": "wrong",
+      "events": [
+        {
+          "id": "key",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "wrong",
+          "at": 0.03,
+          "gain": 1
+        },
+        {
+          "id": "stretch",
+          "at": 0.005,
+          "gain": 0.7
+        },
+        {
+          "id": "pop",
+          "at": 0.144,
+          "gain": 1
+        },
+        {
+          "id": "sink",
+          "at": 0.19,
+          "gain": 0.7
+        },
+        {
+          "id": "@worry",
+          "at": 0.34,
+          "gain": 0.8
+        }
+      ]
+    },
+    {
+      "id": "fall",
+      "name": "The last balloon",
+      "description": "Last pop → pause in the air → fall → cushioned landing → dazed recovery.",
+      "visual": "fall",
+      "events": [
+        {
+          "id": "key",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "wrong",
+          "at": 0.03,
+          "gain": 1
+        },
+        {
+          "id": "last-stretch",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "last-pop",
+          "at": 0.352,
+          "gain": 1
+        },
+        {
+          "id": "string",
+          "at": 0.4,
+          "gain": 1
+        },
+        {
+          "id": "fall",
+          "at": 0.836,
+          "gain": 1
+        },
+        {
+          "id": "@fall",
+          "at": 0.836,
+          "gain": 1
+        },
+        {
+          "id": "impact",
+          "at": 1.32,
+          "gain": 1
+        },
+        {
+          "id": "@land",
+          "at": 1.35,
+          "gain": 0.85
+        },
+        {
+          "id": "dust",
+          "at": 1.37,
+          "gain": 1
+        },
+        {
+          "id": "bounce",
+          "at": 1.584,
+          "gain": 1
+        },
+        {
+          "id": "stars",
+          "at": 1.66,
+          "gain": 0.65
+        },
+        {
+          "id": "@recover",
+          "at": 2.04,
+          "gain": 0.75
+        },
+        {
+          "id": "stamp",
+          "at": 2.6,
+          "gain": 1
+        },
+        {
+          "id": "loss",
+          "at": 2.73,
+          "gain": 0.7
+        }
+      ]
+    },
+    {
+      "id": "win",
+      "name": "Word complete",
+      "description": "The last letter, a delighted character, the result stamp, and earned tokens.",
+      "visual": "win",
+      "events": [
+        {
+          "id": "key",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "correct",
+          "at": 0.035,
+          "gain": 1
+        },
+        {
+          "id": "tile",
+          "at": 0.08,
+          "gain": 0.6
+        },
+        {
+          "id": "win",
+          "at": 0.16,
+          "gain": 1
+        },
+        {
+          "id": "@joy",
+          "at": 0.25,
+          "gain": 0.9
+        },
+        {
+          "id": "stamp",
+          "at": 0.7,
+          "gain": 0.75
+        },
+        {
+          "id": "token-gain",
+          "at": 0.88,
+          "gain": 1
+        },
+        {
+          "id": "token-flight",
+          "at": 1.42,
+          "gain": 1
+        },
+        {
+          "id": "token-land",
+          "at": 2.04,
+          "gain": 1
+        },
+        {
+          "id": "count",
+          "at": 2.1,
+          "gain": 1
+        },
+        {
+          "id": "count",
+          "at": 2.19,
+          "gain": 0.8
+        },
+        {
+          "id": "count",
+          "at": 2.3,
+          "gain": 0.6
+        }
+      ]
+    },
+    {
+      "id": "letters",
+      "name": "Buy two letters",
+      "description": "Payment leaves the balance and two letters come into view.",
+      "visual": "letters",
+      "events": [
+        {
+          "id": "token-spend",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "letters",
+          "at": 0.08,
+          "gain": 1
+        },
+        {
+          "id": "token-flight",
+          "at": 0.36,
+          "gain": 0.7
+        },
+        {
+          "id": "spend-land",
+          "at": 0.98,
+          "gain": 1
+        }
+      ]
+    },
+    {
+      "id": "streak",
+      "name": "Complete a streak",
+      "description": "The star fills, settles, and bursts into a token bonus.",
+      "visual": "streak",
+      "events": [
+        {
+          "id": "streak-open",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "streak-fill",
+          "at": 0.66,
+          "gain": 1
+        },
+        {
+          "id": "star-land",
+          "at": 1.28,
+          "gain": 1
+        },
+        {
+          "id": "streak-bonus",
+          "at": 1.54,
+          "gain": 1
+        },
+        {
+          "id": "confetti",
+          "at": 1.54,
+          "gain": 1
+        },
+        {
+          "id": "token-gain",
+          "at": 1.28,
+          "gain": 0.8
+        },
+        {
+          "id": "token-flight",
+          "at": 1.82,
+          "gain": 1
+        },
+        {
+          "id": "token-land",
+          "at": 2.44,
+          "gain": 1
+        },
+        {
+          "id": "count",
+          "at": 2.51,
+          "gain": 1
+        },
+        {
+          "id": "count",
+          "at": 2.62,
+          "gain": 0.7
+        }
+      ]
+    },
+    {
+      "id": "unlock",
+      "name": "Unlock a character",
+      "description": "A purchase, a tiny lock, a big welcome, and a greeting from your character.",
+      "visual": "unlock",
+      "events": [
+        {
+          "id": "token-spend",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "latch",
+          "at": 0.12,
+          "gain": 1
+        },
+        {
+          "id": "unlock",
+          "at": 0.24,
+          "gain": 1
+        },
+        {
+          "id": "confetti",
+          "at": 0.35,
+          "gain": 1
+        },
+        {
+          "id": "@hello",
+          "at": 0.36,
+          "gain": 1
+        },
+        {
+          "id": "token-flight",
+          "at": 0.36,
+          "gain": 0.6
+        },
+        {
+          "id": "ribbon",
+          "at": 0.65,
+          "gain": 1
+        },
+        {
+          "id": "spend-land",
+          "at": 0.98,
+          "gain": 0.7
+        }
+      ]
+    },
+    {
+      "id": "choose",
+      "name": "Choose a character",
+      "description": "Browse, pick, and hear who you are playing with.",
+      "visual": "choose",
+      "events": [
+        {
+          "id": "browse",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "choose",
+          "at": 0.44,
+          "gain": 1
+        },
+        {
+          "id": "@hello",
+          "at": 0.56,
+          "gain": 1
+        }
+      ]
+    },
+    {
+      "id": "level-up",
+      "name": "Reach a new level",
+      "description": "The marker climbs for 950 ms and celebrates on arrival.",
+      "visual": "level-up",
+      "events": [
+        {
+          "id": "panel-open",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "level-rise",
+          "at": 0.73,
+          "gain": 1
+        },
+        {
+          "id": "level-up",
+          "at": 1.68,
+          "gain": 1
+        },
+        {
+          "id": "@joy",
+          "at": 1.93,
+          "gain": 0.8
+        }
+      ]
+    },
+    {
+      "id": "level-down",
+      "name": "Back one level",
+      "description": "A gentle slide and an encouraging landing.",
+      "visual": "level-down",
+      "events": [
+        {
+          "id": "panel-open",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "level-slide",
+          "at": 0.73,
+          "gain": 1
+        },
+        {
+          "id": "level-down",
+          "at": 1.88,
+          "gain": 1
+        },
+        {
+          "id": "@recover",
+          "at": 2.09,
+          "gain": 0.7
+        }
+      ]
+    },
+    {
+      "id": "summit",
+      "name": "Reach the summit",
+      "description": "The final climb, clouds opening, and a crown settling into place.",
+      "visual": "summit",
+      "events": [
+        {
+          "id": "panel-open",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "level-rise",
+          "at": 0.73,
+          "gain": 1
+        },
+        {
+          "id": "summit",
+          "at": 1.68,
+          "gain": 1
+        },
+        {
+          "id": "fog",
+          "at": 1.68,
+          "gain": 1
+        },
+        {
+          "id": "confetti",
+          "at": 1.68,
+          "gain": 1
+        },
+        {
+          "id": "@joy",
+          "at": 1.98,
+          "gain": 0.85
+        },
+        {
+          "id": "crown",
+          "at": 1.86,
+          "gain": 0.75
+        }
+      ]
+    },
+    {
+      "id": "name",
+      "name": "A new player name",
+      "description": "Open the editor, roll a name, then save it.",
+      "visual": "name",
+      "events": [
+        {
+          "id": "edit",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "dice",
+          "at": 0.6,
+          "gain": 1
+        },
+        {
+          "id": "name-save",
+          "at": 1.45,
+          "gain": 1
+        }
+      ]
+    },
+    {
+      "id": "leaderboard",
+      "name": "Check the scores",
+      "description": "Change the ranking period, refresh, and receive the updated board.",
+      "visual": "leaderboard",
+      "events": [
+        {
+          "id": "period",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "refresh",
+          "at": 0.35,
+          "gain": 1
+        },
+        {
+          "id": "board-ready",
+          "at": 1.4,
+          "gain": 1
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "name": "One more word",
+      "description": "Press Next word and hear the new tiles settle.",
+      "visual": "next",
+      "events": [
+        {
+          "id": "primary",
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "id": "deal",
+          "at": 0.16,
+          "gain": 1
+        }
+      ]
+    }
+  ],
+  "assets": {
+    "key-1": {
+      "duration": 0.135,
+      "wav": "audio/wav/key-1.wav",
+      "mp3": "audio/mp3/key-1.mp3"
+    },
+    "key-2": {
+      "duration": 0.135,
+      "wav": "audio/wav/key-2.wav",
+      "mp3": "audio/mp3/key-2.mp3"
+    },
+    "key-3": {
+      "duration": 0.135,
+      "wav": "audio/wav/key-3.wav",
+      "mp3": "audio/mp3/key-3.mp3"
+    },
+    "key-4": {
+      "duration": 0.135,
+      "wav": "audio/wav/key-4.wav",
+      "mp3": "audio/mp3/key-4.mp3"
+    },
+    "key-5": {
+      "duration": 0.135,
+      "wav": "audio/wav/key-5.wav",
+      "mp3": "audio/mp3/key-5.mp3"
+    },
+    "correct-1": {
+      "duration": 0.27,
+      "wav": "audio/wav/correct-1.wav",
+      "mp3": "audio/mp3/correct-1.mp3"
+    },
+    "correct-2": {
+      "duration": 0.27,
+      "wav": "audio/wav/correct-2.wav",
+      "mp3": "audio/mp3/correct-2.mp3"
+    },
+    "correct-3": {
+      "duration": 0.27,
+      "wav": "audio/wav/correct-3.wav",
+      "mp3": "audio/mp3/correct-3.mp3"
+    },
+    "wrong-1": {
+      "duration": 0.195,
+      "wav": "audio/wav/wrong-1.wav",
+      "mp3": "audio/mp3/wrong-1.mp3"
+    },
+    "wrong-2": {
+      "duration": 0.195,
+      "wav": "audio/wav/wrong-2.wav",
+      "mp3": "audio/mp3/wrong-2.mp3"
+    },
+    "wrong-3": {
+      "duration": 0.195,
+      "wav": "audio/wav/wrong-3.wav",
+      "mp3": "audio/mp3/wrong-3.mp3"
+    },
+    "tile-1": {
+      "duration": 0.135,
+      "wav": "audio/wav/tile-1.wav",
+      "mp3": "audio/mp3/tile-1.mp3"
+    },
+    "tile-2": {
+      "duration": 0.135,
+      "wav": "audio/wav/tile-2.wav",
+      "mp3": "audio/mp3/tile-2.mp3"
+    },
+    "tile-3": {
+      "duration": 0.135,
+      "wav": "audio/wav/tile-3.wav",
+      "mp3": "audio/mp3/tile-3.mp3"
+    },
+    "deal-1": {
+      "duration": 0.41502083333333334,
+      "wav": "audio/wav/deal-1.wav",
+      "mp3": "audio/mp3/deal-1.mp3"
+    },
+    "deal-2": {
+      "duration": 0.41502083333333334,
+      "wav": "audio/wav/deal-2.wav",
+      "mp3": "audio/mp3/deal-2.mp3"
+    },
+    "deal-3": {
+      "duration": 0.41502083333333334,
+      "wav": "audio/wav/deal-3.wav",
+      "mp3": "audio/mp3/deal-3.mp3"
+    },
+    "letters-1": {
+      "duration": 0.495,
+      "wav": "audio/wav/letters-1.wav",
+      "mp3": "audio/mp3/letters-1.mp3"
+    },
+    "letters-2": {
+      "duration": 0.495,
+      "wav": "audio/wav/letters-2.wav",
+      "mp3": "audio/mp3/letters-2.mp3"
+    },
+    "win-1": {
+      "duration": 1.141,
+      "wav": "audio/wav/win-1.wav",
+      "mp3": "audio/mp3/win-1.mp3"
+    },
+    "win-2": {
+      "duration": 1.141,
+      "wav": "audio/wav/win-2.wav",
+      "mp3": "audio/mp3/win-2.mp3"
+    },
+    "loss-1": {
+      "duration": 1.395,
+      "wav": "audio/wav/loss-1.wav",
+      "mp3": "audio/mp3/loss-1.mp3"
+    },
+    "loss-2": {
+      "duration": 1.395,
+      "wav": "audio/wav/loss-2.wav",
+      "mp3": "audio/mp3/loss-2.mp3"
+    },
+    "stamp-1": {
+      "duration": 0.195,
+      "wav": "audio/wav/stamp-1.wav",
+      "mp3": "audio/mp3/stamp-1.mp3"
+    },
+    "stamp-2": {
+      "duration": 0.195,
+      "wav": "audio/wav/stamp-2.wav",
+      "mp3": "audio/mp3/stamp-2.mp3"
+    },
+    "stamp-3": {
+      "duration": 0.195,
+      "wav": "audio/wav/stamp-3.wav",
+      "mp3": "audio/mp3/stamp-3.mp3"
+    },
+    "stretch-1": {
+      "duration": 0.179,
+      "wav": "audio/wav/stretch-1.wav",
+      "mp3": "audio/mp3/stretch-1.mp3"
+    },
+    "stretch-2": {
+      "duration": 0.179,
+      "wav": "audio/wav/stretch-2.wav",
+      "mp3": "audio/mp3/stretch-2.mp3"
+    },
+    "stretch-3": {
+      "duration": 0.179,
+      "wav": "audio/wav/stretch-3.wav",
+      "mp3": "audio/mp3/stretch-3.mp3"
+    },
+    "pop-1": {
+      "duration": 0.251,
+      "wav": "audio/wav/pop-1.wav",
+      "mp3": "audio/mp3/pop-1.mp3"
+    },
+    "pop-2": {
+      "duration": 0.251,
+      "wav": "audio/wav/pop-2.wav",
+      "mp3": "audio/mp3/pop-2.mp3"
+    },
+    "pop-3": {
+      "duration": 0.251,
+      "wav": "audio/wav/pop-3.wav",
+      "mp3": "audio/mp3/pop-3.mp3"
+    },
+    "pop-4": {
+      "duration": 0.251,
+      "wav": "audio/wav/pop-4.wav",
+      "mp3": "audio/mp3/pop-4.mp3"
+    },
+    "pop-5": {
+      "duration": 0.251,
+      "wav": "audio/wav/pop-5.wav",
+      "mp3": "audio/mp3/pop-5.mp3"
+    },
+    "last-stretch-1": {
+      "duration": 0.387,
+      "wav": "audio/wav/last-stretch-1.wav",
+      "mp3": "audio/mp3/last-stretch-1.mp3"
+    },
+    "last-pop-1": {
+      "duration": 0.255,
+      "wav": "audio/wav/last-pop-1.wav",
+      "mp3": "audio/mp3/last-pop-1.mp3"
+    },
+    "last-pop-2": {
+      "duration": 0.255,
+      "wav": "audio/wav/last-pop-2.wav",
+      "mp3": "audio/mp3/last-pop-2.mp3"
+    },
+    "string-1": {
+      "duration": 0.2615208333333333,
+      "wav": "audio/wav/string-1.wav",
+      "mp3": "audio/mp3/string-1.mp3"
+    },
+    "string-2": {
+      "duration": 0.26266666666666666,
+      "wav": "audio/wav/string-2.wav",
+      "mp3": "audio/mp3/string-2.mp3"
+    },
+    "sink-1": {
+      "duration": 0.355,
+      "wav": "audio/wav/sink-1.wav",
+      "mp3": "audio/mp3/sink-1.mp3"
+    },
+    "sink-2": {
+      "duration": 0.355,
+      "wav": "audio/wav/sink-2.wav",
+      "mp3": "audio/mp3/sink-2.mp3"
+    },
+    "sink-3": {
+      "duration": 0.355,
+      "wav": "audio/wav/sink-3.wav",
+      "mp3": "audio/mp3/sink-3.mp3"
+    },
+    "fall-1": {
+      "duration": 0.519,
+      "wav": "audio/wav/fall-1.wav",
+      "mp3": "audio/mp3/fall-1.mp3"
+    },
+    "fall-2": {
+      "duration": 0.519,
+      "wav": "audio/wav/fall-2.wav",
+      "mp3": "audio/mp3/fall-2.mp3"
+    },
+    "impact-1": {
+      "duration": 0.415,
+      "wav": "audio/wav/impact-1.wav",
+      "mp3": "audio/mp3/impact-1.mp3"
+    },
+    "impact-2": {
+      "duration": 0.415,
+      "wav": "audio/wav/impact-2.wav",
+      "mp3": "audio/mp3/impact-2.mp3"
+    },
+    "impact-3": {
+      "duration": 0.415,
+      "wav": "audio/wav/impact-3.wav",
+      "mp3": "audio/mp3/impact-3.mp3"
+    },
+    "bounce-1": {
+      "duration": 0.235,
+      "wav": "audio/wav/bounce-1.wav",
+      "mp3": "audio/mp3/bounce-1.mp3"
+    },
+    "bounce-2": {
+      "duration": 0.235,
+      "wav": "audio/wav/bounce-2.wav",
+      "mp3": "audio/mp3/bounce-2.mp3"
+    },
+    "bounce-3": {
+      "duration": 0.235,
+      "wav": "audio/wav/bounce-3.wav",
+      "mp3": "audio/mp3/bounce-3.mp3"
+    },
+    "dust-1": {
+      "duration": 0.515,
+      "wav": "audio/wav/dust-1.wav",
+      "mp3": "audio/mp3/dust-1.mp3"
+    },
+    "dust-2": {
+      "duration": 0.515,
+      "wav": "audio/wav/dust-2.wav",
+      "mp3": "audio/mp3/dust-2.mp3"
+    },
+    "stars-1": {
+      "duration": 0.725,
+      "wav": "audio/wav/stars-1.wav",
+      "mp3": "audio/mp3/stars-1.mp3"
+    },
+    "stars-2": {
+      "duration": 0.725,
+      "wav": "audio/wav/stars-2.wav",
+      "mp3": "audio/mp3/stars-2.mp3"
+    },
+    "token-gain-1": {
+      "duration": 0.37502083333333336,
+      "wav": "audio/wav/token-gain-1.wav",
+      "mp3": "audio/mp3/token-gain-1.mp3"
+    },
+    "token-gain-2": {
+      "duration": 0.37502083333333336,
+      "wav": "audio/wav/token-gain-2.wav",
+      "mp3": "audio/mp3/token-gain-2.mp3"
+    },
+    "token-gain-3": {
+      "duration": 0.37502083333333336,
+      "wav": "audio/wav/token-gain-3.wav",
+      "mp3": "audio/mp3/token-gain-3.mp3"
+    },
+    "token-spend-1": {
+      "duration": 0.339,
+      "wav": "audio/wav/token-spend-1.wav",
+      "mp3": "audio/mp3/token-spend-1.mp3"
+    },
+    "token-spend-2": {
+      "duration": 0.339,
+      "wav": "audio/wav/token-spend-2.wav",
+      "mp3": "audio/mp3/token-spend-2.mp3"
+    },
+    "token-spend-3": {
+      "duration": 0.339,
+      "wav": "audio/wav/token-spend-3.wav",
+      "mp3": "audio/mp3/token-spend-3.mp3"
+    },
+    "token-flight-1": {
+      "duration": 0.655,
+      "wav": "audio/wav/token-flight-1.wav",
+      "mp3": "audio/mp3/token-flight-1.mp3"
+    },
+    "token-flight-2": {
+      "duration": 0.655,
+      "wav": "audio/wav/token-flight-2.wav",
+      "mp3": "audio/mp3/token-flight-2.mp3"
+    },
+    "token-land-1": {
+      "duration": 0.425,
+      "wav": "audio/wav/token-land-1.wav",
+      "mp3": "audio/mp3/token-land-1.mp3"
+    },
+    "token-land-2": {
+      "duration": 0.425,
+      "wav": "audio/wav/token-land-2.wav",
+      "mp3": "audio/mp3/token-land-2.mp3"
+    },
+    "token-land-3": {
+      "duration": 0.425,
+      "wav": "audio/wav/token-land-3.wav",
+      "mp3": "audio/mp3/token-land-3.mp3"
+    },
+    "spend-land-1": {
+      "duration": 0.255,
+      "wav": "audio/wav/spend-land-1.wav",
+      "mp3": "audio/mp3/spend-land-1.mp3"
+    },
+    "spend-land-2": {
+      "duration": 0.255,
+      "wav": "audio/wav/spend-land-2.wav",
+      "mp3": "audio/mp3/spend-land-2.mp3"
+    },
+    "count-1": {
+      "duration": 0.12002083333333333,
+      "wav": "audio/wav/count-1.wav",
+      "mp3": "audio/mp3/count-1.mp3"
+    },
+    "count-2": {
+      "duration": 0.12002083333333333,
+      "wav": "audio/wav/count-2.wav",
+      "mp3": "audio/mp3/count-2.mp3"
+    },
+    "count-3": {
+      "duration": 0.12002083333333333,
+      "wav": "audio/wav/count-3.wav",
+      "mp3": "audio/mp3/count-3.mp3"
+    },
+    "count-4": {
+      "duration": 0.12002083333333333,
+      "wav": "audio/wav/count-4.wav",
+      "mp3": "audio/mp3/count-4.mp3"
+    },
+    "count-5": {
+      "duration": 0.12002083333333333,
+      "wav": "audio/wav/count-5.wav",
+      "mp3": "audio/mp3/count-5.mp3"
+    },
+    "refused-1": {
+      "duration": 0.325,
+      "wav": "audio/wav/refused-1.wav",
+      "mp3": "audio/mp3/refused-1.mp3"
+    },
+    "refused-2": {
+      "duration": 0.325,
+      "wav": "audio/wav/refused-2.wav",
+      "mp3": "audio/mp3/refused-2.mp3"
+    },
+    "streak-open-1": {
+      "duration": 0.415,
+      "wav": "audio/wav/streak-open-1.wav",
+      "mp3": "audio/mp3/streak-open-1.mp3"
+    },
+    "streak-fill-1": {
+      "duration": 0.655,
+      "wav": "audio/wav/streak-fill-1.wav",
+      "mp3": "audio/mp3/streak-fill-1.mp3"
+    },
+    "streak-fill-2": {
+      "duration": 0.655,
+      "wav": "audio/wav/streak-fill-2.wav",
+      "mp3": "audio/mp3/streak-fill-2.mp3"
+    },
+    "star-land-1": {
+      "duration": 0.465,
+      "wav": "audio/wav/star-land-1.wav",
+      "mp3": "audio/mp3/star-land-1.mp3"
+    },
+    "star-land-2": {
+      "duration": 0.465,
+      "wav": "audio/wav/star-land-2.wav",
+      "mp3": "audio/mp3/star-land-2.mp3"
+    },
+    "streak-bonus-1": {
+      "duration": 1.049,
+      "wav": "audio/wav/streak-bonus-1.wav",
+      "mp3": "audio/mp3/streak-bonus-1.mp3"
+    },
+    "streak-bonus-2": {
+      "duration": 1.049,
+      "wav": "audio/wav/streak-bonus-2.wav",
+      "mp3": "audio/mp3/streak-bonus-2.mp3"
+    },
+    "confetti-1": {
+      "duration": 0.5998541666666667,
+      "wav": "audio/wav/confetti-1.wav",
+      "mp3": "audio/mp3/confetti-1.mp3"
+    },
+    "confetti-2": {
+      "duration": 0.6145625,
+      "wav": "audio/wav/confetti-2.wav",
+      "mp3": "audio/mp3/confetti-2.mp3"
+    },
+    "confetti-3": {
+      "duration": 0.6176458333333333,
+      "wav": "audio/wav/confetti-3.wav",
+      "mp3": "audio/mp3/confetti-3.mp3"
+    },
+    "level-rise-1": {
+      "duration": 0.985,
+      "wav": "audio/wav/level-rise-1.wav",
+      "mp3": "audio/mp3/level-rise-1.mp3"
+    },
+    "level-slide-1": {
+      "duration": 1.185,
+      "wav": "audio/wav/level-slide-1.wav",
+      "mp3": "audio/mp3/level-slide-1.mp3"
+    },
+    "level-up-1": {
+      "duration": 1.471,
+      "wav": "audio/wav/level-up-1.wav",
+      "mp3": "audio/mp3/level-up-1.mp3"
+    },
+    "level-up-2": {
+      "duration": 1.471,
+      "wav": "audio/wav/level-up-2.wav",
+      "mp3": "audio/mp3/level-up-2.mp3"
+    },
+    "level-down-1": {
+      "duration": 1.135,
+      "wav": "audio/wav/level-down-1.wav",
+      "mp3": "audio/mp3/level-down-1.mp3"
+    },
+    "map-open-1": {
+      "duration": 0.33939583333333334,
+      "wav": "audio/wav/map-open-1.wav",
+      "mp3": "audio/mp3/map-open-1.mp3"
+    },
+    "map-open-2": {
+      "duration": 0.335,
+      "wav": "audio/wav/map-open-2.wav",
+      "mp3": "audio/mp3/map-open-2.mp3"
+    },
+    "map-close-1": {
+      "duration": 0.2587291666666667,
+      "wav": "audio/wav/map-close-1.wav",
+      "mp3": "audio/mp3/map-close-1.mp3"
+    },
+    "map-close-2": {
+      "duration": 0.24533333333333332,
+      "wav": "audio/wav/map-close-2.wav",
+      "mp3": "audio/mp3/map-close-2.mp3"
+    },
+    "fog-1": {
+      "duration": 0.825,
+      "wav": "audio/wav/fog-1.wav",
+      "mp3": "audio/mp3/fog-1.mp3"
+    },
+    "summit-1": {
+      "duration": 2.11,
+      "wav": "audio/wav/summit-1.wav",
+      "mp3": "audio/mp3/summit-1.mp3"
+    },
+    "crown-1": {
+      "duration": 0.535,
+      "wav": "audio/wav/crown-1.wav",
+      "mp3": "audio/mp3/crown-1.mp3"
+    },
+    "crown-2": {
+      "duration": 0.535,
+      "wav": "audio/wav/crown-2.wav",
+      "mp3": "audio/mp3/crown-2.mp3"
+    },
+    "browse-1": {
+      "duration": 0.215,
+      "wav": "audio/wav/browse-1.wav",
+      "mp3": "audio/mp3/browse-1.mp3"
+    },
+    "browse-2": {
+      "duration": 0.215,
+      "wav": "audio/wav/browse-2.wav",
+      "mp3": "audio/mp3/browse-2.mp3"
+    },
+    "browse-3": {
+      "duration": 0.215,
+      "wav": "audio/wav/browse-3.wav",
+      "mp3": "audio/mp3/browse-3.mp3"
+    },
+    "choose-1": {
+      "duration": 0.355,
+      "wav": "audio/wav/choose-1.wav",
+      "mp3": "audio/mp3/choose-1.mp3"
+    },
+    "choose-2": {
+      "duration": 0.355,
+      "wav": "audio/wav/choose-2.wav",
+      "mp3": "audio/mp3/choose-2.mp3"
+    },
+    "latch-1": {
+      "duration": 0.285,
+      "wav": "audio/wav/latch-1.wav",
+      "mp3": "audio/mp3/latch-1.mp3"
+    },
+    "latch-2": {
+      "duration": 0.285,
+      "wav": "audio/wav/latch-2.wav",
+      "mp3": "audio/mp3/latch-2.mp3"
+    },
+    "latch-3": {
+      "duration": 0.285,
+      "wav": "audio/wav/latch-3.wav",
+      "mp3": "audio/mp3/latch-3.mp3"
+    },
+    "unlock-1": {
+      "duration": 1.157,
+      "wav": "audio/wav/unlock-1.wav",
+      "mp3": "audio/mp3/unlock-1.mp3"
+    },
+    "unlock-2": {
+      "duration": 1.157,
+      "wav": "audio/wav/unlock-2.wav",
+      "mp3": "audio/mp3/unlock-2.mp3"
+    },
+    "ribbon-1": {
+      "duration": 0.23477083333333335,
+      "wav": "audio/wav/ribbon-1.wav",
+      "mp3": "audio/mp3/ribbon-1.mp3"
+    },
+    "ribbon-2": {
+      "duration": 0.24175,
+      "wav": "audio/wav/ribbon-2.wav",
+      "mp3": "audio/mp3/ribbon-2.mp3"
+    },
+    "tap-1": {
+      "duration": 0.135,
+      "wav": "audio/wav/tap-1.wav",
+      "mp3": "audio/mp3/tap-1.mp3"
+    },
+    "tap-2": {
+      "duration": 0.135,
+      "wav": "audio/wav/tap-2.wav",
+      "mp3": "audio/mp3/tap-2.mp3"
+    },
+    "tap-3": {
+      "duration": 0.135,
+      "wav": "audio/wav/tap-3.wav",
+      "mp3": "audio/mp3/tap-3.mp3"
+    },
+    "tap-4": {
+      "duration": 0.135,
+      "wav": "audio/wav/tap-4.wav",
+      "mp3": "audio/mp3/tap-4.mp3"
+    },
+    "primary-1": {
+      "duration": 0.20502083333333335,
+      "wav": "audio/wav/primary-1.wav",
+      "mp3": "audio/mp3/primary-1.mp3"
+    },
+    "primary-2": {
+      "duration": 0.20502083333333335,
+      "wav": "audio/wav/primary-2.wav",
+      "mp3": "audio/mp3/primary-2.mp3"
+    },
+    "primary-3": {
+      "duration": 0.20502083333333335,
+      "wav": "audio/wav/primary-3.wav",
+      "mp3": "audio/mp3/primary-3.mp3"
+    },
+    "tab-1": {
+      "duration": 0.165,
+      "wav": "audio/wav/tab-1.wav",
+      "mp3": "audio/mp3/tab-1.mp3"
+    },
+    "tab-2": {
+      "duration": 0.165,
+      "wav": "audio/wav/tab-2.wav",
+      "mp3": "audio/mp3/tab-2.mp3"
+    },
+    "tab-3": {
+      "duration": 0.165,
+      "wav": "audio/wav/tab-3.wav",
+      "mp3": "audio/mp3/tab-3.mp3"
+    },
+    "back-1": {
+      "duration": 0.215,
+      "wav": "audio/wav/back-1.wav",
+      "mp3": "audio/mp3/back-1.mp3"
+    },
+    "back-2": {
+      "duration": 0.215,
+      "wav": "audio/wav/back-2.wav",
+      "mp3": "audio/mp3/back-2.mp3"
+    },
+    "panel-open-1": {
+      "duration": 0.265,
+      "wav": "audio/wav/panel-open-1.wav",
+      "mp3": "audio/mp3/panel-open-1.mp3"
+    },
+    "panel-open-2": {
+      "duration": 0.265,
+      "wav": "audio/wav/panel-open-2.wav",
+      "mp3": "audio/mp3/panel-open-2.mp3"
+    },
+    "panel-close-1": {
+      "duration": 0.245,
+      "wav": "audio/wav/panel-close-1.wav",
+      "mp3": "audio/mp3/panel-close-1.mp3"
+    },
+    "panel-close-2": {
+      "duration": 0.245,
+      "wav": "audio/wav/panel-close-2.wav",
+      "mp3": "audio/mp3/panel-close-2.mp3"
+    },
+    "link-1": {
+      "duration": 0.19502083333333334,
+      "wav": "audio/wav/link-1.wav",
+      "mp3": "audio/mp3/link-1.mp3"
+    },
+    "link-2": {
+      "duration": 0.19502083333333334,
+      "wav": "audio/wav/link-2.wav",
+      "mp3": "audio/mp3/link-2.mp3"
+    },
+    "edit-1": {
+      "duration": 0.19370833333333334,
+      "wav": "audio/wav/edit-1.wav",
+      "mp3": "audio/mp3/edit-1.mp3"
+    },
+    "edit-2": {
+      "duration": 0.19129166666666667,
+      "wav": "audio/wav/edit-2.wav",
+      "mp3": "audio/mp3/edit-2.mp3"
+    },
+    "dice-1": {
+      "duration": 0.445,
+      "wav": "audio/wav/dice-1.wav",
+      "mp3": "audio/mp3/dice-1.mp3"
+    },
+    "dice-2": {
+      "duration": 0.445,
+      "wav": "audio/wav/dice-2.wav",
+      "mp3": "audio/mp3/dice-2.mp3"
+    },
+    "dice-3": {
+      "duration": 0.445,
+      "wav": "audio/wav/dice-3.wav",
+      "mp3": "audio/mp3/dice-3.mp3"
+    },
+    "name-save-1": {
+      "duration": 0.595,
+      "wav": "audio/wav/name-save-1.wav",
+      "mp3": "audio/mp3/name-save-1.mp3"
+    },
+    "name-save-2": {
+      "duration": 0.595,
+      "wav": "audio/wav/name-save-2.wav",
+      "mp3": "audio/mp3/name-save-2.mp3"
+    },
+    "name-invalid-1": {
+      "duration": 0.2750208333333333,
+      "wav": "audio/wav/name-invalid-1.wav",
+      "mp3": "audio/mp3/name-invalid-1.mp3"
+    },
+    "name-invalid-2": {
+      "duration": 0.2750208333333333,
+      "wav": "audio/wav/name-invalid-2.wav",
+      "mp3": "audio/mp3/name-invalid-2.mp3"
+    },
+    "delete-open-1": {
+      "duration": 0.305,
+      "wav": "audio/wav/delete-open-1.wav",
+      "mp3": "audio/mp3/delete-open-1.mp3"
+    },
+    "delete-confirm-1": {
+      "duration": 0.283875,
+      "wav": "audio/wav/delete-confirm-1.wav",
+      "mp3": "audio/mp3/delete-confirm-1.mp3"
+    },
+    "delete-complete-1": {
+      "duration": 0.515,
+      "wav": "audio/wav/delete-complete-1.wav",
+      "mp3": "audio/mp3/delete-complete-1.mp3"
+    },
+    "operation-failed-1": {
+      "duration": 0.395,
+      "wav": "audio/wav/operation-failed-1.wav",
+      "mp3": "audio/mp3/operation-failed-1.mp3"
+    },
+    "operation-failed-2": {
+      "duration": 0.395,
+      "wav": "audio/wav/operation-failed-2.wav",
+      "mp3": "audio/mp3/operation-failed-2.mp3"
+    },
+    "period-1": {
+      "duration": 0.15,
+      "wav": "audio/wav/period-1.wav",
+      "mp3": "audio/mp3/period-1.mp3"
+    },
+    "period-2": {
+      "duration": 0.15,
+      "wav": "audio/wav/period-2.wav",
+      "mp3": "audio/mp3/period-2.mp3"
+    },
+    "period-3": {
+      "duration": 0.15,
+      "wav": "audio/wav/period-3.wav",
+      "mp3": "audio/mp3/period-3.mp3"
+    },
+    "refresh-1": {
+      "duration": 0.375,
+      "wav": "audio/wav/refresh-1.wav",
+      "mp3": "audio/mp3/refresh-1.mp3"
+    },
+    "refresh-2": {
+      "duration": 0.375,
+      "wav": "audio/wav/refresh-2.wav",
+      "mp3": "audio/mp3/refresh-2.mp3"
+    },
+    "board-ready-1": {
+      "duration": 0.415,
+      "wav": "audio/wav/board-ready-1.wav",
+      "mp3": "audio/mp3/board-ready-1.mp3"
+    },
+    "board-ready-2": {
+      "duration": 0.415,
+      "wav": "audio/wav/board-ready-2.wav",
+      "mp3": "audio/mp3/board-ready-2.mp3"
+    },
+    "offline-1": {
+      "duration": 0.335,
+      "wav": "audio/wav/offline-1.wav",
+      "mp3": "audio/mp3/offline-1.mp3"
+    },
+    "offline-2": {
+      "duration": 0.335,
+      "wav": "audio/wav/offline-2.wav",
+      "mp3": "audio/mp3/offline-2.mp3"
+    },
+    "voice-mochi-hello": {
+      "duration": 0.5195,
+      "wav": "audio/wav/voice-mochi-hello.wav",
+      "mp3": "audio/mp3/voice-mochi-hello.mp3"
+    },
+    "voice-mochi-joy": {
+      "duration": 0.6715,
+      "wav": "audio/wav/voice-mochi-joy.wav",
+      "mp3": "audio/mp3/voice-mochi-joy.mp3"
+    },
+    "voice-mochi-worry": {
+      "duration": 0.4245,
+      "wav": "audio/wav/voice-mochi-worry.wav",
+      "mp3": "audio/mp3/voice-mochi-worry.mp3"
+    },
+    "voice-mochi-fall": {
+      "duration": 0.491,
+      "wav": "audio/wav/voice-mochi-fall.wav",
+      "mp3": "audio/mp3/voice-mochi-fall.mp3"
+    },
+    "voice-mochi-land": {
+      "duration": 0.225,
+      "wav": "audio/wav/voice-mochi-land.wav",
+      "mp3": "audio/mp3/voice-mochi-land.mp3"
+    },
+    "voice-mochi-recover": {
+      "duration": 0.5955,
+      "wav": "audio/wav/voice-mochi-recover.wav",
+      "mp3": "audio/mp3/voice-mochi-recover.mp3"
+    },
+    "voice-bun-hello": {
+      "duration": 0.49402083333333335,
+      "wav": "audio/wav/voice-bun-hello.wav",
+      "mp3": "audio/mp3/voice-bun-hello.mp3"
+    },
+    "voice-bun-joy": {
+      "duration": 0.6380208333333334,
+      "wav": "audio/wav/voice-bun-joy.wav",
+      "mp3": "audio/mp3/voice-bun-joy.mp3"
+    },
+    "voice-bun-worry": {
+      "duration": 0.404,
+      "wav": "audio/wav/voice-bun-worry.wav",
+      "mp3": "audio/mp3/voice-bun-worry.mp3"
+    },
+    "voice-bun-fall": {
+      "duration": 0.467,
+      "wav": "audio/wav/voice-bun-fall.wav",
+      "mp3": "audio/mp3/voice-bun-fall.mp3"
+    },
+    "voice-bun-land": {
+      "duration": 0.21502083333333333,
+      "wav": "audio/wav/voice-bun-land.wav",
+      "mp3": "audio/mp3/voice-bun-land.mp3"
+    },
+    "voice-bun-recover": {
+      "duration": 0.5660208333333333,
+      "wav": "audio/wav/voice-bun-recover.wav",
+      "mp3": "audio/mp3/voice-bun-recover.mp3"
+    },
+    "voice-coco-hello": {
+      "duration": 0.5756041666666667,
+      "wav": "audio/wav/voice-coco-hello.wav",
+      "mp3": "audio/mp3/voice-coco-hello.mp3"
+    },
+    "voice-coco-joy": {
+      "duration": 0.7452083333333334,
+      "wav": "audio/wav/voice-coco-joy.wav",
+      "mp3": "audio/mp3/voice-coco-joy.mp3"
+    },
+    "voice-coco-worry": {
+      "duration": 0.469625,
+      "wav": "audio/wav/voice-coco-worry.wav",
+      "mp3": "audio/mp3/voice-coco-worry.mp3"
+    },
+    "voice-coco-fall": {
+      "duration": 0.5438125,
+      "wav": "audio/wav/voice-coco-fall.wav",
+      "mp3": "audio/mp3/voice-coco-fall.mp3"
+    },
+    "voice-coco-land": {
+      "duration": 0.24702083333333333,
+      "wav": "audio/wav/voice-coco-land.wav",
+      "mp3": "audio/mp3/voice-coco-land.mp3"
+    },
+    "voice-coco-recover": {
+      "duration": 0.6604166666666667,
+      "wav": "audio/wav/voice-coco-recover.wav",
+      "mp3": "audio/mp3/voice-coco-recover.mp3"
+    },
+    "voice-biscuit-hello": {
+      "duration": 0.4838125,
+      "wav": "audio/wav/voice-biscuit-hello.wav",
+      "mp3": "audio/mp3/voice-biscuit-hello.mp3"
+    },
+    "voice-biscuit-joy": {
+      "duration": 0.624625,
+      "wav": "audio/wav/voice-biscuit-joy.wav",
+      "mp3": "audio/mp3/voice-biscuit-joy.mp3"
+    },
+    "voice-biscuit-worry": {
+      "duration": 0.3958125,
+      "wav": "audio/wav/voice-biscuit-worry.wav",
+      "mp3": "audio/mp3/voice-biscuit-worry.mp3"
+    },
+    "voice-biscuit-fall": {
+      "duration": 0.4574166666666667,
+      "wav": "audio/wav/voice-biscuit-fall.wav",
+      "mp3": "audio/mp3/voice-biscuit-fall.mp3"
+    },
+    "voice-biscuit-land": {
+      "duration": 0.211,
+      "wav": "audio/wav/voice-biscuit-land.wav",
+      "mp3": "audio/mp3/voice-biscuit-land.mp3"
+    },
+    "voice-biscuit-recover": {
+      "duration": 0.5542083333333333,
+      "wav": "audio/wav/voice-biscuit-recover.wav",
+      "mp3": "audio/mp3/voice-biscuit-recover.mp3"
+    },
+    "voice-pip-hello": {
+      "duration": 0.4583125,
+      "wav": "audio/wav/voice-pip-hello.wav",
+      "mp3": "audio/mp3/voice-pip-hello.mp3"
+    },
+    "voice-pip-joy": {
+      "duration": 0.591125,
+      "wav": "audio/wav/voice-pip-joy.wav",
+      "mp3": "audio/mp3/voice-pip-joy.mp3"
+    },
+    "voice-pip-worry": {
+      "duration": 0.3753125,
+      "wav": "audio/wav/voice-pip-worry.wav",
+      "mp3": "audio/mp3/voice-pip-worry.mp3"
+    },
+    "voice-pip-fall": {
+      "duration": 0.4334166666666667,
+      "wav": "audio/wav/voice-pip-fall.wav",
+      "mp3": "audio/mp3/voice-pip-fall.mp3"
+    },
+    "voice-pip-land": {
+      "duration": 0.201,
+      "wav": "audio/wav/voice-pip-land.wav",
+      "mp3": "audio/mp3/voice-pip-land.mp3"
+    },
+    "voice-pip-recover": {
+      "duration": 0.5247083333333333,
+      "wav": "audio/wav/voice-pip-recover.wav",
+      "mp3": "audio/mp3/voice-pip-recover.mp3"
+    },
+    "voice-bao-hello": {
+      "duration": 0.6164166666666666,
+      "wav": "audio/wav/voice-bao-hello.wav",
+      "mp3": "audio/mp3/voice-bao-hello.mp3"
+    },
+    "voice-bao-joy": {
+      "duration": 0.7988125,
+      "wav": "audio/wav/voice-bao-joy.wav",
+      "mp3": "audio/mp3/voice-bao-joy.mp3"
+    },
+    "voice-bao-worry": {
+      "duration": 0.5023958333333334,
+      "wav": "audio/wav/voice-bao-worry.wav",
+      "mp3": "audio/mp3/voice-bao-worry.mp3"
+    },
+    "voice-bao-fall": {
+      "duration": 0.5822083333333333,
+      "wav": "audio/wav/voice-bao-fall.wav",
+      "mp3": "audio/mp3/voice-bao-fall.mp3"
+    },
+    "voice-bao-land": {
+      "duration": 0.263,
+      "wav": "audio/wav/voice-bao-land.wav",
+      "mp3": "audio/mp3/voice-bao-land.mp3"
+    },
+    "voice-bao-recover": {
+      "duration": 0.7076041666666667,
+      "wav": "audio/wav/voice-bao-recover.wav",
+      "mp3": "audio/mp3/voice-bao-recover.mp3"
+    },
+    "voice-koa-hello": {
+      "duration": 0.6623125,
+      "wav": "audio/wav/voice-koa-hello.wav",
+      "mp3": "audio/mp3/voice-koa-hello.mp3"
+    },
+    "voice-koa-joy": {
+      "duration": 0.859125,
+      "wav": "audio/wav/voice-koa-joy.wav",
+      "mp3": "audio/mp3/voice-koa-joy.mp3"
+    },
+    "voice-koa-worry": {
+      "duration": 0.5393125,
+      "wav": "audio/wav/voice-koa-worry.wav",
+      "mp3": "audio/mp3/voice-koa-worry.mp3"
+    },
+    "voice-koa-fall": {
+      "duration": 0.6254166666666666,
+      "wav": "audio/wav/voice-koa-fall.wav",
+      "mp3": "audio/mp3/voice-koa-fall.mp3"
+    },
+    "voice-koa-land": {
+      "duration": 0.281,
+      "wav": "audio/wav/voice-koa-land.wav",
+      "mp3": "audio/mp3/voice-koa-land.mp3"
+    },
+    "voice-koa-recover": {
+      "duration": 0.7607083333333333,
+      "wav": "audio/wav/voice-koa-recover.wav",
+      "mp3": "audio/mp3/voice-koa-recover.mp3"
+    },
+    "voice-lolo-hello": {
+      "duration": 0.5246041666666666,
+      "wav": "audio/wav/voice-lolo-hello.wav",
+      "mp3": "audio/mp3/voice-lolo-hello.mp3"
+    },
+    "voice-lolo-joy": {
+      "duration": 0.6782083333333333,
+      "wav": "audio/wav/voice-lolo-joy.wav",
+      "mp3": "audio/mp3/voice-lolo-joy.mp3"
+    },
+    "voice-lolo-worry": {
+      "duration": 0.428625,
+      "wav": "audio/wav/voice-lolo-worry.wav",
+      "mp3": "audio/mp3/voice-lolo-worry.mp3"
+    },
+    "voice-lolo-fall": {
+      "duration": 0.4958125,
+      "wav": "audio/wav/voice-lolo-fall.wav",
+      "mp3": "audio/mp3/voice-lolo-fall.mp3"
+    },
+    "voice-lolo-land": {
+      "duration": 0.227,
+      "wav": "audio/wav/voice-lolo-land.wav",
+      "mp3": "audio/mp3/voice-lolo-land.mp3"
+    },
+    "voice-lolo-recover": {
+      "duration": 0.6014166666666667,
+      "wav": "audio/wav/voice-lolo-recover.wav",
+      "mp3": "audio/mp3/voice-lolo-recover.mp3"
+    },
+    "voice-rocco-hello": {
+      "duration": 0.47870833333333335,
+      "wav": "audio/wav/voice-rocco-hello.wav",
+      "mp3": "audio/mp3/voice-rocco-hello.mp3"
+    },
+    "voice-rocco-joy": {
+      "duration": 0.6178958333333333,
+      "wav": "audio/wav/voice-rocco-joy.wav",
+      "mp3": "audio/mp3/voice-rocco-joy.mp3"
+    },
+    "voice-rocco-worry": {
+      "duration": 0.3917083333333333,
+      "wav": "audio/wav/voice-rocco-worry.wav",
+      "mp3": "audio/mp3/voice-rocco-worry.mp3"
+    },
+    "voice-rocco-fall": {
+      "duration": 0.45260416666666664,
+      "wav": "audio/wav/voice-rocco-fall.wav",
+      "mp3": "audio/mp3/voice-rocco-fall.mp3"
+    },
+    "voice-rocco-land": {
+      "duration": 0.209,
+      "wav": "audio/wav/voice-rocco-land.wav",
+      "mp3": "audio/mp3/voice-rocco-land.mp3"
+    },
+    "voice-rocco-recover": {
+      "duration": 0.5483125,
+      "wav": "audio/wav/voice-rocco-recover.wav",
+      "mp3": "audio/mp3/voice-rocco-recover.mp3"
+    },
+    "voice-ember-hello": {
+      "duration": 0.49402083333333335,
+      "wav": "audio/wav/voice-ember-hello.wav",
+      "mp3": "audio/mp3/voice-ember-hello.mp3"
+    },
+    "voice-ember-joy": {
+      "duration": 0.6380208333333334,
+      "wav": "audio/wav/voice-ember-joy.wav",
+      "mp3": "audio/mp3/voice-ember-joy.mp3"
+    },
+    "voice-ember-worry": {
+      "duration": 0.404,
+      "wav": "audio/wav/voice-ember-worry.wav",
+      "mp3": "audio/mp3/voice-ember-worry.mp3"
+    },
+    "voice-ember-fall": {
+      "duration": 0.467,
+      "wav": "audio/wav/voice-ember-fall.wav",
+      "mp3": "audio/mp3/voice-ember-fall.mp3"
+    },
+    "voice-ember-land": {
+      "duration": 0.21502083333333333,
+      "wav": "audio/wav/voice-ember-land.wav",
+      "mp3": "audio/mp3/voice-ember-land.mp3"
+    },
+    "voice-ember-recover": {
+      "duration": 0.5660208333333333,
+      "wav": "audio/wav/voice-ember-recover.wav",
+      "mp3": "audio/mp3/voice-ember-recover.mp3"
+    },
+    "voice-sage-hello": {
+      "duration": 0.6164166666666666,
+      "wav": "audio/wav/voice-sage-hello.wav",
+      "mp3": "audio/mp3/voice-sage-hello.mp3"
+    },
+    "voice-sage-joy": {
+      "duration": 0.7988125,
+      "wav": "audio/wav/voice-sage-joy.wav",
+      "mp3": "audio/mp3/voice-sage-joy.mp3"
+    },
+    "voice-sage-worry": {
+      "duration": 0.5023958333333334,
+      "wav": "audio/wav/voice-sage-worry.wav",
+      "mp3": "audio/mp3/voice-sage-worry.mp3"
+    },
+    "voice-sage-fall": {
+      "duration": 0.5822083333333333,
+      "wav": "audio/wav/voice-sage-fall.wav",
+      "mp3": "audio/mp3/voice-sage-fall.mp3"
+    },
+    "voice-sage-land": {
+      "duration": 0.263,
+      "wav": "audio/wav/voice-sage-land.wav",
+      "mp3": "audio/mp3/voice-sage-land.mp3"
+    },
+    "voice-sage-recover": {
+      "duration": 0.7076041666666667,
+      "wav": "audio/wav/voice-sage-recover.wav",
+      "mp3": "audio/mp3/voice-sage-recover.mp3"
+    },
+    "voice-rexy-hello": {
+      "duration": 0.5603125,
+      "wav": "audio/wav/voice-rexy-hello.wav",
+      "mp3": "audio/mp3/voice-rexy-hello.mp3"
+    },
+    "voice-rexy-joy": {
+      "duration": 0.725125,
+      "wav": "audio/wav/voice-rexy-joy.wav",
+      "mp3": "audio/mp3/voice-rexy-joy.mp3"
+    },
+    "voice-rexy-worry": {
+      "duration": 0.4573125,
+      "wav": "audio/wav/voice-rexy-worry.wav",
+      "mp3": "audio/mp3/voice-rexy-worry.mp3"
+    },
+    "voice-rexy-fall": {
+      "duration": 0.5294166666666666,
+      "wav": "audio/wav/voice-rexy-fall.wav",
+      "mp3": "audio/mp3/voice-rexy-fall.mp3"
+    },
+    "voice-rexy-land": {
+      "duration": 0.241,
+      "wav": "audio/wav/voice-rexy-land.wav",
+      "mp3": "audio/mp3/voice-rexy-land.mp3"
+    },
+    "voice-rexy-recover": {
+      "duration": 0.6427083333333333,
+      "wav": "audio/wav/voice-rexy-recover.wav",
+      "mp3": "audio/mp3/voice-rexy-recover.mp3"
+    },
+    "voice-vesper-hello": {
+      "duration": 0.4838125,
+      "wav": "audio/wav/voice-vesper-hello.wav",
+      "mp3": "audio/mp3/voice-vesper-hello.mp3"
+    },
+    "voice-vesper-joy": {
+      "duration": 0.624625,
+      "wav": "audio/wav/voice-vesper-joy.wav",
+      "mp3": "audio/mp3/voice-vesper-joy.mp3"
+    },
+    "voice-vesper-worry": {
+      "duration": 0.3958125,
+      "wav": "audio/wav/voice-vesper-worry.wav",
+      "mp3": "audio/mp3/voice-vesper-worry.mp3"
+    },
+    "voice-vesper-fall": {
+      "duration": 0.4574166666666667,
+      "wav": "audio/wav/voice-vesper-fall.wav",
+      "mp3": "audio/mp3/voice-vesper-fall.mp3"
+    },
+    "voice-vesper-land": {
+      "duration": 0.211,
+      "wav": "audio/wav/voice-vesper-land.wav",
+      "mp3": "audio/mp3/voice-vesper-land.mp3"
+    },
+    "voice-vesper-recover": {
+      "duration": 0.5542083333333333,
+      "wav": "audio/wav/voice-vesper-recover.wav",
+      "mp3": "audio/mp3/voice-vesper-recover.mp3"
+    },
+    "voice-button-hello": {
+      "duration": 0.6637916666666667,
+      "wav": "audio/wav/voice-button-hello.wav",
+      "mp3": "audio/mp3/voice-button-hello.mp3"
+    },
+    "voice-button-joy": {
+      "duration": 0.6782083333333333,
+      "wav": "audio/wav/voice-button-joy.wav",
+      "mp3": "audio/mp3/voice-button-joy.mp3"
+    },
+    "voice-button-worry": {
+      "duration": 0.428625,
+      "wav": "audio/wav/voice-button-worry.wav",
+      "mp3": "audio/mp3/voice-button-worry.mp3"
+    },
+    "voice-button-fall": {
+      "duration": 0.4958125,
+      "wav": "audio/wav/voice-button-fall.wav",
+      "mp3": "audio/mp3/voice-button-fall.mp3"
+    },
+    "voice-button-land": {
+      "duration": 0.227,
+      "wav": "audio/wav/voice-button-land.wav",
+      "mp3": "audio/mp3/voice-button-land.mp3"
+    },
+    "voice-button-recover": {
+      "duration": 0.6014166666666667,
+      "wav": "audio/wav/voice-button-recover.wav",
+      "mp3": "audio/mp3/voice-button-recover.mp3"
+    },
+    "voice-ribbit-hello": {
+      "duration": 0.5552083333333333,
+      "wav": "audio/wav/voice-ribbit-hello.wav",
+      "mp3": "audio/mp3/voice-ribbit-hello.mp3"
+    },
+    "voice-ribbit-joy": {
+      "duration": 0.7183958333333333,
+      "wav": "audio/wav/voice-ribbit-joy.wav",
+      "mp3": "audio/mp3/voice-ribbit-joy.mp3"
+    },
+    "voice-ribbit-worry": {
+      "duration": 0.4532083333333333,
+      "wav": "audio/wav/voice-ribbit-worry.wav",
+      "mp3": "audio/mp3/voice-ribbit-worry.mp3"
+    },
+    "voice-ribbit-fall": {
+      "duration": 0.5246041666666666,
+      "wav": "audio/wav/voice-ribbit-fall.wav",
+      "mp3": "audio/mp3/voice-ribbit-fall.mp3"
+    },
+    "voice-ribbit-land": {
+      "duration": 0.239,
+      "wav": "audio/wav/voice-ribbit-land.wav",
+      "mp3": "audio/mp3/voice-ribbit-land.mp3"
+    },
+    "voice-ribbit-recover": {
+      "duration": 0.6368125,
+      "wav": "audio/wav/voice-ribbit-recover.wav",
+      "mp3": "audio/mp3/voice-ribbit-recover.mp3"
+    }
+  }
+}

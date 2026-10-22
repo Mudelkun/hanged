@@ -1,0 +1,59 @@
+[
+  {
+    "title": "Little Detours",
+    "file": "01-little-detours.mp3",
+    "seconds": 51.83,
+    "notes": 260,
+    "pre_master_measurement": {
+      "input_i": "-31.72",
+      "input_tp": "-19.53",
+      "input_lra": "2.60",
+      "input_thresh": "-41.89",
+      "output_i": "-19.15",
+      "output_tp": "-6.93",
+      "output_lra": "2.50",
+      "output_thresh": "-29.30",
+      "normalization_type": "dynamic",
+      "target_offset": "0.15"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\first-listen-masters\\01-little-detours.wav"
+  },
+  {
+    "title": "Sunday Window",
+    "file": "02-sunday-window.mp3",
+    "seconds": 49.34,
+    "notes": 201,
+    "pre_master_measurement": {
+      "input_i": "-32.62",
+      "input_tp": "-17.99",
+      "input_lra": "2.10",
+      "input_thresh": "-42.90",
+      "output_i": "-19.03",
+      "output_tp": "-4.50",
+      "output_lra": "2.00",
+      "output_thresh": "-29.28",
+      "normalization_type": "dynamic",
+      "target_offset": "0.03"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\first-listen-masters\\02-sunday-window.wav"
+  },
+  {
+    "title": "Updraft",
+    "file": "03-updraft.mp3",
+    "seconds": 54.98,
+    "notes": 172,
+    "pre_master_measurement": {
+      "input_i": "-33.77",
+      "input_tp": "-22.12",
+      "input_lra": "4.10",
+      "input_thresh": "-44.12",
+      "output_i": "-18.76",
+      "output_tp": "-7.06",
+      "output_lra": "4.10",
+      "output_thresh": "-29.11",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.24"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\first-listen-masters\\03-updraft.wav"
+  }
+]

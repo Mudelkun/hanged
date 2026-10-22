@@ -1,0 +1,1873 @@
+{
+  "title": "Little Detours",
+  "tempos": [
+    100,
+    101,
+    101,
+    97,
+    100,
+    103,
+    101,
+    95,
+    99,
+    102,
+    102,
+    98,
+    100,
+    100,
+    98,
+    95,
+    100,
+    98,
+    94,
+    85
+  ],
+  "parts": {
+    "0": {
+      "name": "Clarinet",
+      "gm_program_zero_based": 71,
+      "volume": 88,
+      "pan": 70
+    },
+    "1": {
+      "name": "Piano",
+      "gm_program_zero_based": 0,
+      "volume": 79,
+      "pan": 56
+    },
+    "2": {
+      "name": "Pizzicato strings",
+      "gm_program_zero_based": 45,
+      "volume": 64,
+      "pan": 46
+    },
+    "3": {
+      "name": "Bassoon",
+      "gm_program_zero_based": 70,
+      "volume": 70,
+      "pan": 78
+    }
+  },
+  "notes": [
+    {
+      "part": "Clarinet",
+      "beat": 0.5899,
+      "pitch": "F#4",
+      "duration": 0.4461,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 1.0934,
+      "pitch": "A4",
+      "duration": 0.671,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 1.8492,
+      "pitch": "B4",
+      "duration": 0.2348,
+      "velocity": 62
+    },
+    {
+      "part": "Clarinet",
+      "beat": 2.1002,
+      "pitch": "A4",
+      "duration": 0.8716,
+      "velocity": 61
+    },
+    {
+      "part": "Clarinet",
+      "beat": 3.0854,
+      "pitch": "F#4",
+      "duration": 0.4538,
+      "velocity": 64
+    },
+    {
+      "part": "Piano",
+      "beat": 0.0871,
+      "pitch": "D3",
+      "duration": 1.2094,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 0.1306,
+      "pitch": "F#3",
+      "duration": 1.2062,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 0.1509,
+      "pitch": "A3",
+      "duration": 1.2076,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 0.1575,
+      "pitch": "B3",
+      "duration": 1.1851,
+      "velocity": 46
+    },
+    {
+      "part": "Piano",
+      "beat": 2.6012,
+      "pitch": "D3",
+      "duration": 0.7062,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 2.6316,
+      "pitch": "F#3",
+      "duration": 0.6958,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 2.6432,
+      "pitch": "A3",
+      "duration": 0.6868,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 2.6668,
+      "pitch": "B3",
+      "duration": 0.6985,
+      "velocity": 48
+    },
+    {
+      "part": "Clarinet",
+      "beat": 4.1069,
+      "pitch": "G4",
+      "duration": 0.6568,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 4.8406,
+      "pitch": "B4",
+      "duration": 0.2052,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 5.1096,
+      "pitch": "D5",
+      "duration": 1.3064,
+      "velocity": 62
+    },
+    {
+      "part": "Clarinet",
+      "beat": 6.5913,
+      "pitch": "B4",
+      "duration": 0.455,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 7.1076,
+      "pitch": "A4",
+      "duration": 0.4484,
+      "velocity": 65
+    },
+    {
+      "part": "Piano",
+      "beat": 4.6147,
+      "pitch": "G2",
+      "duration": 1.3863,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 4.6173,
+      "pitch": "F#3",
+      "duration": 1.4105,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 4.6312,
+      "pitch": "B3",
+      "duration": 1.3887,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 4.6513,
+      "pitch": "D4",
+      "duration": 1.3957,
+      "velocity": 47
+    },
+    {
+      "part": "Clarinet",
+      "beat": 8.1,
+      "pitch": "G4",
+      "duration": 0.4342,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 8.5966,
+      "pitch": "F#4",
+      "duration": 0.4249,
+      "velocity": 61
+    },
+    {
+      "part": "Clarinet",
+      "beat": 9.0898,
+      "pitch": "E4",
+      "duration": 0.8869,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 10.0851,
+      "pitch": "B4",
+      "duration": 0.4262,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 10.6074,
+      "pitch": "A4",
+      "duration": 0.4311,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 11.0946,
+      "pitch": "G4",
+      "duration": 0.4554,
+      "velocity": 61
+    },
+    {
+      "part": "Piano",
+      "beat": 8.0904,
+      "pitch": "E3",
+      "duration": 0.7894,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 8.128,
+      "pitch": "G3",
+      "duration": 0.7946,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 8.1389,
+      "pitch": "B3",
+      "duration": 0.7938,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 8.1441,
+      "pitch": "D4",
+      "duration": 0.8135,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 10.1083,
+      "pitch": "E3",
+      "duration": 1.196,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 10.1041,
+      "pitch": "G3",
+      "duration": 1.2006,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 10.1497,
+      "pitch": "B3",
+      "duration": 1.197,
+      "velocity": 46
+    },
+    {
+      "part": "Piano",
+      "beat": 10.1678,
+      "pitch": "D4",
+      "duration": 1.2029,
+      "velocity": 46
+    },
+    {
+      "part": "Clarinet",
+      "beat": 12.0997,
+      "pitch": "F#4",
+      "duration": 0.436,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 12.6131,
+      "pitch": "E4",
+      "duration": 0.4319,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 13.0871,
+      "pitch": "C#4",
+      "duration": 0.4498,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 13.6072,
+      "pitch": "E4",
+      "duration": 0.4258,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 14.0866,
+      "pitch": "A4",
+      "duration": 1.3123,
+      "velocity": 63
+    },
+    {
+      "part": "Piano",
+      "beat": 13.086,
+      "pitch": "A2",
+      "duration": 1.492,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 13.1051,
+      "pitch": "G3",
+      "duration": 1.4948,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 13.1505,
+      "pitch": "B3",
+      "duration": 1.5079,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 13.1405,
+      "pitch": "C#4",
+      "duration": 1.4885,
+      "velocity": 49
+    },
+    {
+      "part": "Clarinet",
+      "beat": 17.1008,
+      "pitch": "A4",
+      "duration": 0.4473,
+      "velocity": 61
+    },
+    {
+      "part": "Clarinet",
+      "beat": 17.6136,
+      "pitch": "C#5",
+      "duration": 0.4528,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 18.1089,
+      "pitch": "E5",
+      "duration": 0.6722,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 18.8582,
+      "pitch": "C#5",
+      "duration": 0.2195,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 19.0993,
+      "pitch": "B4",
+      "duration": 0.4284,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 19.5933,
+      "pitch": "A4",
+      "duration": 0.4486,
+      "velocity": 61
+    },
+    {
+      "part": "Piano",
+      "beat": 16.0965,
+      "pitch": "F#2",
+      "duration": 1.788,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 16.1037,
+      "pitch": "A3",
+      "duration": 1.803,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 16.1285,
+      "pitch": "C#4",
+      "duration": 1.8146,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 16.1467,
+      "pitch": "E4",
+      "duration": 1.797,
+      "velocity": 50
+    },
+    {
+      "part": "Clarinet",
+      "beat": 20.1122,
+      "pitch": "F#4",
+      "duration": 0.4283,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 20.5969,
+      "pitch": "D#4",
+      "duration": 0.43,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 21.0984,
+      "pitch": "F#4",
+      "duration": 0.8685,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 22.0886,
+      "pitch": "A4",
+      "duration": 0.653,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 22.8512,
+      "pitch": "B4",
+      "duration": 0.2144,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 23.1116,
+      "pitch": "F#4",
+      "duration": 0.4439,
+      "velocity": 62
+    },
+    {
+      "part": "Piano",
+      "beat": 20.8405,
+      "pitch": "B2",
+      "duration": 0.6961,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 20.8753,
+      "pitch": "A3",
+      "duration": 0.7082,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 20.8923,
+      "pitch": "D#4",
+      "duration": 0.712,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 20.8907,
+      "pitch": "F#4",
+      "duration": 0.7137,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 22.5989,
+      "pitch": "B2",
+      "duration": 0.686,
+      "velocity": 53
+    },
+    {
+      "part": "Piano",
+      "beat": 22.62,
+      "pitch": "A3",
+      "duration": 0.7113,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 22.6286,
+      "pitch": "D#4",
+      "duration": 0.7063,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 22.6614,
+      "pitch": "F#4",
+      "duration": 0.6918,
+      "velocity": 45
+    },
+    {
+      "part": "Clarinet",
+      "beat": 24.0943,
+      "pitch": "G4",
+      "duration": 0.8928,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 25.1095,
+      "pitch": "B4",
+      "duration": 0.4497,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 25.6134,
+      "pitch": "A4",
+      "duration": 0.4272,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 26.0868,
+      "pitch": "F#4",
+      "duration": 0.663,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 26.864,
+      "pitch": "E4",
+      "duration": 0.2139,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 27.1037,
+      "pitch": "G4",
+      "duration": 0.4483,
+      "velocity": 62
+    },
+    {
+      "part": "Piano",
+      "beat": 24.0869,
+      "pitch": "E3",
+      "duration": 1.0101,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 24.1137,
+      "pitch": "G3",
+      "duration": 0.9942,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 24.1242,
+      "pitch": "B3",
+      "duration": 0.9864,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 24.1578,
+      "pitch": "F#4",
+      "duration": 1.0098,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 26.8502,
+      "pitch": "E3",
+      "duration": 0.7143,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 26.8723,
+      "pitch": "G3",
+      "duration": 0.6982,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 26.8864,
+      "pitch": "B3",
+      "duration": 0.712,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 26.8958,
+      "pitch": "F#4",
+      "duration": 0.6856,
+      "velocity": 47
+    },
+    {
+      "part": "Clarinet",
+      "beat": 28.0863,
+      "pitch": "E4",
+      "duration": 0.4328,
+      "velocity": 68
+    },
+    {
+      "part": "Clarinet",
+      "beat": 28.6095,
+      "pitch": "C#4",
+      "duration": 0.4472,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 29.1089,
+      "pitch": "B3",
+      "duration": 0.4368,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 29.5996,
+      "pitch": "C#4",
+      "duration": 0.4442,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 30.0876,
+      "pitch": "E4",
+      "duration": 0.8794,
+      "velocity": 64
+    },
+    {
+      "part": "Piano",
+      "beat": 28.5962,
+      "pitch": "A2",
+      "duration": 1.4033,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 28.6264,
+      "pitch": "G3",
+      "duration": 1.4041,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 28.6396,
+      "pitch": "C#4",
+      "duration": 1.4074,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 28.66,
+      "pitch": "F#4",
+      "duration": 1.4059,
+      "velocity": 45
+    },
+    {
+      "part": "Clarinet",
+      "beat": 32.0994,
+      "pitch": "F#4",
+      "duration": 0.66,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 32.8534,
+      "pitch": "A4",
+      "duration": 0.2304,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 33.1147,
+      "pitch": "E5",
+      "duration": 0.4242,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 33.5911,
+      "pitch": "D5",
+      "duration": 0.452,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 34.0894,
+      "pitch": "B4",
+      "duration": 0.8817,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 35.1007,
+      "pitch": "A4",
+      "duration": 0.4438,
+      "velocity": 67
+    },
+    {
+      "part": "Piano",
+      "beat": 32.1073,
+      "pitch": "D3",
+      "duration": 1.3988,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 32.1327,
+      "pitch": "F#3",
+      "duration": 1.3893,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 32.1272,
+      "pitch": "A3",
+      "duration": 1.3947,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 32.1565,
+      "pitch": "E4",
+      "duration": 1.39,
+      "velocity": 44
+    },
+    {
+      "part": "Piano",
+      "beat": 35.1135,
+      "pitch": "D3",
+      "duration": 0.5943,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 35.1313,
+      "pitch": "F#3",
+      "duration": 0.615,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 35.1362,
+      "pitch": "A3",
+      "duration": 0.5916,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 35.1473,
+      "pitch": "E4",
+      "duration": 0.5961,
+      "velocity": 47
+    },
+    {
+      "part": "Clarinet",
+      "beat": 36.099,
+      "pitch": "G#4",
+      "duration": 0.438,
+      "velocity": 71
+    },
+    {
+      "part": "Clarinet",
+      "beat": 36.605,
+      "pitch": "A#4",
+      "duration": 0.4454,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 37.0965,
+      "pitch": "C#5",
+      "duration": 0.6527,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 37.8643,
+      "pitch": "E5",
+      "duration": 0.2109,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 38.1093,
+      "pitch": "D5",
+      "duration": 0.4539,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 38.596,
+      "pitch": "C#5",
+      "duration": 0.4264,
+      "velocity": 68
+    },
+    {
+      "part": "Clarinet",
+      "beat": 39.0862,
+      "pitch": "A#4",
+      "duration": 0.4435,
+      "velocity": 69
+    },
+    {
+      "part": "Piano",
+      "beat": 36.5985,
+      "pitch": "F#2",
+      "duration": 0.7157,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 36.6074,
+      "pitch": "A#3",
+      "duration": 0.7151,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 36.6346,
+      "pitch": "C#4",
+      "duration": 0.7126,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 36.644,
+      "pitch": "E4",
+      "duration": 0.7023,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 38.098,
+      "pitch": "F#2",
+      "duration": 1.0109,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 38.1086,
+      "pitch": "A#3",
+      "duration": 0.9969,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 38.1283,
+      "pitch": "C#4",
+      "duration": 1.0024,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 38.1643,
+      "pitch": "E4",
+      "duration": 1.0136,
+      "velocity": 50
+    },
+    {
+      "part": "Clarinet",
+      "beat": 40.0855,
+      "pitch": "B4",
+      "duration": 1.3226,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 41.5981,
+      "pitch": "F#4",
+      "duration": 0.4506,
+      "velocity": 70
+    },
+    {
+      "part": "Clarinet",
+      "beat": 42.1047,
+      "pitch": "A4",
+      "duration": 0.6489,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 42.8595,
+      "pitch": "C#5",
+      "duration": 0.2234,
+      "velocity": 68
+    },
+    {
+      "part": "Clarinet",
+      "beat": 43.0997,
+      "pitch": "D5",
+      "duration": 0.4457,
+      "velocity": 69
+    },
+    {
+      "part": "Piano",
+      "beat": 40.0951,
+      "pitch": "B2",
+      "duration": 1.5926,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 40.1116,
+      "pitch": "A3",
+      "duration": 1.6045,
+      "velocity": 46
+    },
+    {
+      "part": "Piano",
+      "beat": 40.1477,
+      "pitch": "C#4",
+      "duration": 1.5863,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 40.1446,
+      "pitch": "D4",
+      "duration": 1.5871,
+      "velocity": 50
+    },
+    {
+      "part": "Clarinet",
+      "beat": 44.0907,
+      "pitch": "B4",
+      "duration": 0.4326,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 44.5899,
+      "pitch": "G#4",
+      "duration": 0.4427,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 45.1054,
+      "pitch": "F#4",
+      "duration": 0.4449,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 45.586,
+      "pitch": "E4",
+      "duration": 0.4314,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 46.1012,
+      "pitch": "D4",
+      "duration": 0.4371,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 46.5908,
+      "pitch": "F#4",
+      "duration": 0.4545,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 47.0873,
+      "pitch": "G#4",
+      "duration": 0.8905,
+      "velocity": 65
+    },
+    {
+      "part": "Piano",
+      "beat": 45.1001,
+      "pitch": "E3",
+      "duration": 0.7073,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 45.119,
+      "pitch": "G#3",
+      "duration": 0.7041,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 45.1216,
+      "pitch": "B3",
+      "duration": 0.6958,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 45.1439,
+      "pitch": "D4",
+      "duration": 0.7112,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 46.8356,
+      "pitch": "E3",
+      "duration": 0.6929,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 46.8595,
+      "pitch": "G#3",
+      "duration": 0.7089,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 46.887,
+      "pitch": "B3",
+      "duration": 0.7131,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 46.9007,
+      "pitch": "D4",
+      "duration": 0.7141,
+      "velocity": 49
+    },
+    {
+      "part": "Clarinet",
+      "beat": 48.1088,
+      "pitch": "B4",
+      "duration": 0.4244,
+      "velocity": 69
+    },
+    {
+      "part": "Clarinet",
+      "beat": 48.5902,
+      "pitch": "A4",
+      "duration": 0.4325,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 49.1077,
+      "pitch": "G4",
+      "duration": 0.8847,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 50.0905,
+      "pitch": "F#4",
+      "duration": 0.4552,
+      "velocity": 68
+    },
+    {
+      "part": "Clarinet",
+      "beat": 50.6115,
+      "pitch": "E4",
+      "duration": 0.4306,
+      "velocity": 68
+    },
+    {
+      "part": "Piano",
+      "beat": 48.3516,
+      "pitch": "E3",
+      "duration": 1.2088,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 48.376,
+      "pitch": "G3",
+      "duration": 1.2146,
+      "velocity": 46
+    },
+    {
+      "part": "Piano",
+      "beat": 48.3782,
+      "pitch": "B3",
+      "duration": 1.2032,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 48.4052,
+      "pitch": "D4",
+      "duration": 1.2101,
+      "velocity": 46
+    },
+    {
+      "part": "Clarinet",
+      "beat": 53.1022,
+      "pitch": "E4",
+      "duration": 0.4558,
+      "velocity": 61
+    },
+    {
+      "part": "Clarinet",
+      "beat": 53.6136,
+      "pitch": "G4",
+      "duration": 0.4482,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 54.1072,
+      "pitch": "F#4",
+      "duration": 0.4477,
+      "velocity": 59
+    },
+    {
+      "part": "Clarinet",
+      "beat": 54.6128,
+      "pitch": "E4",
+      "duration": 0.4407,
+      "velocity": 62
+    },
+    {
+      "part": "Clarinet",
+      "beat": 55.0939,
+      "pitch": "C#4",
+      "duration": 0.4292,
+      "velocity": 63
+    },
+    {
+      "part": "Piano",
+      "beat": 52.0977,
+      "pitch": "A2",
+      "duration": 0.8045,
+      "velocity": 53
+    },
+    {
+      "part": "Piano",
+      "beat": 52.1178,
+      "pitch": "G3",
+      "duration": 0.7901,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 52.1286,
+      "pitch": "C#4",
+      "duration": 0.7978,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 52.1457,
+      "pitch": "F#4",
+      "duration": 0.7993,
+      "velocity": 44
+    },
+    {
+      "part": "Piano",
+      "beat": 54.6011,
+      "pitch": "A2",
+      "duration": 0.7987,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 54.6267,
+      "pitch": "G3",
+      "duration": 0.7948,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 54.6451,
+      "pitch": "C#4",
+      "duration": 0.8076,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 54.6456,
+      "pitch": "F#4",
+      "duration": 0.7891,
+      "velocity": 45
+    },
+    {
+      "part": "Clarinet",
+      "beat": 56.0968,
+      "pitch": "D4",
+      "duration": 1.3041,
+      "velocity": 66
+    },
+    {
+      "part": "Clarinet",
+      "beat": 57.611,
+      "pitch": "F#4",
+      "duration": 0.4335,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 58.1149,
+      "pitch": "A4",
+      "duration": 0.8703,
+      "velocity": 59
+    },
+    {
+      "part": "Clarinet",
+      "beat": 59.1111,
+      "pitch": "B4",
+      "duration": 0.4417,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 59.5995,
+      "pitch": "A4",
+      "duration": 0.4258,
+      "velocity": 60
+    },
+    {
+      "part": "Piano",
+      "beat": 56.6125,
+      "pitch": "D3",
+      "duration": 1.7882,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 56.6168,
+      "pitch": "F#3",
+      "duration": 1.7965,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 56.6344,
+      "pitch": "A3",
+      "duration": 1.807,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 56.665,
+      "pitch": "B3",
+      "duration": 1.808,
+      "velocity": 46
+    },
+    {
+      "part": "Clarinet",
+      "beat": 60.1047,
+      "pitch": "F#4",
+      "duration": 0.8875,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 61.1088,
+      "pitch": "E4",
+      "duration": 0.4537,
+      "velocity": 59
+    },
+    {
+      "part": "Clarinet",
+      "beat": 61.6029,
+      "pitch": "D4",
+      "duration": 0.8747,
+      "velocity": 64
+    },
+    {
+      "part": "Piano",
+      "beat": 60.0873,
+      "pitch": "D3",
+      "duration": 0.9939,
+      "velocity": 52
+    },
+    {
+      "part": "Piano",
+      "beat": 60.1069,
+      "pitch": "F#3",
+      "duration": 1.0081,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 60.1241,
+      "pitch": "B3",
+      "duration": 1.0037,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 60.1455,
+      "pitch": "E4",
+      "duration": 0.9906,
+      "velocity": 47
+    },
+    {
+      "part": "Clarinet",
+      "beat": 64.6081,
+      "pitch": "B4",
+      "duration": 0.4398,
+      "velocity": 58
+    },
+    {
+      "part": "Clarinet",
+      "beat": 65.1056,
+      "pitch": "D5",
+      "duration": 0.8747,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 66.1007,
+      "pitch": "A4",
+      "duration": 0.4243,
+      "velocity": 64
+    },
+    {
+      "part": "Clarinet",
+      "beat": 66.5892,
+      "pitch": "G4",
+      "duration": 0.4258,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 67.1097,
+      "pitch": "B4",
+      "duration": 0.4259,
+      "velocity": 64
+    },
+    {
+      "part": "Piano",
+      "beat": 64.1114,
+      "pitch": "G2",
+      "duration": 1.205,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 64.1329,
+      "pitch": "F#3",
+      "duration": 1.1914,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 64.1343,
+      "pitch": "A3",
+      "duration": 1.2,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 64.1502,
+      "pitch": "B3",
+      "duration": 1.2044,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 66.8635,
+      "pitch": "G2",
+      "duration": 0.6886,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 66.8756,
+      "pitch": "F#3",
+      "duration": 0.7043,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 66.8926,
+      "pitch": "A3",
+      "duration": 0.7028,
+      "velocity": 48
+    },
+    {
+      "part": "Piano",
+      "beat": 66.9127,
+      "pitch": "B3",
+      "duration": 0.6846,
+      "velocity": 49
+    },
+    {
+      "part": "Clarinet",
+      "beat": 68.1119,
+      "pitch": "Bb4",
+      "duration": 0.671,
+      "velocity": 67
+    },
+    {
+      "part": "Clarinet",
+      "beat": 68.8526,
+      "pitch": "A4",
+      "duration": 0.2227,
+      "velocity": 58
+    },
+    {
+      "part": "Clarinet",
+      "beat": 69.0953,
+      "pitch": "G4",
+      "duration": 0.8689,
+      "velocity": 58
+    },
+    {
+      "part": "Clarinet",
+      "beat": 70.109,
+      "pitch": "E4",
+      "duration": 0.4345,
+      "velocity": 60
+    },
+    {
+      "part": "Clarinet",
+      "beat": 70.594,
+      "pitch": "D4",
+      "duration": 0.4549,
+      "velocity": 61
+    },
+    {
+      "part": "Piano",
+      "beat": 68.5906,
+      "pitch": "G2",
+      "duration": 1.7889,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 68.6077,
+      "pitch": "Bb3",
+      "duration": 1.7889,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 68.6244,
+      "pitch": "D4",
+      "duration": 1.8011,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 68.6579,
+      "pitch": "E4",
+      "duration": 1.7879,
+      "velocity": 44
+    },
+    {
+      "part": "Clarinet",
+      "beat": 72.0911,
+      "pitch": "F#4",
+      "duration": 0.4464,
+      "velocity": 65
+    },
+    {
+      "part": "Clarinet",
+      "beat": 72.5855,
+      "pitch": "A4",
+      "duration": 0.449,
+      "velocity": 59
+    },
+    {
+      "part": "Clarinet",
+      "beat": 73.103,
+      "pitch": "B4",
+      "duration": 0.6471,
+      "velocity": 59
+    },
+    {
+      "part": "Clarinet",
+      "beat": 73.848,
+      "pitch": "A4",
+      "duration": 0.2292,
+      "velocity": 62
+    },
+    {
+      "part": "Clarinet",
+      "beat": 74.106,
+      "pitch": "G4",
+      "duration": 0.45,
+      "velocity": 61
+    },
+    {
+      "part": "Clarinet",
+      "beat": 74.5941,
+      "pitch": "E4",
+      "duration": 0.4342,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 75.0957,
+      "pitch": "C#4",
+      "duration": 0.4491,
+      "velocity": 58
+    },
+    {
+      "part": "Piano",
+      "beat": 72.1023,
+      "pitch": "A2",
+      "duration": 0.6855,
+      "velocity": 50
+    },
+    {
+      "part": "Piano",
+      "beat": 72.1261,
+      "pitch": "G3",
+      "duration": 0.7025,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 72.1221,
+      "pitch": "B3",
+      "duration": 0.7045,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 72.1679,
+      "pitch": "C#4",
+      "duration": 0.7088,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 74.0929,
+      "pitch": "A2",
+      "duration": 1.1104,
+      "velocity": 49
+    },
+    {
+      "part": "Piano",
+      "beat": 74.1132,
+      "pitch": "G3",
+      "duration": 1.1052,
+      "velocity": 51
+    },
+    {
+      "part": "Piano",
+      "beat": 74.1289,
+      "pitch": "B3",
+      "duration": 1.1133,
+      "velocity": 47
+    },
+    {
+      "part": "Piano",
+      "beat": 74.1406,
+      "pitch": "C#4",
+      "duration": 1.0932,
+      "velocity": 44
+    },
+    {
+      "part": "Clarinet",
+      "beat": 76.0996,
+      "pitch": "D4",
+      "duration": 0.8903,
+      "velocity": 62
+    },
+    {
+      "part": "Clarinet",
+      "beat": 77.1076,
+      "pitch": "F#4",
+      "duration": 0.4288,
+      "velocity": 60
+    },
+    {
+      "part": "Clarinet",
+      "beat": 77.5967,
+      "pitch": "E4",
+      "duration": 0.4326,
+      "velocity": 63
+    },
+    {
+      "part": "Clarinet",
+      "beat": 78.0983,
+      "pitch": "D4",
+      "duration": 1.7514,
+      "velocity": 60
+    },
+    {
+      "part": "Piano",
+      "beat": 76.1074,
+      "pitch": "D3",
+      "duration": 3.8105,
+      "velocity": 46
+    },
+    {
+      "part": "Piano",
+      "beat": 76.1237,
+      "pitch": "F#3",
+      "duration": 3.8041,
+      "velocity": 44
+    },
+    {
+      "part": "Piano",
+      "beat": 76.1275,
+      "pitch": "A3",
+      "duration": 3.8123,
+      "velocity": 45
+    },
+    {
+      "part": "Piano",
+      "beat": 76.145,
+      "pitch": "B3",
+      "duration": 3.7998,
+      "velocity": 41
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 2.2032,
+      "pitch": "A3",
+      "duration": 0.4979,
+      "velocity": 61
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 4.2124,
+      "pitch": "G3",
+      "duration": 0.4976,
+      "velocity": 56
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 11.2899,
+      "pitch": "B3",
+      "duration": 0.491,
+      "velocity": 56
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 18.7111,
+      "pitch": "C#4",
+      "duration": 0.4948,
+      "velocity": 60
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 20.3082,
+      "pitch": "B3",
+      "duration": 0.5112,
+      "velocity": 58
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 25.7925,
+      "pitch": "G3",
+      "duration": 0.4953,
+      "velocity": 61
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 30.1963,
+      "pitch": "A3",
+      "duration": 0.493,
+      "velocity": 59
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 35.312,
+      "pitch": "D4",
+      "duration": 0.4898,
+      "velocity": 57
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 40.2994,
+      "pitch": "F#3",
+      "duration": 0.4945,
+      "velocity": 61
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 47.3546,
+      "pitch": "B3",
+      "duration": 0.4932,
+      "velocity": 61
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 50.8082,
+      "pitch": "E4",
+      "duration": 0.5056,
+      "velocity": 55
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 59.4114,
+      "pitch": "F#3",
+      "duration": 0.4919,
+      "velocity": 57
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 65.8948,
+      "pitch": "D4",
+      "duration": 0.4962,
+      "velocity": 61
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 70.79,
+      "pitch": "G3",
+      "duration": 0.4967,
+      "velocity": 60
+    },
+    {
+      "part": "Pizzicato strings",
+      "beat": 75.2023,
+      "pitch": "A3",
+      "duration": 0.5133,
+      "velocity": 56
+    },
+    {
+      "part": "Bassoon",
+      "beat": 14.1088,
+      "pitch": "E3",
+      "duration": 0.4436,
+      "velocity": 55
+    },
+    {
+      "part": "Bassoon",
+      "beat": 14.5919,
+      "pitch": "G3",
+      "duration": 0.4279,
+      "velocity": 50
+    },
+    {
+      "part": "Bassoon",
+      "beat": 15.1118,
+      "pitch": "A3",
+      "duration": 0.4503,
+      "velocity": 51
+    },
+    {
+      "part": "Bassoon",
+      "beat": 30.1,
+      "pitch": "G3",
+      "duration": 0.4465,
+      "velocity": 54
+    },
+    {
+      "part": "Bassoon",
+      "beat": 30.5913,
+      "pitch": "E3",
+      "duration": 0.4293,
+      "velocity": 53
+    },
+    {
+      "part": "Bassoon",
+      "beat": 31.0964,
+      "pitch": "C#3",
+      "duration": 0.4537,
+      "velocity": 56
+    },
+    {
+      "part": "Bassoon",
+      "beat": 50.0889,
+      "pitch": "B3",
+      "duration": 0.4364,
+      "velocity": 51
+    },
+    {
+      "part": "Bassoon",
+      "beat": 50.6064,
+      "pitch": "A3",
+      "duration": 0.4481,
+      "velocity": 51
+    },
+    {
+      "part": "Bassoon",
+      "beat": 51.0986,
+      "pitch": "G3",
+      "duration": 0.4484,
+      "velocity": 50
+    },
+    {
+      "part": "Bassoon",
+      "beat": 61.0872,
+      "pitch": "F#3",
+      "duration": 0.4345,
+      "velocity": 51
+    },
+    {
+      "part": "Bassoon",
+      "beat": 61.6003,
+      "pitch": "A3",
+      "duration": 0.4335,
+      "velocity": 53
+    },
+    {
+      "part": "Bassoon",
+      "beat": 62.1112,
+      "pitch": "B3",
+      "duration": 0.4333,
+      "velocity": 56
+    },
+    {
+      "part": "Bassoon",
+      "beat": 62.5968,
+      "pitch": "A3",
+      "duration": 0.4473,
+      "velocity": 50
+    },
+    {
+      "part": "Bassoon",
+      "beat": 63.0934,
+      "pitch": "F#3",
+      "duration": 0.4242,
+      "velocity": 53
+    },
+    {
+      "part": "Bassoon",
+      "beat": 70.11,
+      "pitch": "Bb3",
+      "duration": 0.4553,
+      "velocity": 52
+    },
+    {
+      "part": "Bassoon",
+      "beat": 70.5989,
+      "pitch": "A3",
+      "duration": 0.453,
+      "velocity": 55
+    },
+    {
+      "part": "Bassoon",
+      "beat": 71.093,
+      "pitch": "G3",
+      "duration": 0.4352,
+      "velocity": 54
+    }
+  ]
+}

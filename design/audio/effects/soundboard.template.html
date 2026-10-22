@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hanged — Sound playground</title>
+<style>
+:root{--ink:#334448;--muted:#64777a;--paper:#fffaf0;--mint:#d9eddb;--coral:#f39883;--gold:#f7d27e;--line:#deded0;--sky:#dbedf1;--shadow:0 4px 0 #33444812;--radius:22px}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-rounded,"Trebuchet MS",system-ui,sans-serif;padding-bottom:110px}button,input,select{font:inherit;color:inherit}button,a,select,input{touch-action:manipulation}button,select{cursor:pointer}button{border:1px solid var(--line);background:#fffdf6;border-radius:12px;padding:10px 15px;box-shadow:0 2px 0 #33444812;line-height:1.2;min-height:44px;font-weight:700;transition:transform .12s,background .12s}button:hover{background:#f6edda}button:active{transform:translateY(2px);box-shadow:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7b9f98;outline-offset:4px}button:disabled{opacity:.45;cursor:default}.primary{background:var(--coral);border-color:#d98975}.primary:hover{background:#efaa94}.mint{background:var(--mint)}.plain{background:transparent;box-shadow:none}.small{font-size:13px;min-height:36px;padding:8px 11px}a{color:#416e66;text-underline-offset:3px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(36px,5vw,62px);line-height:1.08;letter-spacing:-2px;margin-bottom:16px}h2{font-size:26px;letter-spacing:-.6px;margin-bottom:8px}h3{font-size:17px;margin-bottom:5px}.muted,small{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:800;color:var(--muted)}.wrap{max-width:1300px;padding:0 28px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 0;border-bottom:1px solid var(--line)}.brand{font-size:21px;letter-spacing:-1px;font-weight:900}.brand i{font-style:normal;color:#cf7762}.topbar nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.topbar a{text-decoration:none}.intro{padding:40px 0 28px;display:flex;gap:25px;align-items:end;justify-content:space-between}.intro p{max-width:670px;color:var(--muted);margin-bottom:0}.stats{display:flex;gap:22px;flex-shrink:0;text-align:center}.stats strong{display:block;font-size:29px;line-height:1.2}.stats span{font-size:12px;color:var(--muted)}.chip{display:inline-flex;align-items:center;background:#f1ecde;padding:5px 11px;border-radius:99px;font-size:12px;font-weight:700}.workspace{display:grid;grid-template-columns:1.05fr 1fr;gap:22px;align-items:start}.box{border:1px solid var(--line);border-radius:var(--radius);background:#fffdf7;box-shadow:var(--shadow);overflow:hidden}.box-head{padding:19px 22px 14px;display:flex;justify-content:space-between;align-items:center;gap:15px}.box-head h2{font-size:20px;margin:0}.box-head select{max-width:145px}.stage{height:295px;margin:0 16px;background:#e0eff1;border:1px solid #d1e2e3;border-radius:18px;overflow:hidden;position:relative}.scene-art{height:100%;display:flex;justify-content:center}.scene-art>svg{width:100%;height:100%;max-width:430px}.stage-top{position:absolute;top:12px;left:14px;right:14px;display:flex;justify-content:space-between;font-size:12px;pointer-events:none}.stage-top span{background:#fffdf4d9;border-radius:99px;padding:5px 10px}.stage-message{position:absolute;bottom:17px;left:10%;right:10%;padding:9px;background:#fffdf2eb;text-align:center;font-weight:800;border:1px solid #d5ddcf;border-radius:12px;box-shadow:var(--shadow)}.mini-ui{position:absolute;left:0;right:0;bottom:70px;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:none}.mini-ui .toy{height:55px;min-width:58px;padding:9px;font-size:25px}.mini-ui .tiny-avatar{width:54px;height:54px}.scene-footer{padding:15px 22px 20px}.scene-footer p{font-size:13px;color:var(--muted);min-height:39px;margin:7px 0 12px}.timeline{height:8px;position:relative;background:#eee9dc;border-radius:12px;overflow:hidden}.timeline>i{display:block;height:100%;width:0;background:var(--coral)}.scene-chooser{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.scene-chooser button{font-size:12px;min-height:36px;padding:8px 11px}.scene-chooser button.active{background:var(--mint);border-color:#abc9b1}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.spread{justify-content:space-between}.mixer{padding:0 22px 20px}.mixer-intro{font-size:13px;color:var(--muted);margin-bottom:12px}.mix-empty{padding:24px 16px;border:1px dashed #d8d9c8;border-radius:14px;color:var(--muted);font-size:14px;text-align:center}.mix-list{max-height:310px;overflow:auto;margin:0 -5px;padding:0 5px}.mix-row{padding:10px 0;border-bottom:1px solid #edeadd}.mix-row-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.mix-row-top b{font-size:13px}.mix-row-top button{padding:4px 9px;min-height:30px;flex-shrink:0}.mix-params{display:flex;align-items:center;gap:14px;margin-top:7px;font-size:11px;color:var(--muted)}.mix-params label{display:flex;align-items:center;gap:6px}.mix-params input[type=number]{width:74px;padding:4px 6px;border-radius:7px;border:1px solid var(--line);background:#fffcf4}.mix-params input[type=range]{width:90px}.music-panel{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}.music-panel label{font-size:12px;font-weight:700}.music-controls{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:7px}.music-volume{display:flex;gap:10px;align-items:center;font-size:12px;margin-top:9px}.music-volume input{width:130px}select{padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fffcf4;min-height:41px;max-width:100%}.music-panel p{font-size:11px;color:var(--muted);margin:8px 0 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-top:45px;margin-bottom:20px}.section-head p{margin:0;color:var(--muted);font-size:14px}.search{padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:#fffdf7;min-width:230px;max-width:100%}.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}.filters button{font-size:12px;min-height:36px}.filters .active{background:var(--ink);color:#fffdf2;border-color:var(--ink)}.library{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.cue-card{border:1px solid var(--line);background:#fffdf7;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;position:relative}.element{height:110px;background:#f0f3e9;display:flex;align-items:center;justify-content:center;gap:7px;position:relative;overflow:hidden}.cue-card:nth-child(4n+2) .element{background:#e4eef0}.cue-card:nth-child(4n+3) .element{background:#f9eddb}.cue-card:nth-child(4n) .element{background:#f5e6e0}.toy{display:inline-flex;align-items:center;justify-content:center;position:relative;border:2px solid #43504d;border-radius:12px;min-width:47px;height:47px;padding:8px;background:#fffdf3;box-shadow:0 4px 0 #43504d24;font-weight:900;font-size:21px;line-height:1}.toy.coin{border-radius:50%;background:var(--gold);color:#8d6427;box-shadow:0 3px 0 #b28745;min-width:43px;height:43px;border-color:#cba255}.toy.good{background:var(--mint)}.toy.bad{background:#d7dedd;color:#788887}.toy.gold{background:#f8d994}.toy.wide{font-size:13px;min-width:100px}.toy.balloon{width:42px;height:53px;border-radius:48% 48% 46% 46%;background:#f4a089;border-color:#9b6959;transform:rotate(10deg);box-shadow:inset 6px 5px 0 #ffffff4f}.toy.balloon:after{content:"";position:absolute;left:20px;top:49px;width:2px;height:30px;background:#73857b;transform:rotate(-10deg)}.toy.star{border:0;background:none;box-shadow:none;color:#dca944;font-size:48px;text-shadow:0 2px #a27a31}.toy.arrow{background:var(--sky)}.tiny-avatar{width:72px;height:72px;display:inline-block}.tiny-avatar svg{width:100%;height:100%}.tile-row{display:flex;gap:4px}.tile-row .toy{min-width:30px;height:38px;font-size:16px;padding:6px;border-radius:8px}.balloon-set{display:flex;gap:6px;align-items:center}.balloon-set .balloon:nth-child(2){background:#9fcabd;transform:translateY(-10px) rotate(-12deg)}.orbit{display:flex;gap:5px;color:#d4a143;font-size:35px}.cloud{border-radius:40px;background:#fff;height:40px;width:90px;position:relative;box-shadow:0 4px 0 #c8dadc}.cloud:before{content:"";position:absolute;width:43px;height:43px;border-radius:50%;background:white;top:-20px;left:22px}.path-steps{display:flex;gap:9px;align-items:end}.path-steps .toy{border-radius:50%;min-width:35px;height:35px;padding:7px;font-size:15px}.path-steps .toy:nth-child(2){margin-bottom:15px;background:var(--mint)}.path-steps .toy:nth-child(3){margin-bottom:30px;background:var(--gold)}.card-info{padding:14px;display:flex;flex:1;flex-direction:column}.card-info .eyebrow{font-size:9px;letter-spacing:1.2px;margin-bottom:5px}.card-info h3{font-size:15px;line-height:1.25}.card-info p{font-size:12px;color:var(--muted);margin:4px 0 12px;flex:1;line-height:1.5}.cue-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);gap:5px;margin-bottom:9px}.cue-meta select{font-size:11px;min-height:29px;padding:4px 6px}.card-actions{display:flex;gap:6px}.card-actions .play{flex:1;background:var(--mint)}.card-actions button{font-size:12px;padding:8px 9px;min-height:37px}.download{display:block;font-size:10px;text-align:center;margin-top:8px;color:var(--muted)}.playing{border-color:#c1846e;box-shadow:0 0 0 2px #eeb19a}.playing .element .toy,.playing .element .tiny-avatar{animation:pop .42s ease-out}.voice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.voice-card{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fffdf7}.voice-top{display:flex;align-items:center;gap:13px;margin-bottom:14px}.voice-top .tiny-avatar{width:75px;height:75px;flex-shrink:0}.voice-top h3{font-size:21px}.voice-top p{font-size:12px;color:var(--muted);margin:0}.voice-reactions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.voice-reaction{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.voice-reaction button{border:0;border-radius:0;box-shadow:none;font-size:11px;min-height:36px;padding:7px;flex:1;text-align:left;font-weight:600}.voice-reaction button:last-child{flex:0 0 29px;border-left:1px solid var(--line);text-align:center;background:#f5f0e4;font-weight:900}.voice-reaction.playing button{background:var(--mint)}.voice-note{font-size:12px;color:var(--muted);margin:16px 0}.audit-note{margin-top:35px;padding:23px;border:1px solid var(--line);border-radius:18px;background:#f2efdf;font-size:13px}.audit-note h3{font-size:16px}.audit-note p{margin:6px 0}.dock{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:10;width:min(750px,calc(100% - 24px));display:flex;align-items:center;gap:15px;padding:10px 15px;background:#314444f5;color:#fffdf2;border-radius:17px;box-shadow:0 5px 25px #253f442a;backdrop-filter:blur(9px)}.dock .now{flex:1;min-width:0}.dock .now small{color:#c7d3cc;display:block;font-size:10px}.dock .now strong{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dock label{font-size:11px;display:flex;align-items:center;gap:7px}.dock input{width:90px}.dock button{background:#f6c2ad;border-color:transparent;color:#493e37;white-space:nowrap;font-size:12px}.toast{position:fixed;z-index:20;bottom:99px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);padding:10px 17px;background:#334448;color:#fffdf2;border-radius:12px;font-size:13px;box-shadow:0 3px 12px #0002;opacity:0;pointer-events:none;transition:opacity .15s}.toast.show{opacity:1}.no-results{grid-column:1/-1;padding:30px;text-align:center;color:var(--muted)}footer{padding:30px 0 15px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.pulse{animation:pop .4s ease-out}@keyframes pop{0%{transform:scale(.88)}40%{transform:scale(1.13) rotate(-2deg)}100%{transform:scale(1)}}@media(max-width:1050px){.library{grid-template-columns:repeat(3,minmax(0,1fr))}.intro{align-items:start}.stats{gap:13px}.voice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.wrap{padding:0 16px}.topbar{padding:18px 0}.topbar nav{gap:12px;font-size:12px}.intro{display:block;padding-top:28px}.intro p{font-size:14px}.stats{margin-top:22px;justify-content:start;gap:30px;text-align:left}.stats strong{font-size:24px}.workspace{grid-template-columns:1fr}.stage{height:285px}.library{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.voice-grid{grid-template-columns:1fr}.section-head{display:block}.search{width:100%;margin-top:15px}.element{height:96px}.card-info{padding:11px}.card-info h3{font-size:14px}.card-info p{font-size:11px}.card-actions{flex-wrap:wrap}.card-actions .play{flex:1 1 60%}.card-actions .add{flex:1}.card-info .eyebrow{font-size:8px}.cue-meta{font-size:10px}.cue-meta select{max-width:82px}.dock{gap:9px;padding:10px}.dock label{display:block;font-size:9px}.dock input{display:block;width:66px}.dock button{padding:10px;font-size:11px}.box-head{padding:16px}.mixer{padding:0 16px 16px}.scene-footer{padding:13px 16px 17px}.mix-params{gap:8px}.mix-params input[type=range]{width:75px}.voice-top p{font-size:13px}.voice-reaction button{font-size:12px;min-height:42px}.section-head{margin-top:32px}h1{letter-spacing:-1.5px}.intro .eyebrow{margin-bottom:12px}}
+body{font-family:"Trebuchet MS",system-ui,sans-serif}.scene-art>svg{max-width:none}.card-actions button{white-space:nowrap}.stage-message{position:static;margin:12px 16px 0;font-size:14px}.mini-ui{bottom:auto;top:58px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="topbar"><div class="brand">hanged<i> •</i></div><nav aria-label="Sections"><a href="#scenes">Scenes</a><a href="#effects">Effects</a><a href="#voices">Voices</a><a href="#mixer">Mixer</a></nav></header>
+<section class="intro"><div><p class="eyebrow">The sound playground · first effects collection</p><h1>Little sounds.<br>Lots of personality.</h1><p>Soft clicks, springy balloons, golden rewards, and fifteen very different little voices. Play a scene, explore each sound, or build a combination of your own.</p></div><div class="stats"><div><strong>65</strong><span>effects</span></div><div><strong>90</strong><span>voice reactions</span></div><div><strong>14</strong><span>playable scenes</span></div></div></section>
+<main>
+<div class="workspace">
+<section class="box" id="scenes" aria-label="Scene player"><div class="box-head"><h2>Hear it in motion</h2><select id="character" aria-label="Character for scenes"></select></div>
+<div class="stage"><div class="scene-art" id="sceneArt"></div><div class="stage-top"><span id="stageLabel">A little rehearsal</span><span id="tokenBadge">◈ 240</span></div><div class="mini-ui" id="miniUi"></div></div><div class="stage-message" id="stageMessage">Ready when you are</div>
+<div class="scene-footer"><div class="row spread"><strong id="sceneTitle">The last balloon</strong><button class="primary" id="playScene">▶ Play scene</button></div><p id="sceneDescription"></p><div class="timeline" role="progressbar" aria-label="Scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="sceneProgress"></i></div><div class="scene-chooser" id="sceneChooser"></div><button id="sceneToMixer" class="plain small" style="margin-top:12px">＋ Edit this scene in the mixer</button></div></section>
+<section class="box" id="mixer"><div class="box-head"><h2>Your mix <span class="chip" id="mixCount">0 layers</span></h2><button class="plain small" id="clearMix">Clear</button></div><div class="mixer"><p class="mixer-intro">Add effects or voices below. Set a delay for a sequence, or leave every delay at zero to play them together.</p><div class="mix-list" id="mixList"></div><div class="row" style="margin-top:14px"><button class="primary" id="playMix" disabled>▶ Play together</button><button class="plain small" id="zeroDelays">Start all at once</button></div>
+<div class="music-panel"><label for="musicSelect">Try it with your music</label><div class="music-controls"><select id="musicSelect"></select><button id="musicPlay" class="mint">▶ Play music</button></div><div class="music-volume"><label for="musicVolume">Music level</label><input id="musicVolume" type="range" min="0" max="0.8" step="0.01" value="0.22"><output id="musicLevel">22%</output></div><p>Music plays once and stays underneath any effects you trigger. Nothing starts automatically.</p></div></div></section>
+</div>
+<section id="effects"><div class="section-head"><div><p class="eyebrow">Touch, pop, tumble, celebrate</p><h2>Every little interaction</h2><p>150 takes across 65 effects. Play buttons rotate through the variations.</p></div><input id="search" class="search" type="search" placeholder="Find a sound or an element…" aria-label="Search sound effects"></div><div class="filters" id="filters" role="group" aria-label="Effect categories"></div><div class="library" id="library"></div></section>
+<section id="voices"><div class="section-head"><div><p class="eyebrow">A personality you can hear</p><h2>Meet the voices</h2><p>Six wordless reactions for each character. Tap ＋ to add any voice to your mix.</p></div></div><div class="voice-grid" id="voiceGrid"></div><p class="voice-note">These are original synthesized creature voices, shaped individually with different vowels, breath, pitch movement, texture, and timing.</p></section>
+<aside class="audit-note"><h3>Designed for the actual game</h3><p>The preview covers Play, balloons and landing, tokens, streaks, levels and the summit, the character shop, navigation, Profile, and Leaderboard. The final fall uses the game’s shared animation and its pop, drop, and impact timings.</p><p>Idle motion, scrolling, disabled controls, the always-visible description, and background updates stay quiet. Dedicated sounds replace generic clicks when they describe the same action.</p><p>This is an audition collection. Approval and app integration come afterwards. No ukulele, whistles, claps, or repeating beat loops.</p><p><a href="AUDIT.md">Full interaction inventory</a> · <a href="README.md">Collection notes and source files</a></p></aside>
+</main>
+<footer><span>Hanged · Original sound design · 48 kHz WAV masters included in the pack</span><span>Works offline · Press Esc to stop all audio</span></footer>
+</div>
+<div class="dock"><div class="now"><small id="activeCount">Sound playground</small><strong id="nowPlaying" role="status" aria-live="polite">Choose something to hear</strong></div><label for="masterVolume">Volume<input id="masterVolume" type="range" min="0" max="1" step="0.01" value="0.75"></label><button id="stopAll">■ Stop all</button></div>
+<div id="toast" class="toast" role="status"></div>
+<script>/*__RIG__*/</script>
+<script>/*__BALLOONS__*/</script>
+<script>
+'use strict';
+const DATA=__MANIFEST__;
+const AUDIO=__AUDIO__;
+const $=id=>document.getElementById(id);
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const characters=Object.fromEntries(HangedRig.CHARACTERS.map(c=>[c.id,c]));
+const cues=Object.fromEntries(DATA.cues.map(c=>[c.id,c]));
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let ctx,bus,musicBus,master;
+const cache=new Map(),sources=new Set(),timers=new Set();
+const nextVariant={};
+const lastPlayed={};
+let cancelGeneration=0,musicSource=null,musicGeneration=0,sceneAnimation=0,selectedScene='fall',mix=[],mixSerial=0,filter='All',toastTimer=0;
+let sceneRun=0;
+const selectedCharacter=()=>$('character').value||'mochi';
+const avatar=id=>`<span class="tiny-avatar">${HangedRig.avatar(characters[id])}</span>`;
+function getAudioContext(){
+  if(ctx)return ctx;
+  const Constructor=window.AudioContext||window.webkitAudioContext;
+  if(!Constructor)throw Error('This browser does not support Web Audio. Try a recent Chrome, Safari, or Firefox.');
+  ctx=new Constructor();bus=ctx.createGain();musicBus=ctx.createGain();master=ctx.createGain();
+  const compressor=ctx.createDynamicsCompressor();compressor.threshold.value=-12;compressor.knee.value=16;compressor.ratio.value=5;compressor.attack.value=.003;compressor.release.value=.18;
+  const limiter=ctx.createWaveShaper(),curve=new Float32Array(8193);
+  for(let i=0;i<curve.length;i++){const x=2*i/(curve.length-1)-1;curve[i]=.88*Math.tanh(x/.88);}
+  limiter.curve=curve;limiter.oversample='4x';
+  master.gain.value=Number($('masterVolume').value);musicBus.gain.value=Number($('musicVolume').value);
+  bus.connect(compressor);musicBus.connect(compressor);compressor.connect(limiter);limiter.connect(master);master.connect(ctx.destination);
+  return ctx;
+}
+function bytes(id){const raw=atob(AUDIO[id]);return Uint8Array.from(raw,c=>c.charCodeAt(0)).buffer;}
+function decode(id){getAudioContext();if(!AUDIO[id])return Promise.reject(Error(`Missing sound: ${id}`));if(!cache.has(id))cache.set(id,ctx.decodeAudioData(bytes(id)));return cache.get(id);}
+function say(message){$('nowPlaying').textContent=message;}
+function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1900);}
+function report(error){console.error(error);say('Could not play this sound');toast(error.message||String(error));}
+function guard(fn){return (...args)=>{try{return Promise.resolve(fn(...args)).catch(report);}catch(error){report(error);}};}
+function assetFor(id,variant){
+  if(id.startsWith('@'))return `voice-${selectedCharacter()}-${id.slice(1)}`;
+  if(id.startsWith('voice-'))return id;
+  const cue=cues[id];if(!cue)throw Error(`Unknown cue: ${id}`);
+  const i=variant===undefined?(nextVariant[id]||0):variant;
+  if(variant===undefined)nextVariant[id]=(i+1)%cue.variants;
+  return `${id}-${i+1}`;
+}
+function nameFor(id){if(cues[id])return cues[id].name;if(id.startsWith('@'))return `${characters[selectedCharacter()].name}: ${DATA.emotions.find(e=>e.id===id.slice(1)).name}`;const parts=id.split('-');return `${characters[parts[1]].name}: ${DATA.emotions.find(e=>e.id===parts[2]).name}`;}
+function updateActive(){$('activeCount').textContent=sources.size?`${sources.size} active or scheduled layer${sources.size===1?'':'s'}`:'Sound playground';}
+function scheduleVisual(at,fn){const t=setTimeout(()=>{timers.delete(t);fn();},Math.max(0,(at-ctx.currentTime)*1000));timers.add(t);}
+function pulse(el,duration=.6){if(!el)return;el.classList.remove('playing');void el.offsetWidth;el.classList.add('playing');const t=setTimeout(()=>{timers.delete(t);el.classList.remove('playing');},duration*1000);timers.add(t);}
+function mark(id,asset){
+  pulse(document.querySelector(`[data-cue="${id}"]`));pulse(document.querySelector(`[data-voice="${asset}"]`));
+  if(asset.startsWith('voice-')){const [,character,emotion]=asset.split('-');const face=$(`face-${character}`);const expr=DATA.emotions.find(e=>e.id===emotion).expression;if(face)face.innerHTML=`<svg viewBox="30 4 140 140">${HangedRig.render(characters[character],{bare:true,expr})}</svg>`;}
+}
+function startSource(buffer,at,gain,destination=bus){
+  const source=ctx.createBufferSource(),level=ctx.createGain();source.buffer=buffer;level.gain.value=gain;source.connect(level);level.connect(destination);sources.add(source);
+  source.onended=()=>{sources.delete(source);source.disconnect();level.disconnect();if(musicSource===source){musicSource=null;$('musicPlay').textContent='▶ Play music';}updateActive();};
+  source.start(at);updateActive();return source;
+}
+async function playEvents(events,label,{scene=null}={}){
+  const generation=cancelGeneration;getAudioContext();await ctx.resume();
+  const resolved=events.map(e=>({...e,asset:e.asset||assetFor(e.id,e.variant)}));
+  const buffers=await Promise.all(resolved.map(e=>decode(e.asset)));
+  if(generation!==cancelGeneration)return;
+  const start=ctx.currentTime+.085;
+  resolved.forEach(e=>{if(cues[e.id])lastPlayed[e.id]=e.asset;});
+  const end=Math.max(...resolved.map((e,i)=>e.at+buffers[i].duration));
+  resolved.forEach((e,i)=>{startSource(buffers[i],start+e.at,e.gain??1);scheduleVisual(start+e.at,()=>mark(e.id,e.asset));});
+  say(label);
+  if(scene)animateScene(scene,start,end);
+  return {start,end,events:resolved};
+}
+function stopAll(){cancelGeneration++;musicGeneration++;sceneRun++;cancelAnimationFrame(sceneAnimation);sceneAnimation=0;for(const t of timers)clearTimeout(t);timers.clear();for(const source of sources){try{source.stop();}catch{}}sources.clear();musicSource=null;document.querySelectorAll('.playing').forEach(el=>el.classList.remove('playing'));$('musicPlay').textContent='▶ Play music';$('sceneProgress').style.width='0%';$('sceneProgress').parentElement.setAttribute('aria-valuenow','0');updateActive();say('All audio stopped');}
+function toys(visual,character=selectedCharacter()){
+  const toy=(text,cls='')=>`<span class="toy ${cls}">${text}</span>`;
+  if(['key','correct','wrong','tile'].includes(visual))return toy(visual==='wrong'?'X':'A',visual==='correct'?'good':visual==='wrong'?'bad':'');
+  if(['tiles','gold-tiles','letters','next'].includes(visual))return `<span class="tile-row">${toy('B')+toy('U',visual==='gold-tiles'?'gold':'good')+toy('N')+toy('N',visual==='gold-tiles'?'gold':'')+toy('Y')}</span>`;
+  if(['coin-plus','coin-minus','coin-flight','coin','counter'].includes(visual))return toy('◈','coin')+toy(visual==='coin-minus'?'− 20':visual==='coin-flight'?'↗':'+ 20','wide');
+  if(['balloon','pop','string','sink','wrong'].includes(visual))return `<span class="balloon-set">${toy('','balloon')+toy('','balloon')}</span>`;
+  if(['fall','impact','bounce','dust'].includes(visual))return avatar(character)+toy(visual==='fall'?'↓':'· ·','arrow');
+  if(['stars','confetti'].includes(visual))return '<span class="orbit">✦ · ✧ · ✦</span>';
+  if(['star','streak','streak-fill'].includes(visual))return toy('★','star')+toy('★','star')+toy('☆','star');
+  if(visual==='meter')return toy('★ ★ ☆','wide gold');
+  if(visual==='bonus')return toy('★','star')+toy('+ BONUS','wide gold');
+  if(['level-up','level-down','map'].includes(visual))return `<span class="path-steps">${toy('6')+toy('7')+toy('8')}</span>`;
+  if(visual==='cloud')return '<span class="cloud"></span>';
+  if(['crown','summit'].includes(visual))return toy('♛','gold')+avatar(character);
+  if(['character','choose','unlock'].includes(visual))return avatar(character)+toy('✓','good');
+  if(visual==='lock')return toy('↗','gold')+toy('UNLOCK','wide');
+  if(visual==='ribbon')return toy('WELCOME!','wide gold');
+  if(['win','stamp'].includes(visual))return toy('YOU DID IT!','wide good');
+  if(visual==='loss')return toy('ONE MORE?','wide');
+  if(visual==='button')return toy('Okay','wide');
+  if(visual==='primary')return toy('Next word →','wide gold');
+  if(visual==='tabs')return toy('▶','good')+toy('♜')+toy('☺');
+  if(visual==='back')return toy('←','arrow');
+  if(visual==='panel')return toy('Your profile','wide')+avatar(character);
+  if(visual==='link')return toy('↗','arrow');
+  if(visual==='dice')return toy('⚄','gold');
+  if(visual==='name')return toy('Sunny Bun ✎','wide');
+  if(['warning','refused','offline'].includes(visual))return toy('…','wide');
+  if(visual==='delete')return toy('Keep playing','wide');
+  if(visual==='period')return toy('This week','wide good');
+  if(visual==='refresh')return toy('↻','arrow');
+  if(visual==='leaderboard')return toy('1','gold')+toy('2')+toy('3');
+  return toy('✦','gold');
+}
+function sceneMarkup(c,frame){return BalloonAnim.scene(c,frame,{camera:true}).replace('<svg ','<svg preserveAspectRatio="xMidYMid slice" ');}
+function staticStage(){const c=characters[selectedCharacter()];$('sceneArt').innerHTML=sceneMarkup(c,BalloonAnim.frame(0,0,1,0,false));$('miniUi').innerHTML='';$('stageMessage').textContent='Ready when you are';}
+function animateScene(scene,start,duration){
+  cancelAnimationFrame(sceneAnimation);const run=++sceneRun;const c=characters[selectedCharacter()];let lastPaint=-1;
+  const paint=()=>{
+    if(run!==sceneRun)return;const t=Math.max(0,ctx.currentTime-start),progress=Math.min(1,t/duration);
+    $('sceneProgress').style.width=`${progress*100}%`;$('sceneProgress').parentElement.setAttribute('aria-valuenow',String(Math.round(progress*100)));
+    if(t-lastPaint>.03||progress===1){
+      lastPaint=t;let from=0,to=0,p=1,message=scene.name;
+      if(scene.visual==='fall'){from=9;to=10;p=Math.min(1,t/2.2);message=t<.352?'One balloon left…':t<.836?'Oh.':t<1.32?'Down we go!':t<2.6?'A soft landing. Mostly.':'Another word?';}
+      else if(scene.visual==='wrong'){from=2;to=3;p=Math.min(1,t/.9);message=t<.144?'Not that letter…':'Pop! Still plenty of chances.';}
+      const f=BalloonAnim.frame(from,to,reducedMotion?1:p,t,!reducedMotion);
+      if(['win','unlock','choose','level-up','summit'].includes(scene.visual))f.expr='joy';
+      $('sceneArt').innerHTML=sceneMarkup(c,f);
+      $('stageMessage').textContent=message;
+      if(!['fall','wrong'].includes(scene.visual)){
+        const events=scene.events.filter(e=>e.at<=t),recent=events[events.length-1];
+        const visual=recent&&cues[recent.id]?cues[recent.id].visual:scene.visual;
+        const key=`${visual}:${recent?.at}`;
+        if($('miniUi').dataset.key!==key){$('miniUi').dataset.key=key;$('miniUi').innerHTML=toys(visual);$('miniUi').classList.remove('pulse');void $('miniUi').offsetWidth;$('miniUi').classList.add('pulse');}
+      }else $('miniUi').innerHTML='';
+      $('tokenBadge').textContent=scene.id==='win'&&t>2.04?'◈ 260':scene.id==='letters'&&t>.98?'◈ 220':'◈ 240';
+    }
+    if(progress<1)sceneAnimation=requestAnimationFrame(paint);else sceneAnimation=0;
+  };$('stageLabel').textContent=`${c.name}'s rehearsal`;$('miniUi').dataset.key='';sceneAnimation=requestAnimationFrame(paint);
+}
+function selectScene(id){selectedScene=id;const scene=DATA.scenes.find(s=>s.id===id);$('sceneTitle').textContent=scene.name;$('sceneDescription').textContent=scene.description;document.querySelectorAll('[data-scene]').forEach(b=>b.classList.toggle('active',b.dataset.scene===id));}
+function renderLibrary(){
+  const query=$('search').value.trim().toLowerCase(),list=DATA.cues.filter(c=>(filter==='All'||c.group===filter)&&`${c.name} ${c.element} ${c.trigger}`.toLowerCase().includes(query));
+  $('library').innerHTML=list.map(c=>`<article class="cue-card" data-cue="${c.id}"><div class="element">${toys(c.visual)}</div><div class="card-info"><div class="eyebrow">${escapeHtml(c.element)}</div><h3>${c.name}</h3><p>${escapeHtml(c.trigger)}</p><div class="cue-meta"><span>${DATA.assets[c.id+'-1'].duration.toFixed(2)}s</span><select aria-label="Take for ${c.name}" data-take="${c.id}"><option value="auto">Rotate ${c.variants} ${c.variants===1?'take':'takes'}</option>${Array.from({length:c.variants},(_,i)=>`<option value="${i}">Take ${i+1}</option>`).join('')}</select></div><div class="card-actions"><button class="play" data-play="${c.id}" aria-label="Play ${c.name}">▶ Play</button><button class="add" data-add="${c.id}" aria-label="Add ${c.name} to mixer">＋ Mix</button></div><a class="download" href="#" data-download="${c.id}">Download this take</a></div></article>`).join('')||'<p class="no-results">No sounds match that search.</p>';
+}
+function getVariant(id){const select=document.querySelector(`[data-take="${id}"]`);return !select||select.value==='auto'?undefined:Number(select.value);}
+function chosenAsset(id){const variant=getVariant(id);return variant===undefined?(lastPlayed[id]||assetFor(id,0)):assetFor(id,variant);}
+function addToMix(id,at=0,gain=1,asset){mix.push({key:++mixSerial,id,at,gain,asset:asset||chosenAsset(id)});renderMix();}
+function renderMix(){
+  $('mixCount').textContent=`${mix.length} layer${mix.length===1?'':'s'}`;$('playMix').disabled=!mix.length;
+  $('mixList').innerHTML=mix.length?mix.map(layer=>`<div class="mix-row" data-layer="${layer.key}"><div class="mix-row-top"><b>${escapeHtml(nameFor(layer.id))}${cues[layer.id]?` <span class="muted">· take ${layer.asset.split('-').at(-1)}</span>`:''}</b><button data-remove="${layer.key}" aria-label="Remove ${escapeHtml(nameFor(layer.id))}">×</button></div><div class="mix-params"><label>Delay <input data-delay="${layer.key}" type="number" min="0" max="30000" step="10" value="${Math.round(layer.at*1000)}" aria-label="Delay in milliseconds for ${escapeHtml(nameFor(layer.id))}"> ms</label><label>Level <input data-gain="${layer.key}" type="range" min="0" max="1.5" step=".05" value="${layer.gain}" aria-label="Volume for ${escapeHtml(nameFor(layer.id))}"></label></div></div>`).join(''):'<div class="mix-empty">Your mixing tray is empty.<br>Try a balloon pop + a worried voice.</div>';
+}
+function renderVoices(){
+  $('voiceGrid').innerHTML=DATA.characters.map(c=>`<article class="voice-card"><div class="voice-top"><span class="tiny-avatar" id="face-${c.id}">${HangedRig.avatar(characters[c.id])}</span><div><h3>${c.name}</h3><p>${c.identity}</p></div></div><div class="voice-reactions">${DATA.emotions.map(e=>`<div class="voice-reaction" data-voice="voice-${c.id}-${e.id}"><button data-voiceplay="voice-${c.id}-${e.id}" title="${e.use}" aria-label="Play ${c.name}: ${e.name}">▶ ${e.name}</button><button data-voiceadd="voice-${c.id}-${e.id}" aria-label="Add ${c.name}: ${e.name} to mixer">＋</button></div>`).join('')}</div></article>`).join('');
+}
+function download(id){const asset=chosenAsset(id),blob=new Blob([bytes(asset)],{type:'audio/mpeg'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`hanged-${asset}.mp3`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
+$('character').innerHTML=DATA.characters.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+$('character').addEventListener('change',()=>{cancelAnimationFrame(sceneAnimation);sceneRun++;staticStage();renderLibrary();});
+$('sceneChooser').innerHTML=DATA.scenes.map(s=>`<button data-scene="${s.id}">${s.name}</button>`).join('');
+$('sceneChooser').addEventListener('click',event=>{const button=event.target.closest('[data-scene]');if(button)selectScene(button.dataset.scene);});
+$('playScene').addEventListener('click',guard(()=>{const s=DATA.scenes.find(s=>s.id===selectedScene);return playEvents(s.events,s.name,{scene:s});}));
+$('sceneToMixer').addEventListener('click',()=>{const scene=DATA.scenes.find(s=>s.id===selectedScene);mix=[];for(const e of scene.events){const id=e.id.startsWith('@')?`voice-${selectedCharacter()}-${e.id.slice(1)}`:e.id;mix.push({...e,id,key:++mixSerial,asset:assetFor(id)});}renderMix();toast(`${scene.name} is ready to edit`);});
+$('filters').innerHTML=['All',...DATA.groups].map(g=>`<button data-filter="${escapeHtml(g)}" class="${g==='All'?'active':''}">${escapeHtml(g)}</button>`).join('');
+$('filters').addEventListener('click',event=>{const b=event.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLibrary();});
+$('search').addEventListener('input',renderLibrary);
+$('library').addEventListener('click',guard(event=>{const b=event.target.closest('[data-play],[data-add],[data-download]');if(!b)return;if(b.dataset.play){const id=b.dataset.play;return playEvents([{id,at:0,variant:getVariant(id)}],cues[id].name);}if(b.dataset.add){addToMix(b.dataset.add);toast('Added to your mix');}if(b.dataset.download){event.preventDefault();download(b.dataset.download);}}));
+$('voiceGrid').addEventListener('click',guard(event=>{const b=event.target.closest('[data-voiceplay],[data-voiceadd]');if(!b)return;if(b.dataset.voiceplay)return playEvents([{id:b.dataset.voiceplay,at:0}],nameFor(b.dataset.voiceplay));addToMix(b.dataset.voiceadd);toast('Voice added to your mix');}));
+$('mixList').addEventListener('click',event=>{const b=event.target.closest('[data-remove]');if(b){mix=mix.filter(x=>x.key!==Number(b.dataset.remove));renderMix();}});
+$('mixList').addEventListener('input',event=>{const t=event.target,k=Number(t.dataset.delay||t.dataset.gain),layer=mix.find(x=>x.key===k);if(!layer)return;if(t.dataset.delay)layer.at=Math.min(30000,Math.max(0,Number(t.value)||0))/1000;else layer.gain=Math.min(1.5,Math.max(0,Number(t.value)||0));});
+$('clearMix').addEventListener('click',()=>{mix=[];renderMix();});
+$('zeroDelays').addEventListener('click',()=>{mix.forEach(x=>x.at=0);renderMix();});
+$('playMix').addEventListener('click',guard(()=>mix.length&&playEvents(mix,'Your mix · '+mix.length+' layers')));
+$('musicSelect').innerHTML=DATA.music.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+$('musicPlay').addEventListener('click',guard(async()=>{
+  if(musicSource){musicSource.stop();musicSource=null;musicGeneration++;$('musicPlay').textContent='▶ Play music';return;}
+  const generation=cancelGeneration,request=++musicGeneration;getAudioContext();await ctx.resume();const id=$('musicSelect').value,buffer=await decode(id);if(generation!==cancelGeneration||request!==musicGeneration)return;
+  musicSource=startSource(buffer,ctx.currentTime+.06,1,musicBus);$('musicPlay').textContent='■ Stop music';say(DATA.music.find(m=>m.id===id).name+' + your effects');
+}));
+$('musicSelect').addEventListener('change',()=>{musicGeneration++;if(musicSource){musicSource.stop();musicSource=null;}$('musicPlay').textContent='▶ Play music';});
+$('musicVolume').addEventListener('input',()=>{const v=Number($('musicVolume').value);$('musicLevel').textContent=Math.round(v*100)+'%';if(ctx)musicBus.gain.setTargetAtTime(v,ctx.currentTime,.015);});
+$('masterVolume').addEventListener('input',()=>{if(ctx)master.gain.setTargetAtTime(Number($('masterVolume').value),ctx.currentTime,.015);});
+$('stopAll').addEventListener('click',stopAll);document.addEventListener('keydown',e=>{if(e.key==='Escape')stopAll();});
+selectScene(selectedScene);staticStage();renderLibrary();renderVoices();renderMix();
+// Small read-only surface for offline quality checks; no app connection or network access.
+window.soundboard={data:DATA,decode,playEvents,stopAll,get active(){return sources.size;},get mix(){return mix;},get context(){return ctx;}};
+</script>
+</body>
+</html>
