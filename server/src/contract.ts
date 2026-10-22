@@ -19,7 +19,7 @@ export interface RoundReport {
   won: boolean;
   /** Wrong guesses when the round ended. */
   wrong: number;
-  /** The player revealed the description during play (paid in older app versions). */
+  /** Description shown during play; always true on current clients, optional reveal on older ones. */
   description: boolean;
   /** The player bought letters. */
   letters: boolean;

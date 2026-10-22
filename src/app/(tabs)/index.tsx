@@ -26,7 +26,7 @@ import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
 import { LETTER_BUY_COST } from '../../game/config';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../../game/engine';
-import { canUnlockDescription, lettersForSale } from '../../game/progress';
+import { lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { t } from '../../i18n';
 import { useGame } from '../../state/GameContext';
@@ -94,11 +94,6 @@ export default function PlayScreen() {
     [round, dispatch],
   );
 
-  const onReveal = useCallback(() => {
-    feedback.unlock();
-    dispatch({ type: 'unlockDescription' });
-  }, [dispatch]);
-
   const onBuyLetters = useCallback(() => {
     feedback.unlock();
     dispatch({ type: 'buyLetters' });
@@ -155,12 +150,7 @@ export default function PlayScreen() {
                 compact={compact}
               />
             )}
-            <DescriptionCard
-              text={round.description}
-              unlocked={round.descriptionUnlocked}
-              onReveal={canUnlockDescription(state) ? onReveal : undefined}
-              compact={compact}
-            />
+            <DescriptionCard text={round.description} compact={compact} />
             <View style={[styles.keyboardWrap, { paddingTop: compact ? 8 : 12 }]}>
               <LetterKeyboard
                 keyState={(c) => keyState(round, c)}
@@ -272,7 +262,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         </Text>
       )}
       <WordTiles letters={letters} available={available} compact={compact} />
-      <DescriptionCard text={round.description} unlocked compact={compact} />
+      <DescriptionCard text={round.description} compact={compact} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
         <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />

@@ -26,8 +26,8 @@ would then count it again.
   shrinks as levels rise, and the streak bonus stays small next to it (tests check the first).
   - The **round's** snapshotted `level` pays, not the level the win moves the player up to.
   - A lost round resets `streak` to 0, so the next win pays the base again. Nothing else breaks a
-    streak: the round in progress is saved, so restarting the app can't skip a word, and the
-    description unlock doesn't count. `streak` is saved; an older save gets 0 from `initialState()`.
+    streak: the round in progress is saved, so restarting the app can't skip a word.
+    `streak` is saved; an older save gets 0 from `initialState()`.
   - `streakMeter(streak)` turns the streak into the stretch it's filling between two bonus steps (and laps
     past the last one). Only the streak takeover draws it ([play-screen.md](play-screen.md)); it reads
     `STREAK_BONUS_AT`, so changing the steps changes the meter too.
@@ -40,21 +40,20 @@ would then count it again.
   `LETTER_BUY_COST` (15) tokens, **once per round**. `lettersForSale(state)` says whether the round
   can still take them; the reducer also checks the balance. The engine refuses when 2 or fewer distinct
   letters are hidden, so one always stays hidden and **buying never wins a round**: scoring stays in
-  the winning guess. Like the description, it doesn't break a streak. To sell letters on more levels,
+  the winning guess. Buying letters doesn't break a streak. To sell letters on more levels,
   flip `sellsLetters` in `LEVELS`.
 - **Old saves**: the "N words per token" rate (5, then 2, then 1) and its `wordsTowardToken`
   field and "Next token" bar are gone, because a progress bar can't show payouts that vary.
   `hydrate` pays a leftover `wordsTowardToken` as 1 token per word (the last rate), maps the old
   boolean `lastTokenEarned` to `lastTokensEarned`, and drops both fields. Same key, no bump.
-- **Descriptions are free to reveal** with Show clue (owner, 2026-10-22). They start hidden,
-  and `descriptionUnlocked` keeps the reveal across app restarts. No token flight, deduction,
-  wrong guess, score or streak change. Hint words are removed. Rewards stay unchanged; shop prices now follow the owner's steady pace (2026-10-22):
+- **Descriptions are always visible for free** (owner, 2026-10-22), including restored rounds.
+  There is no unlock action or saved reveal flag, token flight, deduction, wrong guess, score or
+  streak change. Hint words are removed. Rewards stay unchanged; shop prices now follow the owner's steady pace (2026-10-22):
   50-1,100 tokens per paid character and 15 tokens per letter purchase. See the assumptions and
   `npm run check:economy` in [characters-shop.md](characters-shop.md). Existing ownership and
   token balances are preserved.
 - `lastTokensEarned` is what the winning guess paid (the result screen shows
   "+N tokens"). The next `newRound` sets it back to 0.
-- `unlockDescription` is refused without a round, when already revealed, or once the round is over. The result screens always show the description for free.
 
 ## Levels: up with wins, down with losses in a row
 
@@ -194,9 +193,10 @@ in **AsyncStorage**, key `hanged.game.v1`, written after every state change.
 `version: 1` is checked on load. A breaking shape change must bump the key or
 migrate, never silently reuse it. An unreadable save starts a fresh player.
 
-- `hydrate` removes retired `hints` from saved rounds, preserving guesses, tokens and
-  `descriptionUnlocked` (including descriptions bought before they became free). Older rounds
-  without hints also work. Same key, no bump.
+- `hydrate` removes retired `hints` and `descriptionUnlocked` from saved rounds, preserving
+  descriptions, guesses, tokens and progress. Descriptions now display regardless of their old
+  reveal flag. Previously queued round reports retain their original description values; new
+  reports mark the description as shown. Same key, no bump.
 - A save from before disabled keys existed has rounds without `disabledLetters`. `hydrate`
   sets `[]` (full keyboard), so the round plays on as it started. Same key, no bump.
 - A save from before bought letters existed has rounds without `boughtLetters`. `hydrate`

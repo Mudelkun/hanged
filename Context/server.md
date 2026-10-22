@@ -50,9 +50,10 @@ account and registers again on the next sync, and that first sync re-seeds the s
 The reducer queues a **report** for every finished round, in the same step that wins or loses it:
 `{ seq, wordId, level, won, wrong, description, letters, at }` in `state.reports`, saved with the game
 ([progression-and-tokens.md](progression-and-tokens.md)). `seq` counts 1, 2, 3… per device and is never
-reused. `description` means the player revealed the description during play; older clients paid
-for that reveal. The wire field and database column stay compatible, and displaying a result
-does not count as using a clue. `at` comes in on the `guess` action, so the reducer stays pure.
+reused. `description` means the description was shown during play. Current clients always show it
+from the start and report `true`; older clients required a free or paid reveal. Previously queued
+reports keep their original values. The wire field and database column stay compatible.
+`at` comes in on the `guess` action, so the reducer stays pure.
 
 [GameContext](../src/state/GameContext.tsx) runs a sync:
 - once the save is loaded. **Never before**: the first sync sets the player's starting score on the
@@ -97,7 +98,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 | `players` | id, secret hash, name, character, language, `words_guessed` (the score), level, tokens, rounds played/won, `last_seq`, `score_at` (when the score last rose: ties go to who got there first), `synced_at` (null = never synced) |
 | `player_weeks` | `(player_id, week)` → words guessed that week |
 | `words` | a copy of `data/words.json` (`npm run seed:words`), to show words in the statistics. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet |
-| `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions revealed during play (paid on older clients), letters bought |
+| `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
 | `word_stats` (view) | each word over all time: played, won, lost, `loss_rate`, `avg_wrong`, … |
 
 **No table keeps individual rounds.** Reports are added into counters as they arrive, so storage

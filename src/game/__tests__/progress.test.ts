@@ -161,16 +161,22 @@ describe('win streak', () => {
   });
 });
 
-describe('retired hint words', () => {
-  it.each([false, true])('restores a legacy round with description revealed = %s and discards its hints', (descriptionUnlocked) => {
-    let saved = startRound({ ...initialState(), tokens: 0, streak: 4, wordsGuessed: 7 });
+describe('retired hint words and description unlocks', () => {
+  it.each([false, true])('preserves progress and queued reports when restoring descriptionUnlocked = %s', (descriptionUnlocked) => {
+    const finished = winRound(initialState());
+    // A queued report from before descriptions were always visible must keep its original value.
+    const reports = [{ ...finished.reports[0], description: false }];
+    let saved = startRound({ ...finished, reports, tokens: 0, streak: 4, wordsGuessed: 7 });
     saved = gameReducer(saved, { type: 'guess', letter: 'z', at: 0 });
-    const round = { ...saved.round!, descriptionUnlocked };
-    const legacy = { ...saved, round: { ...round, hints: ['king', 'tower', 'stone'] } };
-    const restored = gameReducer(initialState(), { type: 'hydrate', state: legacy });
-    expect(restored).toEqual({ ...saved, round });
-    expect(restored.round).not.toHaveProperty('hints');
-    expect(legacy.round.hints).toEqual(['king', 'tower', 'stone']);
+    for (const extra of [{}, { hints: ['king', 'tower', 'stone'] }]) {
+      const legacy = { ...saved, round: { ...saved.round!, descriptionUnlocked, ...extra } };
+      const restored = gameReducer(initialState(), { type: 'hydrate', state: legacy });
+      expect(restored).toEqual(saved);
+      expect(restored.round).not.toHaveProperty('hints');
+      expect(restored.round).not.toHaveProperty('descriptionUnlocked');
+      expect(legacy.round.descriptionUnlocked).toBe(descriptionUnlocked);
+      expect(gameReducer(initialState(), { type: 'hydrate', state: restored })).toEqual(restored);
+    }
   });
 });
 
@@ -221,36 +227,11 @@ describe('disabled keys', () => {
   });
 });
 
-describe('free description reveal', () => {
-  it.each([0, STARTING_TOKENS])('works with %i tokens without changing progress, guesses or balance', (tokens) => {
-    const before = startRound({ ...initialState(), tokens, wordsGuessed: 7, streak: 4 });
-    expect(before.round!.descriptionUnlocked).toBe(false);
-    const s = gameReducer(before, { type: 'unlockDescription' });
-    expect(s.round!.descriptionUnlocked).toBe(true);
-    expect(s).toEqual({ ...before, round: { ...before.round, descriptionUnlocked: true } });
-    expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
-  });
-
-  it('stays revealed after reloading and starts hidden for the next word', () => {
-    const s = gameReducer(startRound(initialState()), { type: 'unlockDescription' });
-    const restored = gameReducer(initialState(), { type: 'hydrate', state: JSON.parse(JSON.stringify(s)) });
-    expect(restored.round!.descriptionUnlocked).toBe(true);
-    expect(startRound(restored).round!.descriptionUnlocked).toBe(false);
-  });
-
-  it('ignores reveals without a round or after a win or loss', () => {
-    for (const s of [initialState(), winRound(initialState()), loseRound(initialState())]) {
-      expect(gameReducer(s, { type: 'unlockDescription' })).toBe(s);
-    }
-  });
-
-  it.each([false, true])('reports whether the description was revealed during play (%s)', (revealed) => {
-    let s = startRound(initialState());
-    if (revealed) s = gameReducer(s, { type: 'unlockDescription' });
-    for (const letter of word.word) s = gameReducer(s, { type: 'guess', letter, at: 0 });
-    expect(roundStatus(s.round!)).toBe('won');
+describe('always-visible descriptions', () => {
+  it.each([true, false])('reports the description as shown after a round ends (won = %s)', (won) => {
+    const s = (won ? winRound : loseRound)({ ...initialState(), tokens: 0 });
     expect(s.reports).toHaveLength(1);
-    expect(s.reports[0].description).toBe(revealed);
+    expect(s.reports[0]).toMatchObject({ won, description: true });
   });
 });
 

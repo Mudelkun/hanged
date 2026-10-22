@@ -37,7 +37,6 @@ const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: stri
   disabledLetters: disabled,
   boughtLetters: [],
   guessed: [],
-  descriptionUnlocked: false,
 });
 
 const play = (r: Round, letters: string) => letters.split('').reduce(guess, r);

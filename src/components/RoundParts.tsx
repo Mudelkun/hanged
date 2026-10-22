@@ -10,7 +10,7 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
 import { t } from '../i18n';
 import { colors, fonts } from '../theme';
-import { bulbXml, eyeXml, Icon, sparkXml } from './icons';
+import { bulbXml, Icon, sparkXml } from './icons';
 import { popFrom } from './motion';
 import { PayButton, useRefusal } from './PayButton';
 import { Raised } from './Raised';
@@ -142,13 +142,10 @@ export function LetterShopPill({ canAfford, onBuy, compact }: {
 
 interface DescriptionProps {
   text: string;
-  unlocked: boolean;
-  /** Omitted once the round is over. Revealing the clue is always free. */
-  onReveal?: () => void;
   compact?: boolean;
 }
 
-export function DescriptionCard({ text, unlocked, onReveal, compact }: DescriptionProps) {
+export function DescriptionCard({ text, compact }: DescriptionProps) {
   return (
     <Raised shadowColor={colors.shadow} radius={22} style={[styles.desc, compact && { paddingVertical: 7 }]}>
       <View style={styles.bulb}>
@@ -156,26 +153,11 @@ export function DescriptionCard({ text, unlocked, onReveal, compact }: Descripti
       </View>
       <View style={styles.descBody}>
         <Text style={styles.chip}>{t('description.label')}</Text>
-        {unlocked ? (
-          // Dictionary definitions are up to 140 characters (scripts/check-words.js): 4 lines on a 375 pt phone
-          <Text style={styles.descText} numberOfLines={4} adjustsFontSizeToFit minimumFontScale={0.85}>
-            {text}
-          </Text>
-        ) : (
-          // Keep the actual definition out of the view and accessibility tree until requested.
-          <Text style={styles.descPrompt}>{t('description.hidden')}</Text>
-        )}
+        {/* Dictionary definitions are up to 140 characters: 4 lines on a 375 pt phone. */}
+        <Text style={styles.descText} numberOfLines={4} adjustsFontSizeToFit minimumFontScale={0.85}>
+          {text}
+        </Text>
       </View>
-      {!unlocked && onReveal && (
-        <Pressable onPress={onReveal} accessibilityRole="button" accessibilityLabel={t('description.a11y.show')}>
-          {({ pressed }) => (
-            <Raised pressed={pressed} shadowColor={colors.skyT} radius={14} style={styles.revealButton}>
-              <Icon xml={eyeXml()} size={16} />
-              <Text style={styles.revealText}>{t('description.show')}</Text>
-            </Raised>
-          )}
-        </Pressable>
-      )}
     </Raised>
   );
 }
@@ -260,9 +242,6 @@ const styles = StyleSheet.create({
   descBody: { flex: 1, minWidth: 0 },
   chip: { fontFamily: fonts.display600, fontSize: 12, letterSpacing: 1, color: colors.butterT },
   descText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink, marginTop: 1 },
-  descPrompt: { fontFamily: fonts.body800, fontSize: 14, color: colors.muted, marginTop: 3 },
-  revealButton: { minHeight: 44, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.sky },
-  revealText: { fontFamily: fonts.display600, fontSize: 15, color: '#fff' },
   btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
   btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },

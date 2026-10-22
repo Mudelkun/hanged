@@ -210,12 +210,10 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 ## Free description clue (owner, 2026-10-22)
 
-Hint words are removed. The description starts hidden with a readable "Free to reveal" prompt
-and a sky-blue **Show clue** button (44 pt minimum height, with an eye icon). The actual definition
-is not rendered or exposed to accessibility until requested. The reducer records the reveal in
-`descriptionUnlocked`, so it survives a restart. There is no payment or token flight. The button
-goes away after revealing, and no new reveal is offered after the round ends. Results always show
-the description. Rewards are unchanged; shop prices follow the steady pace in [characters-shop.md](characters-shop.md).
+Hint words are removed. The dictionary description is always visible in its card, from the start
+of every round and on results, including restored rounds. There is no reveal button, hidden prompt,
+payment or token flight. `DescriptionCard` takes only the text and compact-layout flag; it has no
+visibility state. Rewards are unchanged; shop prices follow the steady pace in [characters-shop.md](characters-shop.md).
 
 ## Letter shop pill (not in the mockup)
 
@@ -231,7 +229,7 @@ pill with no button was confusing). Without enough tokens it stays, and its butt
 ## Deliberate differences from the mockup
 
 - **Description length**: descriptions are dictionary definitions of up to 140 characters
-  ([word-database.md](word-database.md)), so the unlocked card shows **4 lines** (the mockup's are one
+  ([word-database.md](word-database.md)), so the card shows **4 lines** (the mockup's are one
   short sentence), with `adjustsFontSizeToFit` (iOS) as a safety net. Checked at 393×852 and 375×667
   on level 8 (letter shop pill showing) with a 139-character description: no scrolling.
 - **Stamp ink**: the mockup roughens the stamp with an `feTurbulence` filter, which

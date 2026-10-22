@@ -16,7 +16,7 @@ import {
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
-import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription, wrongCount } from './engine';
+import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, wrongCount } from './engine';
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { checkName, keptName } from './names';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
@@ -79,7 +79,6 @@ export type GameAction =
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
   /** `at`: now, in epoch ms (the reducer stays pure). */
   | { type: 'guess'; letter: string; at: number }
-  | { type: 'unlockDescription' }
   | { type: 'buyLetters'; rng?: () => number }
   /** Pays for a locked character and plays with it. */
   | { type: 'buyCharacter'; id: string }
@@ -143,15 +142,12 @@ function queueReport(s: GameState, round: Round, won: boolean, at: number): Pick
     level: round.level,
     won,
     wrong: wrongCount(round),
-    description: round.descriptionUnlocked,
+    description: true, // Descriptions are visible from the start of every round.
     letters: round.boughtLetters.length > 0,
     at,
   };
   return { reports: [...s.reports, report].slice(-REPORTS_KEPT), nextReportSeq: s.nextReportSeq + 1 };
 }
-
-export const canUnlockDescription = (s: GameState) =>
-  !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing';
 
 /** A character's price in tokens (0 = free), or null if it isn't in the shop. */
 export const characterPrice = (id: string): number | null => CHARACTER_PRICES[id] ?? null;
@@ -187,15 +183,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         const { wordsTowardToken = 0, lastTokenEarned, ...rest } = s as LegacySave;
         s = { ...rest, tokens: rest.tokens + wordsTowardToken, lastTokensEarned: lastTokenEarned ? 1 : 0 };
       }
-      // Hint words were retired. Preserve the round and any previously revealed description.
-      if (s.round && 'hints' in s.round) {
-        const { hints, ...round } = s.round;
-        s = { ...s, round };
-      }
-      // A round saved before disabled keys or bought letters existed: full keyboard, nothing bought.
+      // Descriptions are always visible; discard retired hint/reveal fields from old rounds.
+      // Older rounds also default to a full keyboard and no bought letters.
       if (s.round) {
-        const { disabledLetters = [], boughtLetters = [] } = s.round;
-        s = { ...s, round: { ...s.round, disabledLetters, boughtLetters } };
+        const { hints, descriptionUnlocked, disabledLetters = [], boughtLetters = [], ...round } =
+          s.round as Round & { hints?: string[]; descriptionUnlocked?: boolean };
+        s = { ...s, round: { ...round, disabledLetters, boughtLetters } };
       }
       // A character that left the shop goes back to the default; one that stopped being free stays owned.
       if (characterPrice(s.characterId) === null) s = { ...s, characterId: DEFAULT_CHARACTER };
@@ -254,11 +247,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         tokens: state.tokens + earned,
         lastTokensEarned: earned,
       };
-    }
-
-    case 'unlockDescription': {
-      if (!canUnlockDescription(state)) return state;
-      return { ...state, round: unlockDescription(state.round!) };
     }
 
     case 'buyLetters': {

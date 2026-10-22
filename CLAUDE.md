@@ -34,7 +34,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Read this before working on… | File |
 |---|---|
 | The round rules in code: word validation, clues, guesses, win/loss, scene stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
-| Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
+| Score (words guessed), tokens, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
 | The word database: `data/words.json`, how to add words, the checks, why words stay on the device | [Context/word-database.md](Context/word-database.md) |
 | How the app draws characters **from `design/characters/*.js`**, the personas (signature poses, elbows, props), the balloon stages, the animation loop, the won pose, the scene camera, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
 | The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
@@ -107,7 +107,7 @@ A level's difficulty is set by:
 
 - **Every word** has a **description/hint**. The mockup shows a "CLUE" card such as *"A greeting used when meeting someone."*
 - Descriptions come from a **trusted dictionary**, never written by hand or by an AI: today Open English WordNet (CC BY 4.0, so the app must credit it). They must not contain the word itself.
-- The description is **always hidden** when a round starts. The player taps **Show clue** to reveal it **for free**. It never costs a token or a wrong guess, and stays revealed when the app reopens. Results always show it.
+- The description is **always visible for free**, from the start of every round and on the result screen. There is no reveal button, token cost or wrong-guess penalty.
 
 ### Keyboard
 

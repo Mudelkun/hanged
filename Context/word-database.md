@@ -27,7 +27,7 @@ statistics ([server.md](server.md)).
   so keep the ids when migrating.
 - `word` is lowercase a–z. Length isn't stored: it's computed (CLAUDE.md).
 - `language` is on **every** word from day one, even though the MVP is English only.
-- `description` is the clue the player can reveal for free. It's required, and it comes
+- `description` is the clue always shown for free. It's required, and it comes
   from a dictionary (below), never written by hand.
 - `sense` is the dictionary sense the description comes from.
 - `rarity` is how common the word is, `concrete` whether it's a thing you can picture, and
@@ -132,7 +132,7 @@ ran out of tokens, and lost on "magnesium" (level 7) and "virulent" (level 6). I
 All these numbers are PLACEHOLDERS in [levels.ts](../src/game/levels.ts) and [config.ts](../src/game/config.ts),
 see [progression-and-tokens.md](progression-and-tokens.md).
 
-The owner later made descriptions **free to reveal at every level** and removed hint words
+The owner later made descriptions **always visible for free at every level** and removed hint words
 (2026-10-22). Rewards are unchanged; shop prices now follow the steady pace in [characters-shop.md](characters-shop.md). The target remains that
 **players win more rounds than they lose**.
 

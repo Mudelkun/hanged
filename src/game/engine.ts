@@ -43,8 +43,6 @@ export interface Round {
   boughtLetters: Letter[];
   /** Letters the player picked, in order. Never contains a clue letter or a repeat. */
   guessed: Letter[];
-  /** The player revealed the free description; kept across app restarts. */
-  descriptionUnlocked: boolean;
 }
 
 export type RoundStatus = 'playing' | 'won' | 'lost';
@@ -188,7 +186,6 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
     boughtLetters: [],
     guessed: [],
-    descriptionUnlocked: false,
   };
 }
 
@@ -258,9 +255,6 @@ export function guess(r: Round, raw: string): Round {
   if (usedLetters(r).has(c)) return r;
   return { ...r, guessed: [...r.guessed, c] };
 }
-
-export const unlockDescription = (r: Round): Round =>
-  r.descriptionUnlocked ? r : { ...r, descriptionUnlocked: true };
 
 // ---- bought letters (hardest levels) ----
 

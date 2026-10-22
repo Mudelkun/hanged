@@ -27,9 +27,6 @@
   "letters.a11y.buy": "Reveal {count} hidden letters for {cost} tokens",
 
   "description.label": "DESCRIPTION",
-  "description.hidden": "Free to reveal",
-  "description.show": "Show clue",
-  "description.a11y.show": "Show the description for free",
 
   "result.lost.stamp": "DROPPED !!",
   "result.lost.line": "{wrong} / {max} misses · the word was",
@@ -166,7 +163,7 @@
   "rules.guess.title": "Guessing",
   "rules.guess.body": "Tap a letter. If it's in the word, every copy of it shows up. If it isn't, a balloon pops. Each letter can only be tried once.",
   "rules.help.title": "A little help",
-  "rules.help.body": "Every word starts with a few letters showing. Tap Show clue to reveal the word's description for free, whenever you need help. On the first levels, some letters that aren't in the word are taken off the keyboard.",
+  "rules.help.body": "Every word starts with a few letters showing. The word's description is always visible for free to help you guess. On the first levels, some letters that aren't in the word are taken off the keyboard.",
   "rules.hard.title": "Harder words",
   "rules.hard.body": "From level {lettersLevel}, you can reveal {letterCount} hidden letters for {letterCost} tokens, once per word. From level {subjectLevel}, the word's subject is shown for free.",
   "rules.tokens.title": "Tokens",
