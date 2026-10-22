@@ -23,6 +23,8 @@ import { t } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { colors } from '../../theme';
 
+const GUTTER = 16;
+
 export default function CharactersScreen() {
   const { state, dispatch } = useGame();
   const insets = useSafeAreaInsets();
@@ -83,7 +85,7 @@ export default function CharactersScreen() {
           style={[styles.stage, { minHeight: compact ? 130 : 170 }]}
         />
         <CharacterInfo character={viewed} ownership={status} price={price} note={note} />
-        <CharacterGrid ownership={ownership} viewedId={viewedId} width={width - 32} compact={compact} onPress={setViewedId} />
+        <CharacterGrid ownership={ownership} viewedId={viewedId} width={width - GUTTER * 2} gutter={GUTTER} compact={compact} onPress={setViewedId} />
         <View style={styles.action}>
           {status === 'locked' ? (
             <PayButton
@@ -108,7 +110,7 @@ export default function CharactersScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
+  body: { flex: 1, paddingHorizontal: GUTTER, minHeight: 0 },
   // The mockup's stage is 222 tall; it grows on tall phones so the grid and button sit low, like Play's keyboard
   stage: { flexGrow: 1, flexShrink: 1, maxHeight: 300, marginTop: 4 },
   action: { marginTop: 'auto', paddingTop: 6 },

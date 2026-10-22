@@ -61,6 +61,11 @@ export const characterTint: Record<string, string> = {
   rexy: '#dcf5ea',
   biscuit: '#fff1dc',
   button: '#ffe6e3',
+  pip: '#e3eaf6',
+  sage: '#f6e9d8',
+  rocco: '#ebe8f2',
+  koa: '#e9edf2',
+  vesper: '#ece4f8',
 };
 
 /**

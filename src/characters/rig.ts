@@ -1,6 +1,6 @@
 /*
  * The app draws the characters with the SAME code as the design previews:
- * design/characters/rig.js (shared rig + the 10 skins) and balloons.js (the
+ * design/characters/rig.js (shared rig + the 15 skins and their personas) and balloons.js (the
  * 10-stage balloon animation). Both are plain scripts that attach
  * `HangedRig` / `BalloonAnim` to the global object and return SVG strings,
  * which react-native-svg's <SvgXml> renders. Change a character there and
@@ -12,7 +12,9 @@ import '../../design/characters/rig.js';
 import '../../design/characters/balloons.js';
 
 export type Expression = 'happy' | 'joy' | 'nervous' | 'worried' | 'scared' | 'ko';
-export type Angles = Partial<Record<'head' | 'armL' | 'armR' | 'legL' | 'legR' | 'tail', number>>;
+/** The personas' attitude faces (Characters page only). */
+export type Mood = 'cool' | 'smug' | 'side' | 'wink' | 'fierce' | 'calm' | 'sleepy' | 'blep';
+export type Angles = Partial<Record<'head' | 'armL' | 'armR' | 'legL' | 'legR' | 'tail' | 'elbowL' | 'elbowR', number>>;
 
 export interface Character {
   id: string;
@@ -22,9 +24,15 @@ export interface Character {
 
 export interface RenderOptions {
   pose?: 'idle' | 'cheer' | 'panic' | 'dangle';
-  expr?: Expression;
+  expr?: Expression | Mood;
   angles?: Angles;
   bare?: boolean;
+  /** Degrees the whole figure tilts around its feet. */
+  lean?: number;
+  layers?: Partial<Record<'armL' | 'armR', 'under' | 'back' | 'front'>>;
+  under?: string;
+  held?: string;
+  over?: string;
 }
 
 /** One animation frame, as returned by BalloonAnim.frame. Only the fields the app reads are typed. */
@@ -42,6 +50,12 @@ export interface Stage {
 
 interface HangedRigApi {
   render(c: Character, opts?: RenderOptions): string;
+  /** The character's persona (signature pose, face and props) as render options. */
+  signature(c: Character): RenderOptions;
+  /** The profile picture: the persona on its backdrop, clipped to a circle filling the viewBox. */
+  avatar(c: Character): string;
+  /** The avatar's ring colour. */
+  avatarRing(c: Character): string;
   CHARACTERS: Character[];
   POSES: Record<string, Required<Angles>>;
 }
@@ -66,10 +80,26 @@ export const CHARACTERS = HangedRig.CHARACTERS;
 export const characterById = (id: string): Character =>
   CHARACTERS.find((c) => c.id === id) ?? CHARACTERS.find((c) => c.id === 'mochi')!;
 
-/** Head-and-shoulders crop, used as the avatar until the player uploads a photo. */
+/** Head-and-shoulders crop with a chosen face (e.g. the Profile page's worried one). */
 export const faceXml = (c: Character, expr: Expression = 'happy') =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 4 140 140">${HangedRig.render(c, { bare: true, expr })}</svg>`;
 
 /** The whole character on its own (the rig's VIEWBOX), e.g. cheering on the streak takeover. */
 export const bodyXml = (c: Character, opts?: RenderOptions) =>
   HangedRig.render(c, opts).replace(' class="hanged-char"', '');
+
+/**
+ * The character's profile picture: its persona (face, pose, prop) on a backdrop that fits its
+ * personality. Every avatar in the app shows this. Cached: it never changes for a character, and a
+ * leaderboard draws the same few many times.
+ */
+const avatars = new Map<string, string>();
+export function avatarXml(c: Character) {
+  let xml = avatars.get(c.id);
+  if (!xml) avatars.set(c.id, (xml = HangedRig.avatar(c)));
+  return xml;
+}
+export const avatarRing = (c: Character) => HangedRig.avatarRing(c);
+
+/** The whole character in its persona's signature pose (Characters page). */
+export const signatureXml = (c: Character) => bodyXml(c, HangedRig.signature(c));

@@ -1,15 +1,16 @@
 /*
  * The Characters page's pieces (mockup: Characters): the showcase stage with
  * the character being looked at, its name line, and the grid of every
- * character with its price or "Owned" / "Playing". Prices and ownership are
- * game rules (progress.ts); these only draw them.
+ * character with its price or "Owned" / "Playing". Every character shows in
+ * its persona's signature pose (rig.js) and the stage adds its quote. Prices
+ * and ownership are game rules (progress.ts); these only draw them.
  */
 import { useIsFocused } from 'expo-router';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, LayoutChangeEvent, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Svg, { Defs, Ellipse, Path, RadialGradient, Rect, Stop, SvgXml } from 'react-native-svg';
 
-import { bodyXml, Character, CHARACTERS } from '../characters/rig';
+import { Character, CHARACTERS, signatureXml } from '../characters/rig';
 import { characterPrice } from '../game/progress';
 import { t, TranslationKey } from '../i18n';
 import { characterTint, colors, confettiColors, fonts } from '../theme';
@@ -23,12 +24,15 @@ export const SHOP: readonly Character[] = CHARACTERS.filter((c) => characterPric
   (a, b) => characterPrice(a.id)! - characterPrice(b.id)!,
 );
 
-/** The species in the UI language; the rig's English one if a translation is missing. */
-export function speciesOf(c: Character) {
-  const key = `species.${c.id}` as TranslationKey;
+/** A per-character UI string (`<prefix>.<id>`), or null when it isn't translated. */
+function perCharacter(prefix: string, c: Character) {
+  const key = `${prefix}.${c.id}` as TranslationKey;
   const text = t(key);
-  return text === key ? c.species : text;
+  return text === key ? null : text;
 }
+
+/** The species in the UI language; the rig's English one if a translation is missing. */
+export const speciesOf = (c: Character) => perCharacter('species', c) ?? c.species;
 
 /** The rig's whole-character box (rig.js VIEWBOX: 220 × 260). */
 const FIG_RATIO = 220 / 260;
@@ -43,8 +47,11 @@ const RAYS = Array.from({ length: 18 }, (_, i) => {
   return `M100,100 L${p(100, a)} L${p(100, b)} Z`;
 }).join(' ');
 const RAYS_MS = 40_000;
-const HOP_MS = 520;
+/** One slow breath up or down: the personas are too cool to hop. */
+const BOB_MS = 1400;
 const PARTY_MS = 1700;
+/** Height kept free above the figure for the quote bubble (its top inset, one line and the tail). */
+const BUBBLE_ROOM = 34;
 
 /** `cheer` changes when the player picks (`big` false) or buys (`big` true) a character: the stage celebrates. */
 export type Cheer = { n: number; big: boolean };
@@ -66,23 +73,24 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
   const focused = useIsFocused();
   const [fx] = useState(() => ({
     spin: new Animated.Value(0),
-    hop: new Animated.Value(0),
+    bob: new Animated.Value(0),
     pop: new Animated.Value(1),
+    say: new Animated.Value(1),
     party: new Animated.Value(0),
     ribbon: new Animated.Value(0),
   }));
 
-  // The rays turn and the character hops only while the page is in view.
+  // The rays turn and the character breathes only while the page is in view.
   useEffect(() => {
     if (!focused) return;
     const native = { useNativeDriver: true };
+    const breath = { duration: BOB_MS, easing: Easing.inOut(Easing.sin), ...native };
     const loops = [
       Animated.loop(Animated.timing(fx.spin, { toValue: 1, duration: RAYS_MS, easing: Easing.linear, ...native })),
       Animated.loop(
         Animated.sequence([
-          Animated.timing(fx.hop, { toValue: 1, duration: HOP_MS, easing: Easing.out(Easing.quad), ...native }),
-          Animated.timing(fx.hop, { toValue: 0, duration: HOP_MS, easing: Easing.in(Easing.quad), ...native }),
-          Animated.delay(260),
+          Animated.timing(fx.bob, { toValue: 1, ...breath }),
+          Animated.timing(fx.bob, { toValue: 0, ...breath }),
         ]),
       ),
     ];
@@ -90,12 +98,13 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
     return () => loops.forEach((l) => l.stop());
   }, [focused, fx]);
 
-  // A new character on the stage pops in; a pick or a purchase pops harder, and a purchase throws a party.
+  // A new character on the stage pops in and says its line; a pick or a purchase pops harder, and a purchase throws a party.
   const shownId = useRef(character.id);
   useEffect(() => {
     if (character.id === shownId.current) return;
     shownId.current = character.id;
     popFrom(fx.pop, 0.82);
+    popFrom(fx.say, 0.6);
   }, [character.id, fx]);
   const cheered = useRef(cheer.n);
   useEffect(() => {
@@ -114,7 +123,8 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
     ]).start();
   }, [cheer, fx]);
 
-  const xml = useMemo(() => bodyXml(character, { pose: 'cheer', expr: 'joy' }), [character]);
+  const xml = useMemo(() => signatureXml(character), [character]);
+  const quote = perCharacter('quote', character);
   const poppers = useMemo(
     () =>
       size && [
@@ -124,7 +134,8 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
     [size],
   );
 
-  const figH = size ? size.h - 16 : 0;
+  // The quote bubble gets its own room above the head, so it never covers ears or caps
+  const figH = size ? size.h - 16 - (quote ? BUBBLE_ROOM : 0) : 0;
   const rays = size ? Math.hypot(size.w, size.h) * 1.1 : 0;
   return (
     <Raised shadowColor={colors.shadow} radius={30} outerStyle={style} style={styles.stage}>
@@ -163,7 +174,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
             <Ellipse cx={95} cy={14.5} rx={95} ry={14.5} fill="#ffd2b8" />
           </Svg>
         </View>
-        <View style={[styles.spark, { left: '21%', top: '15%' }]} pointerEvents="none">
+        <View style={[styles.spark, { left: '16%', bottom: '24%' }]} pointerEvents="none">
           <Icon xml={sparkXml()} size={20} />
         </View>
         <View style={[styles.spark, { right: '21%', top: '27%' }]} pointerEvents="none">
@@ -176,13 +187,26 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
               styles.figure,
               {
                 transform: [
-                  { translateY: fx.hop.interpolate({ inputRange: [0, 1], outputRange: [0, -figH * 0.06] }) },
+                  { translateY: fx.bob.interpolate({ inputRange: [0, 1], outputRange: [0, -figH * 0.015] }) },
                   { scale: fx.pop },
                 ],
               },
             ]}
           >
             <SvgXml xml={xml} width={figH * FIG_RATIO} height={figH} />
+          </Animated.View>
+        )}
+        {quote && (
+          // The character's line, in a bubble over its head; it steps aside for the purchase ribbon
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.bubble, { opacity: fx.ribbon.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ scale: fx.say }] }]}
+          >
+            <Text style={styles.bubbleText} numberOfLines={1}>{quote}</Text>
+            <Svg style={styles.bubbleTail} width={16} height={11} viewBox="0 0 16 11">
+              <Path d="M0,0 L16,0 L8,11 Z" fill="#fff" />
+              <Path d="M0,0 L8,11 L16,0" fill="none" stroke={colors.line} strokeWidth={2} />
+            </Svg>
           </Animated.View>
         )}
         <Animated.View
@@ -250,8 +274,13 @@ export function CharacterInfo({ character, ownership, price, note }: {
 
 // ---- the grid ----
 
-const COLUMNS = 5;
+/** Two rows that scroll sideways: 5 cards fit across, and a slice of the next one hints at more. */
+const ROWS = 2;
+const VISIBLE = 5.4;
 const GAP = 7;
+/** Room around the cards inside the scroller: the playing check sticks out, the raised edge hangs below. */
+const PAD_TOP = 9;
+const PAD_BOTTOM = 4;
 
 interface CardProps {
   character: Character;
@@ -265,7 +294,7 @@ interface CardProps {
 const Card = memo(function Card({ character, ownership, viewed, width, height, onPress }: CardProps) {
   const locked = ownership === 'locked';
   const price = characterPrice(character.id)!;
-  const xml = useMemo(() => bodyXml(character), [character]);
+  const xml = useMemo(() => signatureXml(character), [character]);
   // What's left once the name and the price lines are in
   const figH = height - 46;
   return (
@@ -312,30 +341,72 @@ const Card = memo(function Card({ character, ownership, viewed, width, height, o
   );
 });
 
-export function CharacterGrid({ ownership, viewedId, width, compact, onPress }: {
+/** SHOP in columns of ROWS, so the price order reads down then across. */
+const COLUMN_LIST = Array.from({ length: Math.ceil(SHOP.length / ROWS) }, (_, i) => SHOP.slice(i * ROWS, i * ROWS + ROWS));
+const columnOf = (id: string) => Math.floor(SHOP.findIndex((c) => c.id === id) / ROWS);
+
+export function CharacterGrid({ ownership, viewedId, width, gutter, compact, onPress }: {
   ownership: (id: string) => Ownership;
   viewedId: string;
-  /** The grid's width: the cards share it. */
+  /** The page's content width: 5 cards and a slice of the next share it. */
   width: number;
+  /** The page's side padding: the scroller bleeds into it to reach the screen edges. */
+  gutter: number;
   compact: boolean;
   onPress: (id: string) => void;
 }) {
-  const cardW = Math.floor((width - GAP * (COLUMNS - 1)) / COLUMNS);
+  const cardW = Math.floor((width - GAP * (Math.ceil(VISIBLE) - 1)) / VISIBLE);
   const cardH = compact ? 96 : 116;
+  const step = cardW + GAP;
+
+  // Keep the viewed card in sight when the stage's arrows move past the edge (at once on the first layout)
+  const scroller = useRef<ScrollView>(null);
+  const scrollX = useRef(0);
+  const placed = useRef(false);
+  const reveal = useCallback(
+    (animated: boolean) => {
+      const x = columnOf(viewedId) * step;
+      const view = width - cardW;
+      const to = x < scrollX.current ? x : x > scrollX.current + view ? x - view : null;
+      if (to !== null) scroller.current?.scrollTo({ x: to, animated });
+    },
+    [viewedId, step, width, cardW],
+  );
+  useEffect(() => {
+    if (placed.current) reveal(true);
+  }, [reveal]);
+
   return (
-    <View style={styles.grid}>
-      {SHOP.map((c) => (
-        <Card
-          key={c.id}
-          character={c}
-          ownership={ownership(c.id)}
-          viewed={c.id === viewedId}
-          width={cardW}
-          height={cardH}
-          onPress={onPress}
-        />
+    <ScrollView
+      ref={scroller}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={[styles.scroller, { marginHorizontal: -gutter, marginTop: -PAD_TOP }]}
+      contentContainerStyle={[styles.grid, { paddingHorizontal: gutter, paddingTop: PAD_TOP, paddingBottom: PAD_BOTTOM }]}
+      onScroll={(e) => (scrollX.current = e.nativeEvent.contentOffset.x)}
+      scrollEventThrottle={32}
+      onLayout={() => {
+        if (placed.current) return;
+        placed.current = true;
+        reveal(false);
+      }}
+    >
+      {COLUMN_LIST.map((column) => (
+        <View key={column[0].id} style={styles.column}>
+          {column.map((c) => (
+            <Card
+              key={c.id}
+              character={c}
+              ownership={ownership(c.id)}
+              viewed={c.id === viewedId}
+              width={cardW}
+              height={cardH}
+              onPress={onPress}
+            />
+          ))}
+        </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -356,6 +427,21 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   ribbonText: { fontFamily: fonts.display600, fontSize: 16, color: colors.butterT },
+  bubble: {
+    position: 'absolute',
+    top: 10,
+    alignSelf: 'center',
+    maxWidth: '86%',
+    backgroundColor: '#fff',
+    borderColor: colors.line,
+    borderWidth: 2,
+    borderRadius: 14,
+    paddingHorizontal: 11,
+    paddingVertical: 5,
+    transformOrigin: 'center bottom',
+  },
+  bubbleText: { fontFamily: fonts.display500, fontSize: 13, lineHeight: 17, color: colors.ink },
+  bubbleTail: { position: 'absolute', bottom: -9, left: '50%', marginLeft: -8 },
   arrow: { position: 'absolute', top: '50%', marginTop: -24 },
   arrowFace: { width: 42, height: 42, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
 
@@ -378,7 +464,9 @@ const styles = StyleSheet.create({
   },
   tagText: { fontFamily: fonts.display600, fontSize: 15, color: colors.butterT },
 
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: GAP },
+  scroller: { flexGrow: 0, flexShrink: 0 },
+  grid: { flexDirection: 'row', gap: GAP },
+  column: { gap: GAP },
   card: { borderWidth: 2, borderColor: '#fff', alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 6 },
   cardViewed: { borderWidth: 3, borderColor: colors.coral },
   faded: { opacity: 0.5 },

@@ -69,19 +69,25 @@ export const DEFAULT_CHARACTER = 'mochi';
  * Calibrated on a simulated player (Context/characters-shop.md): a
  * casual player nets ~1.35 tokens a round, a strong one ~2.1, after buying
  * some descriptions. So the first friend comes in the first session (~25
- * rounds), each next one takes longer, and the whole set takes a casual
- * player ~1100 rounds. Saving up for one favourite is never more than ~300.
+ * rounds), each next one takes longer, and the whole set (15 characters)
+ * takes a casual player ~1800 rounds. Saving up for one favourite is never
+ * more than ~300.
  */
 export const CHARACTER_PRICES: Readonly<Record<string, number>> = {
   mochi: 0,
   bun: 0,
   coco: 30,
-  biscuit: 60,
+  biscuit: 50,
+  pip: 75,
   bao: 100,
+  koa: 125,
   lolo: 150,
+  rocco: 175,
   ember: 200,
+  sage: 225,
   rexy: 250,
-  button: 300,
+  vesper: 300,
+  button: 350,
   ribbit: 400,
 };
 

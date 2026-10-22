@@ -31,8 +31,10 @@ game save (`unlockedCharacterIds`, `characterId`), like tokens. The server only 
 
 ## Prices (PLACEHOLDER) and why
 
-Mochi and Bun are free (Mochi is the default). Then Coco 30, Biscuit 60, Bao 100, Lolo 150, Ember 200,
-Rexy 250, Button 300, Ribbit 400 (the frog prince with the crown is the top prize). The mockup's prices
+15 characters. Mochi and Bun are free (Mochi is the default). Then Coco 30, Biscuit 50, Pip 75, Bao 100,
+Koa 125, Lolo 150, Rocco 175, Ember 200, Sage 225, Rexy 250, Vesper 300, Button 350, Ribbit 400 (the frog
+prince with the crown and sceptre is the top prize). The 5 newer characters (2026-10-22) were slotted into
+the ladder instead of being stacked on top, so the dearest is still 400. The mockup's prices
 (10 to 50) were not used: the owner asked for prices that fit how tokens are really earned.
 
 They come from simulating players through the real level and token rules (pay 1–4 per level, the
@@ -44,8 +46,8 @@ streak bonus, 10 wins to move up, drops after 3 losses, 15% of rounds buying a d
 | Strong | 92% → 50% | ~2.1 |
 
 So the first paid character comes in the first session (~25 rounds), each one after takes longer, and the
-whole set takes a casual player ~1100 rounds (a strong one ~650). Saving for one favourite is at most
-~300 rounds. **If the token pay (`LEVELS`, `STREAK_BONUS_AT`) or the description price changes, redo
+whole set (2430 tokens) takes a casual player ~1800 rounds (a strong one ~1150). Saving for one favourite
+is at most ~300 rounds. **If the token pay (`LEVELS`, `STREAK_BONUS_AT`) or the description price changes, redo
 this check** and adjust the prices with it.
 
 ## The page (mockup: Characters)
@@ -53,15 +55,23 @@ this check** and adjust the prices with it.
 Header (`TitleHeader live`: the spend flies into its pill) · showcase stage · name line · grid · action
 button · tab bar.
 
-- **Showcase**: the looked-at character in the rig's `cheer` pose with the `joy` face, drawn once
-  (`bodyXml`) and hopped with native transforms. Behind it, a radial glow, a sunburst that turns slowly
-  and a rug. Arrows go through `SHOP` in a loop. The rays and the hop run **only while the page is in
-  view** (`useIsFocused`). A new character pops in.
+- **Showcase**: the looked-at character in its **persona's signature pose** (`signatureXml`,
+  [characters-and-animation.md](characters-and-animation.md)), drawn once and breathing with a slow
+  native bob. Not the `cheer` pose: the owner found everyone cheering with arms up too childish. Above
+  its head, a speech bubble with its **quote** (`quote.<id>`, one line); the figure shrinks by
+  `BUBBLE_ROOM` so the bubble never covers ears or caps, and the bubble fades out under the purchase
+  ribbon. Behind it, a radial glow, a sunburst that turns slowly and a rug. Arrows go through `SHOP` in
+  a loop. The rays and the bob run **only while the page is in view** (`useIsFocused`). A new character
+  pops in and its bubble pops with it.
 - **Name line**: name, then "Fox · locked" / "· yours" / "· playing", and a butter price tag on a locked
   one. A refused purchase swaps the second line for "N more tokens to go" in coral for 2.2 s.
-- **Grid**: 5 columns, cards share the width (`CharacterGrid`). Tint per character, a lock and faded
-  figure when locked, price or "Owned"/"Playing", a mint check on the one being played, coral border on
-  the one being looked at. Cards are memoized, so looking at another one redraws two cards.
+- **Grid**: **2 rows that scroll sideways** (`CharacterGrid`), filled column by column in price order.
+  5.4 cards fit across, so a slice of the next one hints at more; the scroller bleeds to the screen
+  edges. Three rows of 15 don't fit any phone without the page scrolling. The row scrolls itself to keep
+  the looked-at card in sight when the stage's arrows move past the edge, and opens on it. Cards show the
+  signature pose too. Tint per character, a lock and faded figure when locked, price or
+  "Owned"/"Playing", a mint check on the one being played, coral border on the one being looked at.
+  Cards are memoized, so looking at another one redraws two cards.
 - **Action**: locked → `PayButton big` "Unlock Ember · 200" (beige and refused without enough tokens);
   owned → "Choose Ember"; playing → ghost "Play with Ember" (goes to Play).
 - **Buying** sends the −N token flight from the button, then pays: confetti from the stage's bottom

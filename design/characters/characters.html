@@ -32,7 +32,7 @@
 <body>
 <main>
   <h1>Hanged · Characters</h1>
-  <p class="sub">10 characters on one shared rig. Same joints, parts and face anchors, so one animation drives them all.</p>
+  <p class="sub">15 characters on one shared rig. Same joints, parts and face anchors, so one animation drives them all. <b>signature</b> shows each one's persona (pose, face, prop) from the Characters page.</p>
 
   <div class="controls">
     <div class="group" id="poses"><span>Pose</span></div>
@@ -43,14 +43,14 @@
   <div class="grid" id="grid"></div>
 
   <h2>Shared expressions</h2>
-  <p class="sub">The face set the hanging stages will step through. Shown on <b id="stripName"></b>; click any character above to switch.</p>
+  <p class="sub">The faces the balloon stages step through. Shown on <b id="stripName"></b>; click any character above to switch.</p>
   <div class="strip" id="strip"></div>
 </main>
 <script src="rig.js"></script>
 <script>
-  const { render, CHARACTERS, POSES, EXPRESSIONS } = HangedRig;
+  const { render, signature, CHARACTERS, POSES, EXPRESSIONS, MOODS } = HangedRig;
   const params = new URLSearchParams(location.search);
-  const state = { pose: params.get('pose') || 'idle', expr: params.get('expr') || 'happy', joints: params.has('joints'), focus: 'mochi' };
+  const state = { pose: params.get('pose') || 'signature', expr: params.get('expr') || 'happy', joints: params.has('joints'), focus: 'mochi' };
 
   function buttons(el, items, key) {
     items.forEach((v) => {
@@ -61,17 +61,22 @@
       el.appendChild(b);
     });
   }
-  buttons(document.getElementById('poses'), Object.keys(POSES), 'pose');
-  buttons(document.getElementById('exprs'), EXPRESSIONS, 'expr');
+  buttons(document.getElementById('poses'), ['signature', ...Object.keys(POSES)], 'pose');
+  buttons(document.getElementById('exprs'), [...EXPRESSIONS, ...MOODS], 'expr');
+  // A face picked by hand overrides the persona's own
+  const look = (c) => state.pose === 'signature'
+    ? { ...signature(c), ...(state.exprSet ? { expr: state.expr } : {}), showJoints: state.joints }
+    : { pose: state.pose, expr: state.expr, showJoints: state.joints };
+  document.getElementById('exprs').addEventListener('click', () => (state.exprSet = true));
   document.getElementById('joints').onclick = () => { state.joints = !state.joints; draw(); };
 
   function draw() {
     document.querySelectorAll('#poses button').forEach((b) => b.classList.toggle('on', b.dataset.v === state.pose));
-    document.querySelectorAll('#exprs button').forEach((b) => b.classList.toggle('on', b.dataset.v === state.expr));
+    document.querySelectorAll('#exprs button').forEach((b) => b.classList.toggle('on', !!(state.pose !== 'signature' || state.exprSet) && b.dataset.v === state.expr));
     document.getElementById('joints').classList.toggle('on', state.joints);
 
     document.getElementById('grid').innerHTML = CHARACTERS.map((c) =>
-      `<div class="card" data-id="${c.id}">${render(c, { pose: state.pose, expr: state.expr, showJoints: state.joints })}` +
+      `<div class="card" data-id="${c.id}">${render(c, look(c))}` +
       `<div class="name">${c.name}</div><div class="species">${c.species}</div></div>`).join('');
     document.querySelectorAll('#grid .card').forEach((el) => el.onclick = () => { state.focus = el.dataset.id; draw(); });
 

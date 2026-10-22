@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanged Avatars</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #fffaf3; --card: #ffffff; --ink: #3a2b4d; --muted: #9a8a80; --line: #f3e6d6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Fredoka', system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 28px 16px 36px; }
+  h1 { margin: 0; font-size: 32px; font-weight: 700; }
+  .sub { color: var(--muted); margin: 6px 0 22px; font-size: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .card { background: var(--card); border: 2px solid var(--line); border-radius: 24px; padding: 16px 12px 14px; text-align: center; box-shadow: 0 4px 0 var(--line); }
+  .big { width: 132px; height: 132px; display: block; margin: 0 auto 10px; }
+  .name { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .kind { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .kind b { color: var(--accent); font-weight: 600; }
+  .quote { font-size: 14px; margin: 8px 4px 10px; min-height: 36px; font-style: italic; }
+  .small { display: flex; justify-content: center; align-items: center; gap: 10px; border-top: 2px dashed var(--line); padding-top: 10px; }
+  .small span { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Hanged · Profile pictures</h1>
+  <p class="sub">Each character's avatar shows its personality: its persona's face and pose, a backdrop of its own and a ring in its colour (HangedRig.avatar in rig.js, the same drawing the app uses). Bottom row: the header and leaderboard sizes.</p>
+  <div class="grid" id="grid"></div>
+</main>
+<script src="rig.js"></script>
+<script>
+  const { avatar, avatarRing, CHARACTERS } = HangedRig;
+
+  // Design-sheet text only: the personality word, and the quote (the app's copy is quote.<id> in en.json)
+  const WORDS = {
+    mochi: ['Aloof', "I wasn't even trying."], bun: ['Chill', "Relax. We've got balloons."],
+    coco: ['Confident', "Big words don't scare me."], biscuit: ['Loyal', "I've got your back. Always."],
+    pip: ['Deadpan', 'No sweat. Literally.'], bao: ['Zen', 'Breathe. The letter will come.'],
+    koa: ['Sleepy', 'Wake me for the last letter.'], lolo: ['Quirky', 'Vowels are overrated.'],
+    rocco: ['Sneaky', 'Your letters? My letters now.'], ember: ['Charming', 'Trust me. I know this one.'],
+    sage: ['Know-it-all', 'Statistically? Try an E.'], rexy: ['Fierce', 'Small? Say that again.'],
+    vesper: ['Mysterious', 'I only come out for hard words.'], button: ['Secretive', 'I know things. Mushroom things.'],
+    ribbit: ['Royal', 'Bow before my vocabulary.'],
+  };
+  const sized = (c, size, cls = '') => avatar(c, { ring: true }).replace('<svg ', `<svg ${cls} width="${size}" height="${size}" `);
+
+  document.getElementById('grid').innerHTML = CHARACTERS.map((c) => {
+    const [word, quote] = WORDS[c.id] || ['', ''];
+    return `<div class="card" style="--accent:${avatarRing(c)}">` +
+      sized(c, 132, 'class="big"') +
+      `<div class="name">${c.name}</div><div class="kind">${c.species} · <b>${word}</b></div>` +
+      `<div class="quote">“${quote}”</div>` +
+      `<div class="small">${sized(c, 44)}${sized(c, 28)}<span>in-app sizes</span></div></div>`;
+  }).join('');
+</script>
+</body>
+</html>

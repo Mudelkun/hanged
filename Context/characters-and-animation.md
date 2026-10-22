@@ -28,6 +28,33 @@ react-native-svg's `<SvgXml>` draws.
 - The scripts put `class="balloon-scene"` on the root `<svg>`. React DOM rejects
   `class` on web, so `GameScene` strips it.
 
+## Personas: the characters' signature looks
+
+Every character in `rig.js` has a `persona`: a signature pose, an attitude face, an optional lean and
+props. The owner asked for this (2026-10-22): the old showcase had everyone cheering with arms up, which
+read as "a kids' thing", so each character now has its own personality and a cooler stance. The persona
+is used **only on the Characters page** (showcase and cards, via `signatureXml`). The game keeps its own
+poses and faces (balloons, won `cheer`, streak takeover).
+
+- `HangedRig.signature(c)` turns a persona into render options. Its quote is UI text (`quote.<id>` in
+  `en.json`), not part of the rig.
+- What the rig gained for personas, all **opt-in**:
+  - **Elbows**: `elbowL` / `elbowR` angles split an arm into an upper arm and a forearm (crossed arms,
+    fists on hips, raised fists). Arms are short: a paw can't reach the mouth or chin, so don't design
+    poses that need it.
+  - **`lean`**: tilts the whole figure around its feet.
+  - **`layers`**: forces an arm `under` the body (hands behind the back), `back` (behind the head) or
+    `front`, instead of the `ARM_FRONT_AT` rule.
+  - **Props**: `under` (behind the body: Rocco's hidden tile), `held` (on the belly, under the arms: Bao's
+    tea, Sage's book) and `over` (over the head: Biscuit's ball).
+  - **Attitude faces** (`MOODS`): cool, smug, side, wink, fierce, calm, sleepy, blep.
+- Skin options added with the 5 new characters (Pip, Sage, Rocco, Koa, Vesper): `beak`, `fang`, `eye`
+  (pupil colour), `lash` (stroke colour for line-drawn eyes: Bao's are white so closed, joy and KO eyes
+  show on its dark patches) and `decor.arm` (drawn with the arm: Vesper's wings).
+- **The balloon frames don't change**: with no persona options, `render` returns the same string as before
+  for every character (checked across every pose and expression; only Bao's joy/KO eyes changed, on
+  purpose). Keep it that way: a persona feature must cost nothing when it's off.
+
 ## The stages
 
 Two numbers drive the scene, both from the engine ([game-engine.md](game-engine.md)):
@@ -125,10 +152,25 @@ The preview page uses the full 400×600 view with the scene's own sky.
 
 ## Avatars
 
-`faceXml(character)` crops the head (`viewBox="30 4 140 140"`, same as the
-mockup's `faceSvg`). It's used as the avatar until the player uploads a photo
-(Profile page, not built). `characterTint` in [src/theme](../src/theme/index.ts)
-gives each character its pastel circle colour.
+The avatar is the player's picture everywhere until photo uploads exist. The owner asked that no two characters share the same profile look
+(2026-10-22), so each avatar shows the character's personality:
+
+- `HangedRig.avatar(c)` in `rig.js` draws the persona (signature face, head tilt, crossed arms, prop;
+  its lean dropped so the head sits centred) on a **backdrop that fits it** (`AVATARS`: Bun's clouds,
+  Pip's snow, Koa's dusk moon, Sage's bookshelf, Rocco's stolen letter tiles, Vesper's full moon…),
+  clipped to a circle that fills the viewBox. `HangedRig.avatarRing(c)` is the character's ring colour.
+- In the app, `avatarXml(c)` ([src/characters/rig.ts](../src/characters/rig.ts)) caches it per character
+  (leaderboards draw the same few many times), and `Avatar` in
+  [GameHeader.tsx](../src/components/GameHeader.tsx) is the **only** component that shows it: header
+  button, leaderboard rows, level path and map markers, Profile. Its ring takes `avatarRing`.
+- Backdrops draw **no `<text>`**: react-native-svg has no font to give it. Letters are stroked paths
+  (`GLYPH`).
+- Design sheet: [design/characters/avatars.html](../design/characters/avatars.html) (+ `avatars.png`),
+  with each character's personality word and quote, at full and in-app sizes.
+
+`faceXml(character, expr)` still crops the plain head (`viewBox="30 4 140 140"`, same as the mockup's
+`faceSvg`) for a chosen face, e.g. the Profile page's worried one. `characterTint` in
+[src/theme](../src/theme/index.ts) is each character's pastel card colour on the Characters page.
 
 ## Character selection
 

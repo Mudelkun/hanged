@@ -10,9 +10,9 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
-import { Character, faceXml } from '../characters/rig';
+import { avatarRing, avatarXml, Character } from '../characters/rig';
 import { t } from '../i18n';
-import { characterTint, colors, fonts, levelColor } from '../theme';
+import { colors, fonts, levelColor } from '../theme';
 import { Icon, starXml } from './icons';
 import { popFrom } from './motion';
 import { StillTokenPill, TokenPill } from './TokenPill';
@@ -27,18 +27,24 @@ interface Props {
   onLevelPress?: () => void;
 }
 
-/** The character's face in a coral ring (the player's own profile button), or a thin `plain` one (other players). */
+/**
+ * The character's profile picture (its persona on its own backdrop, rig.js) in a ring of its colour:
+ * a thick one for the player's own profile button, a thin `plain` one for other players.
+ */
 export const Avatar = memo(function Avatar({ character, size, plain }: { character: Character; size: number; plain?: boolean }) {
   const ring = size + (plain ? 3 : 5);
+  // Inside the white border
+  const inner = size - AVATAR_BORDER * 2;
   return (
-    <View style={[styles.avatarRing, plain && styles.avatarPlain, { width: ring, height: ring, borderRadius: ring / 2 }]}>
-      <View
-        style={[
-          styles.avatar,
-          { width: size, height: size, borderRadius: size / 2, backgroundColor: characterTint[character.id] ?? '#ffeedd' },
-        ]}
-      >
-        <SvgXml xml={faceXml(character)} width={size - 2} height={size - 2} />
+    <View
+      style={[
+        styles.avatarRing,
+        plain && styles.avatarPlain,
+        { width: ring, height: ring, borderRadius: ring / 2, backgroundColor: avatarRing(character) },
+      ]}
+    >
+      <View style={[styles.avatar, { width: size, height: size, borderRadius: size / 2 }]}>
+        <SvgXml xml={avatarXml(character)} width={inner} height={inner} />
       </View>
     </View>
   );
@@ -121,6 +127,9 @@ export function GameHeader({ name, character, wordsGuessed, level, tokens, onLev
   );
 }
 
+/** The white line between an avatar's ring and its picture. */
+const AVATAR_BORDER = 3;
+
 const styles = StyleSheet.create({
   head: {
     height: 60,
@@ -133,17 +142,17 @@ const styles = StyleSheet.create({
   },
   side: { flexDirection: 'row', alignItems: 'center', gap: 9, flexShrink: 1 },
   nameBlock: { flexShrink: 1 },
+  // backgroundColor: the character's ring colour (avatarRing)
   avatarRing: {
-    backgroundColor: colors.coral,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#e85c4d',
-    shadowOpacity: 0.35,
+    shadowColor: '#3a2b4d',
+    shadowOpacity: 0.22,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 3 },
   },
-  avatarPlain: { backgroundColor: colors.line, shadowOpacity: 0 },
-  avatar: { borderWidth: 3, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  avatarPlain: { shadowOpacity: 0 },
+  avatar: { borderWidth: AVATAR_BORDER, borderColor: '#fff', backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { fontFamily: fonts.display700, fontSize: 27, lineHeight: 30, color: colors.ink },
   title: { flexShrink: 1, fontFamily: fonts.display700, fontSize: 25, color: colors.ink },
   sub: { fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted, marginTop: 1, letterSpacing: 0.2 },
