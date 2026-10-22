@@ -130,7 +130,7 @@ A level's difficulty is set by:
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
 - **Spending**: tokens are used for exactly two things:
-  1. on the hard levels (8 and up): revealing 2 hidden letters for 10 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
+  1. on the hard levels (8 and up): revealing 2 hidden letters for 15 tokens, once per round. All occurrences show, and at least one letter always stays hidden.
   2. unlocking characters (each character has a price in tokens)
 - There are **no gems** in the game. The mockup shows gems, but ignore them.
 - The mockup puts a heart counter in the top bar. That spot becomes the token counter, with a **different symbol, not a heart**. Don't use hearts for it, because hearts suggest lives.
@@ -211,7 +211,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 
 ## Open questions (ask the owner, don't guess)
 
-- **Tokens**: what symbol and name should they have? Does a new player start with any? How many tokens does each character cost? (Placeholders for now: 2 free characters, then 30 to 400 tokens, set from a simulation of the token pay: [Context/characters-shop.md](Context/characters-shop.md).)
+- **Tokens**: what symbol and name should they have? Does a new player start with any? Character prices use the steady pace chosen on 2026-10-22: 2 free characters, then 50 to 1,100 tokens, targeting the first paid unlock in 20-30 rounds and the full collection in 1,500-2,000 for a regular player (tuning and model: [Context/characters-shop.md](Context/characters-shop.md).)
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: each level sets how many letters are left to find, never fewer than 3 in a long word from level 3; clues are a long word's first or last two letters, then the word's rarest letters. The numbers per level and how long counts as long (8 letters) are placeholders.)
 - **Progression**: what moves the player up a level (a number of words won, a streak)? (Decided: 20 levels, and dropping down after 3 losses in a row. The exact numbers are placeholders.)

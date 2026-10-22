@@ -1,7 +1,7 @@
 /*
  * Game tuning. Values marked PLACEHOLDER answer an open question in CLAUDE.md
  * that the owner has not decided yet. Change them here, and update
- * Context/game-rules.md when you do.
+ * the relevant Context file when you do.
  */
 
 /** The last balloon pops at this many wrong guesses (rule 7). */
@@ -43,9 +43,9 @@ export const LETTER_FREQUENCY: Readonly<Record<string, string>> = {
  */
 export const STREAK_BONUS_AT: readonly number[] = [3, 6, 10];
 
-/** On levels with `sellsLetters` (levels.ts), the player can reveal 2 hidden letters for 10 tokens, once per round. */
+/** On levels with `sellsLetters` (levels.ts), reveal 2 hidden letters for 15 tokens, once per round. */
 export const LETTER_BUY_COUNT = 2;
-export const LETTER_BUY_COST = 10;
+export const LETTER_BUY_COST = 15;
 
 /** The character a new player starts with. Always free. */
 export const DEFAULT_CHARACTER = 'mochi';
@@ -55,30 +55,28 @@ export const DEFAULT_CHARACTER = 'mochi';
  * first: the Characters page lists them in this order. Every character in
  * design/characters/rig.js needs a row (a test checks it).
  *
- * Originally calibrated on a simulated player (Context/characters-shop.md): a
- * casual player nets ~1.35 tokens a round, a strong one ~2.1, after buying
- * some descriptions. Descriptions are now free; prices stay until playtesting.
- * In that original simulation the first friend came in the first session (~25
- * rounds), each next one takes longer, and the whole set (15 characters)
- * takes a casual player ~1800 rounds. Saving up for one favourite is never
- * more than ~300.
+ * Steady pace chosen by the owner (2026-10-22), with free descriptions:
+ * first paid character in ~20-30 rounds; full collection in ~1,500-2,000
+ * for a regular player. Run npm run check:economy for the outcome model,
+ * its assumptions and spending sensitivity (Context/characters-shop.md).
+ * Early unlocks stay accessible; later ones account for higher level rewards.
  */
 export const CHARACTER_PRICES: Readonly<Record<string, number>> = {
   mochi: 0,
   bun: 0,
-  coco: 30,
-  biscuit: 50,
-  pip: 75,
-  bao: 100,
-  koa: 125,
-  lolo: 150,
-  rocco: 175,
-  ember: 200,
-  sage: 225,
-  rexy: 250,
-  vesper: 300,
-  button: 350,
-  ribbit: 400,
+  coco: 50,
+  biscuit: 100,
+  pip: 150,
+  bao: 200,
+  koa: 250,
+  lolo: 300,
+  rocco: 375,
+  ember: 450,
+  sage: 550,
+  rexy: 650,
+  vesper: 800,
+  button: 950,
+  ribbit: 1100,
 };
 
 /** PLACEHOLDER: tokens a brand-new player starts with. */

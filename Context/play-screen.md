@@ -185,7 +185,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, token pill). Use it for any new pop so they all feel the same. |
 | `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
 | `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `LetterShopPill`, `DescriptionCard`, `BigButton` (`ghost`: white). |
-| `PayButton.tsx` | `PayButton`, the coral "label + coin" button that spends tokens: the letter shop's "10" and the Characters page's Unlock (`big`: BigButton's size). It sends the token flight, then pays, and turns beige and refuses without enough tokens; `useRefusal` shows why ("Not enough tokens yet") for 2.2 s. Reuse it for any new spend. |
+| `PayButton.tsx` | `PayButton`, the coral "label + coin" button that spends tokens: the letter shop's price and the Characters page's Unlock (`big`: BigButton's size). It sends the token flight, then pays, and turns beige and refuses without enough tokens; `useRefusal` shows why ("Not enough tokens yet") for 2.2 s. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
 | `TabBar.tsx` | The 4 tabs. Play, Leaderboard and Characters navigate; Versus is drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** How the tabs work: [leaderboard.md](leaderboard.md). |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
@@ -215,13 +215,13 @@ and a sky-blue **Show clue** button (44 pt minimum height, with an eye icon). Th
 is not rendered or exposed to accessibility until requested. The reducer records the reveal in
 `descriptionUnlocked`, so it survives a restart. There is no payment or token flight. The button
 goes away after revealing, and no new reveal is offered after the round ends. Results always show
-the description. Rewards, letter prices and character prices are unchanged pending playtesting.
+the description. Rewards are unchanged; shop prices follow the steady pace in [characters-shop.md](characters-shop.md).
 
 ## Letter shop pill (not in the mockup)
 
 Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). A
 white pill between the word tiles and the description, with a **butter** "LETTERS" chip (butter = clue letters and
-tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button; the bought tiles and
+tokens). It reads "Reveal 2 hidden letters" with a small coral **15** pay button; the bought tiles and
 keys turn butter like clues. **The pill only shows while the letters can be bought**
 (`lettersForSale`): once bought, when only 2 letters are left hidden (buying must leave one hidden), or
 when the round ends, it's removed and the scene grows into the space (owner's call, 2026-10-22: a dead

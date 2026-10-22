@@ -28,6 +28,7 @@ npx expo start            # dev server; scan the QR code with Expo Go on the iPh
 npm test                  # jest (jest-expo preset): engine + progression tests
 npm run typecheck         # tsc --noEmit
 npx eslint .              # lint (see trap below)
+npm run check:economy     # model character unlock pace with the live rewards and prices
 npm run check:words       # validate data/words.json (add -- --build to regenerate it)
 cd server && npm test     # server tests (its own package: npm install there first)
 cd server && npm run dev  # local API on :3000 with an embedded database

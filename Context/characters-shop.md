@@ -29,27 +29,78 @@ game save (`unlockedCharacterIds`, `characterId`), like tokens. The server only 
 - **A switch mid-round keeps the round.** The scene redraws the new character at the same stage
   (`GameScene` keeps its step; [characters-and-animation.md](characters-and-animation.md)).
 
-## Prices (PLACEHOLDER) and why
+## Prices and steady unlock pace (owner, 2026-10-22)
 
-15 characters. Mochi and Bun are free (Mochi is the default). Then Coco 30, Biscuit 50, Pip 75, Bao 100,
-Koa 125, Lolo 150, Rocco 175, Ember 200, Sage 225, Rexy 250, Vesper 300, Button 350, Ribbit 400 (the frog
-prince with the crown and sceptre is the top prize). The 5 newer characters (2026-10-22) were slotted into
-the ladder instead of being stacked on top, so the dearest is still 400. The mockup's prices
-(10 to 50) were not used: the owner asked for prices that fit how tokens are really earned.
+The owner chose a steady pace after descriptions became free: the first paid character in
+about **20-30 rounds**, and the full collection in **1,500-2,000 rounds for a regular player**.
+Mochi and Bun remain free. The paid collection totals **5,925 tokens** (previously 2,430).
+Prices are still tuning values; observed play should guide future adjustments.
 
-They originally came from simulating players through the real level and token rules (pay 1–4 per level, the
-streak bonus, 10 wins to move up, drops after 3 losses, 15% of rounds buying a description):
+| Character | Previous tokens | Current tokens |
+|---|---:|---:|
+| Mochi | 0 | 0 |
+| Bun | 0 | 0 |
+| Coco | 30 | 50 |
+| Biscuit | 50 | 100 |
+| Pip | 75 | 150 |
+| Bao | 100 | 200 |
+| Koa | 125 | 250 |
+| Lolo | 150 | 300 |
+| Rocco | 175 | 375 |
+| Ember | 200 | 450 |
+| Sage | 225 | 550 |
+| Rexy | 250 | 650 |
+| Vesper | 300 | 800 |
+| Button | 350 | 950 |
+| Ribbit | 400 | 1,100 |
 
-| Player | Wins on level 1 → 8 | Tokens a round (net) |
-|---|---|---|
-| Casual | 80% → 35% | ~1.35 |
-| Strong | 92% → 50% | ~2.1 |
+Early prices rise less to keep the first unlock accessible. Later prices account for the higher
+rewards on the current 20-level ladder. The original prices were calibrated against an older
+eight-level game with lower assumed win rates and paid descriptions. Applying a flat percentage
+for the removed description charge alone would miss those changes.
 
-In that simulation the first paid character came in the first session (~25 rounds), each one after took longer, and the
-whole set (2430 tokens) took a casual player ~1800 rounds (a strong one ~1150). Saving for one favourite
-was at most ~300 rounds. **Descriptions became free on 2026-10-22.** The owner explicitly kept
-rewards and prices unchanged until playtesting; these old estimates are historical, not the current
-unlock pace. Check real win rates and character unlock speed before adjusting prices.
+**Letter reveals cost 15 tokens** for two letters (previously 10), once per round from level 8,
+with at least one distinct letter left hidden. That is three base wins at the top levels;
+a streak can earn it sooner. Descriptions stay free. Rewards, starting tokens and level rules
+are unchanged. Existing balances and unlocked characters are preserved: prices only affect
+future purchases, and `unlockedCharacterIds` still determines paid ownership.
+
+### Repeatable economy check
+
+Run **`npm run check:economy`** ([scripts/check-economy.js](../scripts/check-economy.js)). It uses
+the existing TypeScript compiler to load the real `tokenReward`, `afterRound`, level table and
+price constants. No separate copy of the reward or progression formulas, and no new dependency.
+It models 400 seeded players per scenario, buying the cheapest remaining character as soon as
+they can afford it. Prices are compared with the previous shop under identical win outcomes.
+
+This is an **outcome model, not measured player data**. Assumed win probabilities, including
+whatever help the player gets from the free description:
+
+| Profile | Levels 1 / 2 | Levels 3-15 | Levels 16 / 17 / 18 / 19 / 20 |
+|---|---|---|---|
+| Casual | 90% / 85% | 75% | 70% / 68% / 65% / 62% / 60% |
+| Regular | 95% / 90% | 82% | 80% / 78% / 75% / 72% / 70% |
+| Strong | 98% / 95% | 90% | 88% / 86% / 84% / 82% / 80% |
+
+A planned letter purchase happens on 0%, 5% or 10% of rounds on levels selling letters, only
+when affordable. The model assumes enough hidden letters remain; actual eligibility can reduce
+spending. It does not separately increase win probability after a purchase. These scenarios show
+sensitivity to spending, rather than predicting how much letter reveals help.
+
+Median collection-completion rounds with the new prices:
+
+| Profile | First paid character | No letter purchases | 5% letter use | 10% letter use |
+|---|---:|---:|---:|---:|
+| Casual | 25 | 1,729 | 2,172 | 2,947 |
+| Regular | 21 | 1,462 | 1,769 | 2,248 |
+| Strong | 16 | 1,208 | 1,406 | 1,694 |
+
+The regular 5% scenario is the calibration target; its previous prices gave the first character
+at round 11 and the collection at round 668. The check exits with an error when the current
+regular scenario leaves the owner's 20-30 / 1,500-2,000 target ranges. A frequent letter buyer
+will collect more slowly; a stronger player or someone saving every token will collect faster.
+The script also prints each character's cumulative unlock round. Re-run it when prices,
+rewards or progression change, and validate these assumptions against real player data.
 
 ## The page (mockup: Characters)
 
@@ -73,7 +124,7 @@ button · tab bar.
   signature pose too. Tint per character, a lock and faded figure when locked, price or
   "Owned"/"Playing", a mint check on the one being played, coral border on the one being looked at.
   Cards are memoized, so looking at another one redraws two cards.
-- **Action**: locked → `PayButton big` "Unlock Ember · 200" (beige and refused without enough tokens);
+- **Action**: locked → `PayButton big` "Unlock Ember · 450" (beige and refused without enough tokens);
   owned → "Choose Ember"; playing → ghost "Play with Ember" (goes to Play).
 - **Buying** sends the −N token flight from the button, then pays: confetti from the stage's bottom
   corners, the character pops, a "Ember is yours!" ribbon, success haptic. Picking pops it and ticks.

@@ -133,7 +133,7 @@ All these numbers are PLACEHOLDERS in [levels.ts](../src/game/levels.ts) and [co
 see [progression-and-tokens.md](progression-and-tokens.md).
 
 The owner later made descriptions **free to reveal at every level** and removed hint words
-(2026-10-22). Rewards and prices stay unchanged until playtesting. The target remains that
+(2026-10-22). Rewards are unchanged; shop prices now follow the steady pace in [characters-shop.md](characters-shop.md). The target remains that
 **players win more rounds than they lose**.
 
 **Measured, not guessed:** two simulated players play real rounds through the real rules (no descriptions). The first is a word-matcher who knows every common word, 60% of rarity-35 words and a
@@ -152,7 +152,7 @@ checker, bundled entries and rounds no longer need or carry hints. The rebuilt l
 words whose definitions are usable without hint-word requirements, with no removed ids. 398
 existing generated entries now use an earlier main sense that previously failed hint selection.
 Difficulty is remeasured against the whole list. The existing level-balance tests pass without
-changing any level settings, rewards or prices.
+changing any level settings or rewards. Shop prices were subsequently adjusted for the steady unlock pace.
 
 Words per level after this rebuild: 1: 268; 2: 455; 3: 477; 4: 587; 5: 3,592; 6: 4,420;
 7: 4,672; 8-15: 4,710; 16: 8,168 (68% everyday); 17: 10,474 (53%); 18: 13,446 (41%);

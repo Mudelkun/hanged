@@ -18,7 +18,7 @@ would then count it again.
 
 - **Score = `wordsGuessed`** (the leaderboard number). Spending tokens never lowers it.
 - **Tokens: harder words pay more, and a streak adds a small bonus.** A win pays its level's
-  `tokenReward` (the `LEVELS` column: 1, 1, 2, 2, 3, 3, 4, 4), plus +1 for each `STREAK_BONUS_AT`
+  `tokenReward` (1-5 across the 20 levels), plus +1 for each `STREAK_BONUS_AT`
   step the streak has reached (3, 6, 10 in a row, so the bonus is capped at +3).
   **Why:** the old "Nth win in a row pays N" ignored difficulty. Easy levels are easy to streak on,
   so a new player hit the cap on level-1 words while a level-8 player (6 wrong guesses) rarely
@@ -37,7 +37,7 @@ would then count it again.
   from a simulation of this token pay, so **changing the pay means re-checking those prices**.
 - **Buying letters (owner's request)**: on a level with `sellsLetters` (levels 8–20, the hard
   ones), the `buyLetters` action reveals `LETTER_BUY_COUNT` (2) hidden letters for
-  `LETTER_BUY_COST` (10) tokens, **once per round**. `lettersForSale(state)` says whether the round
+  `LETTER_BUY_COST` (15) tokens, **once per round**. `lettersForSale(state)` says whether the round
   can still take them; the reducer also checks the balance. The engine refuses when 2 or fewer distinct
   letters are hidden, so one always stays hidden and **buying never wins a round**: scoring stays in
   the winning guess. Like the description, it doesn't break a streak. To sell letters on more levels,
@@ -48,8 +48,10 @@ would then count it again.
   boolean `lastTokenEarned` to `lastTokensEarned`, and drops both fields. Same key, no bump.
 - **Descriptions are free to reveal** with Show clue (owner, 2026-10-22). They start hidden,
   and `descriptionUnlocked` keeps the reveal across app restarts. No token flight, deduction,
-  wrong guess, score or streak change. Hint words are removed. Rewards and shop prices stay
-  unchanged pending playtesting.
+  wrong guess, score or streak change. Hint words are removed. Rewards stay unchanged; shop prices now follow the owner's steady pace (2026-10-22):
+  50-1,100 tokens per paid character and 15 tokens per letter purchase. See the assumptions and
+  `npm run check:economy` in [characters-shop.md](characters-shop.md). Existing ownership and
+  token balances are preserved.
 - `lastTokensEarned` is what the winning guess paid (the result screen shows
   "+N tokens"). The next `newRound` sets it back to 0.
 - `unlockDescription` is refused without a round, when already revealed, or once the round is over. The result screens always show the description for free.
