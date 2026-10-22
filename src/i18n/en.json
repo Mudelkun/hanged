@@ -64,6 +64,8 @@
   "level.up.body": "Welcome to level {level}. The words get a little harder.",
   "level.down.title": "Back to level {level}",
   "level.down.body": "Take a breath. You've got this!",
+  "level.top.title": "You reached the top!",
+  "level.top.body": "Level {level}, the highest level. Look how far you climbed!",
   "level.a11y.path": "Level path: from level {from} to level {to}",
 
   "levelMap.title": "Level path",
@@ -74,7 +76,11 @@
   "levelMap.toLevel": "{count} more words to reach level {level}",
   "levelMap.toLevelOne": "1 more word to reach level {level}",
   "levelMap.top": "You made it to the highest level!",
+  "levelMap.topWords": "{count} words up here",
+  "levelMap.topWordsOne": "1 word up here",
+  "levelMap.topPay": "Every word here pays {count} tokens, more in a streak.",
   "levelMap.a11y.path": "Level path. You are on level {level}. Past level {best}, the path is hidden in fog.",
+  "levelMap.a11y.top": "Level path. You are on level {level}, the highest level, at the castle.",
 
   "tabs.play": "Play",
   "tabs.versus": "Versus",

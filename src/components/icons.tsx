@@ -6,6 +6,7 @@
 import { memo } from 'react';
 import { SvgXml } from 'react-native-svg';
 
+import { HangedWorld } from '../world/world';
 
 const svg = (viewBox: string, body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${body}</svg>`;
@@ -62,6 +63,8 @@ export const fogCloudXml = (shadow: string) =>
 // Not in the mockup: the leaves on the level map's wooden sign (pointing left; mirror it for the right side).
 export const leafXml = (c: string, vein: string) =>
   svg('0 0 26 16', `<path d="M1 8C6 1 18 0 25 6 18 15 6 15 1 8z" fill="${c}"/><path d="M4 8h15" stroke="${vein}" stroke-width="1.6" stroke-linecap="round"/>`);
+// Not in the mockup: the top level's crown (header pill, the map's card, on the character), from the world's castle (design/world).
+export const crownXml = (fill?: string, edge?: string) => svg('0 0 28 22', HangedWorld.crown(14, 0, 28, fill, edge));
 // Not in the mockup: the close button of a full-screen sheet (the level path).
 export const closeXml = (c = '#4b3a35') =>
   svg('0 0 24 24', `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`);

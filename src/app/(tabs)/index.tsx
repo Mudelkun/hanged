@@ -148,7 +148,6 @@ export default function PlayScreen() {
               available={available}
               compact={compact}
             />
-            <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
             {lettersForSale(state) && (
               <LetterShopPill
                 canAfford={state.tokens >= LETTER_BUY_COST}
@@ -156,6 +155,7 @@ export default function PlayScreen() {
                 compact={compact}
               />
             )}
+            <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
             <DescriptionCard
               text={round.description}
               unlocked={round.descriptionUnlocked}

@@ -9,7 +9,7 @@ these components.
 
 ## Two layouts on one screen
 
-- **Playing**: header · scene · miss pips · word tiles · hint pill · letter shop pill (levels that sell letters) · description card · keyboard · tab bar.
+- **Playing**: header · scene · miss pips · word tiles · letter shop pill (levels that sell letters) · hint pill · description card · keyboard · tab bar.
 - **Result** (won or lost): header · bigger scene + rubber stamp ("DROPPED !!" red /
   "HANGING !!" green). The stamp sizes its font to fit the frame from Fredoka Bold's real letter
   widths (`FREDOKA_BOLD_EM`), because react-native-svg on iOS ignores `textLength`; text that would
@@ -66,11 +66,11 @@ result's level line use it.
 When a round moves the level, `LevelChange` pops a card over the result, `APPEAR_MS` (1100 ms) after
 it shows, so the stamp and the token flight come first. The card holds the **level path** (`LevelPath.tsx`, shared with the level map below): a winding
 road of numbered stops, level 1 at the bottom, drawn in react-native-svg. Only stops up to
-`bestLevel` are drawn; past them is the fog (see The level map). Reached stops are filled
-and raised in their colour; stops ahead are pale and dashed. The player's **character avatar** stands
-on its stop and travels to the new one: it hops up (the road fills in the new level's colour, the stop
-pops, sparkles burst, success haptic) or slides down (the road empties, the old stop turns pale again,
-a light tap). The window's "camera" follows the character, so any number of levels fits any phone; the window is
+`bestLevel` are drawn; past them is the fog (see The level map). Reached stops are glossy buttons
+raised in their colour; stops ahead are pale and dashed. The player's **character avatar** stands
+on its stop and travels to the new one: it hops up (a trail in the new level's colour fills along the dirt
+road, the stop pops, sparkles burst, success haptic) or slides down (the trail empties, the old stop turns
+pale again, a light tap). The window's "camera" follows the character, so any number of levels fits any phone; the window is
 a slice of the level world (see The level map). **The card has no button** (owner's call): `HOLD_MS` (1.3 s) after the
 character lands, it fades out by itself (`onClose` → `levelGone`), leaving the result, and the player
 taps **Next word** as after any round. It blocks taps on the result while it's up.
@@ -86,21 +86,40 @@ taps **Next word** as after any round. It blocks taps on the result while it's u
 - Positions come from `pathLayout()` (LevelPath) plus the trip in `geometry()`: each stretch is an S-curve leaving and entering stops straight
   up, and the character and camera follow 8 samples of it. The road's fill is an SVG dash offset,
   which can't use the native driver, so it runs as its own JS-driven value in step with the travel.
-- Checked on web at 393×852 and 375×667 (both directions); the card fits without scrolling.
+- **Reaching the top level** (`geo.top`): the title is "You reached the top!", and the camera drifts up as
+  the character climbs (`TOP_LIFT`, a share of the window), so it ends with the stop low in the window and the
+  castle above it. The layout's room over the last stop is exactly what the window shows there (`edge + lift +
+  MARKER_LIFT / 2`), so no empty strip shows at the top. The fog covers the castle during the climb (drawn even
+  though nothing lies past the top level), then lifts on landing (`fx.fog`), two `Confetti` poppers fire from
+  the window's bottom corners, and a crown pops onto the character. It lingers `HOLD_TOP_MS` (2.6 s), not 1.3 s.
+- The card draws its world while it waits to appear (`WARM_MS`), so it opens without a stutter (parsed bands
+  are kept, see The level map).
+- Checked on web at 393×852 and 375×667 (both directions, and 19 → 20); the card fits without scrolling.
 
 ## The level map: tap the level (owner's idea, not in the mockup)
 
 Tapping the header's `Lv N` pill opens `LevelMap`, a full-screen sheet over the Play screen (tab bar
 included, `zIndex: 20`). The owner asked for it to feel like a place to climb (from a reference picture
-of a game map), so the path runs through **a little world** (`PathWorld` in LevelPath), drawn in
-react-native-svg in the app's flat style:
-- a sky gradient that deepens toward the top, distant clouds, and floating islands down both sides,
-  some with a waterfall spilling off
-- a meadow at the foot, and the road on a **grassy hill**: a plateau around every stop joined by a wide
-  ribbon of grass, with the same shapes shifted down as the cliff under it
-- bushes and flowers by the road, a **stone pedestal** under every stop, and a **rope bridge** from the
-  last stop into the fog
+of a game map, then a second one with terraces and a castle), so the path climbs **a world**:
+- every stop sits on its own **terrace**, a grassy plateau over a tall rock cliff, joined to the next by a
+  grassy ramp along the road, stepping up over a sea of clouds; far floating islands and clouds behind
+- pine and round trees, wooden fences on the cliff side, lanterns, cottages, waterfalls spilling off the
+  ramps, flowers and rocks; a meadow at the foot
+- a **dirt road** with white dashes, and a **stone ring** under every stop (the colour is on the stops)
+- the goal is a **castle with a crown**. Below the top level only its mountain shows, far away, poking out of
+  the fog (it says there is a top, never how far). On the top level the fog is gone: the castle stands behind
+  the last stop, in the sun (a glow and rays), the stop gets a gold ring and sparkles, and the character wears
+  a crown (the header's `Lv N` pill shows a crown too). The card counts the words guessed up there
+  (`progress.wins` keeps counting on the last level) and says what a word pays there
 - decorations placed by a seeded `rand(n)`, so the world looks the same on every visit
+
+**The world is drawn by [design/world/world.js](../design/world/world.js)**, a plain script like the
+character rig, so the design preview ([design/level-top.html](../design/level-top.html)) and the app draw
+the same thing. [src/world/world.ts](../src/world/world.ts) types it. Change the world there, never in a
+copy. It returns SVG strings rendered through react-native-svg's parser, so it sticks to what that supports
+on iOS: **no masks, no filters, no nested `<svg>`, no `paint-order`**. A cliff is its terrace's bottom
+outline extruded down (one path with a vertical gradient), not a mask. `src/world/__tests__` draws every
+level at every phone width and parses every band the way the phone does.
 
 The world scrolls vertically, edge to edge, in a `ScrollView`, under a wooden **sign** ("Level path",
 with leaves) and the ✕. It opens with the player's character standing on their stop, with a slow bob,
@@ -110,17 +129,23 @@ level N" when the player dropped and the stop above is known.
 - Left out of the reference on purpose: stars under the stops (the game has no star rating per level)
   and a settings gear (settings live on the Profile page).
 - **The world is drawn in 512-pt bands** (one Svg each, `viewBox` on its slice), and the ScrollView
-  has `removeClippedSubviews`. With 20 levels, a single Svg would be one bitmap about 2,500 pt tall.
-  Everything static is built once (`worldArt`) and shared by the bands. The level-up card animates only
-  the stretch being filled, in its own small Svg on top.
+  has `removeClippedSubviews`. With 20 levels, a single Svg would be one bitmap about 2,400 pt tall.
+  `art()` lists the world's pieces with the height range each covers, so **a band only gets the pieces it
+  shows** (about 1,900 elements for all 20 levels; the old world drew every element in every band). Each
+  band is **parsed once and kept** (`worldBands`, the last 6 layouts), so opening the map again is free.
+  Parsing the top level takes tens of ms: keep an eye on it if the world grows. Same-coloured circles are
+  merged into one path (`dots`) to keep the element count down. The level-up card animates only the
+  stretch being filled, in its own small Svg on top.
 
 - **The fog (owner's call): the player must never learn how many levels there are.** At level 6 they
   can't see level 7 or know it exists, only that the road runs into fog. So the path draws stops only
   up to `bestLevel`, and `PathFog` covers the rest: mist thickening over the sky, a thick bank of
   overlapping clouds where the road goes in, fainter puffs drifting above, and a dim dashed **"?"**
-  stop where the next level would be, never its number. On the last level there is no "?" and the card
-  says it's the highest level (the player has reached it, so nothing is spoiled). The level-up card
-  uses the same fog.
+  stop where the next level would be, never its number. The castle's far mountain sits in the fog,
+  between the mist and the clouds; its foot stays inside the cloud bank, because the fog is drawn over the
+  stops (a mountain reaching lower washed out the last stop). Once the player has reached the top level
+  (`bestLevel`), there's no fog at all: the map leaves `PathFog` out, even after a drop. The level-up
+  card uses the same fog.
 - Stops between the current level and `bestLevel` (after a drop) are pale and dashed, like a stop not
   yet reached on the level-up card.
 - The pill is disabled while a level change is due (`levelChanging`), so the map never shows a level
@@ -130,7 +155,10 @@ level N" when the player dropped and the stop above is known.
   the same reason.
 - Each `PathWorld` and `PathFog` gets its own gradient `id` (web shares SVG ids across the page).
 - The level-up card's window shows the same world, so a level-up happens in the same place as the map.
-- Checked on web at 393×852 and 375×667 at levels 1, 8 and 14 (scrolled down too), plus the level-up card 5 → 6.
+- Checked on web at 393×852 and 375×667 at levels 1, 8, 19 after a drop from 20, and 20 (scrolled down too),
+  plus the level-up card 19 → 20.
+- The design preview: [design/level-top.html](../design/level-top.html) (+ `level-top.png`, headless Chrome at
+  2330×1720) shows the whole 20-level world, the map at levels 8 and 20, and the card reaching the top.
 
 When a round ends, the play layout **stays for a moment** (`RESULT_DELAY`: lost
 2600 ms so the last pop, the fall and the landing play (stage 10 lasts 2200 ms), won 700 ms so the last tile pops). Then the result
@@ -146,7 +174,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | File | What |
 |---|---|
 | `GameHeader.tsx` | Avatar button (opens Profile), **player name** (never the app name; a new player's is random, e.g. "SunnyOtter"; at most 15 characters, sized to fit the room beside the pills (27 down to 14), cut with "…" if it still doesn't fit), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
-| `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathWorld` (the world and the road), `LevelStop`, `PathFog`. Use it for any new view of the levels. Colours: `worldColors` in [src/theme](../src/theme/index.ts). |
+| `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathWorld` (the world, from [design/world/world.js](../design/world/world.js)), `LevelStop`, `PathFog`. Use it for any new view of the levels. The world's palette is in world.js; the fog and sign colours are `worldColors` in [src/theme](../src/theme/index.ts). |
 | `LevelChange.tsx` | The level path card (see Level change above). |
 | `LevelMap.tsx` | The full-screen level map (see The level map above). |
 | `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |
@@ -196,7 +224,7 @@ no scrolling, the scene absorbs the height.
 ## Letter shop pill (not in the mockup)
 
 Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). Same
-white pill as the hint, under it, with a **butter** "LETTERS" chip (butter = clue letters and
+white pill as the hint, above it (between the word tiles and the hint), with a **butter** "LETTERS" chip (butter = clue letters and
 tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button; the bought tiles and
 keys turn butter like clues. **The pill only shows while the letters can be bought**
 (`lettersForSale`): once bought, when only 2 letters are left hidden (buying must leave one hidden), or

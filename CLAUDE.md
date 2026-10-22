@@ -11,6 +11,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `design/characters/`: the 15 character designs. `rig.js` holds the shared rig (joints, parts, poses, expressions) and every character's skin and persona (signature pose and attitude for the Characters page). `characters.html` previews them, and `characters.png` is its headless-Chrome screenshot. `avatars.html` (+ `avatars.png`) previews each character's profile picture (`HangedRig.avatar`). All characters must keep the same rig, so one animation works for all of them.
 - `design/characters/balloons.js` + `balloons.html` (+ `balloons.png`): **the animation the app uses**. 10 stages, built on the shared rig. A round shows **one balloon per allowed miss** and every miss pops exactly one (`balloonsGone`). Each pop sinks the character a little more; at stage 10 the last balloon pops, they hang in the air for a beat, fall, and land hard on their bottom (squash, shake, bounce, dust, cracks), then sit dazed with stars. With fewer allowed wrong guesses, the pose stage is `round(wrong * 10 / maxWrong)`.
 - `design/characters/hanging.js` + `hanging.html`: the **old** 10-stage hanging animation, kept only because the mockup still draws it. The gallows is already there when the round starts. The character does one step per stage: wave, rope, throw, noose, stool, climb, stand, noose on, wobble, tip. They stay on the stool until stage 10, which is the only stage where they fall and hang. With fewer allowed wrong guesses, show stage `round(wrong * 10 / maxWrong)`.
+- `design/world/world.js`: **the level path's world** (terraces over the clouds, the castle at the top), drawn by the app's level map and level-up card and by the preview `design/level-top.html` (+ `level-top.png`). Same idea as the characters: edit it there, never a copy in `src/`.
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
@@ -51,6 +52,7 @@ src/game/           pure rules, no React: engine.ts, progress.ts (reducer), leve
 src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard
 src/net/            the only code that talks to the server: api.ts, sync.ts
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
+src/world/          world.ts: imports design/world/world.js (the level path's world), parses it in bands
 src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup

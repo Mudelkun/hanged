@@ -12,9 +12,10 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { avatarRing, avatarXml, Character } from '../characters/rig';
+import { LEVELS } from '../game/levels';
 import { t } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
-import { chevXml, Icon, starXml } from './icons';
+import { chevXml, crownXml, Icon, starXml } from './icons';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { StillTokenPill, TokenPill } from './TokenPill';
@@ -52,10 +53,12 @@ export const Avatar = memo(function Avatar({ character, size, plain }: { charact
   );
 });
 
+const CROWN = crownXml();
 
 /**
- * "Lv N" in the level's own colour. It pops when the level changes, never when
- * it first shows. Tapping it opens the level map.
+ * "Lv N" in the level's own colour, with a crown instead of the star on the top
+ * level. It pops when the level changes, never when it first shows. Tapping it
+ * opens the level map.
  */
 const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; onPress?: () => void }) {
   const [pop] = useState(() => new Animated.Value(1));
@@ -82,7 +85,7 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
             pressed && styles.levelPressed,
           ]}
         >
-          <Icon xml={starXml(c.main)} size={15} />
+          {level >= LEVELS.length ? <Icon xml={CROWN} size={17} height={13} /> : <Icon xml={starXml(c.main)} size={15} />}
           <Text style={[styles.levelText, { color: c.dark }]}>{t('header.level', { level })}</Text>
         </Animated.View>
       )}

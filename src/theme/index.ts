@@ -104,28 +104,16 @@ export const streakColors = [
 export const streakColor = (tier: number) => streakColors[Math.min(Math.max(0, tier), streakColors.length - 1)];
 
 /**
- * The level path's world (LevelPath): a sky that deepens as the road climbs, a
- * grassy hill with cliff edges, floating islands with waterfalls, stone pedestals
- * under the stops, a rope bridge into the fog. A little richer than the balloon
- * scene's pastels, so the map reads as a place to climb.
+ * The level path's views around the world: the fog, the wooden sign and its
+ * leaves. The world's own palette (cliffs, grass, trees, castle) lives with its
+ * drawing in design/world/world.js (COLORS); mist, cloudShade and the leaves
+ * are the same colours as there.
  */
 export const worldColors = {
-  skyTop: '#5cb8f2',
-  skyBottom: '#d6f0ff',
-  grass: '#9edb7d',
-  grassL: '#b9e89c',
-  grassD: '#7cc45f',
-  bush: '#5fba68',
-  bushL: '#86d58c',
-  cliff: '#e3a774',
-  cliffD: '#c4845a',
-  water: '#8fd8ff',
-  stone: '#b8afa3',
-  stoneL: '#dcd5ca',
-  wood: '#d9a066',
-  woodD: '#9c6638',
   mist: '#eef8ff',
   cloudShade: '#cfe6f6',
+  leaf: '#5fba68',
+  leafL: '#86d58c',
   sign: '#f2cf98',
   signD: '#c99558',
 };

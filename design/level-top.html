@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Level Path Summit</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Same "Sunny meadow" palette as ui-mockup.html */
+  :root{
+    --page1:#d7f0ff; --page2:#fff3e3; --paper:#fffaf1; --ink:#4b3a35; --muted:#a8948a;
+    --line:#f3e6d6; --shadow:#ecd9c3; --coral:#ff7b6b; --butter-t:#9a6a00;
+    --sign:#f2cf98; --sign-d:#c99558; --mist:#eef8ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(180deg,var(--page1) 0%,#eaf7ff 38%,var(--page2) 100%);font-family:Nunito,"Segoe UI",sans-serif;color:var(--ink);
+    width:2330px;height:1720px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+  .h3{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:40px;text-align:center}
+  .lead{font-weight:800;font-size:17px;color:var(--muted);text-align:center;margin-top:6px}
+  .row{display:flex;gap:36px;align-items:flex-start}
+  .label{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px;color:#9b847a;text-align:center;margin-top:14px;max-width:400px;line-height:1.3}
+
+  /* the whole world, scaled down */
+  .panel{background:#fff;border:2px solid var(--line);border-radius:30px;box-shadow:0 6px 0 var(--shadow);padding:22px 24px 20px}
+  .ptitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:22px}
+  .psub{font-weight:800;font-size:13.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .strip{position:relative;margin-top:14px;display:flex}
+  .strip > svg{border-radius:18px;flex:none}
+  .notes{position:relative;width:320px}
+  .note{position:absolute;left:18px;right:0;transform:translateY(-50%);display:flex;align-items:center;gap:10px}
+  .note::before{content:"";position:absolute;left:-18px;top:50%;width:14px;border-top:2px dashed #e3d3c2}
+  .lv{flex:none;width:30px;height:30px;border-radius:50%;color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .nt{font-weight:800;font-size:13.5px;line-height:1.25}
+  .nt b{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;display:block}
+  .nt i{font-style:normal;color:var(--muted)}
+
+  /* phones, as in ui-mockup.html */
+  .phone{width:400px;height:860px;border-radius:58px;background:#3a2d29;padding:11px;box-shadow:0 34px 60px -24px rgba(150,95,50,.45),inset 0 0 0 2px #574540}
+  .screen{width:100%;height:100%;border-radius:47px;background:var(--paper);background-image:radial-gradient(#f5e8d6 1.3px,transparent 1.6px);background-size:18px 18px;overflow:hidden;position:relative}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:20px;background:#3a2d29;z-index:5}
+  .status{position:absolute;top:0;left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-weight:800;font-size:15px;z-index:4}
+  .world{position:absolute;inset:0}
+  .mhead{position:absolute;top:47px;left:0;right:0;height:64px;display:flex;align-items:center;padding:0 16px;z-index:3}
+  .mhead .side{width:44px;display:flex;justify-content:flex-end}
+  .signrow{flex:1;display:flex;align-items:center;justify-content:center}
+  .sign{background:linear-gradient(180deg,#f6d9a8,#e9bf82);border:2px solid var(--sign-d);box-shadow:0 4px 0 var(--sign-d),0 8px 14px -6px rgba(90,50,20,.4);border-radius:16px;padding:3px 20px;margin:0 -5px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:25px;position:relative;z-index:1}
+  .close{width:40px;height:40px;border-radius:20px;background:#fff;border:2px solid var(--line);box-shadow:0 3px 0 var(--shadow);display:flex;align-items:center;justify-content:center}
+  .mfoot{position:absolute;left:16px;right:16px;bottom:34px;z-index:3}
+  .card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 5px 0 var(--shadow),0 14px 24px -12px rgba(60,40,30,.35);padding:14px;display:flex;flex-direction:column;gap:10px}
+  .crow{display:flex;align-items:center;justify-content:space-between}
+  .lpill{display:flex;align-items:center;gap:5px;border-radius:14px;padding:5px 13px 5px 9px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:17px;color:#fff}
+  .count{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;color:var(--muted)}
+  .bar{height:12px;border-radius:6px;background:#f1e5d6;overflow:hidden}
+  .bar div{height:100%;border-radius:6px}
+  .next{font-weight:800;font-size:14px;color:var(--muted);text-align:center}
+
+  /* the level-up card over the result */
+  .head{position:absolute;top:46px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;height:60px}
+  .hl,.hr{display:flex;align-items:center;gap:9px}
+  .me-btn{width:46px;height:46px;border-radius:50%;background:#ffeedd;border:3px solid #fff;box-shadow:0 0 0 2.5px var(--coral);overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .uname{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:27px;line-height:1}
+  .usub{font-size:11.5px;font-weight:800;color:var(--muted);margin-top:3px}
+  .hlvl{display:flex;align-items:center;gap:4px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;border-radius:13px;padding:6px 10px 6px 7px}
+  .tok{display:flex;align-items:center;gap:5px;background:#fff;border:2px solid #ffe39a;box-shadow:0 3px 0 #f6dc9c;border-radius:17px;padding:5px 11px 5px 6px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:19px;color:var(--butter-t)}
+  .ghost{position:absolute;left:16px;right:16px;border-radius:24px;background:#fff;border:2px solid var(--line)}
+  .backdrop{position:absolute;inset:0;background:rgba(75,58,53,.38);display:flex;align-items:center;justify-content:center;z-index:3}
+  .lcard{width:346px;background:#fff;border:2px solid var(--line);border-radius:28px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+  .ltitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:30px;text-align:center}
+  .lbody{font-weight:800;font-size:14px;color:var(--muted);text-align:center;margin-top:2px;line-height:1.3}
+  .window{margin-top:12px;border-radius:20px;overflow:hidden;background:var(--mist)}
+
+  .col{width:330px}
+  .list{margin-top:10px;display:flex;flex-direction:column;gap:9px}
+  .li{display:flex;gap:10px;font-weight:800;font-size:14px;line-height:1.3}
+  .li .d{flex:none;width:22px;height:22px;border-radius:50%;background:#fff3cc;border:1.5px solid #ffe39a;color:#9a6a00;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .li i{font-style:normal;color:var(--muted)}
+</style>
+</head>
+<body>
+<div>
+  <div class="h3">The level path: a world to climb</div>
+  <div class="lead">Terraced cliffs above the clouds, a castle at the top. Left: the whole world a player sees once they reach level 20. Right: the map on a normal day, at the top, and the moment they get there.</div>
+</div>
+<div class="row" id="row"></div>
+
+<script src="characters/rig.js"></script>
+<script src="world/world.js"></script>
+<script>
+/*
+ * The world (terraces, trees, castle, far mountain, fog clouds) comes from
+ * world/world.js, the same code the app draws with. This page only draws what
+ * the app draws as views on top: the stops, the character, the fog's mist and
+ * "?", the sign, the cards.
+ */
+const INK = '#4b3a35';
+const CH = Object.fromEntries(HangedRig.CHARACTERS.map(c=>[c.id,c]));
+const ME = 'mochi';
+const TINT = { bun:'#ffeef4', mochi:'#ffeedd', coco:'#f6e7da', ember:'#ffe6d8', bao:'#eef0f5', ribbit:'#e6f6d9', lolo:'#ffe5ef', rexy:'#dcf5ea', biscuit:'#fff1dc', button:'#ffe6e3' };
+const WC = HangedWorld.COLORS;
+
+/* The app's level colours (src/theme levelColors): past level 8 the list wraps around */
+const LEVEL_COLORS = [
+  { main:'#4fcf9c', dark:'#2a9a6e', light:'#dcf7ea' }, { main:'#5bb8f5', dark:'#2a86c8', light:'#e0f3ff' },
+  { main:'#a98bf5', dark:'#7656dc', light:'#efe9ff' }, { main:'#f5b82e', dark:'#b97f00', light:'#fff3cc' },
+  { main:'#ff9a45', dark:'#d9701a', light:'#fff0dc' }, { main:'#ff7b6b', dark:'#e05040', light:'#ffe5df' },
+  { main:'#e45a92', dark:'#bb3369', light:'#ffe3ee' }, { main:'#6a5ae0', dark:'#4636b8', light:'#ebe8ff' },
+];
+const levelColor = (l) => LEVEL_COLORS[(Math.max(1, l) - 1) % LEVEL_COLORS.length];
+const LEVELS = 20, NODE = HangedWorld.NODE, MARKER = 38, MARKER_LIFT = 37;
+const CONFETTI = ['#4fcf9c','#ffa630','#f2557f','#7b5cff','#ffd667','#6cc4ff'];
+const rand = (n) => { const x = Math.sin(n*127.1 + 311.7)*43758.5453; return x - Math.floor(x); };
+const layout = (width, below, above, shown) => HangedWorld.layout(width, below, above, shown, LEVELS);
+
+/* ---------- what the app draws as views over the world ---------- */
+const spark = (x, y, s, c = '#ffd667') => `<path transform="translate(${x - s/2} ${y - s/2}) scale(${s/24})" d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5-.9-5.6-4.9-9.6-10.5-10.5C7.1 11.1 11.1 7.1 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>`;
+const starPath = (x, y, s, c) => `<path transform="translate(${x - s/2} ${y - s/2}) scale(${s/24})" d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`;
+
+/** LevelStop: a glossy button in its level's colour; pale and dashed when not reached. */
+function stop(p, level, reached = true){
+  const c = levelColor(level);
+  if (!reached) return `<circle cx="${p.x}" cy="${p.y}" r="${NODE/2 - 1}" fill="${c.light}" stroke="${c.main}" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <text x="${p.x}" y="${p.y + 7.5}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="22" fill="${c.main}">${level}</text>`;
+  return `<circle cx="${p.x}" cy="${p.y + 5}" r="${NODE/2}" fill="${c.dark}"/><circle cx="${p.x}" cy="${p.y}" r="${NODE/2}" fill="${c.main}"/>
+    <rect x="${p.x - 14}" y="${p.y - 18}" width="22" height="11" rx="6" fill="#fff" opacity=".32"/>
+    <text x="${p.x}" y="${p.y + 9}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="22" fill="${c.dark}">${level}</text>
+    <text x="${p.x}" y="${p.y + 7.5}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="22" fill="#fff">${level}</text>`;
+}
+/** The header's Avatar standing on its stop, with the crown on the top level. */
+let uid = 0;
+function avatar(cx, cy, crowned = false){
+  const id = `av${uid++}`, ring = MARKER + 5;
+  return `<g><defs><clipPath id="${id}"><circle cx="${cx}" cy="${cy}" r="${MARKER/2}"/></clipPath></defs>
+    <circle cx="${cx}" cy="${cy}" r="${ring/2 + 2.5}" fill="#ff7b6b"/><circle cx="${cx}" cy="${cy}" r="${ring/2}" fill="#fff"/><circle cx="${cx}" cy="${cy}" r="${MARKER/2}" fill="${TINT[ME]}"/>
+    <g clip-path="url(#${id})"><svg x="${cx - MARKER/2 + 1}" y="${cy - MARKER/2 + 1}" width="${MARKER - 2}" height="${MARKER - 2}" viewBox="30 4 140 140">${HangedRig.render(CH[ME], { bare:true })}</svg></g>
+    ${crowned ? `<g transform="rotate(-12 ${cx} ${cy - ring/2})">${HangedWorld.crown(cx, cy - ring/2 - 17, 26)}</g>` : ''}</g>`;
+}
+/** PathFog, still: the mist, the far mountain, the cloud bank and the "?" stop. */
+function fog(L, id){
+  const top = L.stops[L.stops.length - 1], fogH = top.y - NODE/2 - 4;
+  const clouds = HangedWorld.cloudSpots(L).map(s => HangedWorld.cloud(s.left, s.top, s.w, s.opacity, s.shade)).join('');
+  return `<defs><linearGradient id="${id}Mist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${WC.mist}" stop-opacity=".92"/><stop offset=".55" stop-color="${WC.mist}" stop-opacity=".82"/><stop offset="1" stop-color="${WC.mist}" stop-opacity="0"/></linearGradient></defs>
+    <rect width="${L.width}" height="${fogH}" fill="url(#${id}Mist)"/>${HangedWorld.farMountain(L, id)}${clouds}
+    ${L.more ? `<circle cx="${L.hidden.x}" cy="${L.hidden.y}" r="${NODE/2}" fill="#fffaf1" stroke="#cdb9a7" stroke-width="2.5" stroke-dasharray="6 5" opacity=".75"/><text x="${L.hidden.x}" y="${L.hidden.y + 7.5}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="21" fill="#a8948a" opacity=".85">?</text>` : ''}`;
+}
+/**
+ * A window on the world from `top`, `h` tall: the world from world.js, then the stops, the fog
+ * (below the top level) and the character on stop `at`, like LevelMap. `scale` shrinks the picture.
+ */
+function view(L, id, top, h, { at = L.count, reached = at, scale = 1, extra = '' } = {}){
+  const over = L.stops.map((p, i) => stop(p, i + 1, i < reached)).join('')
+    + (L.more ? fog(L, `${id}Fog`) : '') + extra
+    + avatar(L.stops[at - 1].x, L.stops[at - 1].y - MARKER_LIFT, at === LEVELS);
+  return HangedWorld.slice(L, HangedWorld.art(L, id), id, top, h)
+    .replace(/width="[^"]*" height="[^"]*"/, `width="${L.width*scale}" height="${h*scale}" style="display:block"`)
+    .replace(/<\/svg>$/, `${over}</svg>`);
+}
+
+/* ---------- small UI pieces ---------- */
+const coin = (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12.6" r="10.4" fill="#f0b43a"/><circle cx="12" cy="11.4" r="10.4" fill="#ffd667"/><circle cx="12" cy="11.4" r="7.4" fill="#ffe593"/><path d="M12 6.4l1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.6l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke="#f0b43a" stroke-width="1" stroke-linejoin="round"/></svg>`;
+const crownIcon = (s = 18, c, d) => `<svg width="${s}" height="${s*.8}" viewBox="0 0 28 22">${HangedWorld.crown(14, 0, 28, c, d)}</svg>`;
+const starIcon = (s = 18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24">${starPath(12, 12, 22, '#fff')}</svg>`;
+const leaf = (flip) => `<svg width="24" height="15" viewBox="0 0 26 16" style="${flip ? 'transform:scaleX(-1)' : ''}"><path d="M1 8C6 1 18 0 25 6 18 15 6 15 1 8z" fill="${WC.leaf}"/><path d="M4 8h15" stroke="${WC.leafL}" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const closeI = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/></svg>`;
+const statusIcons = `<span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="${INK}"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="${INK}"/><rect x="10" y="3" width="3" height="9" rx="1" fill="${INK}"/><rect x="15" y="0" width="3" height="12" rx="1" fill="${INK}"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".7" y=".7" width="22" height="11.6" rx="3.6" fill="none" stroke="${INK}" stroke-opacity=".4" stroke-width="1.4"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="2" fill="${INK}"/></svg></span>`;
+const phone = (inner, label) => `<div><div class="phone"><div class="screen"><div class="island"></div><div class="status"><span>9:41</span>${statusIcons}</div>${inner}</div></div><div class="label">${label}</div></div>`;
+const mapHead = `<div class="mhead"><div class="side"></div><div class="signrow">${leaf(false)}<div class="sign">Level path</div>${leaf(true)}</div><div class="side"><div class="close">${closeI}</div></div></div>`;
+
+/* ---------- 1. the whole world, all 20 levels ---------- */
+const STRIP_H = 1360;
+const LS = layout(393, 300, 420, 20);
+const sc = STRIP_H / LS.height;
+// What changes as the player climbs (src/game/levels.ts, placeholder numbers)
+const NOTES = [
+  [1, 'Short words you can picture', 'some wrong keys off the keyboard · +1 token a word'],
+  [3, 'Full keyboard', 'longer words · +2 tokens'],
+  [5, 'Every kind of word', 'not just things to picture · +3 tokens'],
+  [7, 'Long words', '9 to 13 letters · +4 tokens'],
+  [8, 'The letter shop opens', '2 hidden letters for 10 tokens'],
+  [9, 'Harder words begin', 'the word\'s subject is shown for free'],
+  [11, 'A rare letter as a clue', 'one of the word\'s rarest letters is given'],
+  [12, '+5 tokens a word', 'the most a word pays'],
+  [13, 'Two rare letters given', 'help grows with the words'],
+  [17, 'The rarest words join', 'words even good players rarely see'],
+  [20, 'The castle', 'the highest level: the fog is gone'],
+];
+const strip = `<div class="panel">
+  <div class="ptitle">The whole world: levels 1 to 20</div>
+  <div class="psub">The full map a player at the top can scroll through, scaled down.</div>
+  <div class="strip">${view(LS, 'strip', 0, LS.height, { scale: sc })}
+    <div class="notes" style="height:${STRIP_H}px">${NOTES.map(([l, b, t]) => { const c = levelColor(l);
+      return `<div class="note" style="top:${LS.stops[l - 1].y*sc}px"><div class="lv" style="background:${c.main};box-shadow:0 2px 0 ${c.dark}">${l}</div><div class="nt"><b>${b}</b><i>${t}</i></div></div>`; }).join('')}</div>
+  </div>
+</div>`;
+
+/* ---------- 2. a normal day: level 8, fog above ---------- */
+const PW = 378, PH = 838, FOOT = 150;
+const center = Math.round((47 + 64 + PH - FOOT)/2);
+const L8 = layout(PW, PH - center, center, 8), c8 = levelColor(8);
+const dayPhone = phone(`
+  <div class="world">${view(L8, 'day', 0, PH)}</div>${mapHead}
+  <div class="mfoot"><div class="card">
+    <div class="crow"><div class="lpill" style="background:${c8.main};box-shadow:0 3px 0 ${c8.dark}">${starIcon(17)}Level 8</div><div class="count">6 / 10</div></div>
+    <div class="bar"><div style="width:60%;background:${c8.main}"></div></div>
+    <div class="next">4 more words to clear the fog</div>
+  </div></div>`,
+  'A normal day (level 8): the road crosses a plank bridge into the fog. Far away, the castle on its mountain pokes out above it: the goal, without saying how far.');
+
+/* ---------- 3. at the top: level 20 ---------- */
+const LM = layout(PW, PH - center, center, 20), top20 = levelColor(20);
+const topPhone = phone(`
+  <div class="world">${view(LM, 'top', 0, PH)}</div>${mapHead}
+  <div class="mfoot"><div class="card">
+    <div class="crow"><div class="lpill" style="background:${top20.main};box-shadow:0 3px 0 ${top20.dark}">${crownIcon(19, '#fff', '#fff3cc')}Level 20</div><div class="count">23 words up here</div></div>
+    <div class="next" style="color:${top20.dark};font-size:15px">You made it to the highest level!</div>
+    <div class="next" style="margin-top:-6px">Every word here pays 5 tokens, more in a streak.</div>
+  </div></div>`,
+  'At the top (level 20): the fog is gone and stop 20 sits at the castle gate. The character wears a crown, and the card counts the words guessed up here.');
+
+/* ---------- 4. the level-up card, 19 → 20 (LevelChange: a 280 pt window, the camera lifted to the castle) ---------- */
+const VH = 280, LIFT = Math.round(VH * 0.24);
+const LC = layout(310, VH/2, VH/2 + LIFT + MARKER_LIFT/2, 20), t20 = LC.stops[19];
+const confetti = Array.from({ length: 26 }, (_, i) => {
+  const x = rand(i + 300)*LC.width, y = t20.y - 230 + rand(i + 400)*190, r = rand(i + 500)*180;
+  return `<rect x="${x}" y="${y}" width="${5 + rand(i)*4}" height="${9 + rand(i + 1)*5}" rx="1.5" fill="${CONFETTI[i % CONFETTI.length]}" transform="rotate(${r} ${x} ${y})"/>`;
+}).join('');
+const burst = Array.from({ length: 8 }, (_, i) => { const a = i/8*Math.PI*2; return spark(t20.x + Math.cos(a)*46, t20.y + Math.sin(a)*46, i % 2 ? 11 : 15, i % 2 ? '#fff' : '#ffd667'); }).join('');
+const upPhone = phone(`
+  <div class="head"><div class="hl"><div class="me-btn"><svg width="44" height="44" viewBox="30 4 140 140">${HangedRig.render(CH[ME], { bare:true })}</svg></div><div><div class="uname">Roda</div><div class="usub">191 words guessed</div></div></div>
+    <div class="hr"><div class="hlvl" style="background:${top20.light};color:${top20.dark};border:2px solid ${top20.main}">${crownIcon(15)}Lv 20</div><div class="tok">${coin(24)}86</div></div></div>
+  <div class="ghost" style="top:120px;height:330px;background:#bfe6ff"></div><div class="ghost" style="top:470px;height:120px"></div><div class="ghost" style="top:610px;height:60px;background:#ff7b6b;border:0"></div>
+  <div class="backdrop"><div class="lcard">
+    <div class="ltitle" style="color:${top20.dark}">You reached the top!</div>
+    <div class="lbody">Level 20, the highest level. Look how far you climbed!</div>
+    <div class="window">${view(LC, 'up', 0, VH, { extra: confetti + burst })}</div>
+  </div></div>`,
+  'Getting there: the word that reaches level 20 pops this card. The character hops onto the last stop, the fog lifts off the castle, a crown lands on their head, confetti.');
+
+/* ---------- notes ---------- */
+const side = `<div class="col"><div class="panel">
+  <div class="ptitle">What's new, next to the reference</div>
+  <div class="list">
+    <div class="li"><div class="d">1</div><div>Every stop has its own <b>terrace</b>: a grassy top on a tall rock cliff, stepping up over a sea of clouds.</div></div>
+    <div class="li"><div class="d">2</div><div><b>Pine trees, fences, lanterns, cottages, waterfalls</b> and far floating islands, placed the same way on every visit.</div></div>
+    <div class="li"><div class="d">3</div><div>A <b>dirt road</b> with white dashes, like the reference. The colour stays on the stops; a level-up draws a trail in the new level's colour.</div></div>
+    <div class="li"><div class="d">4</div><div>Stops are glossy buttons on <b>stone rings</b>.</div></div>
+    <div class="li"><div class="d">5</div><div>The goal is a <b>castle with a crown</b>. Far away on a normal day, and at the top the player stands at its gate.</div></div>
+  </div>
+  <div class="psub" style="margin-top:12px">Left out of the reference on purpose, as on today's map: <i>the stars under the stops</i> (no star rating per level) and <i>the settings gear</i> (settings live on the Profile page).</div>
+  <div class="psub" style="margin-top:10px">The world on this page is drawn by <i>design/world/world.js</i>, the same code as the app.</div>
+</div></div>`;
+
+document.getElementById('row').innerHTML = strip + dayPhone + topPhone + upPhone + side;
+</script>
+</body>
+</html>

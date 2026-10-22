@@ -3,10 +3,13 @@
  * round result showing the level path, a winding road of numbered stops with
  * one colour per level (theme.levelColors). The player's character hops up to
  * the next stop or slides back down to the one before, the camera following
- * it, while the road fills or empties behind it. The path (LevelPath) stops at
- * the highest level reached; past it is fog. When it lands, the stop pops
- * (with sparkles going up) and `onLanded` lets the header show the new level.
- * The card has no button: it lingers a moment, then fades out by itself.
+ * it, while a trail in the level's colour fills or empties along the road. The
+ * path (LevelPath) stops at the highest level reached; past it is fog. When it
+ * lands, the stop pops (with sparkles going up) and `onLanded` lets the header
+ * show the new level. Reaching the top level is bigger: its own title, the
+ * camera pans up to the castle, the fog lifts off it, confetti, and a crown
+ * lands on the character. The card has no button: it lingers a moment, then
+ * fades out by itself.
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
@@ -14,9 +17,13 @@ import Svg, { Path } from 'react-native-svg';
 
 import { Character } from '../characters/rig';
 import { feedback } from '../feedback';
+import { worldBands } from '../world/world';
 import { t } from '../i18n';
-import { colors, fonts, levelColor, worldColors } from '../theme';
+import { LEVELS } from '../game/levels';
+import { colors, confettiColors, fonts, levelColor, worldColors } from '../theme';
+import { Confetti } from './Confetti';
 import { Avatar } from './GameHeader';
+import { crownXml, Icon } from './icons';
 import {
   bezier,
   curve,
@@ -40,22 +47,36 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 /** The card waits for the result to settle and the token flight to land. */
 const APPEAR_MS = 1100;
+/** After the result's stamp has popped, before the card shows. */
+const WARM_MS = 500;
+const WORLD_ID = 'levelChangeWorld';
 const SHOW_MS = 280;
 /** Card shown → the character sets off. */
 const START_MS = 450;
 const TRAVEL_MS = { up: 950, down: 1150 };
 /** Landed → the card fades out by itself, so the stop's pop and sparkles play out first. */
 const HOLD_MS = 1300;
+/** On the top level, longer: the fog lifts and the confetti falls. */
+const HOLD_TOP_MS = 2600;
+const FOG_LIFT_MS = 700;
+const CONFETTI_MS = 2100;
+/** Reaching the top, the camera ends with the stop this share of the window below the middle, to show the castle. */
+const TOP_LIFT = 0.24;
 const HIDE_MS = 220;
 const SAMPLES = 8;
+const CROWN = crownXml();
 
 /**
  * The path up to the `best` level reached, and the character's trip on it,
- * for a card `width` wide and `viewH` tall.
+ * for a card `width` wide and `viewH` tall. Climbing onto the top level, the
+ * camera drifts up as the character climbs (`lift`), so it ends on the castle.
  */
 function geometry(width: number, viewH: number, from: number, to: number, best: number) {
   const edge = viewH / 2;
-  const layout = pathLayout(width, edge, edge, Math.max(best, from, to));
+  const top = to > from && to >= LEVELS.length;
+  const lift = top ? Math.round(viewH * TOP_LIFT) : 0;
+  // Room over the last stop: exactly what the window shows when the camera stops there
+  const layout = pathLayout(width, edge, edge + lift + MARKER_LIFT / 2, Math.max(best, from, to));
   const { stops } = layout;
   const up = to > from;
   const lo = Math.min(from, to) - 1;
@@ -73,8 +94,7 @@ function geometry(width: number, viewH: number, from: number, to: number, best: 
 
   return {
     layout,
-    /** Stretches reached both before and after the change. */
-    done: lo,
+    top,
     /** The stretch (or stretches) that fills going up and empties going down. */
     moving: {
       d: moving.map((i) => curve(stops[i], stops[i + 1])).join(''),
@@ -87,8 +107,8 @@ function geometry(width: number, viewH: number, from: number, to: number, best: 
     inputRange,
     markerX: pts.map((p) => p.x - MARKER_BOX / 2),
     markerY: pts.map((p) => p.y - MARKER_LIFT - MARKER_BOX / 2),
-    // Keep the character (and the stop under it) in the middle of the window
-    camera: pts.map((p) => edge - (p.y - MARKER_LIFT / 2)),
+    // Keep the character (and the stop under it) in the middle of the window, lower on the way to the top
+    camera: pts.map((p, k) => edge - (p.y - MARKER_LIFT / 2) + lift * inputRange[k]),
   };
 }
 
@@ -111,6 +131,7 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
   const pathW = cardW - 32;
   const viewH = compact ? 220 : 280;
   const geo = useMemo(() => geometry(pathW, viewH, from, to, best), [pathW, viewH, from, to, best]);
+  const top = geo.top;
   const [fx] = useState(() => ({
     show: new Animated.Value(0),
     travel: new Animated.Value(0),
@@ -118,14 +139,31 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
     fill: new Animated.Value(up ? 0 : 1),
     land: new Animated.Value(1),
     burst: new Animated.Value(1),
+    // Reaching the top: the fog lifts, confetti, the crown
+    fog: new Animated.Value(1),
+    confetti: new Animated.Value(0),
+    crown: new Animated.Value(0),
   }));
+  // Two party poppers from the window's bottom corners, toward the castle
+  const poppers = useMemo(
+    () => [
+      { seed: 11, width: pathW, height: viewH, origin: { x: 0, y: viewH * 0.9 }, aim: -Math.PI / 2 + 0.5 },
+      { seed: 29, width: pathW, height: viewH, origin: { x: pathW, y: viewH * 0.9 }, aim: -Math.PI / 2 - 0.5 },
+    ],
+    [pathW, viewH],
+  );
   const [open, setOpen] = useState(false);
   const [landed, setLanded] = useState(false);
 
   useEffect(() => {
     const id = setTimeout(() => setOpen(true), APPEAR_MS);
-    return () => clearTimeout(id);
-  }, []);
+    // Draw the world while the card waits, so it opens without a stutter (it's kept: see worldBands)
+    const warm = setTimeout(() => worldBands(geo.layout, WORLD_ID), WARM_MS);
+    return () => {
+      clearTimeout(id);
+      clearTimeout(warm);
+    };
+  }, [geo.layout]);
 
   useEffect(() => {
     if (!open) return;
@@ -145,21 +183,26 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
         Animated.timing(fx.burst, { toValue: 1, duration: 700, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
         feedback.levelUp();
       } else feedback.levelDown();
+      if (top) {
+        Animated.timing(fx.fog, { toValue: 0, duration: FOG_LIFT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
+        Animated.timing(fx.confetti, { toValue: 1, duration: CONFETTI_MS, easing: Easing.linear, useNativeDriver: true }).start();
+        popFrom(fx.crown, 0);
+      }
     });
     road.start();
     return () => {
       run.stop();
       road.stop();
     };
-  }, [open, up, fx]);
+  }, [open, up, top, fx]);
 
   useEffect(() => {
     if (!landed) return;
     onLanded();
-    const hide = Animated.timing(fx.show, { toValue: 0, duration: HIDE_MS, delay: HOLD_MS, useNativeDriver: true });
+    const hide = Animated.timing(fx.show, { toValue: 0, duration: HIDE_MS, delay: top ? HOLD_TOP_MS : HOLD_MS, useNativeDriver: true });
     hide.start(({ finished }) => finished && onClose());
     return () => hide.stop();
-  }, [landed, onLanded, onClose, fx]);
+  }, [landed, top, onLanded, onClose, fx]);
 
   if (!open) return null;
   const at = (input: number[]) => fx.travel.interpolate({ inputRange: geo.inputRange, outputRange: input });
@@ -167,7 +210,7 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
   const tilt = fx.travel.interpolate({ inputRange: [0, 0.5, 1], outputRange: ['0deg', up ? '8deg' : '-12deg', '0deg'] });
   const current = landed ? to : from;
   const c = levelColor(to);
-  const word = up ? 'up' : 'down';
+  const word = top ? 'top' : up ? 'up' : 'down';
 
   return (
     <Animated.View style={[styles.backdrop, { opacity: fx.show }]} accessibilityViewIsModal>
@@ -181,7 +224,7 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
             accessibilityLabel={t('level.a11y.path', { from, to })}
           >
             <Animated.View style={{ width: pathW, height: geo.layout.height, transform: [{ translateY: at(geo.camera) }] }}>
-              <PathWorld id="levelChangeWorld" layout={geo.layout} filled={geo.done} />
+              <PathWorld id={WORLD_ID} layout={geo.layout} />
               <Svg
                 width={pathW}
                 height={geo.moving.height}
@@ -212,7 +255,12 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
                   </Animated.View>
                 );
               })}
-              <PathFog id="levelChangeFog" layout={geo.layout} />
+              {/* Climbing onto the top, the fog still hides the castle until the character lands */}
+              {(geo.layout.more || top) && (
+                <Animated.View style={[StyleSheet.absoluteFill, { opacity: fx.fog }]} pointerEvents="none">
+                  <PathFog id="levelChangeFog" layout={geo.layout} />
+                </Animated.View>
+              )}
               <Animated.View
                 style={[
                   styles.marker,
@@ -220,8 +268,14 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
                 ]}
               >
                 <Avatar character={character} size={MARKER} />
+                {top && (
+                  <Animated.View style={[styles.crown, { opacity: fx.crown, transform: [{ rotate: '-12deg' }, { scale: fx.crown }] }]} pointerEvents="none">
+                    <Icon xml={CROWN} size={26} height={20} />
+                  </Animated.View>
+                )}
               </Animated.View>
             </Animated.View>
+            {top && poppers.map((p) => <Confetti key={p.seed} fire={fx.confetti} colors={confettiColors} {...p} />)}
           </View>
         </Raised>
       </Animated.View>
@@ -246,4 +300,6 @@ const styles = StyleSheet.create({
   moving: { position: 'absolute', left: 0 },
   stop: { position: 'absolute', width: NODE, height: NODE },
   marker: { position: 'absolute', left: 0, top: 0 },
+  // On the character's head, tilted like a hat worn at an angle (a flat 2D rotate)
+  crown: { position: 'absolute', top: -15, left: MARKER_BOX / 2 - 13 },
 });
