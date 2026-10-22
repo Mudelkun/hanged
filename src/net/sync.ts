@@ -4,7 +4,8 @@
  * next one sends the same reports again (the server skips seqs it has).
  *
  * The account (an anonymous id + secret from the server) is kept apart from
- * the game save, under its own key, and made on the first sync.
+ * the game save, under its own key, and made on the first sync. Deleting it
+ * (Profile) goes through here too, so it never races a sync.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,9 +15,14 @@ import { Account, api, ApiError } from './api';
 
 const ACCOUNT_KEY = 'hanged.account.v1';
 
-async function account(): Promise<Account> {
+async function savedAccount(): Promise<Account | null> {
   const saved = await AsyncStorage.getItem(ACCOUNT_KEY).catch(() => null);
-  if (saved) return JSON.parse(saved) as Account;
+  return saved ? (JSON.parse(saved) as Account) : null;
+}
+
+async function account(): Promise<Account> {
+  const saved = await savedAccount();
+  if (saved) return saved;
   const made = await api.register();
   await AsyncStorage.setItem(ACCOUNT_KEY, JSON.stringify(made));
   return made;
@@ -24,8 +30,7 @@ async function account(): Promise<Account> {
 
 /** The player's id on the server, if a sync ever made one (no network needed). */
 export async function savedPlayerId(): Promise<string | null> {
-  const saved = await AsyncStorage.getItem(ACCOUNT_KEY).catch(() => null);
-  return saved ? (JSON.parse(saved) as Account).id : null;
+  return (await savedAccount())?.id ?? null;
 }
 
 const snapshot = (s: GameState): PlayerSnapshot => ({
@@ -53,6 +58,8 @@ export function createSync(dispatch: (a: GameAction) => void) {
     let acked = 0;
     for (;;) {
       const s = latest;
+      // The account is being deleted: stop here
+      if (!s) return null;
       const pending = s.reports.filter((r) => r.seq > acked);
       const reports = pending.slice(0, LIMITS.reportsPerSync);
       try {
@@ -67,16 +74,45 @@ export function createSync(dispatch: (a: GameAction) => void) {
     }
   }
 
+  const run = (): Promise<string | null> =>
+    (running ??= once()
+      .catch(() => null)
+      .finally(() => {
+        running = null;
+      }));
+
+  /**
+   * Deletes the player on the server, then forgets the account. true once it's
+   * gone (or never existed: a player who never synced has nothing there).
+   * Offline it changes nothing and resolves false. No sync starts meanwhile, and
+   * one already running finishes first, so it can't bring the old account back.
+   */
+  async function deleteAccount(): Promise<boolean> {
+    const held = latest;
+    latest = null;
+    await running;
+    try {
+      const me = await savedAccount();
+      if (me)
+        await api.deletePlayer(me).catch((e) => {
+          // The server doesn't know it (already deleted, or its database was reset): nothing left to delete.
+          if (!(e instanceof ApiError && e.status === 401)) throw e;
+        });
+      await AsyncStorage.removeItem(ACCOUNT_KEY);
+      return true;
+    } catch {
+      latest = held;
+      return false;
+    }
+  }
+
   return {
+    /** The latest state; null until the save is loaded (and while the account is being deleted). */
     update: (state: GameState | null) => {
       latest = state;
     },
     /** Syncs now (or joins the sync already running). Resolves to the player's id, or null if it failed. */
-    run: (): Promise<string | null> =>
-      (running ??= once()
-        .catch(() => null)
-        .finally(() => {
-          running = null;
-        })),
+    run,
+    deleteAccount,
   };
 }

@@ -19,11 +19,15 @@ import {
 } from './config';
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription, wrongCount } from './engine';
 import { afterRound, clueRatioFor, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
+import { checkName, keptName } from './names';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
 
 export interface GameState {
   version: 1;
-  /** null until the Profile page lets the player pick one; the UI shows a default. */
+  /**
+   * Public (leaderboard). Always one that passes names.checkName. null only for
+   * a moment: the provider gives a new player a random name (names.randomName).
+   */
   playerName: string | null;
   /** The character the player plays with. Always one they own (ownsCharacter). */
   characterId: string;
@@ -83,7 +87,11 @@ export type GameAction =
   /** Plays with a character the player owns. */
   | { type: 'selectCharacter'; id: string }
   /** The server counted every report up to this seq. */
-  | { type: 'reportsSent'; upTo: number };
+  | { type: 'reportsSent'; upTo: number }
+  /** A new name. Ignored unless names.checkName takes it. */
+  | { type: 'rename'; name: string }
+  /** The account was deleted: everything starts over, as on a new phone. */
+  | { type: 'reset' };
 
 /**
  * Tokens paid by a win at `level` that brings the streak to `streak`: the
@@ -190,6 +198,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       // A character that left the shop goes back to the default; one that stopped being free stays owned.
       if (characterPrice(s.characterId) === null) s = { ...s, characterId: DEFAULT_CHARACTER };
       else if (!ownsCharacter(s, s.characterId)) s = { ...s, unlockedCharacterIds: [...s.unlockedCharacterIds, s.characterId] };
+      // A name the rules no longer take (longer than the limit): keep its first word, or drop it for a random one.
+      const playerName = keptName(s.playerName);
+      if (playerName !== s.playerName) s = { ...s, playerName };
       // Words removed from the database can never be dealt again: forget them.
       const seenWordIds = s.seenWordIds.filter((id) => wordById(id));
       return seenWordIds.length === s.seenWordIds.length ? s : { ...s, seenWordIds };
@@ -276,6 +287,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const reports = state.reports.filter((r) => r.seq > action.upTo);
       return reports.length === state.reports.length ? state : { ...state, reports };
     }
+
+    case 'rename': {
+      const check = checkName(action.name);
+      return check.ok && check.name !== state.playerName ? { ...state, playerName: check.name } : state;
+    }
+
+    case 'reset':
+      return initialState();
   }
 }
 

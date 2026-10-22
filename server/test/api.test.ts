@@ -5,7 +5,7 @@ import { buildApp } from '../src/app.ts';
 import type { LeaderboardResponse, PlayerSnapshot, RegisterResponse, RoundReport, SyncResponse } from '../src/contract.ts';
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
-import { cleanName, nextScore } from '../src/players.ts';
+import { nextScore } from '../src/players.ts';
 
 let db: Db;
 let app: Awaited<ReturnType<typeof buildApp>>;
@@ -102,13 +102,13 @@ describe('sync', () => {
 describe('leaderboard', () => {
   it('ranks by words guessed, then level, and gives my rank', async () => {
     const [a, b, c] = [await newPlayer(), await newPlayer(), await newPlayer()];
-    await sync(a, snapshot({ name: 'A', wordsGuessed: 10, level: 2 }));
-    await sync(b, snapshot({ name: 'B', wordsGuessed: 30 }));
-    await sync(c, snapshot({ name: 'C', wordsGuessed: 10, level: 3 }));
+    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 10, level: 2 }));
+    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 30 }));
+    await sync(c, snapshot({ name: 'Cal', wordsGuessed: 10, level: 3 }));
     const res = await board('all', a.id);
     assert.deepEqual(
       res.entries.map((e) => [e.rank, e.name, e.words]),
-      [[1, 'B', 30], [2, 'C', 10], [3, 'A', 10]],
+      [[1, 'Bea', 30], [2, 'Cal', 10], [3, 'Ann', 10]],
     );
     assert.deepEqual(res.me, { rank: 3, words: 10 });
   });
@@ -135,17 +135,59 @@ describe('leaderboard', () => {
   });
 });
 
+describe('names', () => {
+  const nameOf = async (id: string) =>
+    (await db.query<{ name: string | null }>('SELECT name FROM players WHERE id = $1', [id])).rows[0].name;
+
+  it('keeps a clean name, tidied', async () => {
+    const p = await newPlayer();
+    await sync(p, snapshot({ name: '  Sunny   Owl ' }));
+    assert.equal(await nameOf(p.id), 'Sunny Owl');
+  });
+
+  it('drops a name that is too long, but still takes the sync', async () => {
+    const p = await newPlayer();
+    const res = await sync(p, snapshot({ name: 'Roda The Goat Forever', wordsGuessed: 1 }), [report(1)]);
+    assert.equal(res.statusCode, 200);
+    assert.equal(await nameOf(p.id), null);
+  });
+
+  it('drops a name the filter refuses, even if the app let it through', async () => {
+    const p = await newPlayer();
+    await sync(p, snapshot({ name: 'BigDick' }));
+    assert.equal(await nameOf(p.id), null);
+  });
+});
+
+describe('delete account', () => {
+  const del = (p: RegisterResponse) =>
+    app.inject({ method: 'DELETE', url: '/v1/players/me', headers: { authorization: `Bearer ${p.id}:${p.secret}` } });
+
+  it('needs the secret', async () => {
+    const p = await newPlayer();
+    assert.equal((await del({ ...p, secret: 'x'.repeat(43) })).statusCode, 401);
+    assert.equal((await app.inject({ method: 'DELETE', url: '/v1/players/me' })).statusCode, 401);
+  });
+
+  it('removes the player and their weeks, keeps the word statistics', async () => {
+    const p = await newPlayer();
+    await sync(p, snapshot({ wordsGuessed: 1 }), [report(1)]);
+    assert.equal((await del(p)).statusCode, 204);
+    assert.deepEqual((await board('all')).entries, []);
+    assert.deepEqual((await board('week')).entries, []);
+    assert.equal((await db.query('SELECT 1 FROM player_weeks')).rows.length, 0);
+    assert.equal((await db.query('SELECT 1 FROM word_days')).rows.length, 1);
+    // the device's old account is gone: its next sync starts over
+    assert.equal((await sync(p, snapshot())).statusCode, 401);
+    assert.equal((await del(p)).statusCode, 401);
+  });
+});
+
 describe('rules', () => {
   it('nextScore', () => {
     assert.equal(nextScore(5, true, 3, 0), 3);
     assert.equal(nextScore(5, false, 3, 0), 5);
     assert.equal(nextScore(5, false, 9, 2), 7);
     assert.equal(nextScore(5, false, 6, 2), 6);
-  });
-
-  it('cleanName', () => {
-    assert.equal(cleanName('   '), null);
-    assert.equal(cleanName(null), null);
-    assert.equal(cleanName(' Zoé\n '), 'Zoé');
   });
 });

@@ -16,7 +16,7 @@ export class ApiError extends Error {
   }
 }
 
-async function call<T>(path: string, init: { method?: 'GET' | 'POST'; body?: unknown; account?: Account } = {}): Promise<T> {
+async function call<T>(path: string, init: { method?: 'GET' | 'POST' | 'DELETE'; body?: unknown; account?: Account } = {}): Promise<T> {
   if (!BASE) throw new ApiError(0);
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
@@ -31,7 +31,7 @@ async function call<T>(path: string, init: { method?: 'GET' | 'POST'; body?: unk
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });
     if (!res.ok) throw new ApiError(res.status);
-    return (await res.json()) as T;
+    return (res.status === 204 ? undefined : await res.json()) as T;
   } finally {
     clearTimeout(timer);
   }
@@ -40,6 +40,7 @@ async function call<T>(path: string, init: { method?: 'GET' | 'POST'; body?: unk
 export const api = {
   register: () => call<RegisterResponse>('/v1/players', { method: 'POST' }),
   sync: (account: Account, body: SyncRequest) => call<SyncResponse>('/v1/sync', { method: 'POST', body, account }),
+  deletePlayer: (account: Account) => call<void>('/v1/players/me', { method: 'DELETE', account }),
   leaderboard: (period: Period, me?: string) =>
     call<LeaderboardResponse>(`/v1/leaderboard?period=${period}${me ? `&me=${me}` : ''}`),
 };

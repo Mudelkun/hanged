@@ -50,8 +50,8 @@ statistics ([server.md](server.md)).
 not text an AI wrote. The source is **Open English WordNet 2025** (https://en-word.net), the
 maintained successor of Princeton WordNet.
 - **Licence: CC BY 4.0.** Commercial use is fine, but the app **must credit it**:
-  [data/CREDITS.md](../data/CREDITS.md) holds the credit and the list of changes. Show it on the
-  Profile page's Info & legal section when that's built. Don't switch to Wiktionary
+  [data/CREDITS.md](../data/CREDITS.md) holds the credit and the list of changes. Profile → Credits shows
+  it (`credits.*` in `en.json`: keep them in step with CREDITS.md). Don't switch to Wiktionary
   (CC BY-SA: share-alike) or Merriam-Webster/Oxford (non-commercial or paid) without asking the owner.
 - Each source line pins one **sense** (a WordNet synset id such as `02983900-n`), because most
   words have several meanings (castle: the building, the chess piece, the chess move). Pick the

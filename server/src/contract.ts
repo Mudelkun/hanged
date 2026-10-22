@@ -29,6 +29,7 @@ export interface RoundReport {
 
 /** What the device holds about the player. The device is the source of truth; the server copies it. */
 export interface PlayerSnapshot {
+  /** Checked by names.ts on both sides; null = the app's default name. */
   name: string | null;
   characterId: string;
   language: string;
@@ -73,6 +74,5 @@ export interface LeaderboardResponse {
 
 export const LIMITS = {
   reportsPerSync: 200,
-  nameLength: 20,
   boardSize: 50,
 } as const;

@@ -18,8 +18,8 @@ layout is the mockup's and nothing more.
 
 ## Screen
 
-- Header: `TitleHeader` ([GameHeader.tsx](../src/components/GameHeader.tsx)): avatar (the future
-  Profile button), the title, and `StillTokenPill`.
+- Header: `TitleHeader` ([GameHeader.tsx](../src/components/GameHeader.tsx)): avatar (opens Profile),
+  the title, and `StillTokenPill`.
   - Tokens never move here, so the pill is the still one. A screen where tokens move (Play, Characters)
     has a live `TokenPill`; flights land on the focused one ([play-screen.md](play-screen.md), TokenPill).
 - `PeriodSwitch`: This week (the default) / All time.
@@ -36,8 +36,9 @@ layout is the mockup's and nothing more.
   - **Not ranked** yet: "Guess a word to join the leaderboard."
 - Pull to refresh. Each time the screen shows (or the period changes, or on refresh), it **syncs first**,
   then fetches. Each period keeps its last board, so a failed refresh still shows it.
-- A name the server has as null shows the default name (`player.defaultName`). Players can't set
-  names until the Profile page exists.
+- A name the server has as null shows the default name (`player.defaultName`): an old player, or a name
+  the server's filter refused. Players set their name on Profile, and a new one gets a random name
+  ([profile.md](profile.md)).
 
 ## Tabs
 

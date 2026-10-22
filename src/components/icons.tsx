@@ -6,6 +6,7 @@
 import { memo } from 'react';
 import { SvgXml } from 'react-native-svg';
 
+
 const svg = (viewBox: string, body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${body}</svg>`;
 
@@ -64,6 +65,42 @@ export const leafXml = (c: string, vein: string) =>
 // Not in the mockup: the close button of a full-screen sheet (the level path).
 export const closeXml = (c = '#4b3a35') =>
   svg('0 0 24 24', `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`);
+
+// The Profile page's row icons (white, on a coloured square) and its name editor.
+export const profileIconXml = {
+  language: svg(
+    '0 0 24 24',
+    '<g fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></g>',
+  ),
+  rules: svg(
+    '0 0 24 24',
+    '<path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5z" fill="#fff"/><path d="M5 21.5A2.5 2.5 0 0 1 7.5 19H19v3H7.5" fill="none" stroke="#fff" stroke-width="1.8"/>',
+  ),
+  privacy: svg('0 0 24 24', '<path d="M12 2l8 3.5v6c0 5-3.4 8.8-8 10.5-4.6-1.7-8-5.5-8-10.5v-6z" fill="#fff"/>'),
+  terms: svg(
+    '0 0 24 24',
+    '<path d="M6 2h9l5 5v15H6z" fill="#fff"/><path d="M9 12h7M9 16h7" stroke="#4fb3e8" stroke-width="2" stroke-linecap="round"/>',
+  ),
+  support: svg(
+    '0 0 24 24',
+    '<path d="M4 5h16v11H10l-5 4v-4H4z" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>',
+  ),
+  // Not in the mockup: a ribbon for the credits.
+  credits: svg(
+    '0 0 24 24',
+    '<path d="M8 13l-2.5 8.5 3.5-1.6 2 3 1-9.9M16 13l2.5 8.5-3.5-1.6-2 3-1-9.9" fill="#fff"/><circle cx="12" cy="9" r="6.5" fill="#fff"/><circle cx="12" cy="9" r="3.2" fill="#ffc23d"/>',
+  ),
+};
+export const penXml = svg(
+  '0 0 24 24',
+  '<path d="M4 20l1-4.5L15.5 5l3.5 3.5L8.5 19z" fill="#ffe5df" stroke="#e85c4d" stroke-width="2.4" stroke-linejoin="round"/>',
+);
+// Not in the mockup: the name editor's "random name" button.
+export const diceXml = (c = '#2a86c8') =>
+  svg(
+    '0 0 24 24',
+    `<rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="#fff" stroke="${c}" stroke-width="2.2"/><g fill="${c}"><circle cx="8.5" cy="8.5" r="1.7"/><circle cx="15.5" cy="8.5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="8.5" cy="15.5" r="1.7"/><circle cx="15.5" cy="15.5" r="1.7"/></g>`,
+  );
 
 export const tabIconXml = {
   play: (c: string) =>

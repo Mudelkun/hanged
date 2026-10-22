@@ -84,6 +84,7 @@ button · tab bar.
 ## Every place the character shows
 
 All read `state.characterId`, so a pick shows everywhere at once: the Play scene, the result scene, the
-headers' avatars (Play, Leaderboard, Characters), the streak takeover, the level path, and the player's
+headers' avatars (Play, Leaderboard, Characters), the Profile page's face (it and its "Change character" open
+this page), the delete-account sheet, the streak takeover, the level path, and the player's
 own leaderboard row (the local character, newer than the server's copy). Species names are UI text
 (`species.<id>` in `en.json`, falling back to the rig's English one).

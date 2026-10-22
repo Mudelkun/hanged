@@ -24,11 +24,13 @@ everything again.
 |---|---|
 | `POST /v1/players` | New anonymous player → `{ id, secret }`. Rate limit: 20 per hour per IP. |
 | `POST /v1/sync` | `Authorization: Bearer <id>:<secret>`. Body: the player snapshot + up to 200 round reports. → `{ acked, wordsGuessed }` |
+| `DELETE /v1/players/me` | Same auth. Deletes the player (App Store Guideline 5.1.1(v)) → `204`, or `401` if unknown. |
 | `GET /v1/leaderboard?period=week\|all&me=<id>` | Top 50 + the asking player's rank. No auth: ranks are public. |
 | `GET /health` | `SELECT 1`, for Railway. |
 
 Every body and query is validated by a JSON schema in [app.ts](../server/src/app.ts) before a
-handler runs. Global rate limit: 120 requests a minute per IP (`trustProxy` is on, because Railway
+handler runs. CORS (only the web preview needs it) allows GET, POST and DELETE: `@fastify/cors` allows only
+GET, HEAD and POST by default, and the preview's delete failed until DELETE was added. Global rate limit: 120 requests a minute per IP (`trustProxy` is on, because Railway
 sits behind a proxy).
 
 ## Accounts: anonymous for now
@@ -36,7 +38,10 @@ sits behind a proxy).
 The first sync calls `POST /v1/players` and stores `{ id, secret }` in AsyncStorage under
 `hanged.account.v1`, **apart from the game save**. The server keeps only a sha256 of the secret.
 There's no login: deleting the app loses the account, the same as it loses the save. Sign in with
-Apple, a name the player picks and account deletion are still open questions (CLAUDE.md). A `401` from
+Apple is still an open question (CLAUDE.md). The player deletes their account from Profile
+(`DELETE /v1/players/me`, then the app forgets the account and starts over:
+[profile.md](profile.md)). The row goes, `player_weeks` with it (cascade); `word_days` stays, since it
+has nothing that points back to a player. A `401` from
 sync means the server doesn't know this player (e.g. its database was reset): the app drops the
 account and registers again on the next sync, and that first sync re-seeds the score (below).
 
@@ -68,7 +73,9 @@ The server, in **one transaction** that locks the player's row (`FOR UPDATE`):
    - After that, the score grows by **at most the wins reported in that sync**. Editing the saved number
      doesn't move the leaderboard. Sending fake reports still would: real anti-cheat (plausibility
      checks, rate per hour) comes later.
-3. Copies the rest of the snapshot, and adds to `rounds_played`/`rounds_won`.
+3. Copies the rest of the snapshot, and adds to `rounds_played`/`rounds_won`. The name goes through
+   `checkName` ([names.ts](../server/src/names.ts), shared with the app): one it refuses is stored as null.
+   The schema lets names up to 64 through (`NAME_SENT_MAX`), so a too-long name never fails the whole sync.
 4. Adds the wins to `player_weeks` (the Monday, UTC, of each report's `at`, capped at the server's now,
    so a fast device clock can't file wins in a future week).
 5. Adds every report to `word_days`. Rows are written in key order so two syncs can't deadlock on the
@@ -141,3 +148,5 @@ is an indexed count, which is O(rank). Cache it if it ever shows up in the metri
   because `pg` returns bigints as strings. Multi-statement SQL goes through `exec`, because PGlite's
   `query` takes one statement.
 - Keep the app's checks and the server's schemas in step with `LIMITS` in `contract.ts`.
+- **`names.ts` is shared like `contract.ts`**: the app imports it, so no imports in it. The server
+  re-checks names because the app's check can be skipped by a modified app.

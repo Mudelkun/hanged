@@ -152,7 +152,8 @@ The preview page uses the full 400×600 view with the scene's own sky.
 
 ## Avatars
 
-The avatar is the player's picture everywhere until photo uploads exist. The owner asked that no two characters share the same profile look
+The avatar is the player's picture everywhere: there are no photo uploads for now (owner's call,
+[profile.md](profile.md)). The owner asked that no two characters share the same profile look
 (2026-10-22), so each avatar shows the character's personality:
 
 - `HangedRig.avatar(c)` in `rig.js` draws the persona (signature face, head tilt, crossed arms, prop;

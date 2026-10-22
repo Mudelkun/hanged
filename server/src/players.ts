@@ -10,6 +10,7 @@ import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypt
 
 import type { RegisterResponse, RoundReport, SyncRequest, SyncResponse } from './contract.ts';
 import type { Db, Sql } from './db.ts';
+import { checkName } from './names.ts';
 
 const hash = (secret: string) => createHash('sha256').update(secret).digest('hex');
 
@@ -33,12 +34,6 @@ export async function register(db: Db): Promise<RegisterResponse> {
   return { id, secret };
 }
 
-/** Trimmed, single-spaced, no control characters; empty → null. */
-export function cleanName(name: string | null): string | null {
-  const clean = name?.replace(/\p{C}/gu, '').replace(/\s+/g, ' ').trim();
-  return clean || null;
-}
-
 /** Reports the server hasn't taken yet, one per seq, oldest first. */
 export function freshReports(reports: RoundReport[], lastSeq: number): RoundReport[] {
   const bySeq = new Map(reports.filter((r) => r.seq > lastSeq).map((r) => [r.seq, r]));
@@ -53,6 +48,16 @@ export function freshReports(reports: RoundReport[], lastSeq: number): RoundRepo
 export function nextScore(held: number, firstSync: boolean, reported: number, wins: number): number {
   return firstSync ? reported : Math.max(held, Math.min(reported, held + wins));
 }
+
+/** The row exists and the secret is its own. */
+const owns = (row: { secret_hash: string } | undefined, who: Credentials): boolean =>
+  !!row && timingSafeEqual(Buffer.from(row.secret_hash), Buffer.from(hash(who.secret)));
+
+/** The name to keep: one the filter refuses (a modified app) is dropped, and the app shows its default. */
+const allowedName = (name: string | null) => {
+  const check = checkName(name);
+  return check.ok ? check.name : null;
+};
 
 interface PlayerRow {
   secret_hash: string;
@@ -69,7 +74,7 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
       [who.id],
     );
     const held = rows[0];
-    if (!held || !timingSafeEqual(Buffer.from(held.secret_hash), Buffer.from(hash(who.secret)))) return null;
+    if (!owns(held, who)) return null;
 
     const fresh = freshReports(reports, held.last_seq);
     const wins = fresh.filter((r) => r.won).length;
@@ -83,10 +88,25 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
          rounds_played = rounds_played + $8, rounds_won = rounds_won + $9,
          last_seq = $10, synced_at = now()
        WHERE id = $1`,
-      [who.id, cleanName(player.name), player.characterId, player.language, player.level, player.tokens, words, fresh.length, wins, acked],
+      [who.id, allowedName(player.name), player.characterId, player.language, player.level, player.tokens, words, fresh.length, wins, acked],
     );
     if (fresh.length) await addRounds(sql, who.id, fresh);
     return { acked, wordsGuessed: words };
+  });
+}
+
+/**
+ * Deletes the player (App Store Guideline 5.1.1(v)): their row, and with it
+ * their weekly counts (ON DELETE CASCADE). The word statistics stay: they are
+ * counts per word and day, with nothing that points back to a player.
+ * false: unknown player or wrong secret.
+ */
+export function deletePlayer(db: Db, who: Credentials): Promise<boolean> {
+  return db.tx(async (sql) => {
+    const { rows } = await sql.query<{ secret_hash: string }>('SELECT secret_hash FROM players WHERE id = $1 FOR UPDATE', [who.id]);
+    if (!owns(rows[0], who)) return false;
+    await sql.query('DELETE FROM players WHERE id = $1', [who.id]);
+    return true;
   });
 }
 

@@ -3,6 +3,7 @@
  * a handler runs, with the limits from contract.ts.
  *   POST /v1/players      a new anonymous player → { id, secret }
  *   POST /v1/sync         the device's snapshot + new round reports (auth)
+ *   DELETE /v1/players/me deletes the player (auth)
  *   GET  /v1/leaderboard  ?period=week|all[&me=<player id>]
  *   GET  /health          for Railway
  */
@@ -13,7 +14,8 @@ import Fastify, { type FastifyServerOptions } from 'fastify';
 import { LIMITS, type Period, type SyncRequest } from './contract.ts';
 import type { Db } from './db.ts';
 import { createLeaderboard } from './leaderboard.ts';
-import { credentials, register, sync } from './players.ts';
+import { NAME_SENT_MAX } from './names.ts';
+import { credentials, deletePlayer, register, sync } from './players.ts';
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
 const UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
@@ -44,7 +46,7 @@ const syncBody = {
       additionalProperties: false,
       required: ['name', 'characterId', 'language', 'wordsGuessed', 'level', 'tokens'],
       properties: {
-        name: { type: ['string', 'null'], maxLength: LIMITS.nameLength },
+        name: { type: ['string', 'null'], maxLength: NAME_SENT_MAX },
         characterId: { type: 'string', pattern: '^[a-z]{1,20}$' },
         language: { type: 'string', pattern: '^[a-z]{2}$' },
         wordsGuessed: int(0, 10_000_000),
@@ -70,8 +72,8 @@ export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs
   const { boardTtlMs, ...fastifyOpts } = opts;
   // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's.
   const app = Fastify({ trustProxy: true, bodyLimit: 256 * 1024, ...fastifyOpts });
-  // The app doesn't need CORS; the web preview (npx expo start --web) does.
-  await app.register(cors, { origin: true });
+  // The app doesn't need CORS; the web preview (npx expo start --web) does. DELETE isn't allowed by default.
+  await app.register(cors, { origin: true, methods: ['GET', 'POST', 'DELETE'] });
   await app.register(rateLimit, { max: 120, timeWindow: '1 minute' });
   const leaderboard = createLeaderboard(db, boardTtlMs);
 
@@ -88,6 +90,12 @@ export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs
     const who = credentials(req.headers.authorization);
     const done = who && (await sync(db, who, req.body));
     return done ?? reply.code(401).send({ error: 'unknown player' });
+  });
+
+  app.delete('/v1/players/me', async (req, reply) => {
+    const who = credentials(req.headers.authorization);
+    const done = who && (await deletePlayer(db, who));
+    return done ? reply.code(204).send() : reply.code(401).send({ error: 'unknown player' });
   });
 
   app.get<{ Querystring: { period: Period; me?: string } }>(

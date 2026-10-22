@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { AppState } from 'react-native';
 
+import { randomName } from '../game/names';
 import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
 import { createSync } from '../net/sync';
@@ -23,6 +24,11 @@ interface GameContextValue {
   startNextRound: () => void;
   /** Syncs with the server now. Resolves to the player's server id, or null offline. */
   syncNow: () => Promise<string | null>;
+  /**
+   * Deletes the account on the server, then starts the game over on this
+   * device. Resolves false (and changes nothing) when the server can't be reached.
+   */
+  deleteAccount: () => Promise<boolean>;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -77,7 +83,25 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (ready && !state.round) startNextRound();
   }, [ready, state.round, startNextRound]);
 
-  const value = useMemo(() => ({ state, ready, dispatch, startNextRound, syncNow: sync.run }), [state, ready, startNextRound, sync]);
+  // A new player (or a save from before names) gets a friendly random name; the Profile page changes it.
+  useEffect(() => {
+    if (ready && !state.playerName) dispatch({ type: 'rename', name: randomName() });
+  }, [ready, state.playerName]);
+
+  const deleteAccount = useCallback(async () => {
+    const deleted = await sync.deleteAccount();
+    if (deleted) {
+      // Dealt in the same batch, so there's never a state without a round (the root Gate would unmount the app)
+      dispatch({ type: 'reset' });
+      dispatch({ type: 'newRound', word: nextWord(initialState()), roundId: newRoundId() });
+    }
+    return deleted;
+  }, [sync]);
+
+  const value = useMemo(
+    () => ({ state, ready, dispatch, startNextRound, syncNow: sync.run, deleteAccount }),
+    [state, ready, startNextRound, sync, deleteAccount],
+  );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
 

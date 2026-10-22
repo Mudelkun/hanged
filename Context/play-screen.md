@@ -145,7 +145,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 | File | What |
 |---|---|
-| `GameHeader.tsx` | Avatar button (will open Profile; disabled now), **player name** (never the app name; default "Player" until Profile exists), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
+| `GameHeader.tsx` | Avatar button (opens Profile), **player name** (never the app name; a new player's is random, e.g. "SunnyOtter"; at most 15 characters, sized to fit the room beside the pills (27 down to 14), cut with "…" if it still doesn't fit), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
 | `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathWorld` (the world and the road), `LevelStop`, `PathFog`. Use it for any new view of the levels. Colours: `worldColors` in [src/theme](../src/theme/index.ts). |
 | `LevelChange.tsx` | The level path card (see Level change above). |
 | `LevelMap.tsx` | The full-screen level map (see The level map above). |

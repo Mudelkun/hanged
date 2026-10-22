@@ -2,10 +2,11 @@
  * The headers. In game (Play and Round lost): the player's avatar and name
  * (never the app name), words guessed, level and token balance. On the other
  * tabs (TitleHeader): avatar, the screen's title, token balance (`live` on a
- * screen where tokens are spent, so the spend flies into it).
- * The avatar is the button that will open the Profile page (not built yet);
- * the level pill opens the level map (LevelMap).
+ * screen where tokens are spent, so the spend flies into it). On a pushed
+ * page (BackHeader): back button, title, token balance.
+ * The avatar opens the Profile page; the level pill opens the level map (LevelMap).
  */
+import { router } from 'expo-router';
 import { memo, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -13,8 +14,9 @@ import { SvgXml } from 'react-native-svg';
 import { avatarRing, avatarXml, Character } from '../characters/rig';
 import { t } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
-import { Icon, starXml } from './icons';
+import { chevXml, Icon, starXml } from './icons';
 import { popFrom } from './motion';
+import { Raised } from './Raised';
 import { StillTokenPill, TokenPill } from './TokenPill';
 
 interface Props {
@@ -49,6 +51,7 @@ export const Avatar = memo(function Avatar({ character, size, plain }: { charact
     </View>
   );
 });
+
 
 /**
  * "Lv N" in the level's own colour. It pops when the level changes, never when
@@ -88,10 +91,38 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
 });
 
 const ProfileButton = ({ character }: { character: Character }) => (
-  <Pressable accessibilityRole="button" accessibilityLabel={t('header.a11y.avatar')} disabled>
+  <Pressable
+    onPress={() => router.push('/profile')}
+    hitSlop={6}
+    accessibilityRole="button"
+    accessibilityLabel={t('header.a11y.avatar')}
+    style={({ pressed }) => pressed && styles.levelPressed}
+  >
     <Avatar character={character} size={46} />
   </Pressable>
 );
+
+/** Back to where the page was opened from (Play, if it was opened straight from a link). */
+const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
+
+/** A pushed page's header: back button, title, and the token balance when the page shows it. */
+export function BackHeader({ title, tokens }: { title: string; tokens?: number }) {
+  return (
+    <View style={styles.head}>
+      <Pressable onPress={goBack} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
+        {({ pressed }) => (
+          <Raised depth={3} shadowColor={colors.shadow} radius={15} pressed={pressed} style={styles.back}>
+            <Icon xml={chevXml('l')} size={22} />
+          </Raised>
+        )}
+      </Pressable>
+      <Text style={[styles.title, styles.backTitle]} accessibilityRole="header" numberOfLines={1}>
+        {title}
+      </Text>
+      {tokens === undefined ? <View style={styles.backSpacer} /> : <StillTokenPill tokens={tokens} />}
+    </View>
+  );
+}
 
 export function TitleHeader({ title, character, tokens, live }: { title: string; character: Character; tokens: number; live?: boolean }) {
   return (
@@ -105,13 +136,26 @@ export function TitleHeader({ title, character, tokens, live }: { title: string;
   );
 }
 
+/** Fredoka Bold's letters average about this much of the font size in width (wide ones, W and M, more). */
+const LETTER_WIDTH = 0.62;
+
+/**
+ * The name's size in the game header: as big as fits the space beside the
+ * level and tokens, 27 at most and 14 at least. A 15-character name (NAME_MAX)
+ * fits on a small iPhone; one of very wide letters is cut with "…".
+ */
+const nameSize = (name: string, width: number) =>
+  Math.max(14, Math.min(27, Math.floor(width / ([...name].length * LETTER_WIDTH))));
+
 export function GameHeader({ name, character, wordsGuessed, level, tokens, onLevelPress }: Props) {
+  // The name's room, measured: it changes with the phone and with the pills' widths
+  const [nameWidth, setNameWidth] = useState(0);
   return (
     <View style={styles.head}>
-      <View style={styles.side}>
+      <View style={[styles.side, styles.grow]}>
         <ProfileButton character={character} />
-        <View style={styles.nameBlock}>
-          <Text style={styles.name} numberOfLines={1}>
+        <View style={styles.nameBlock} onLayout={(e) => setNameWidth(e.nativeEvent.layout.width)}>
+          <Text style={[styles.name, nameWidth > 0 && { fontSize: nameSize(name, nameWidth) }]} numberOfLines={1}>
             {name}
           </Text>
           <Text style={styles.sub}>
@@ -119,7 +163,7 @@ export function GameHeader({ name, character, wordsGuessed, level, tokens, onLev
           </Text>
         </View>
       </View>
-      <View style={styles.side}>
+      <View style={[styles.side, styles.fixed]}>
         <LevelPill level={level} onPress={onLevelPress} />
         <TokenPill tokens={tokens} />
       </View>
@@ -141,7 +185,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   side: { flexDirection: 'row', alignItems: 'center', gap: 9, flexShrink: 1 },
-  nameBlock: { flexShrink: 1 },
+  // The level and tokens never shrink: the name gives way (and is cut with "…" if it's very wide)
+  fixed: { flexShrink: 0 },
+  grow: { flex: 1, marginRight: 9 },
+  nameBlock: { flex: 1 },
   // backgroundColor: the character's ring colour (avatarRing)
   avatarRing: {
     alignItems: 'center',
@@ -155,6 +202,17 @@ const styles = StyleSheet.create({
   avatar: { borderWidth: AVATAR_BORDER, borderColor: '#fff', backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { fontFamily: fonts.display700, fontSize: 27, lineHeight: 30, color: colors.ink },
   title: { flexShrink: 1, fontFamily: fonts.display700, fontSize: 25, color: colors.ink },
+  back: {
+    width: 44,
+    height: 41,
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backTitle: { flex: 1, textAlign: 'center', marginHorizontal: 8 },
+  backSpacer: { width: 44 },
   sub: { fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted, marginTop: 1, letterSpacing: 0.2 },
   level: {
     flexDirection: 'row',

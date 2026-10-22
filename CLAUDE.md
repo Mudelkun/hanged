@@ -14,7 +14,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
-**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, and the **Characters** tab (buy characters with tokens and pick one, all on the device). Versus and Profile aren't built yet.
+**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), and the **Profile** page (name, stats, info and legal pages, account deletion). Versus isn't built yet.
 
 **Stack:** Expo SDK 57 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
@@ -40,12 +40,13 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The server (`server/`): API, database, anonymous accounts, round reports and the sync, word statistics, deploying on Railway | [Context/server.md](Context/server.md) |
 | The Leaderboard screen, the ranking rules, and how the bottom tabs work | [Context/leaderboard.md](Context/leaderboard.md) |
 | The Characters page: character prices (and why), buying and picking, ownership in the save, every place the character shows | [Context/characters-shop.md](Context/characters-shop.md) |
+| The Profile page: player names (the filter, random names), the info and legal pages, deleting the account | [Context/profile.md](Context/profile.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
 
 ```
-src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx, (tabs)/characters.tsx
+src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx, (tabs)/characters.tsx, profile.tsx, info/[page].tsx
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
 src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard
 src/net/            the only code that talks to the server: api.ts, sync.ts
@@ -63,7 +64,7 @@ server/             the API (its own package, deployed on Railway): src/contract
 - **Score only in the reducer, in the step that wins the round**, never in a screen or an effect ([Context/progression-and-tokens.md](Context/progression-and-tokens.md)).
 - **Never fork the characters into `src/`.** Edit `design/characters/*.js`; the app and the mockup both read it.
 - **Every UI string goes in `src/i18n/en.json`.**
-- Placeholder answers to the open questions (starting tokens, levels, clue ratios) live only in `src/game/config.ts` and `src/game/levels.ts`, and are marked PLACEHOLDER.
+- Placeholder answers to the open questions (starting tokens, levels, letters to find) live only in `src/game/config.ts` and `src/game/levels.ts`, and are marked PLACEHOLDER.
 
 ---
 
@@ -75,7 +76,7 @@ server/             the API (its own package, deployed on Railway): src/contract
    - Letters only, A–Z. No spaces, digits, hyphens or accents. Normalize to one case internally (the original used lowercase).
    - Length: 1 to **15** letters, inclusive.
 3. **Display**: each hidden letter shows as a blank (dash or empty tile), e.g. `h _ l l _`. Revealed letters appear in their positions.
-4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more. **Long words (8+ letters) always get at least four**, even on the hardest levels, and the first two clues are **the word's first two letters or its last two** (front or back at random), because a word's start or ending is what people recognise it by (owner's call, 2026-10-22; it was two clues before).
+4. **Clues (pre-revealed letters)**: when a round starts, some letters are already revealed. Every word gets **at least one** clue, and longer words get more. **The player always has letters to find: from level 3, a long word (8+ letters) never leaves fewer than 3**, and more as levels rise (owner's call, 2026-10-22: 2 letters to find in a 12-letter word is no game). The clues are placed to help: a long word's first two clues are **its first two letters or its last two** (front or back at random), because a word's start or ending is what people recognise it by, and the other clues are **the word's rarest letters** (the V or J nobody tries), so the letters left to find are ones a player can find.
    - When a letter is revealed as a clue, **all** of its occurrences are shown and that key counts as used.
    - At least one letter must always stay hidden.
 5. **A turn** = the player picks one letter on the in-game keyboard.
@@ -164,24 +165,25 @@ This is the player's own page. It holds personal customization, app settings, an
 - **How the player gets there:** Profile is **not** a bottom tab. The player taps their **avatar button** at the top-left of the Play, Leaderboard and Characters screens, and Profile opens as a pushed screen with a back button.
 - **Navigation rule:** the bottom tab bar has **at most 4 items**: Play · Versus · Leaderboard · Characters. Any new section needs a different entry point, such as a header button or a link inside an existing screen. Never add a fifth tab.
 
-- **Player name**: editable. It's public, because it shows on the leaderboard and in online matches.
-- **Profile picture**: the player can upload one from the photo library or take one with the camera. Ask for that permission only when the player taps "Change photo". Crop the picture to a circle.
+- **Player name**: editable, and the only thing the player edits here. It's public, because it shows on the leaderboard and in online matches, so it's **filtered** (offensive words, names that pose as the game) on the device and again on the server. At most **15 characters**, for long real names; the Play header shrinks a long name to fit. A new player gets a **random friendly name** ("SunnyOtter"); onboarding will ask for a name later (owner's calls, 2026-10-22).
+- **Profile picture: not for now** (owner's call, 2026-10-22). No uploads, to keep out user-uploaded content and the privacy work it brings: the avatar is the face of the player's selected character, everywhere, and "Change character" replaces "Change photo". Kept for later: the player can upload one from the photo library or take one with the camera. Ask for that permission only when the player taps "Change photo". Crop the picture to a circle.
   - Until a picture is uploaded, the avatar is the face of the player's selected character.
   - The profile picture (or that fallback) is the avatar used on the leaderboard and in online matches.
 - **Stats**: words guessed, tokens and current level.
 - **Settings**
   - App **language**. The MVP lists English only.
-  - **Sound effects** and **music** on/off switches. These are my addition, since the game is meant to be full of sound.
+  - **Sound effects** and **music** on/off switches. These are my addition, since the game is meant to be full of sound. **Not shown until the game has sound** (owner's call, 2026-10-22).
 - **Info & legal**
   - **Game rules**: an in-app sheet that explains the rules in player-friendly words. It must match the rules in this file.
   - **Privacy policy**: required by the App Store. Apple also needs a public URL for it in App Store Connect.
   - **Terms of use**
   - **Contact / support**
+  - These three pages exist but stay blank ("Coming soon") until their texts are written (owner's call, 2026-10-22).
   - **Credits**: the dictionary the descriptions come from ([data/CREDITS.md](data/CREDITS.md)). Its licence requires it.
   - The app name ("Hanged: word guessing game") and the version.
 - **Delete account**: Apple requires in-app account deletion for any app that lets players create an account (App Store Review Guideline 5.1.1(v)).
 
-Names and photos are public content that players create, so the App Store expects ways to deal with abuse (Guideline 1.2): filter offensive names, let players report someone, and be able to remove bad photos. Plan for this before the leaderboard goes live.
+Names and photos are public content that players create, so the App Store expects ways to deal with abuse (Guideline 1.2): filter offensive names, let players report someone, and be able to remove bad photos. Names are filtered now and there are no photos; reporting a player is still to plan before the leaderboard goes live.
 
 ---
 
@@ -220,7 +222,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Progression**: what moves the player up a level (a number of words won, a streak)? (Decided: 20 levels, and dropping down after 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
-- **Player names**: must they be unique? What length limits apply?
+- **Player names**: must they be unique? (For now: not unique, 2 to 15 characters (owner's call), letters in any language, digits, spaces and `- _ . '`: [Context/profile.md](Context/profile.md).)
 - **App language**: does it change only the UI text, or the word list too?
 - **Legal pages**: who writes the privacy policy and terms, and where are they hosted?
 - **Online two-player**: how do players find each other (invite a friend, random match, or both)? Do words guessed there count toward the leaderboard and toward earning tokens?

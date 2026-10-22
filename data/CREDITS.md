@@ -35,4 +35,5 @@ Which meaning of a word is used comes from the sense frequencies of
 All rights reserved. (Princeton WordNet licence:
 https://wordnet.princeton.edu/license-and-commercial-use)
 
-The app must show these credits to players (planned for the Profile page, Info & legal).
+The app shows these credits to players: Profile → Info & legal → Credits (`credits.*` in
+`src/i18n/en.json`). Change them there too when this file changes.
