@@ -160,12 +160,11 @@ export function HintPill({ hints, compact }: { hints: readonly string[]; compact
 /**
  * Not in the mockup. On levels that sell letters, the player can reveal
  * LETTER_BUY_COUNT hidden letters for LETTER_BUY_COST tokens, once per round.
- * The pill stays for the whole round so the layout never jumps; only its
- * button comes and goes. `canAfford` null: nothing to buy right now.
+ * The screen only shows the pill while the letters can be bought (owner's
+ * call): once bought, or with too few hidden letters left, it's gone.
  */
-export function LetterShopPill({ bought, canAfford, onBuy, compact }: {
-  bought: boolean;
-  canAfford: boolean | null;
+export function LetterShopPill({ canAfford, onBuy, compact }: {
+  canAfford: boolean;
   onBuy: () => void;
   compact?: boolean;
 }) {
@@ -180,18 +179,16 @@ export function LetterShopPill({ bought, canAfford, onBuy, compact }: {
     >
       <Text style={[styles.pillChip, styles.shopChip]}>{t('letters.label')}</Text>
       <Text style={[styles.pillText, refused && { color: colors.coralD }]} numberOfLines={1}>
-        {refused ? t('tokens.notEnough') : t(bought ? 'letters.bought' : 'letters.offer', params)}
+        {refused ? t('tokens.notEnough') : t('letters.offer', params)}
       </Text>
-      {!bought && canAfford !== null && (
-        <PayButton
-          label={t('letters.buy', params)}
-          a11yLabel={t('letters.a11y.buy', params)}
-          canAfford={canAfford}
-          onPay={onBuy}
-          onRefuse={refuse}
-          pillHeight={compact ? 25 : 28}
-        />
-      )}
+      <PayButton
+        label={t('letters.buy', params)}
+        a11yLabel={t('letters.a11y.buy', params)}
+        canAfford={canAfford}
+        onPay={onBuy}
+        onRefuse={refuse}
+        pillHeight={compact ? 25 : 28}
+      />
     </Raised>
   );
 }

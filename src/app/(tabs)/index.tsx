@@ -26,7 +26,6 @@ import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
 import { DESCRIPTION_COST, LETTER_BUY_COST } from '../../game/config';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../../game/engine';
-import { levelByNumber } from '../../game/levels';
 import { lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { t } from '../../i18n';
@@ -150,10 +149,9 @@ export default function PlayScreen() {
               compact={compact}
             />
             <HintPill key={`hint-${round.id}`} hints={round.hints} compact={compact} />
-            {levelByNumber(round.level).sellsLetters && (
+            {lettersForSale(state) && (
               <LetterShopPill
-                bought={round.boughtLetters.length > 0}
-                canAfford={lettersForSale(state) ? state.tokens >= LETTER_BUY_COST : null}
+                canAfford={state.tokens >= LETTER_BUY_COST}
                 onBuy={onBuyLetters}
                 compact={compact}
               />

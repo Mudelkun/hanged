@@ -28,7 +28,6 @@
 
   "letters.label": "LETTERS",
   "letters.offer": "Reveal {count} hidden letters",
-  "letters.bought": "{count} letters revealed",
   "letters.buy": "{cost}",
   "letters.a11y.buy": "Reveal {count} hidden letters for {cost} tokens",
 

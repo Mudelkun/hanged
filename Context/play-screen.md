@@ -197,10 +197,12 @@ no scrolling, the scene absorbs the height.
 
 Only on a level with `sellsLetters` ([progression-and-tokens.md](progression-and-tokens.md)). Same
 white pill as the hint, under it, with a **butter** "LETTERS" chip (butter = clue letters and
-tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button. After buying it reads
-"2 letters revealed", and the bought tiles and keys turn butter like clues. **The pill stays for the
-whole round**, even when there's nothing left to buy or the round ends, so the scene never jumps; only
-the button comes and goes. Checked at 393×852 and 375×667 with a 12-letter word: still no scrolling.
+tokens). It reads "Reveal 2 hidden letters" with a small coral **10** pay button; the bought tiles and
+keys turn butter like clues. **The pill only shows while the letters can be bought**
+(`lettersForSale`): once bought, when only 2 letters are left hidden (buying must leave one hidden), or
+when the round ends, it's removed and the scene grows into the space (owner's call, 2026-10-22: a dead
+pill with no button was confusing). Without enough tokens it stays, and its button refuses. Checked at
+393×852 and 375×667 with a 12-letter word: still no scrolling.
 
 ## Deliberate differences from the mockup
 
