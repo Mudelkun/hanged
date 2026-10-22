@@ -1,6 +1,6 @@
 # The Play screen (and the round result)
 
-Route: [src/app/index.tsx](../src/app/index.tsx). It follows the **Play** and
+Route: [src/app/(tabs)/index.tsx](../src/app/(tabs)/index.tsx). It follows the **Play** and
 **Round lost** phones in [design/ui-mockup.png](../design/ui-mockup.png).
 Sizes, radii and colours are copied from the CSS in
 [design/ui-mockup.html](../design/ui-mockup.html), and the palette lives in
@@ -106,7 +106,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
 | `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `HintPill`, `LetterShopPill`, `DescriptionCard`, `BigButton`. `PayButton` (private) is the coral "label + coin" button that spends tokens: the description's Unlock and the shop's "10". It sends the token flight, then pays, and turns beige and refuses ("Not enough tokens yet", `useRefusal`) without enough tokens. Reuse it for any new spend. |
 | `LetterKeyboard.tsx` | Letters only, in the **iPhone (QWERTY) order**: 3 centred rows of 10/9/7, so players find letters where their thumbs expect them. Used keys **stay in place** and change look: mint = correct, grey with the letter faded (sunk, no shadow) = wrong, butter = clue, **empty dashed slot = disabled** by an easy level (not in the mockup; the slot keeps the QWERTY layout from shifting, and screen readers hear "not in this word"). Wrong keys show their letter, not a ✕ (owner's call), so the player can see at a glance what they already tried. Used keys and finished rounds can't be pressed. |
-| `TabBar.tsx` | The 4 tabs. Only Play exists; the others are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** |
+| `TabBar.tsx` | The 4 tabs. Play and Leaderboard navigate; Versus and Characters are drawn but disabled ("Coming soon" for screen readers). **Never a 5th tab.** How the tabs work: [leaderboard.md](leaderboard.md). |
 | `Raised.tsx` | The mockup's flat bottom shadow (`box-shadow: 0 4px 0 color`) as a coloured block under the element. `pressed` sinks it, like a key going down. Use it for anything "raised"; native RN shadows blur and look wrong here. |
 | `icons.tsx` | The mockup's SVG icons, copied verbatim as strings. |
 | `PaperBackground.tsx` | Cream paper with the 18 px dot grid. |

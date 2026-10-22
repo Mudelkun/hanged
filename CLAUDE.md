@@ -14,9 +14,9 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
-**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file for now), tokens and levels, all saved on the device. Versus, Leaderboard, Characters and Profile aren't built yet.
+**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway. Versus, Characters and Profile aren't built yet.
 
-**Stack:** Expo SDK 57 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. There's **no backend and no state library**: ask the owner before adding either. Details: [Context/dev-setup.md](Context/dev-setup.md).
+**Stack:** Expo SDK 57 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
 ---
 
@@ -34,22 +34,26 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 |---|---|
 | The round rules in code: word validation, clues, guesses, win/loss, scene stage, the "Pendu" bug tests | [Context/game-engine.md](Context/game-engine.md) |
 | Score (words guessed), tokens, description unlock, **levels and their placeholder numbers**, picking the next word, saving on the device | [Context/progression-and-tokens.md](Context/progression-and-tokens.md) |
-| The word database: `data/words.json`, how to add words and hint words, the checks, the PostgreSQL move | [Context/word-database.md](Context/word-database.md) |
+| The word database: `data/words.json`, how to add words and hint words, the checks, why words stay on the device | [Context/word-database.md](Context/word-database.md) |
 | How the app draws characters **from `design/characters/*.js`**, the balloon stages, the animation loop, the won pose, the scene camera, avatars | [Context/characters-and-animation.md](Context/characters-and-animation.md) |
 | The Play screen and the round result: layout, components, the streak takeover and level path, compact phones, where the app deliberately differs from the mockup, UI text (i18n) | [Context/play-screen.md](Context/play-screen.md) |
+| The server (`server/`): API, database, anonymous accounts, round reports and the sync, word statistics, deploying on Railway | [Context/server.md](Context/server.md) |
+| The Leaderboard screen, the ranking rules, and how the bottom tabs work | [Context/leaderboard.md](Context/leaderboard.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
 
 ```
-src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), index.tsx (Play)
+src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
-src/state/          GameContext: the reducer + AsyncStorage
+src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard
+src/net/            the only code that talks to the server: api.ts, sync.ts
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/components/     UI pieces of the Play screen
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
 data/words.json     the word database (generated from scripts/words-source.txt)
+server/             the API (its own package, deployed on Railway): src/contract.ts is shared with the app
 ```
 
 ### Rules that apply to every task
@@ -118,6 +122,11 @@ A level's difficulty is set by:
 ### Unlimited play
 - There is **no lives/energy system**. The player can play as many rounds as they want, and losing all the balloons only ends that round.
 
+### Offline first (owner's call, 2026-10-21)
+- The solo game works **fully offline**, at every level. The words, rounds, tokens, levels, characters and settings all live on the device, and **the device is the source of truth**.
+- The player needs the internet for only two things: **seeing the leaderboard**, and **sending their stats** so they're ranked in the right place. Stats wait on the device until a connection comes back, and play never waits for them. Two-player mode is online by nature and is the exception.
+- **No server serves words.** They ship inside the app. The server also collects word statistics (which words are guessed or lost most), but the game never depends on them.
+
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
@@ -130,7 +139,7 @@ A level's difficulty is set by:
 
 ### Leaderboard
 - Each player's score is **the number of words they have guessed**. Spending tokens never lowers it.
-- The leaderboard ranks players by that score and shows it as a plain count, not gems. The mockup has **This week / All time** tabs and highlights the current player with a "YOU" badge.
+- The leaderboard ranks players by that score and shows it as a plain count, not gems. Ties go to the higher level, then to whoever got there first. Tokens never count toward the rank: spending them must not lower it. The mockup has **This week / All time** tabs and highlights the current player with a "YOU" badge.
 - Each row shows the player's name and profile picture, or their character's face if they haven't uploaded one (see Profile page).
 
 ### Characters
@@ -208,7 +217,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: long words get at least 2. How long counts as long is a placeholder: 8 letters.)
 - **Progression**: what moves the player up a level (a number of words won, a streak)? How many levels are there? (Dropping down is decided: 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
-- **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? The leaderboard, profile, tokens and online play all depend on this.
+- **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
 - **Player names**: must they be unique? What length limits apply?
 - **App language**: does it change only the UI text, or the word list too?
 - **Legal pages**: who writes the privacy policy and terms, and where are they hosted?

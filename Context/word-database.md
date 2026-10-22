@@ -1,13 +1,16 @@
 # Word database
 
-For now the database is a JSON file bundled with the app. It will move to PostgreSQL.
+The database is a JSON file **bundled with the app**, and it stays there (owner's call, 2026-10-21:
+offline first). **No server serves words**: the player can play every level without a connection.
+New words ship with app updates. The server only keeps a copy of the list to label the word
+statistics ([server.md](server.md)).
 
 - Data: [data/words.json](../data/words.json) (generated, don't hand-edit).
 - Source: [scripts/words-source.txt](../scripts/words-source.txt), one `word | sense | hint, hint, hint` per line.
 - Builder/checker: [scripts/check-words.js](../scripts/check-words.js). Dictionary loader:
   [scripts/wordnet.js](../scripts/wordnet.js).
 - Access: [src/game/words.ts](../src/game/words.ts), the **only** module that reads the
-  file, so the PostgreSQL move touches one place.
+  file. If words ever arrive as downloaded packs, that is the one place to change.
 
 ## Shape
 
@@ -56,6 +59,8 @@ maintained successor of Princeton WordNet.
    would give, or `(unusable)`.
 2. Add `word | sense | hint, hint, hint` to `scripts/words-source.txt`.
 3. Run `npm run check:words -- --build`. This regenerates `data/words.json` and validates it.
+4. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
+   can show the new words by name ([server.md](server.md)).
 
 The build fails on a sense that doesn't exist, that isn't for this word, or whose definition
 is unusable. The check fails on any word that:
@@ -80,10 +85,10 @@ It also prints how many words there are at each length. **Every level in
 every level`) fails if a level has none. Today: 182 words of 3–15 letters, thinnest
 at 13–15 letters (3–6 each). Add long words before adding harder levels.
 
-## Migrating to PostgreSQL (later)
+## Why the words stay on the device
 
-The table maps 1:1: `id text pk, word text, language text, description text, hints text[], sense text`. Add
-a check constraint for `^[a-z]{1,15}$`, plus whatever difficulty data the owner
-decides on. `pickWord`'s inputs (level, language, the player's seen ids) are what the query
-has to answer; the seen list then belongs on the server too. The server must never send the word
-to a guesser in two-player mode (CLAUDE.md). That applies to solo too once words come from the server.
+The owner's call is **offline first**. Bundling the words also costs nothing to serve: 182 words are
+12 KB gzipped, and 10,000 would be about 650 KB. Fetching words per round or in batches would put load on
+the server and break offline play. It would also make the "never repeat" rule depend on the server
+knowing what each player has seen. The **ids are the contract** with the server (`word_days.word_id`),
+so never rename an id: retire the word and add a new one.

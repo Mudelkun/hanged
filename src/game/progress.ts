@@ -4,7 +4,9 @@
  *
  * Scoring happens here, in the same step as the winning guess, so a won
  * round is counted exactly once. A round already over ignores further guesses.
+ * The same step queues the round's report for the server (src/net/sync.ts).
  */
+import type { RoundReport } from '../../server/src/contract';
 import {
   DEFAULT_LANGUAGE,
   DESCRIPTION_COST,
@@ -13,7 +15,7 @@ import {
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
-import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription } from './engine';
+import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, unlockDescription, wrongCount } from './engine';
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
 
@@ -35,7 +37,14 @@ export interface GameState {
   round: Round | null;
   /** Tokens paid by the winning guess (0 otherwise), cleared by the next round. */
   lastTokensEarned: number;
+  /** Finished rounds the server hasn't confirmed yet, oldest first (at most REPORTS_KEPT). */
+  reports: RoundReport[];
+  /** The seq the next report gets: 1, 2, 3… never reused on this device. */
+  nextReportSeq: number;
 }
+
+/** Reports kept while offline (~90 bytes each). Past it the oldest go: only statistics lose them. */
+export const REPORTS_KEPT = 2000;
 
 export const initialState = (): GameState => ({
   version: 1,
@@ -49,14 +58,19 @@ export const initialState = (): GameState => ({
   seenWordIds: [],
   round: null,
   lastTokensEarned: 0,
+  reports: [],
+  nextReportSeq: 1,
 });
 
 export type GameAction =
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
-  | { type: 'guess'; letter: string }
+  /** `at`: now, in epoch ms (the reducer stays pure). */
+  | { type: 'guess'; letter: string; at: number }
   | { type: 'unlockDescription' }
-  | { type: 'buyLetters'; rng?: () => number };
+  | { type: 'buyLetters'; rng?: () => number }
+  /** The server counted every report up to this seq. */
+  | { type: 'reportsSent'; upTo: number };
 
 /**
  * Tokens paid by a win at `level` that brings the streak to `streak`: the
@@ -100,6 +114,21 @@ const withDefaults = (saved: GameState): GameState => {
   const fresh = initialState();
   return (Object.keys(fresh) as (keyof GameState)[]).every((k) => k in saved) ? saved : { ...fresh, ...saved };
 };
+
+/** The outbox once `round` (just finished) is queued. */
+function queueReport(s: GameState, round: Round, won: boolean, at: number): Pick<GameState, 'reports' | 'nextReportSeq'> {
+  const report: RoundReport = {
+    seq: s.nextReportSeq,
+    wordId: round.wordId,
+    level: round.level,
+    won,
+    wrong: wrongCount(round),
+    description: round.descriptionUnlocked,
+    letters: round.boughtLetters.length > 0,
+    at,
+  };
+  return { reports: [...s.reports, report].slice(-REPORTS_KEPT), nextReportSeq: s.nextReportSeq + 1 };
+}
 
 export const canUnlockDescription = (s: GameState) =>
   !!s.round && !s.round.descriptionUnlocked && roundStatus(s.round) === 'playing' && s.tokens >= DESCRIPTION_COST;
@@ -164,17 +193,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (round === state.round) return state;
       const status = roundStatus(round);
       if (status === 'playing') return { ...state, round };
-      const levelProgress = afterRound(state.levelProgress, status === 'won');
-      if (status === 'lost') return { ...state, round, streak: 0, levelProgress };
+      const won = status === 'won';
+      const ended = { ...state, round, levelProgress: afterRound(state.levelProgress, won), ...queueReport(state, round, won, action.at) };
+      if (!won) return { ...ended, streak: 0 };
       const streak = state.streak + 1;
       // The round's own level pays, not the level this win may move the player up to.
       const earned = tokenReward(round.level, streak);
       return {
-        ...state,
-        round,
+        ...ended,
         wordsGuessed: state.wordsGuessed + 1,
         streak,
-        levelProgress,
         tokens: state.tokens + earned,
         lastTokensEarned: earned,
       };
@@ -190,6 +218,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (!lettersForSale(state) || state.tokens < LETTER_BUY_COST) return state;
       const round = buyLetters(state.round!, LETTER_BUY_COUNT, action.rng);
       return { ...state, round, tokens: state.tokens - LETTER_BUY_COST };
+    }
+
+    case 'reportsSent': {
+      const reports = state.reports.filter((r) => r.seq > action.upTo);
+      return reports.length === state.reports.length ? state : { ...state, reports };
     }
   }
 }

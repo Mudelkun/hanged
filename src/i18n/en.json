@@ -71,5 +71,20 @@
   "tabs.versus": "Versus",
   "tabs.leaderboard": "Leaderboard",
   "tabs.characters": "Characters",
-  "tabs.comingSoon": "Coming soon"
+  "tabs.comingSoon": "Coming soon",
+
+  "board.title": "Leaderboard",
+  "board.week": "This week",
+  "board.all": "All time",
+  "board.word": "word",
+  "board.words": "words",
+  "board.you": "YOU",
+  "board.loading": "Loading…",
+  "board.retry": "Try again",
+  "board.offline.title": "You're offline",
+  "board.offline.body": "The leaderboard needs the internet. Keep playing: every word you guess is saved and counts as soon as you're back online.",
+  "board.empty.week": "No words guessed yet this week. Guess one and take the top spot!",
+  "board.empty.all": "Nobody's on the board yet. Guess a word and be the first!",
+  "board.notRanked": "Guess a word to join the leaderboard.",
+  "board.a11y.row": "Number {rank}: {name}, {count} words"
 }

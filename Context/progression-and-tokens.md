@@ -104,7 +104,7 @@ through every word available to them.**
 - A round in progress is saved and restored, so reopening the app shows the same word: that's
   on purpose (no skipping a hard word), not a repeat.
 
-## Saving (no backend yet)
+## Saving (on the device; the server gets a copy)
 
 Everything (score, tokens, settings, the round in progress) is one JSON blob
 in **AsyncStorage**, key `hanged.game.v1`, written after every state change.
@@ -127,6 +127,11 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.
-- This is device-local and trivially editable. Real tokens and the leaderboard
-  need the server (accounts are an open question). Treat this storage as a cache
-  of the future server state, not the source of truth.
+- **This save is the source of truth** (offline first, owner's call 2026-10-21). The server only
+  receives a copy for the leaderboard and the word statistics ([server.md](server.md)).
+- **Round reports**: the step that wins or loses a round also queues a report in `reports` (the outbox,
+  at most `REPORTS_KEPT`) and bumps `nextReportSeq`. The `guess` action carries `at` (now), so the
+  reducer stays pure. `reportsSent(upTo)` drops what the server confirmed. Old saves get `[]` and 1 from
+  `initialState()`. Same key, no bump.
+- The save is still trivially editable. The server's score can only grow by reported wins after the first
+  sync, so editing `wordsGuessed` alone does nothing there ([server.md](server.md)).

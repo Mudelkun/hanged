@@ -6,6 +6,8 @@
  *   - spend: the pill squishes and the coin wobbles.
  * A change nobody sent from is counted in place after a moment. The balance
  * the pill mounts with (the saved one) never animates.
+ * Only ONE live pill may be mounted (flights land on it): Play's. Other
+ * screens show StillTokenPill.
  */
 import { memo, useEffect, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
@@ -133,6 +135,18 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
           <Text style={styles.pillText}>{shown}</Text>
         </View>
       </Animated.View>
+    </View>
+  );
+});
+
+/** The same pill without flights or counting, for screens where tokens don't move (Leaderboard). */
+export const StillTokenPill = memo(function StillTokenPill({ tokens }: { tokens: number }) {
+  return (
+    <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })} style={styles.pillShadow}>
+      <View style={styles.pill}>
+        <Icon xml={coinXml} size={24} />
+        <Text style={styles.pillText}>{tokens}</Text>
+      </View>
     </View>
   );
 });

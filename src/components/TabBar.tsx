@@ -1,8 +1,10 @@
 /*
  * The floating bottom tab bar from the mockup. At most 4 tabs, ever:
  * Play · Versus · Leaderboard · Characters (Profile opens from the avatar).
- * Only Play exists for now; the other tabs are drawn but not pressable.
+ * A tab without a route is drawn but not pressable. The routes are the
+ * (tabs) group's screens (src/app/(tabs)/_layout.tsx).
  */
+import { Href, router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,11 +14,11 @@ import { Icon, tabIconXml } from './icons';
 
 type TabId = keyof typeof tabIconXml;
 
-const TABS: { id: TabId; label: TranslationKey; built: boolean }[] = [
-  { id: 'play', label: 'tabs.play', built: true },
-  { id: 'versus', label: 'tabs.versus', built: false },
-  { id: 'leaderboard', label: 'tabs.leaderboard', built: false },
-  { id: 'characters', label: 'tabs.characters', built: false },
+const TABS: { id: TabId; label: TranslationKey; href?: Href }[] = [
+  { id: 'play', label: 'tabs.play', href: '/' },
+  { id: 'versus', label: 'tabs.versus' },
+  { id: 'leaderboard', label: 'tabs.leaderboard', href: '/leaderboard' },
+  { id: 'characters', label: 'tabs.characters' },
 ];
 
 export function TabBar({ active, compact }: { active: TabId; compact: boolean }) {
@@ -25,14 +27,16 @@ export function TabBar({ active, compact }: { active: TabId; compact: boolean })
     <View style={[styles.bar, { height: compact ? 60 : 68, marginBottom: Math.max(insets.bottom - 8, 10) }]}>
       {TABS.map((tab) => {
         const on = tab.id === active;
+        const { href } = tab;
         return (
           <Pressable
             key={tab.id}
             style={styles.tab}
-            disabled={!tab.built || on}
+            disabled={!href || on}
+            onPress={href ? () => router.navigate(href) : undefined}
             accessibilityRole="tab"
-            accessibilityLabel={tab.built ? t(tab.label) : `${t(tab.label)}, ${t('tabs.comingSoon')}`}
-            accessibilityState={{ selected: on, disabled: !tab.built }}
+            accessibilityLabel={href ? t(tab.label) : `${t(tab.label)}, ${t('tabs.comingSoon')}`}
+            accessibilityState={{ selected: on, disabled: !href }}
           >
             <View style={[styles.iconBox, on && { backgroundColor: colors.coralL }]}>
               <Icon xml={tabIconXml[tab.id](on ? colors.coral : colors.tabIdle)} size={28} height={24} />

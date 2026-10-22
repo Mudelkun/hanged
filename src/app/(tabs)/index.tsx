@@ -12,24 +12,24 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { characterById } from '../characters/rig';
-import { GameHeader } from '../components/GameHeader';
-import { GameScene, Stamp } from '../components/GameScene';
-import { LetterKeyboard } from '../components/LetterKeyboard';
-import { LevelChange } from '../components/LevelChange';
-import { PaperBackground } from '../components/PaperBackground';
-import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../components/RoundParts';
-import { STREAK_SHOWN_FROM, StreakTakeover } from '../components/StreakTakeover';
-import { TabBar } from '../components/TabBar';
-import { useTokenOrigin } from '../components/TokenFlight';
-import { DESCRIPTION_COST, LETTER_BUY_COST } from '../game/config';
-import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../game/engine';
-import { levelByNumber } from '../game/levels';
-import { lettersForSale } from '../game/progress';
-import { feedback } from '../feedback';
-import { t } from '../i18n';
-import { useGame } from '../state/GameContext';
-import { colors, fonts, levelColor } from '../theme';
+import { characterById } from '../../characters/rig';
+import { GameHeader } from '../../components/GameHeader';
+import { GameScene, Stamp } from '../../components/GameScene';
+import { LetterKeyboard } from '../../components/LetterKeyboard';
+import { LevelChange } from '../../components/LevelChange';
+import { PaperBackground } from '../../components/PaperBackground';
+import { BigButton, DescriptionCard, HintPill, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
+import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
+import { TabBar } from '../../components/TabBar';
+import { useTokenOrigin } from '../../components/TokenFlight';
+import { DESCRIPTION_COST, LETTER_BUY_COST } from '../../game/config';
+import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount } from '../../game/engine';
+import { levelByNumber } from '../../game/levels';
+import { lettersForSale } from '../../game/progress';
+import { feedback } from '../../feedback';
+import { t } from '../../i18n';
+import { useGame } from '../../state/GameContext';
+import { colors, fonts, levelColor } from '../../theme';
 
 // Lost waits for the last balloon to pop and the character to hit the ground (stage 10 is 2200 ms)
 const RESULT_DELAY = { lost: 2600, won: 700 };
@@ -80,7 +80,7 @@ export default function PlayScreen() {
   const onKey = useCallback(
     (c: Letter) => {
       if (roundStatus(round) !== 'playing' || usedLetters(round).has(c)) return;
-      dispatch({ type: 'guess', letter: c });
+      dispatch({ type: 'guess', letter: c, at: Date.now() });
     },
     [round, dispatch],
   );

@@ -9,8 +9,10 @@
 - **Expo Router**, routes in `src/app/` (`_layout.tsx` = root Stack, `index.tsx` = Play).
   Non-route code stays outside `src/app/`.
 - State: React `useReducer` + context. **No state library**: ask the owner before adding one.
-- Storage: `@react-native-async-storage/async-storage`, on the device only. **No backend
-  yet**: ask before adding one (two-player online will need it).
+- Storage: `@react-native-async-storage/async-storage`. The device is the source of truth
+  (offline first).
+- Server: [server/](../server/), its own package (Node 24, Fastify, PostgreSQL on Railway), only for the
+  leaderboard and word statistics. The app reaches it through `EXPO_PUBLIC_API_URL`. See [server.md](server.md).
 - Drawing: `react-native-svg` (`SvgXml` for the character scripts and icons).
 - Fonts: `@expo-google-fonts/fredoka` (titles, letters) and `nunito` (body). Loaded in
   `_layout.tsx`. The splash screen stays up until the fonts **and** the saved game are loaded.
@@ -27,11 +29,13 @@ npm test                  # jest (jest-expo preset): engine + progression tests
 npm run typecheck         # tsc --noEmit
 npx eslint .              # lint (see trap below)
 npm run check:words       # validate data/words.json (add -- --build to regenerate it)
+cd server && npm test     # server tests (its own package: npm install there first)
+cd server && npm run dev  # local API on :3000 with an embedded database
 npx expo install <pkg>    # ALWAYS this instead of npm install <pkg>: picks SDK-compatible versions
 npx expo-doctor           # dependency/config check
 ```
 
-Run tests, typecheck and lint before calling a task done.
+Run tests, typecheck and lint before calling a task done (in `server/` too when it changed).
 
 ## Traps
 

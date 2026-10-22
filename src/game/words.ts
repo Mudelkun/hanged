@@ -1,7 +1,7 @@
 /*
- * The word database. For now it is a JSON file bundled with the app
- * (data/words.json); it will move to PostgreSQL. Keep every read behind
- * this module so that move only touches this file.
+ * The word database: a JSON file bundled with the app (data/words.json).
+ * It stays on the device so every level plays offline; the server never
+ * serves words. Keep every read behind this module.
  */
 import rawWords from '../../data/words.json';
 import type { Level } from './levels';

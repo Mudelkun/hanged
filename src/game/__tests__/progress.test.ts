@@ -10,7 +10,7 @@ import {
 } from '../config';
 import { decoyLetters, roundStatus, usedLetters } from '../engine';
 import { afterRound, LEVELS, LevelProgress, START_LEVEL } from '../levels';
-import { gameReducer, GameState, initialState, lettersForSale, nextWord, streakMeter, tokenReward } from '../progress';
+import { gameReducer, GameState, initialState, lettersForSale, nextWord, REPORTS_KEPT, streakMeter, tokenReward } from '../progress';
 import { levelPool, pickWord } from '../words';
 
 const word = {
@@ -26,14 +26,14 @@ const startRound = (s: GameState) => gameReducer(s, { type: 'newRound', word, ro
 
 function winRound(s: GameState): GameState {
   let state = startRound(s);
-  for (const c of 'castle') state = gameReducer(state, { type: 'guess', letter: c });
+  for (const c of 'castle') state = gameReducer(state, { type: 'guess', letter: c, at: 0 });
   return state;
 }
 
 function loseRound(s: GameState): GameState {
   let state = startRound(s);
   const wrong = decoyLetters(word.word).filter((c) => !usedLetters(state.round!).has(c));
-  for (const c of wrong.slice(0, state.round!.maxWrong)) state = gameReducer(state, { type: 'guess', letter: c });
+  for (const c of wrong.slice(0, state.round!.maxWrong)) state = gameReducer(state, { type: 'guess', letter: c, at: 0 });
   return state;
 }
 
@@ -48,7 +48,7 @@ describe('scoring', () => {
     let s = winRound(initialState());
     expect(roundStatus(s.round!)).toBe('won');
     expect(s.wordsGuessed).toBe(1);
-    s = gameReducer(s, { type: 'guess', letter: 'z' });
+    s = gameReducer(s, { type: 'guess', letter: 'z', at: 0 });
     expect(s.wordsGuessed).toBe(1);
   });
 
@@ -347,5 +347,40 @@ describe('word picking', () => {
     const s = gameReducer(initialState(), { type: 'hydrate', state: old });
     expect(s.seenWordIds).toEqual(['en-sun', 'en-cat']);
     expect('recentWordIds' in s).toBe(false);
+  });
+});
+
+describe('round reports (server outbox)', () => {
+  it('queues one report per finished round, in the step that ends it', () => {
+    let s = winRound(initialState());
+    s = gameReducer(s, { type: 'guess', letter: 'z', at: 0 });
+    s = loseRound(s);
+    expect(s.reports.map((r) => [r.seq, r.wordId, r.won])).toEqual([
+      [1, 'en-castle', true],
+      [2, 'en-castle', false],
+    ]);
+    expect(s.reports[1].wrong).toBe(s.round!.maxWrong);
+    expect(s.nextReportSeq).toBe(3);
+  });
+
+  it('drops what the server confirmed, and keeps the seq counting', () => {
+    let s = loseRound(winRound(initialState()));
+    s = gameReducer(s, { type: 'reportsSent', upTo: 1 });
+    expect(s.reports.map((r) => r.seq)).toEqual([2]);
+    expect(gameReducer(s, { type: 'reportsSent', upTo: 1 })).toBe(s);
+    expect(winRound(s).reports.map((r) => r.seq)).toEqual([2, 3]);
+  });
+
+  it('keeps at most REPORTS_KEPT, dropping the oldest', () => {
+    const full = { ...initialState(), reports: Array.from({ length: REPORTS_KEPT }, (_, i) => ({ ...winRound(initialState()).reports[0], seq: i + 1 })), nextReportSeq: REPORTS_KEPT + 1 };
+    const s = winRound(full);
+    expect(s.reports).toHaveLength(REPORTS_KEPT);
+    expect(s.reports[0].seq).toBe(2);
+  });
+
+  it('starts an old save with an empty outbox', () => {
+    const { reports, nextReportSeq, ...old } = initialState();
+    const s = gameReducer(initialState(), { type: 'hydrate', state: old as GameState });
+    expect([s.reports, s.nextReportSeq]).toEqual([[], 1]);
   });
 });

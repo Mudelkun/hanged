@@ -1,6 +1,7 @@
 /*
- * In-game header (Play and Round lost): the player's avatar and name (never
- * the app name), words guessed, level and token balance.
+ * The headers. In game (Play and Round lost): the player's avatar and name
+ * (never the app name), words guessed, level and token balance. On the other
+ * tabs (TitleHeader): avatar, the screen's title, token balance.
  * The avatar is the button that will open the Profile page (not built yet).
  */
 import { memo, useEffect, useRef, useState } from 'react';
@@ -12,7 +13,7 @@ import { t } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
 import { Icon, starXml } from './icons';
 import { popFrom } from './motion';
-import { TokenPill } from './TokenPill';
+import { StillTokenPill, TokenPill } from './TokenPill';
 
 interface Props {
   name: string;
@@ -22,9 +23,11 @@ interface Props {
   tokens: number;
 }
 
-export const Avatar = memo(function Avatar({ character, size }: { character: Character; size: number }) {
+/** The character's face in a coral ring (the player's own profile button), or a thin `plain` one (other players). */
+export const Avatar = memo(function Avatar({ character, size, plain }: { character: Character; size: number; plain?: boolean }) {
+  const ring = size + (plain ? 3 : 5);
   return (
-    <View style={[styles.avatarRing, { width: size + 5, height: size + 5, borderRadius: (size + 5) / 2 }]}>
+    <View style={[styles.avatarRing, plain && styles.avatarPlain, { width: ring, height: ring, borderRadius: ring / 2 }]}>
       <View
         style={[
           styles.avatar,
@@ -55,13 +58,29 @@ const LevelPill = memo(function LevelPill({ level }: { level: number }) {
   );
 });
 
+const ProfileButton = ({ character }: { character: Character }) => (
+  <Pressable accessibilityRole="button" accessibilityLabel={t('header.a11y.avatar')} disabled>
+    <Avatar character={character} size={46} />
+  </Pressable>
+);
+
+export function TitleHeader({ title, character, tokens }: { title: string; character: Character; tokens: number }) {
+  return (
+    <View style={styles.head}>
+      <ProfileButton character={character} />
+      <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+        {title}
+      </Text>
+      <StillTokenPill tokens={tokens} />
+    </View>
+  );
+}
+
 export function GameHeader({ name, character, wordsGuessed, level, tokens }: Props) {
   return (
     <View style={styles.head}>
       <View style={styles.side}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t('header.a11y.avatar')} disabled>
-          <Avatar character={character} size={46} />
-        </Pressable>
+        <ProfileButton character={character} />
         <View style={styles.nameBlock}>
           <Text style={styles.name} numberOfLines={1}>
             {name}
@@ -100,8 +119,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 3 },
   },
+  avatarPlain: { backgroundColor: colors.line, shadowOpacity: 0 },
   avatar: { borderWidth: 3, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { fontFamily: fonts.display700, fontSize: 27, lineHeight: 30, color: colors.ink },
+  title: { flexShrink: 1, fontFamily: fonts.display700, fontSize: 25, color: colors.ink },
   sub: { fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted, marginTop: 1, letterSpacing: 0.2 },
   level: {
     flexDirection: 'row',
