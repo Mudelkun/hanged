@@ -37,8 +37,8 @@ def chunk(kind: bytes, data: bytes) -> bytes:
 
 
 class Sketch:
-    def __init__(self, slug: str, title: str, tempos: list[int], seed: int):
-        self.slug, self.title, self.tempos = slug, title, tempos
+    def __init__(self, slug: str, title: str, tempos: list[int], seed: int, out: Path = HERE):
+        self.slug, self.title, self.tempos, self.out = slug, title, tempos, out
         self.rng = random.Random(seed)
         self.events: dict[int, list[tuple[int, int, bytes]]] = {}
         self.parts: dict[int, dict] = {}
@@ -97,7 +97,7 @@ class Sketch:
                 previous = tick
             data.extend(vlq(max(0, end_tick - previous)) + b"\xff\x2f\x00")
             chunks.append(chunk(b"MTrk", bytes(data)))
-        target = HERE / (self.slug + ".mid")
+        target = self.out / (self.slug + ".mid")
         target.write_bytes(chunk(b"MThd", struct.pack(">HHH", 1, len(chunks), PPQ)) + b"".join(chunks))
         duration = 0.0
         remaining = self.end
@@ -106,7 +106,7 @@ class Sketch:
             duration += beats * 60 / tempo
             remaining -= beats
         duration += max(0, remaining) * 60 / self.tempos[-1] + 3.2
-        (HERE / (self.slug + ".score.json")).write_text(json.dumps({"title": self.title, "tempos": self.tempos, "parts": self.parts, "notes": self.score}, indent=2) + "\n", encoding="utf-8")
+        (self.out / (self.slug + ".score.json")).write_text(json.dumps({"title": self.title, "tempos": self.tempos, "parts": self.parts, "notes": self.score}, indent=2) + "\n", encoding="utf-8")
         return target, duration
 
 
@@ -239,36 +239,44 @@ def run(command: list[str]):
     return completed
 
 
-def main():
+def render_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--fluidsynth", type=Path)
     parser.add_argument("--soundfont", type=Path)
     parser.add_argument("--renders", type=Path, help="Directory outside the app for WAV masters")
-    args = parser.parse_args()
-    tracks = []
-    for sketch in [little_detours(), sunday_window(), updraft()]:
-        midi, duration = sketch.write()
-        entry = {"title": sketch.title, "file": sketch.slug + ".mp3", "seconds": round(duration, 2), "notes": len(sketch.score)}
-        if args.fluidsynth and args.soundfont and args.renders:
-            args.renders.mkdir(parents=True, exist_ok=True)
-            raw = args.renders / (sketch.slug + "-raw.wav")
-            master = args.renders / (sketch.slug + ".wav")
-            run([str(args.fluidsynth), "-ni", "-g", "0.65", "-r", "48000", "-F", str(raw), "-T", "wav", "-O", "float", "-o", "synth.reverb.room-size=0.38", "-o", "synth.reverb.damp=0.55", "-o", "synth.reverb.width=65", "-o", "synth.reverb.level=0.26", "-o", "synth.chorus.active=0", str(args.soundfont), str(midi)])
-            # Quiet audition masters: transparent normalization, never a pumping beat.
-            base = f"atrim=0:{duration:.3f},afade=t=in:d=0.025,afade=t=out:st={duration-1.3:.3f}:d=1.3,highpass=f=38,lowpass=f=13000"
-            measure = run(["ffmpeg", "-hide_banner", "-i", str(raw), "-af", base + ",loudnorm=I=-19:TP=-2:LRA=14:print_format=json", "-f", "null", "-"])
-            stats, _ = json.JSONDecoder().raw_decode(measure.stderr[measure.stderr.rfind("{"):])
-            normal = ("loudnorm=I=-19:TP=-2:LRA=14:linear=true:"
-                      f"measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}:"
-                      f"measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}")
-            run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(raw), "-af", base + "," + normal, "-ar", "48000", "-c:a", "pcm_s24le", str(master)])
-            run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(master), "-codec:a", "libmp3lame", "-b:a", "192k", "-metadata", "title=" + sketch.title, "-metadata", "album=Hanged - first listen", "-metadata", "comment=Original instrumental audition sketch. Not approved or integrated.", str(HERE / entry["file"])])
-            probe = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(HERE / entry["file"])])
-            entry["seconds"] = round(float(probe.stdout), 2)
-            entry["pre_master_measurement"] = stats
-            entry["wav_master"] = str(master)
-        tracks.append(entry)
-        print(json.dumps(entry), flush=True)
+    return parser.parse_args()
+
+
+def render(sketch: Sketch, args: argparse.Namespace, album: str = "Hanged - first listen") -> dict:
+    """Writes the sketch's MIDI and score; with the tools given, also its WAV master and MP3."""
+    midi, duration = sketch.write()
+    entry = {"title": sketch.title, "file": sketch.slug + ".mp3", "seconds": round(duration, 2), "notes": len(sketch.score)}
+    if args.fluidsynth and args.soundfont and args.renders:
+        mp3 = sketch.out / entry["file"]
+        args.renders.mkdir(parents=True, exist_ok=True)
+        raw = args.renders / (sketch.slug + "-raw.wav")
+        master = args.renders / (sketch.slug + ".wav")
+        run([str(args.fluidsynth), "-ni", "-g", "0.65", "-r", "48000", "-F", str(raw), "-T", "wav", "-O", "float", "-o", "synth.reverb.room-size=0.38", "-o", "synth.reverb.damp=0.55", "-o", "synth.reverb.width=65", "-o", "synth.reverb.level=0.26", "-o", "synth.chorus.active=0", str(args.soundfont), str(midi)])
+        # Quiet audition masters: transparent normalization, never a pumping beat.
+        base = f"atrim=0:{duration:.3f},afade=t=in:d=0.025,afade=t=out:st={duration-1.3:.3f}:d=1.3,highpass=f=38,lowpass=f=13000"
+        measure = run(["ffmpeg", "-hide_banner", "-i", str(raw), "-af", base + ",loudnorm=I=-19:TP=-2:LRA=14:print_format=json", "-f", "null", "-"])
+        stats, _ = json.JSONDecoder().raw_decode(measure.stderr[measure.stderr.rfind("{"):])
+        normal = ("loudnorm=I=-19:TP=-2:LRA=14:linear=true:"
+                  f"measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}:"
+                  f"measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}")
+        run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(raw), "-af", base + "," + normal, "-ar", "48000", "-c:a", "pcm_s24le", str(master)])
+        run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(master), "-codec:a", "libmp3lame", "-b:a", "192k", "-metadata", "title=" + sketch.title, "-metadata", "album=" + album, "-metadata", "comment=Original instrumental audition sketch. Not approved or integrated.", str(mp3)])
+        probe = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3)])
+        entry["seconds"] = round(float(probe.stdout), 2)
+        entry["pre_master_measurement"] = stats
+        entry["wav_master"] = str(master)
+    print(json.dumps(entry), flush=True)
+    return entry
+
+
+def main():
+    args = render_args()
+    tracks = [render(sketch, args) for sketch in [little_detours(), sunday_window(), updraft()]]
     (HERE / "tracks.json").write_text(json.dumps(tracks, indent=2) + "\n", encoding="utf-8")
 
 

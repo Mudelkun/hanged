@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Last Balloon",
+    "file": "04-last-balloon.mp3",
+    "seconds": 131.1,
+    "notes": 579,
+    "pre_master_measurement": {
+      "input_i": "-32.99",
+      "input_tp": "-18.52",
+      "input_lra": "12.70",
+      "input_thresh": "-43.45",
+      "output_i": "-16.77",
+      "output_tp": "-2.00",
+      "output_lra": "7.50",
+      "output_thresh": "-27.01",
+      "normalization_type": "dynamic",
+      "target_offset": "-2.23"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\second-listen-masters\\04-last-balloon.wav"
+  }
+]

@@ -1,8 +1,9 @@
 # Music, effects, and character voices
 
-The owner requested app integration on 2026-10-22, including music at a reasonable volume. All 65 cue families (150 takes), 90 character reactions, and three music tracks are now connected to the app. The original standalone listening boards remain available for design review.
+The owner requested app integration on 2026-10-22, including music at a reasonable volume. All 65 cue families (150 takes), 90 character reactions, and four music tracks are now connected to the app. The original standalone listening boards remain available for design review.
 
 - Music: `design/audio/first-listen/listen.html`, three original tracks, MIDI/score sources and rendering notes alongside them.
+- Second listening round: `design/audio/second-listen/` holds Last Balloon, a guitar-and-strings ballad draft. It was written from a reference's measured style only, not its notes. The owner put it in the game on 2026-10-23. Its `compose.py` reuses first-listen's `Sketch` and `render`.
 - Effects and character voices: `design/audio/effects/soundboard.html`. The board includes the previous music for auditioning combinations.
 - [Effects documentation](../design/audio/effects/README.md): file formats, generation, playback, and provenance.
 - [Interaction audit](../design/audio/effects/AUDIT.md): coverage, specific UI triggers, animation timings, and deliberate silence.
@@ -12,7 +13,7 @@ The owner dislikes generic ukulele, whistles, claps, and repetitive beats. Effec
 
 ## Runtime
 
-- `src/audio/assets.ts` is a generated, statically required inventory. Regenerate with `node scripts/audio-assets.js` after changing the collection. Metro bundles the MP3s directly from `design/audio/`; WAVs, scores, HTML, and ZIPs are not imported. The audio payload is about 5.44 MiB and works offline in installed builds.
+- `src/audio/assets.ts` is a generated, statically required inventory. Regenerate with `node scripts/audio-assets.js` after changing the collection. Metro bundles the MP3s directly from `design/audio/`; WAVs, scores, HTML, and ZIPs are not imported. The music playlist and its order live in that script, which reads each track's duration from its round's `tracks.json`. The audio payload is about 8.4 MiB, including Last Balloon's 3.0 MiB, and works offline in installed builds.
 - `engine.ts` owns a bounded cache of 48 effect/voice players, at most 8 concurrent effect layers, and one music player. Frequently used effects and the selected character are warmed. Takes rotate without immediate repetition. An asset that loads over 250 ms after its requested onset is dropped rather than played out of sync. No gameplay action waits for audio.
 - `backend.ts` uses Expo SDK 58's `expo-audio` (`createAudioPlayer`, `remove`, `setAudioModeAsync`). Playback mixes with other apps, respects the iOS silent switch, and does not play in the background. Recording permissions, recording, background playback, and media services are disabled in the config plugin. A player's `ready` resolves on the load event *or* when polling `isLoaded` sees it, and rejects on a load error or after 20 s: a missed or failed load used to leave the music waiting forever while effects kept working.
 - iOS can pause a player without telling JS (interruptions, route changes, the session going idle). `SoundPlayer.playing` reports what the platform is really doing. If music was started over a second ago and is not playing, or its load failed, the next touch (`unlock`) or return to the foreground restarts or rebuilds it.
@@ -24,7 +25,7 @@ The owner dislikes generic ukulele, whistles, claps, and repetitive beats. Effec
 
 `MIX` in `engine.ts` is the one balance control: effects **0.55**, voices **0.62**, music **0.22**, ducked music **0.09**. These multiply the already leveled masters, not full-scale raw synth output. Music fades between levels over 320 ms. Voices and large rewards lower the music briefly. Only one character voice speaks at a time; ordinary worried reactions happen every third miss, not on every key. Counter ticks stop after three even on a large payment.
 
-The playlist plays Little Detours, Sunday Window, then Updraft, with four seconds of breathing room between full tracks. It continues across screens, pauses/resumes with the music switch or app lifecycle, and never repeats a short beat loop. Turning effects off cancels existing and queued effects immediately without muting the music.
+The playlist plays Little Detours, Sunday Window, Updraft, then Last Balloon (2:11, the longest; all four are mastered to the same -19 LUFS), with four seconds of breathing room between full tracks. It continues across screens, pauses/resumes with the music switch or app lifecycle, and never repeats a short beat loop. Turning effects off cancels existing and queued effects immediately without muting the music.
 
 ## Placement
 

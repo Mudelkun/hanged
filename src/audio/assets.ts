@@ -90,4 +90,5 @@ export const music: SoundAsset[] = [
   { id: 'detours', source: require('../../design/audio/first-listen/01-little-detours.mp3'), duration: 51.83 },
   { id: 'window', source: require('../../design/audio/first-listen/02-sunday-window.mp3'), duration: 49.34 },
   { id: 'updraft', source: require('../../design/audio/first-listen/03-updraft.mp3'), duration: 54.98 },
+  { id: 'balloon', source: require('../../design/audio/second-listen/04-last-balloon.mp3'), duration: 131.1 },
 ];
