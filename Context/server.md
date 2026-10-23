@@ -101,7 +101,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 |---|---|
 | `players` | id, secret hash, name, character, language, `words_guessed` (the score), level, tokens, rounds played/won, `last_seq`, `score_at` (when the score last rose: ties go to who got there first), `synced_at` (null = never synced) |
 | `player_weeks` | `(player_id, week)` → words guessed that week |
-| `words` | a copy of `data/words.json` (`npm run seed:words`), to show words in the statistics. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet |
+| `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs (`npm run seed:words`), to show words in the statistics. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
 | `word_stats` (view) | each word over all time: played, won, lost, `loss_rate`, `avg_wrong`, … |
 

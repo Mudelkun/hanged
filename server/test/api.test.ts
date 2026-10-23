@@ -6,6 +6,7 @@ import type { LeaderboardResponse, PlayerSnapshot, RegisterResponse, RoundReport
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
 import { nextScore } from '../src/players.ts';
+import { seedWords } from '../src/words.ts';
 
 let db: Db;
 let app: Awaited<ReturnType<typeof buildApp>>;
@@ -113,6 +114,15 @@ describe('sync', () => {
     const { rows } = await db.query(`SELECT word, length, played, won, lost, avg_wrong, descriptions, letters FROM word_stats`);
     assert.deepEqual(rows, [{ word: 'castle', length: 6, played: 2, won: 1, lost: 1, avg_wrong: '7.00', descriptions: 1, letters: 1 }]);
     assert.equal((await db.query<{ name: string }>('SELECT name FROM players')).rows[0].name, 'Roda B');
+  });
+
+  it('seeds every language pack, accents included, and rejects letters of another language', async () => {
+    const seeded = await seedWords(db);
+    const { rows } = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM words');
+    assert.equal(rows[0].n, seeded);
+    const { rows: [zebra] } = await db.query<{ word: string; length: number }>(`SELECT word, length FROM words WHERE id = 'fr-zèbre'`);
+    assert.deepEqual({ ...zebra }, { word: 'zèbre', length: 5 });
+    await assert.rejects(db.query(`INSERT INTO words (id, word, language) VALUES ('en-niño', 'niño', 'en')`), /words_word_check/);
   });
 });
 
