@@ -25,6 +25,7 @@ export class SoundEngine {
   private track = 0;
   private musicPlayer?: SoundPlayer;
   private musicPlaying = false;
+  private musicSent = 0;
   private musicRequest = 0;
   private nextTrack?: ReturnType<typeof setTimeout>;
   private duckTimer?: ReturnType<typeof setTimeout>;
@@ -176,10 +177,11 @@ export class SoundEngine {
     try {
       const player = this.backend.create(this.bank.music[this.track]); this.musicPlayer = player;
       player.volume = 0;
-      void player.ready.catch(() => { if (this.musicPlayer === player) { this.musicPlaying = false; this.musicPlayer = undefined; safely(() => player.remove()); } });
+      // A failed load drops the player; the next touch or foregrounding builds a fresh one.
+      void player.ready.catch(() => { if (this.musicPlayer === player) { this.musicPlaying = false; this.musicSent = 0; this.musicPlayer = undefined; safely(() => player.remove()); } });
       player.onEnd(() => {
         if (this.musicPlayer !== player) return;
-        this.musicPlayer = undefined; this.musicPlaying = false; safely(() => player.remove());
+        this.musicPlayer = undefined; this.musicPlaying = false; this.musicSent = 0; safely(() => player.remove());
         this.track = (this.track + 1) % this.bank.music.length;
         // Breathing room between complete compositions, never a repeating beat loop.
         this.nextTrack = setTimeout(() => { this.nextTrack = undefined; this.prepareMusic(); this.startMusic(); }, 4000);
@@ -187,17 +189,24 @@ export class SoundEngine {
     } catch { /* The game still runs if the platform's audio is unavailable. */ }
   }
   private startMusic() {
-    if (!this.running || !this.foreground || !this.musicOn || !this.unlocked || this.musicPlaying || this.nextTrack) return;
+    if (!this.running || !this.foreground || !this.musicOn || !this.unlocked || this.nextTrack) return;
+    if (this.musicPlaying && !this.musicStalled()) return;
     this.prepareMusic(); const player = this.musicPlayer; if (!player) return;
     const request = ++this.musicRequest;
     this.musicPlaying = true;
     void player.ready.then(() => {
       if (request !== this.musicRequest || this.musicPlayer !== player || !this.foreground || !this.musicOn || !this.running) return;
-      player.volume = 0; player.play(); this.fadeMusic(this.duckUntil > Date.now() ? MIX.duckedMusic : MIX.music);
+      player.volume = 0; player.play(); this.musicSent = Date.now();
+      this.fadeMusic(this.duckUntil > Date.now() ? MIX.duckedMusic : MIX.music);
     }).catch(() => { if (request === this.musicRequest) this.musicPlaying = false; });
   }
+  /** iOS pauses players itself (interruptions, route changes, an idle session) without telling JS. A touch or foregrounding restarts them. */
+  private musicStalled() {
+    if (!this.musicSent || Date.now() - this.musicSent < 1000) return false;
+    try { return !this.musicPlayer?.playing; } catch { return true; }
+  }
   private pauseMusic() {
-    this.musicRequest++; this.musicPlaying = false;
+    this.musicRequest++; this.musicPlaying = false; this.musicSent = 0;
     clearTimeout(this.nextTrack); this.nextTrack = undefined; clearInterval(this.fadeTimer);
     if (this.musicPlayer) safely(() => this.musicPlayer?.pause());
   }

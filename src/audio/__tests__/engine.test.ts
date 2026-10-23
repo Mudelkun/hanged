@@ -11,6 +11,7 @@ class Player implements SoundPlayer {
   ends = new Set<() => void>();
   ready = Promise.resolve();
   constructor(readonly asset: SoundAsset) {}
+  get playing() { return !this.paused; }
   play() { this.plays++; this.paused = false; }
   pause() { this.paused = true; }
   rewind() { return Promise.resolve(); }
@@ -83,6 +84,26 @@ test('music pauses independently, resumes, and advances through all three compos
   const second = players.find(p => p.asset.id === 'window')!; expect(second.plays).toBe(1);
   second.finish(); jest.advanceTimersByTime(4000); await flush(); expect(players.find(p => p.asset.id === 'updraft')?.plays).toBe(1);
   engine.dispose(); expect(players.every(p => p.removed)).toBe(true);
+});
+
+test('music that iOS paused behind the engine\'s back restarts on the next touch', async () => {
+  const { engine, players } = setup(); await engine.start(true); await flush();
+  const first = players.find(p => p.asset.id === 'detours')!;
+  first.pause(); engine.unlock(); await flush(); expect(first.plays).toBe(1); // still starting up
+  jest.advanceTimersByTime(1000); engine.unlock(); await flush();
+  expect(first.plays).toBe(2); expect(first.paused).toBe(false);
+  jest.advanceTimersByTime(400); expect(first.volume).toBeCloseTo(MIX.music); engine.dispose();
+});
+
+test('a music track that fails to load is rebuilt on the next touch', async () => {
+  const { engine, players, backend } = setup(); const create = backend.create;
+  backend.create = asset => { const p = create(asset) as Player; if (asset.id === 'detours' && players.filter(q => q.asset.id === 'detours').length === 1) p.ready = Promise.reject(new Error('load')); return p; };
+  await engine.start(true); await flush();
+  const [failed] = players.filter(p => p.asset.id === 'detours');
+  expect(failed.plays).toBe(0); expect(failed.removed).toBe(true);
+  engine.unlock(); await flush();
+  const retry = players.filter(p => p.asset.id === 'detours')[1];
+  expect(retry.plays).toBe(1); engine.dispose();
 });
 
 test('bounds native player resources and simultaneous layers during rapid bursts', async () => {

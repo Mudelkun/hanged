@@ -22,7 +22,7 @@ export const backend: AudioBackend = {
     const ctx = audioContext(), gain = ctx.createGain();
     gain.connect(output);
     let buffer: AudioBuffer | undefined, source: AudioBufferSourceNode | undefined;
-    let offset = 0, started = 0, removed = false;
+    let offset = 0, started = 0, removed = false, level = 1;
     const ends = new Set<() => void>();
     const request = new AbortController();
     const ready = fetch(Asset.fromModule(asset.source).uri, { signal: request.signal })
@@ -37,8 +37,10 @@ export const backend: AudioBackend = {
     };
     return {
       ready,
-      get volume() { return gain.gain.value; },
-      set volume(value) { gain.gain.setValueAtTime(value, ctx.currentTime); },
+      // gain.value lags scheduled changes by a render quantum, so fades read the level last set.
+      get volume() { return level; },
+      set volume(value) { level = value; gain.gain.setValueAtTime(value, ctx.currentTime); },
+      get playing() { return !!source; },
       play() {
         if (!buffer || removed || source) return;
         source = ctx.createBufferSource(); source.buffer = buffer; source.connect(gain);
