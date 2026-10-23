@@ -16,8 +16,9 @@ function readTS(file) {
   mod._compile(ts.transpile(fs.readFileSync(filename, 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }), filename);
   return mod.exports;
 }
-const { guessWord, hasValidLetters } = readTS('src/game/languages.ts');
-const { LETTER_FREQUENCY } = readTS('src/game/config.ts');
+// The letter rules live in server/ (shared with the Versus server); these two files import nothing.
+const { guessWord, hasValidLetters } = readTS('server/src/languages.ts');
+const { LETTER_FREQUENCY } = readTS('server/src/rules.ts');
 const { measureDifficulty } = require('./difficulty');
 for (const language of ['fr', 'es', 'de']) {
   const file = path.join('data', 'words', language);

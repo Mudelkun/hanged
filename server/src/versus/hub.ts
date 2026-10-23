@@ -673,6 +673,6 @@ export class Hub {
   counts() {
     let inMatches = 0;
     for (const m of this.matches) inMatches += m.playerIds.length;
-    return { online: this.conns.size, queued: this.queue.size, lobbies: this.lobbies.size, matches: this.matches.size, inMatches };
+    return { online: this.conns.size, queued: this.queue.size, lobbies: this.lobbies.size, matches: this.matches.size, inMatches, words: this.words.sizes() };
   }
 }

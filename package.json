@@ -49,7 +49,8 @@
     "check:web": "node scripts/check-web.js",
     "lint": "expo lint",
     "build:languages": "node scripts/build-language-words.js",
-    "check:languages": "jest --runInBand localization"
+    "check:languages": "jest --runInBand localization",
+    "build:server-words": "node scripts/build-server-words.js"
   },
   "jest": {
     "preset": "jest-expo",

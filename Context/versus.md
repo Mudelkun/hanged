@@ -42,8 +42,9 @@ needs the internet.
 Versus words are everyday words (rarity ≤ 20, difficulty ≤ 8, 5-10 letters: the familiarity of solo
 levels 1-15) from the `words` table, loaded once into memory by [versus/words.ts](../server/src/versus/words.ts).
 A match is played in the language of whoever started it (matchmaking queues are per mode **and**
-language). **The `words` table must be seeded** (`npm run seed:words`, now with descriptions): with an
-empty pool, starting a match answers `noWords`.
+language). The server fills the `words` table itself at start from its own copy of the packs
+([server.md](server.md), Deploying, step 4). With an empty pool, starting a match answers `noWords`
+("Versus isn't ready in this language yet"); the admin page shows each language's pool size, red at 0.
 
 ## Server ([server/src/versus/](../server/src/versus/))
 

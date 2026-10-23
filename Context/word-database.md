@@ -221,8 +221,9 @@ or to fix a generated word's sense, write it by hand:
 3. Write its description in `scripts/descriptions.txt` as `word | sense | description`, from that
    sense's definition (or update the line if the word was already there).
 4. Run `npm run check:words -- --build`. This regenerates `data/words.json` and validates it.
-5. After the release, run `cd server && DATABASE_URL=… npm run seed:words` so the server's statistics
-   can show the new words by name ([server.md](server.md)).
+5. Run `npm run build:server-words`: the server's copy of the packs (`server/data/words.json.gz`), which it
+   loads into its database at start, for the statistics and Versus ([server.md](server.md)). A server test
+   fails until you do. The same after `npm run build:languages`.
 
 To keep a generated word out, add it to `removed-words.txt` and rebuild, and delete its line from
 `descriptions.txt` (the build fails on a rewrite for a word that left the list). To also keep out

@@ -49,6 +49,7 @@ export function fakeWords(list = WORDS, extra = ['zebra', 'puzzle', 'banana']): 
   const known = new Map([...list, ...extra].map((w) => [w, entry(w)]));
   return {
     has: (language) => language === 'en',
+    sizes: () => ({ en: pool.length }),
     deal(language, count, rng, exclude) {
       if (language !== 'en') return [];
       const left = pool.filter((w) => !exclude?.has(w.id));

@@ -1,6 +1,7 @@
 /*
- * The words Versus deals. The server picks them (the `words` table, filled by
- * npm run seed:words), so a device never holds a word before it's guessed.
+ * The words Versus deals. The server picks them (the `words` table, which the
+ * server fills from its own copy at start: ../words.ts), so a device never
+ * holds a word before it's guessed.
  * The dealing pool is the everyday words (the same familiarity as solo
  * levels 1-15), loaded once into memory: a few thousand short rows. A word
  * typed in Word Duel is looked up one at a time and may be any word of the
@@ -29,6 +30,8 @@ export interface WordSource {
   /** `count` different words of `language` not in `exclude`, in random order (fewer if the pool runs out). */
   deal(language: string, count: number, rng: () => number, exclude?: ReadonlySet<string>): VersusWord[];
   has(language: string): boolean;
+  /** Words in each language's dealing pool (the admin page shows them: 0 means Versus can't start there). */
+  sizes(): Record<string, number>;
   /** A typed word (Word Duel), if it's a word of the language's pack. */
   find(language: string, raw: string): Promise<VersusWord | null>;
 }
@@ -55,6 +58,8 @@ export async function loadWords(db: Db): Promise<WordSource> {
       if (!ok && Date.now() - loadedAt > RETRY_MS) load().catch(() => {});
       return ok;
     },
+
+    sizes: () => Object.fromEntries([...pools].map(([language, pool]) => [language, pool.length])),
 
     deal(language, count, rng, exclude) {
       const pool = pools.get(language) ?? [];

@@ -94,6 +94,7 @@ const PAGE = `<!doctype html>
   .stat { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; }
   .stat b { display: block; font-size: 24px; }
   .stat span { color: var(--muted); font-size: 13px; }
+  .stat.empty { border-color: var(--coral); } .stat.empty b { color: var(--coralD); }
   table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 14px; overflow: hidden; }
   td, th { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 14px; }
   th { color: var(--muted); font-weight: 600; }
@@ -167,7 +168,8 @@ const PAGE = `<!doctype html>
     if (document.activeElement !== $('message')) $('message').value = s.status.message || '';
     const c = s.counts;
     const stats = [['Online', c.online], ['In matches', c.inMatches], ['Matches', c.matches], ['Queued', c.queued], ['Lobbies', c.lobbies]];
-    $('counts').replaceChildren(...stats.map(([label, n]) => { const d = document.createElement('div'); d.className = 'stat'; const b = document.createElement('b'); b.textContent = n; const sp = document.createElement('span'); sp.textContent = label; d.append(b, sp); return d; }));
+    const words = ['en', 'fr', 'es', 'de'].map((l) => ['Words · ' + l, (c.words || {})[l] || 0]);
+    $('counts').replaceChildren(...stats.concat(words).map(([label, n]) => { const d = document.createElement('div'); d.className = 'stat' + (String(label).startsWith('Words') && !n ? ' empty' : ''); const b = document.createElement('b'); b.textContent = n; const sp = document.createElement('span'); sp.textContent = label; d.append(b, sp); return d; }));
     rows($('days'), s.days, ['day', 'mode', 'matches', 'players', 'forfeits']);
     rows($('reported'), s.reported, ['name', 'id', 'reports']);
   }

@@ -1,7 +1,8 @@
 /*
- * npm run seed:words [-- path/to/words.json]
- * Copies the word list into the database at DATABASE_URL. Run it after
- * `npm run check:words -- --build` changes data/words.json.
+ * npm run seed:words [-- path/to/words.json.gz]
+ * Copies the word list (server/data/words.json.gz) into the database at
+ * DATABASE_URL now. Rarely needed: the server does it by itself at start
+ * whenever the list changed (words.ts, syncWords).
  */
 import { postgres } from './db.ts';
 import { migrate } from './migrate.ts';

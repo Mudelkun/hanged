@@ -1,16 +1,17 @@
 /*
  * Starts the server. With DATABASE_URL (Railway) it uses PostgreSQL; without
- * it (local dev) an embedded PGlite in ./.pglite, seeded with the word list.
+ * it (local dev) an embedded PGlite in ./.pglite. Either way the word list is
+ * copied in from server/data/ whenever it changed (Versus deals from it).
  */
 import { buildApp } from './app.ts';
 import { embedded, postgres } from './db.ts';
 import { migrate } from './migrate.ts';
-import { seedWords } from './words.ts';
+import { syncWords } from './words.ts';
 
 const url = process.env.DATABASE_URL;
 const db = url ? postgres(url) : await embedded(process.env.PGLITE_DIR ?? '.pglite');
 const applied = await migrate(db);
-if (!url) await seedWords(db);
+const seeded = await syncWords(db);
 
 const app = await buildApp(db, {
   logger: true,
@@ -18,6 +19,7 @@ const app = await buildApp(db, {
   versusForcedOff: process.env.VERSUS_DISABLED === '1',
 });
 if (applied.length) app.log.info({ applied }, 'migrations applied');
+if (seeded !== null) app.log.info({ words: seeded }, 'word list updated');
 await app.listen({ host: '0.0.0.0', port: Number(process.env.PORT ?? 3000) });
 
 // Railway sends SIGTERM on redeploy: Versus matches get VERSUS_DRAIN_SECONDS to finish (keep it

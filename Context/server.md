@@ -116,7 +116,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 |---|---|
 | `players` | id, secret hash, name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
 | `player_weeks` | `(player_id, week)` → words guessed, highest level played, tokens earned and misses that week |
-| `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs (`npm run seed:words`), to show words in the statistics, and since migration 004 with each word's description, subject, rarity and difficulty, because **Versus deals its words from it**. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
+| `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs, filled by the server itself (below), to show words in the statistics, and since migration 004 with each word's description, subject, rarity and difficulty, because **Versus deals its words from it**. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
 | `word_stats` (view) | each word over all time: played, won, lost, `loss_rate`, `avg_wrong`, … |
 
@@ -132,7 +132,7 @@ To see the most lost words, run this in Railway's data tab:
 ```bash
 cd server
 npm install
-npm run dev          # no DATABASE_URL: embedded PGlite in server/.pglite (gitignored), seeded with the words
+npm run dev          # no DATABASE_URL: embedded PGlite in server/.pglite (gitignored)
 npm test             # node --test, on PGlite in memory
 npm run typecheck
 ```
@@ -150,9 +150,12 @@ Expo Go on a phone can't reach `localhost`: use the computer's LAN address, or t
 2. Add a **PostgreSQL** database to the project. In the server service's variables, set
    `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`.
 3. Settings → Networking → **Generate Domain**. Set the healthcheck path to `/health`.
-4. Migrations run on every start. To fill the `words` table, run this from your machine with the
-   Postgres service's **public** URL: `cd server && DATABASE_URL=… npm run seed:words`. Run it again
-   whenever `data/words.json` changes, **and once after migration 004**: Versus needs the descriptions it adds.
+4. Migrations run on every start, and so does the **word list**: Railway deploys only `server/`, so the server
+   ships its own copy of the packs, `server/data/words.json.gz` (`npm run build:server-words` at the repo root
+   writes it from `data/`; a server test fails while it's out of date). At start, `syncWords` copies it into
+   `words` when its hash differs from the last one (kept in `settings`), and drops words taken out of the game.
+   No manual seeding: a deploy is enough. (Until 2026-10-23 this was a manual `npm run seed:words`; forgetting
+   it after migration 004 left Versus with no words: "isn't ready in this language". The script still exists.)
    Versus variables: `ADMIN_TOKEN` (24+ characters: the `/admin` page and its switch exist only with it),
    `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
    redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`).

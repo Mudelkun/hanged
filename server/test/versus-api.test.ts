@@ -11,7 +11,9 @@ import { migrate } from '../src/migrate.ts';
 import { type FriendsResponse, MODES, type SearchResponse, type ServerMessage, VERSUS_LIMITS, VERSUS_PROTOCOL } from '../src/versus-contract.ts';
 import { FILL_WAIT_MS } from '../src/versus/matchmaker.ts';
 import { loadWords } from '../src/versus/words.ts';
-import { seedWords } from '../src/words.ts';
+import { readFile } from 'node:fs/promises';
+
+import { fromBundle, seedWords, syncWords, toBundle, WORDS_BUNDLE } from '../src/words.ts';
 import { FakeClock, fakeWords, seeded } from './versus-helpers.ts';
 
 const ADMIN = 'a'.repeat(32);
@@ -262,10 +264,30 @@ describe('the switch', () => {
 });
 
 describe('words', () => {
+  it('ships an up-to-date copy of data/ (run npm run build:server-words at the repo root after changing the packs)', async () => {
+    const packs = ['words.json', 'words/fr.json', 'words/es.json', 'words/de.json'];
+    const entries = (await Promise.all(packs.map(async (f) => JSON.parse(await readFile(new URL(`../../data/${f}`, import.meta.url), 'utf8'))))).flat();
+    const shipped = await readFile(WORDS_BUNDLE);
+    assert.ok(toBundle(entries).equals(shipped), 'server/data/words.json.gz is out of date');
+    assert.equal(fromBundle(shipped).length, entries.length);
+  });
+
+  it('seeds the table at start only when the list changed, and drops words taken out of it', async () => {
+    await db.exec('TRUNCATE words');
+    await db.query(`INSERT INTO words (id, word, language) VALUES ('en-zzgone', 'zzgone', 'en')`);
+    const count = await syncWords(db);
+    assert.ok(count && count > 30_000);
+    assert.equal(await syncWords(db), null, 'unchanged: nothing to do');
+    const { rows } = await db.query(`SELECT id FROM words WHERE id = 'en-zzgone'`);
+    assert.deepEqual(rows, []);
+    const { rows: described } = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM words WHERE description IS NULL');
+    assert.equal(described[0].n, 0);
+  });
+
   it('deals everyday words from the seeded table and finds a typed word of the whole pack', async () => {
     await seedWords(db);
     const words = await loadWords(db);
-    assert.ok(words.has('en') && words.has('fr'));
+    assert.ok(['en', 'fr', 'es', 'de'].every((l) => words.has(l) && words.sizes()[l] > 500));
     const dealt = words.deal('en', 5, seeded());
     assert.equal(new Set(dealt.map((w) => w.id)).size, 5);
     assert.ok(dealt.every((w) => w.description && w.word.length >= 5 && w.word.length <= 10));
