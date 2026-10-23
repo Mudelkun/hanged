@@ -49,8 +49,11 @@ The bottom tabs are an Expo Router `Tabs` group, [src/app/(tabs)/_layout.tsx](..
 - A `TabBar` entry with an `href` navigates; an entry without one is drawn disabled ("Coming soon").
   Play, Leaderboard and Characters navigate; Versus is still disabled.
   **Never a 5th tab** (CLAUDE.md).
-- Screens **stay mounted** when the player switches tabs, and they're **frozen while hidden**
-  (`freezeOnBlur`). So Play keeps its round, its result and its animations' state, and stops
-  re-rendering behind the Leaderboard.
+- Screens **stay mounted** when the player switches tabs, so Play keeps its round, its result and
+  its animations' state. Each animation loop stops itself while its tab is hidden (`useIsFocused`).
+  Since SDK 58 there is **no freeze**: `freezeOnBlur` has no effect in Expo Router, and its
+  replacement `activityEnabled` is deliberately off, because it re-runs mount effects when a tab comes
+  back (the streak takeover, token flight and level card would replay their sounds). A hidden tab
+  still re-renders when the game state changes (a purchase, the language), which is cheap.
 - On web, a hidden tab stays in the DOM. A test that clicks a tab by its label must pick the
   visible one (`offsetParent !== null`).

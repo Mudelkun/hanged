@@ -26,7 +26,7 @@ const report = {
   required: ['seq', 'wordId', 'level', 'won', 'wrong', 'description', 'letters', 'at'],
   properties: {
     seq: int(1, 2 ** 31 - 1),
-    wordId: { type: 'string', pattern: '^[a-z]{2}-[a-z]{1,15}$' },
+    wordId: { type: 'string', pattern: '^(?:en-[a-z]{1,15}|fr-[a-zàâçéèêëîïôùûüÿœ]{1,15}|es-[a-záéíóúüñ]{1,15}|de-[a-zäöüß]{1,15})$' },
     level: int(1, 99),
     won: { type: 'boolean' },
     wrong: int(0, 26),

@@ -5,11 +5,11 @@
  */
 import { postgres } from './db.ts';
 import { migrate } from './migrate.ts';
-import { seedWords, WORDS_FILE } from './words.ts';
+import { seedWords } from './words.ts';
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error('Set DATABASE_URL (Railway: the Postgres service\'s public URL)');
 const db = postgres(url);
 await migrate(db);
-console.log(`${await seedWords(db, process.argv[2] ?? WORDS_FILE)} words seeded`);
+console.log(`${await seedWords(db, process.argv[2])} words seeded`);
 await db.close();

@@ -10,10 +10,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackHeader } from '../../components/GameHeader';
 import { INFO_PAGES, InfoContent, isInfoPage } from '../../components/InfoPages';
 import { PaperBackground } from '../../components/PaperBackground';
-import { t } from '../../i18n';
+import { useTranslation } from '../../i18n';
 import { colors } from '../../theme';
 
 export default function InfoScreen() {
+  const t = useTranslation();
   const { page } = useLocalSearchParams<{ page: string }>();
   const insets = useSafeAreaInsets();
   if (!isInfoPage(page)) return <Redirect href="/profile" />;

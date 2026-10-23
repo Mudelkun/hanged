@@ -5,11 +5,13 @@
  * statistics, whenever a sync gets through (src/net/sync.ts).
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
+import { getLocales } from 'expo-localization';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useState } from 'react';
 import { AppState } from 'react-native';
 
 import { randomName } from '../game/names';
 import { needsOnboarding } from '../game/onboarding';
+import { Language, languageForLocales } from '../game/languages';
 import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
 import { createSync } from '../net/sync';
@@ -23,6 +25,7 @@ interface GameContextValue {
   ready: boolean;
   dispatch: (action: GameAction) => void;
   startNextRound: () => void;
+  changeLanguage: (language: Language) => void;
   /** Syncs with the server now. Resolves to the player's server id, or null offline. */
   syncNow: () => Promise<string | null>;
   /**
@@ -40,7 +43,7 @@ const GameContext = createContext<GameContextValue | null>(null);
 const newRoundId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(gameReducer, undefined, initialState);
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => initialState(languageForLocales(getLocales().map(l => l.languageTag))));
   const [ready, setReady] = useState(false);
   const [welcomePending, setWelcomePending] = useState(false);
   const dismissWelcome = useCallback(() => setWelcomePending(false), []);
@@ -65,7 +68,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (ready) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [ready, state]);
 
-  useEffect(() => setLanguage(state.language), [state.language]);
+  useLayoutEffect(() => setLanguage(state.language), [state.language]);
+  const changeLanguage = useCallback((language: Language) => {
+    dispatch({ type: 'language', language, roundId: newRoundId() });
+  }, []);
 
   // The sync reads the latest state when it runs, never the one it was scheduled with.
   const [sync] = useState(() => createSync(dispatch));
@@ -96,8 +102,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // A new player (or a save from before names) gets a friendly random name; the Profile page changes it.
   useEffect(() => {
-    if (ready && !state.playerName) dispatch({ type: 'rename', name: randomName() });
-  }, [ready, state.playerName]);
+    if (ready && !state.playerName) dispatch({ type: 'rename', name: randomName(undefined, state.language) });
+  }, [ready, state.playerName, state.language]);
 
   const deleteAccount = useCallback(async () => {
     const deleted = await sync.deleteAccount();
@@ -112,8 +118,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [sync]);
 
   const value = useMemo(
-    () => ({ state, ready, dispatch, startNextRound, syncNow: sync.run, deleteAccount, completeOnboarding, welcomePending, dismissWelcome }),
-    [state, ready, startNextRound, sync, deleteAccount, completeOnboarding, welcomePending, dismissWelcome],
+    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, completeOnboarding, welcomePending, dismissWelcome }),
+    [state, ready, startNextRound, changeLanguage, sync, deleteAccount, completeOnboarding, welcomePending, dismissWelcome],
   );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

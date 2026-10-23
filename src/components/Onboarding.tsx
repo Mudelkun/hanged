@@ -1,7 +1,7 @@
 import { router, Stack, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { Animated, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInputInstance, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
@@ -9,7 +9,7 @@ import { characterById } from '../characters/rig';
 import { feedback } from '../feedback';
 import { checkName, NAME_MAX, randomName } from '../game/names';
 import { STARTER_CHARACTERS } from '../game/onboarding';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { useOnboarding } from '../state/OnboardingContext';
 import { colors, fonts } from '../theme';
@@ -18,6 +18,7 @@ import { Avatar } from './GameHeader';
 import { checkXml, chevXml, diceXml, Icon, profileIconXml } from './icons';
 import { INFO_PAGES, InfoContent } from './InfoPages';
 import { LegalPage } from './LegalDocument';
+import { LanguageSheet } from './LanguagePicker';
 import { BuddyGlow, LiftOff, NameStage, OnboardingBalloon, OnboardingCloud, OnboardingSky, OnboardingSun } from './OnboardingArt';
 import { PaperBackground } from './PaperBackground';
 import { nameHelp, PlayerNameInput } from './PlayerNameInput';
@@ -26,13 +27,15 @@ import { BigButton, Tile } from './RoundParts';
 
 const BALLOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 24"><path d="M10 1.5c4.7 0 7.5 3.5 7.5 7.6 0 4.6-3.6 7.6-7.5 8.6-3.9-1-7.5-4-7.5-8.6 0-4.1 2.8-7.6 7.5-7.6zM8.5 19.5h3l-1.5-2z" fill="#fff"/><path d="M10 20c-1 1.4 1 2.2 0 3.5" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>';
 
-function StepDots({ step }: { step: 1 | 2 }) {
-  return <View style={styles.dots} accessible accessibilityLabel={t('onboarding.step', { step, total: 2 })}>
-    {[1, 2].map(i => <View key={i} style={[styles.dot, i === step ? styles.dotOn : i < step && styles.dotDone]} />)}
+function StepDots({ step }: { step: 1 | 2 | 3 }) {
+  const t = useTranslation();
+  return <View style={styles.dots} accessible accessibilityLabel={t('onboarding.step', { step, total: 3 })}>
+    {[1, 2, 3].map(i => <View key={i} style={[styles.dot, i === step ? styles.dotOn : i < step && styles.dotDone]} />)}
   </View>;
 }
 
 function FloatingChoice({ id, selected, scale, onPress }: { id: string; selected: boolean; scale: number; onPress: () => void }) {
+  const t = useTranslation();
   const [front] = useState(() => new Animated.Value(selected ? 1 : 0));
   useEffect(() => {
     Animated.spring(front, { toValue: selected ? 1 : 0, friction: 7, tension: 70, useNativeDriver: true }).start();
@@ -58,6 +61,7 @@ function FloatingChoice({ id, selected, scale, onPress }: { id: string; selected
 }
 
 export function BuddyScreen() {
+  const t = useTranslation();
   const { characterId, setCharacterId } = useOnboarding();
   const audio = useSoundScope();
   const insets = useSafeAreaInsets();
@@ -104,7 +108,7 @@ export function BuddyScreen() {
               <Raised depth={selected ? 5 : 4} shadowColor={selected ? colors.coralD : colors.shadow} radius={22} pressed={pressed}
                 style={[styles.pick, { height: compact ? 82 : 96 }, selected && styles.pickOn]}>
                 <Avatar character={character} size={width < 370 ? 46 : 51} />
-                <View style={styles.fill}><Text style={styles.pickName}>{character.name}</Text><Text style={styles.species}>{speciesOf(character)}</Text></View>
+                <View style={styles.fill}><Text style={styles.pickName}>{character.name}</Text><Text style={styles.species}>{speciesOf(character, t)}</Text></View>
                 {!selected && <View style={styles.radio} />}
               </Raised>
               {selected && <View style={styles.check}><Icon xml={checkXml} size={13} /></View>}
@@ -115,13 +119,17 @@ export function BuddyScreen() {
       <View style={styles.spacer} />
       <BigButton label={t('onboarding.buddy.next', { name: characterById(characterId).name })} trailing={<Icon xml={chevXml('r', '#fff')} size={20} />}
         onPress={() => router.push('/onboarding/name')} />
-      <View style={{ height: 6 }} /><StepDots step={1} />
+      <View style={{ height: 6 }} /><StepDots step={2} />
+      <Pressable onPress={() => router.back()} accessibilityRole="button" style={{ paddingVertical: 8 }}>
+        <Text style={[styles.foot, styles.link]}>{t('profile.language')}</Text>
+      </Pressable>
       <Text style={[styles.foot, { marginTop: 9 }]}>{t('onboarding.buddy.footer')}</Text>
     </View>
   </View>;
 }
 
 function LegalSheet({ page, onSelect, onClose }: { page: LegalPage; onSelect: (page: LegalPage) => void; onClose: () => void }) {
+  const t = useTranslation();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   return <Modal transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
@@ -145,6 +153,7 @@ function LegalSheet({ page, onSelect, onClose }: { page: LegalPage; onSelect: (p
 }
 
 export function NameScreen() {
+  const t = useTranslation();
   const draft = useOnboarding();
   const { state, completeOnboarding } = useGame();
   const returning = state.onboardingCompleted;
@@ -153,11 +162,12 @@ export function NameScreen() {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const compact = height < 760;
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
   const [tried, setTried] = useState(false);
   const [nudged, setNudged] = useState(false);
   const [policy, setPolicy] = useState<LegalPage | null>(null);
   const [lifting, setLifting] = useState(false);
+  const [choosingLanguage, setChoosingLanguage] = useState(false);
   const [shake] = useState(() => new Animated.Value(0));
   const check = checkName(draft.name);
   const problem = !check.ok && (check.problem !== 'short' || tried) ? check.problem : null;
@@ -196,7 +206,10 @@ export function NameScreen() {
           {!returning && <Pressable onPress={() => { audio.play('back'); router.back(); }} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
             {({ pressed }) => <Raised depth={3} shadowColor={colors.shadow} radius={15} pressed={pressed} style={styles.back}><Icon xml={chevXml('l')} size={20} /></Raised>}
           </Pressable>}
-          {!returning && <View style={styles.headerDots}><StepDots step={2} /></View>}
+          {!returning && <View style={styles.headerDots}><StepDots step={3} /></View>}
+          {returning && <Pressable accessibilityRole="button" onPress={() => setChoosingLanguage(true)}>
+            <Text style={[styles.foot, styles.link]}>{t('profile.language')}</Text>
+          </Pressable>}
         </View>
         <Text style={[styles.question, styles.leftQuestion]}>{t(returning ? 'onboarding.returning.title' : 'onboarding.name.title')}</Text>
         <Text style={[styles.subtitle, styles.leftSubtitle]}>{t(returning ? 'onboarding.returning.subtitle' : 'onboarding.name.subtitle')}</Text>
@@ -207,13 +220,13 @@ export function NameScreen() {
             <PlayerNameInput ref={input} value={draft.name} onChangeText={draft.setName} selectTextOnFocus
               onSubmitEditing={() => Keyboard.dismiss()} style={[styles.nameInput, problem && styles.nameInputBad]} />
             <Pressable accessibilityRole="button" accessibilityLabel={t('profile.name.random')} onPress={() => {
-              audio.play('dice'); draft.setName(randomName()); setTried(false); feedback.unlock();
+              audio.play('dice'); draft.setName(randomName(undefined, state.language)); setTried(false); feedback.unlock();
             }}>
               {({ pressed }) => <Raised depth={3} shadowColor="#bfe2f8" radius={16} pressed={pressed} style={styles.dice}><Icon xml={diceXml()} size={28} /></Raised>}
             </Pressable>
           </View>
           <View style={styles.helpRow}>
-            <Text style={[styles.help, problem && styles.badText]} accessibilityLiveRegion="polite">{nameHelp(problem)}</Text>
+            <Text style={[styles.help, problem && styles.badText]} accessibilityLiveRegion="polite">{nameHelp(problem, t)}</Text>
             <Text style={[styles.count, problem && styles.badText]}>{t('onboarding.name.count', { count: draft.name.length, max: NAME_MAX })}</Text>
           </View>
         </Raised>}
@@ -241,6 +254,7 @@ export function NameScreen() {
     </KeyboardAvoidingView>
     {policy && <LegalSheet page={policy} onSelect={setPolicy} onClose={() => { audio.play('panel-close'); setPolicy(null); }} />}
     {lifting && <LiftOff id={draft.characterId} onDone={finish} />}
+    {choosingLanguage && <LanguageSheet onClose={() => setChoosingLanguage(false)} />}
   </View>;
 }
 

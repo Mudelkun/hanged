@@ -7,12 +7,12 @@
  */
 import { useIsFocused } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, ScrollViewInstance, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Svg, { Defs, Ellipse, Path, RadialGradient, Rect, Stop, SvgXml } from 'react-native-svg';
 
 import { Character, CHARACTERS, signatureXml } from '../characters/rig';
 import { characterPrice } from '../game/progress';
-import { t, TranslationKey } from '../i18n';
+import { t, Translator, TranslationKey, useTranslation } from '../i18n';
 import { characterTint, colors, confettiColors, fonts } from '../theme';
 import { checkXml, chevXml, coinXml, Icon, lockXml, sparkXml } from './icons';
 import { Confetti } from './Confetti';
@@ -25,14 +25,14 @@ export const SHOP: readonly Character[] = CHARACTERS.filter((c) => characterPric
 );
 
 /** A per-character UI string (`<prefix>.<id>`), or null when it isn't translated. */
-function perCharacter(prefix: string, c: Character) {
+function perCharacter(prefix: string, c: Character, translate: Translator = t) {
   const key = `${prefix}.${c.id}` as TranslationKey;
-  const text = t(key);
+  const text = translate(key);
   return text === key ? null : text;
 }
 
 /** The species in the UI language; the rig's English one if a translation is missing. */
-export const speciesOf = (c: Character) => perCharacter('species', c) ?? c.species;
+export const speciesOf = (c: Character, translate: Translator = t) => perCharacter('species', c, translate) ?? c.species;
 
 /** The rig's whole-character box (rig.js VIEWBOX: 220 × 260). */
 const FIG_RATIO = 220 / 260;
@@ -65,6 +65,7 @@ interface ShowcaseProps {
 }
 
 export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcaseProps) {
+  const t = useTranslation();
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -124,7 +125,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
   }, [cheer, fx]);
 
   const xml = useMemo(() => signatureXml(character), [character]);
-  const quote = perCharacter('quote', character);
+  const quote = perCharacter('quote', character, t);
   const poppers = useMemo(
     () =>
       size && [
@@ -140,7 +141,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
   return (
     <Raised shadowColor={colors.shadow} radius={30} outerStyle={style} style={styles.stage}>
       <View style={StyleSheet.absoluteFill} onLayout={onLayout} accessible accessibilityRole="image"
-        accessibilityLabel={t('chars.a11y.stage', { name: character.name, species: speciesOf(character) })}>
+        accessibilityLabel={t('chars.a11y.stage', { name: character.name, species: speciesOf(character, t) })}>
         <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
           <Defs>
             <RadialGradient id="glow" cx="50%" cy="42%" r="70%">
@@ -224,6 +225,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
 }
 
 function Arrow({ dir, onPress }: { dir: 'l' | 'r'; onPress: () => void }) {
+  const t = useTranslation();
   return (
     <Pressable
       onPress={onPress}
@@ -252,7 +254,8 @@ export function CharacterInfo({ character, ownership, price, note }: {
   price: number;
   note?: string | null;
 }) {
-  const species = speciesOf(character);
+  const t = useTranslation();
+  const species = speciesOf(character, t);
   return (
     <View style={styles.info}>
       <View style={styles.infoText}>
@@ -292,6 +295,7 @@ interface CardProps {
 }
 
 const Card = memo(function Card({ character, ownership, viewed, width, height, onPress }: CardProps) {
+  const t = useTranslation();
   const locked = ownership === 'locked';
   const price = characterPrice(character.id)!;
   const xml = useMemo(() => signatureXml(character), [character]);
@@ -360,7 +364,7 @@ export function CharacterGrid({ ownership, viewedId, width, gutter, compact, onP
   const step = cardW + GAP;
 
   // Keep the viewed card in sight when the stage's arrows move past the edge (at once on the first layout)
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<ScrollViewInstance>(null);
   const scrollX = useRef(0);
   const placed = useRef(false);
   const reveal = useCallback(

@@ -120,9 +120,9 @@ Two numbers drive the scene, both from the engine ([game-engine.md](game-engine.
 - **A new character does not remount it**: the step is kept, so a character picked mid-round
   carries on at the same stage. Until the loop draws its first frame, `AnimatedCharacter` draws it
   at rest on the stage (`restFrame`), so the old character never flashes when Play comes back.
-- **The loop stops while another tab is in view** (`useIsFocused`). Frozen tabs (`freezeOnBlur`)
-  skip renders but their timers still run, so without this the scene was built 30 times a second
-  behind the Leaderboard and Characters pages.
+- **The loop stops while another tab is in view** (`useIsFocused`). Hidden tabs stay mounted and
+  their timers keep running (there is no tab freeze since SDK 58: [leaderboard.md](leaderboard.md)),
+  so without this the scene was built 30 times a second behind the Leaderboard and Characters pages.
 - **Won** has no keyframe in balloons.js. `wonFrame(stage, gone, t)` keeps the round's
   stage (the balloons that are left), applies the rig's `cheer` pose and `joy`
   face to the free arm and the legs, keeps the right paw on the strings and adds a

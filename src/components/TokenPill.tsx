@@ -12,9 +12,9 @@
  */
 import { useFocusEffect, useIsFocused } from 'expo-router';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View, ViewInstance } from 'react-native';
 
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { useSoundScope } from '../audio/AudioProvider';
 import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
@@ -62,10 +62,11 @@ const run = (value: Animated.Value, toValue: number, duration: number, easing: (
   Animated.timing(value, { toValue, duration, easing, useNativeDriver: true }).start();
 
 export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number }) {
+  const t = useTranslation();
   const audio = useSoundScope();
   const flights = useTokenFlights();
   const focused = useIsFocused();
-  const coin = useRef<View>(null);
+  const coin = useRef<ViewInstance>(null);
   const [fx] = useState(createFx);
   const [shown, setShown] = useState(tokens);
   const [prev, setPrev] = useState(tokens);
@@ -158,6 +159,7 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
 
 /** The same pill without flights or counting, for screens where tokens never move (Leaderboard). */
 export const StillTokenPill = memo(function StillTokenPill({ tokens }: { tokens: number }) {
+  const t = useTranslation();
   return (
     <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })} style={styles.pillShadow}>
       <View style={styles.pill}>

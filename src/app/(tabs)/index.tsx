@@ -29,9 +29,10 @@ import { useTokenOrigin } from '../../components/TokenFlight';
 import { WelcomeToast } from '../../components/WelcomeToast';
 import { LETTER_BUY_COST } from '../../game/config';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
+import { guessLetter } from '../../game/languages';
 import { lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
-import { t } from '../../i18n';
+import { useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { colors, fonts, levelColor } from '../../theme';
 
@@ -39,6 +40,7 @@ import { colors, fonts, levelColor } from '../../theme';
 const RESULT_DELAY = { lost: 2600, won: 700 };
 
 export default function PlayScreen() {
+  const t = useTranslation();
   const audio = useSoundScope();
   const { state, dispatch, startNextRound, welcomePending, dismissWelcome } = useGame();
   const round = state.round!;
@@ -168,8 +170,8 @@ export default function PlayScreen() {
                 compact={compact}
               />
             )}
-            <DescriptionCard text={round.description} compact={compact} />
-            <LetterKeyboard
+            <DescriptionCard text={round.description} subject={round.subject} compact={compact} />
+            <LetterKeyboard language={round.language}
               keyState={(c) => keyState(round, c)}
               locked={status !== 'playing'}
               onPress={onKey}
@@ -225,6 +227,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
   compact: boolean;
   onNext: () => void;
 }) {
+  const t = useTranslation();
   const used = usedLetters(round);
   const wrong = wrongCount(round);
   const won = status === 'won';
@@ -237,7 +240,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
   const letters = round.word.split('').map((c) => ({
     letter: c,
     // Lost: what was found turns mint, what was missed turns coral (mockup)
-    look: (won ? tileState(round, c) : used.has(c) ? 'ok' : 'miss') as TileLook,
+    look: (won ? tileState(round, c) : used.has(guessLetter(c, round.language)) ? 'ok' : 'miss') as TileLook,
   }));
 
   return (
@@ -279,7 +282,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         </Text>
       )}
       <WordTiles letters={letters} available={available} compact={compact} />
-      <DescriptionCard text={round.description} compact={compact} />
+      <DescriptionCard text={round.description} subject={round.subject} compact={compact} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
         <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />

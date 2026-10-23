@@ -57,7 +57,8 @@ null, and boards show the default name.
   harmless exceptions: Scunthorpe, Cassandra, Dickens, Titan) and its recommended transformers (leetspeak,
   look-alike characters, repeated letters: "fuuuck", "Sh1t", "b00bs"). It errs on the side of blocking: a
   blocked player picks another name, and a slur on the leaderboard is far worse.
-  - Our part is small: accents off first ("Héil"), and the name is checked twice: with camelCase split
+  - Our part is small: accents off and ß as ss first ("Héil", "Scheiße": the matcher skips letters
+    outside a–z, so an accented or ß pattern can never match), and the name is checked twice: with camelCase split
     ("BigDick" → "Big Dick") and with spaces and punctuation removed ("f.u.c.k", "a s s").
   - `EXTRA_WORDS`: what its list leaves out (nazi, hitler, heil, kys, …) and names that pose as the game
     (admin, moderator, official, Hanged, support, staff, mod, …), in obscenity's pattern syntax: `|nazi|` is a
@@ -65,9 +66,12 @@ null, and boards show the default name.
     except b e o l s g**, so write "official" as `oficial`. That's also why "kkk" can't be blocked (it reads
     as a single "k").
   - `ALLOWED_NAMES`: real names its list blocks (Analise, because of "anal").
+  - `UNEXCEPTED`: English-list exceptions that would hide one of our words. Its exceptions apply to every
+    pattern, and it excuses "fick" (German abuse), so that one is dropped and only "fickle" is excused.
   - **Adding a word**: add it to `EXTRA_WORDS` (or a name to `ALLOWED_NAMES`), then add it and a harmless
-    name that contains it to `server/test/names.test.ts`.
-  - It's an English list. Other languages will need their own words.
+    name that contains it to `server/test/names.test.ts`. Write it as the matcher reads it: no accents
+    ("coño" → `cono`), double letters as one ("connard" → `conard`), or it silently never matches.
+  - The English list plus common French, Spanish and German abuse in `EXTRA_WORDS`.
 - **Names aren't unique** (open question in CLAUDE.md). Players can't report a name yet (Guideline 1.2: plan it
   before the leaderboard goes live).
 - **Random names** (`RANDOM_NAMES`): an adjective and a noun from two small, friendly lists, in one word

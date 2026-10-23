@@ -20,13 +20,14 @@ import { BigButton } from '../../components/RoundParts';
 import { TabBar } from '../../components/TabBar';
 import { feedback } from '../../feedback';
 import { canBuyCharacter, characterPrice, ownsCharacter } from '../../game/progress';
-import { t } from '../../i18n';
+import { useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { colors } from '../../theme';
 
 const GUTTER = 16;
 
 export default function CharactersScreen() {
+  const t = useTranslation();
   const audio = useSoundScope();
   const { state, dispatch } = useGame();
   const insets = useSafeAreaInsets();

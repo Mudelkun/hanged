@@ -6,7 +6,7 @@
  * No photo upload (owner's call, 2026-10-22): the avatar is the character.
  */
 import { memo, ReactNode, useEffect, useRef, useState } from 'react';
-import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, TextInputInstance, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { Character, faceXml } from '../characters/rig';
@@ -14,7 +14,7 @@ import { feedback } from '../feedback';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
 import { checkName, randomName } from '../game/names';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
 import { speciesOf } from './CharacterShop';
 import { Avatar } from './GameHeader';
@@ -42,11 +42,12 @@ interface NameCardProps {
  * "too short", which waits for Save (every name is too short at first).
  */
 export function NameCard({ name, character, onRename, onChangeCharacter }: NameCardProps) {
+  const t = useTranslation();
   const [draft, setDraft] = useState<string | null>(null);
   const [triedSave, setTriedSave] = useState(false);
   const [saved, setSaved] = useState(false);
   const [pop] = useState(() => new Animated.Value(1));
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
 
   useEffect(() => {
     if (!saved) return;
@@ -82,7 +83,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
   };
   const roll = () => {
     sound.play('dice');
-    setDraft(randomName());
+    setDraft(randomName(undefined, t.language));
     setTriedSave(false);
     feedback.unlock();
     input.current?.focus();
@@ -94,7 +95,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
         <Pressable
           onPress={onChangeCharacter}
           accessibilityRole="button"
-          accessibilityLabel={t('profile.a11y.avatar', { name: character.name, species: speciesOf(character) })}
+          accessibilityLabel={t('profile.a11y.avatar', { name: character.name, species: speciesOf(character, t) })}
           style={({ pressed }) => pressed && styles.pressed}
         >
           <Avatar character={character} size={78} />
@@ -131,7 +132,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
           )}
           {editing ? (
             <Text style={[styles.note, problem && styles.noteBad]} accessibilityLiveRegion="polite">
-              {nameHelp(problem)}
+              {nameHelp(problem, t)}
             </Text>
           ) : saved ? (
             <Text style={[styles.note, styles.noteGood]} numberOfLines={1} accessibilityLiveRegion="polite">
@@ -189,6 +190,7 @@ function SmallButton({ onPress, label, tone, children }: { onPress: () => void; 
 
 /** Words guessed (mint), tokens (butter), and the level in its own colour. */
 export const StatTiles = memo(function StatTiles({ words, tokens, level }: { words: number; tokens: number; level: number }) {
+  const t = useTranslation();
   const lv = levelColor(level);
   return (
     <View style={styles.stats}>
@@ -271,6 +273,7 @@ export function ListGroup({ title, items }: { title: string; items: ListItem[] }
 // ---- footer ----
 
 export function ProfileFooter({ version, onDelete }: { version: string; onDelete: () => void }) {
+  const t = useTranslation();
   return (
     <View style={styles.foot}>
       <Text style={styles.footText} numberOfLines={1}>
@@ -295,11 +298,12 @@ interface DeleteSheetProps {
 
 /** "Delete your account?" over the page. Offline, it says so and stays open. */
 export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSheetProps) {
+  const t = useTranslation();
   const audio = useSoundScope();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [confirmation, setConfirmation] = useState('');
-  const canDelete = confirmation === 'DELETE';
+  const canDelete = confirmation === t('delete.confirmWord');
 
   // Reset while hidden so a reopened sheet cannot reuse an earlier confirmation.
   if (!visible && (confirmation !== '' || failed)) {
@@ -351,7 +355,7 @@ export function DeleteSheet({ visible, character, onClose, onConfirm }: DeleteSh
               autoComplete="off"
               spellCheck={false}
               returnKeyType="done"
-              placeholder="DELETE"
+              placeholder={t('delete.confirmWord')}
               placeholderTextColor={colors.muted}
               accessibilityLabel={t('delete.typeToConfirm')}
               style={[styles.input, styles.confirmInput]}

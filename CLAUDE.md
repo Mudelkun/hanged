@@ -17,7 +17,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 
 **Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), and the **Profile** page (name, stats, info and legal pages, account deletion). Versus isn't built yet.
 
-**Stack:** Expo SDK 57 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
+**Stack:** Expo SDK 58 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
 ---
 

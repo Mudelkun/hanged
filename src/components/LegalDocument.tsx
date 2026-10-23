@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { t, TranslationKey } from '../i18n';
+import { TranslationKey, useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 
 export type LegalPage = 'terms' | 'privacy';
@@ -11,6 +11,7 @@ const LINES = [[96, 88, 93, 54], [91, 97, 72], [94, 86, 60]];
 
 /** The design's explicit placeholder, shared with Profile. Replace with approved bundled text before release. */
 export function LegalDocument({ page }: { page: LegalPage }) {
+  const t = useTranslation();
   return <View style={styles.document}>
     {HEADINGS[page].map((heading, i) => <View key={heading} style={styles.section}>
       <Text style={styles.heading}>{t(heading)}</Text>

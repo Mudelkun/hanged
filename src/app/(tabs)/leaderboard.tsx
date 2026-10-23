@@ -16,14 +16,14 @@ import { BoardNote, PeriodSwitch, Podium, Ranked, RankRow } from '../../componen
 import { PaperBackground } from '../../components/PaperBackground';
 import { TabBar } from '../../components/TabBar';
 import { GameState } from '../../game/progress';
-import { t } from '../../i18n';
+import { Translator, useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { Board, useLeaderboard } from '../../state/useLeaderboard';
 import { colors } from '../../theme';
 
 const PODIUM = 3;
 
-function rank(board: Board, s: GameState) {
+function rank(board: Board, s: GameState, t: Translator) {
   const name = (n: string | null) => n ?? t('player.defaultName');
   const all: Ranked[] = board.entries.map((e) => {
     const me = e.playerId === board.meId;
@@ -43,13 +43,14 @@ function rank(board: Board, s: GameState) {
 }
 
 export default function LeaderboardScreen() {
+  const t = useTranslation();
   const { state } = useGame();
   const insets = useSafeAreaInsets();
   const compact = useWindowDimensions().height < 760;
   const [period, setPeriod] = useState<Period>('week');
   const { view, refreshing, refresh } = useLeaderboard(period);
   const board = view.status === 'ready' ? view.board : null;
-  const ranked = useMemo(() => board && rank(board, state), [board, state]);
+  const ranked = useMemo(() => board && rank(board, state, t), [board, state, t]);
 
   return (
     <View style={styles.screen}>
@@ -77,7 +78,7 @@ export default function LeaderboardScreen() {
                 </View>
               ) : !board?.me && ranked.top.length ? (
                 <BoardNote body={t('board.notRanked')} />
-              ) : null
+              ) : undefined
             }
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}

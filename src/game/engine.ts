@@ -16,6 +16,7 @@ import {
   MAX_WORD_LENGTH,
   MIN_WORD_LENGTH,
 } from './config';
+import { alphabetFor, guessLetter, guessWord, hasValidLetters } from './languages';
 
 export type Letter = string; // one of a–z
 
@@ -54,17 +55,17 @@ export type TileState = 'hidden' | 'clue' | 'ok';
 export type WordError = 'empty' | 'too_long' | 'not_letters';
 
 /** Lowercases a word. It never strips or swaps characters: an invalid word stays invalid. */
-export const normalizeWord = (raw: string) => raw.trim().toLowerCase();
+export const normalizeWord = (raw: string) => raw.trim().normalize('NFC').toLowerCase();
 
 /**
  * Letters only (plain A–Z, no accents, spaces, digits or hyphens), 1 to 15
  * letters inclusive. The C# original rejected 15-letter words (`< 15`) and
  * accepted accented letters (`char.IsLetter`); both are bugs, not rules.
  */
-export function validateWord(raw: string): { ok: true; word: string } | { ok: false; error: WordError } {
+export function validateWord(raw: string, language = 'en'): { ok: true; word: string } | { ok: false; error: WordError } {
   const word = normalizeWord(raw);
   if (word.length < MIN_WORD_LENGTH) return { ok: false, error: 'empty' };
-  if (!/^[a-z]+$/.test(word)) return { ok: false, error: 'not_letters' };
+  if (!hasValidLetters(word, language)) return { ok: false, error: 'not_letters' };
   if (word.length > MAX_WORD_LENGTH) return { ok: false, error: 'too_long' };
   return { ok: true, word };
 }
@@ -134,21 +135,21 @@ export function pickClueLetters(word: string, toFind: number, rng: () => number 
 // ---- disabled keys (easy levels) ----
 
 /** Letters of the alphabet that are not in the word: the only ones a level may disable. */
-export const decoyLetters = (word: string): Letter[] => ALPHABET.filter((c) => !word.includes(c));
+export const decoyLetters = (word: string, language = 'en'): Letter[] => alphabetFor(language).filter((c) => !guessWord(word, language).includes(c));
 
 /**
  * How many decoy letters to take off the keyboard (`ratio` comes from the
  * level and shrinks as levels rise). At least one decoy always stays, so a
  * wrong guess is still possible.
  */
-export function disabledCount(word: string, ratio: number): number {
-  const decoys = decoyLetters(word).length;
+export function disabledCount(word: string, ratio: number, language = 'en'): number {
+  const decoys = decoyLetters(word, language).length;
   return Math.max(0, Math.min(decoys - 1, Math.round(decoys * ratio)));
 }
 
-export function pickDisabledLetters(word: string, ratio: number, rng: () => number = Math.random): Letter[] {
-  const count = disabledCount(word, ratio);
-  return count ? shuffled(decoyLetters(word), rng).slice(0, count) : [];
+export function pickDisabledLetters(word: string, ratio: number, rng: () => number = Math.random, language = 'en'): Letter[] {
+  const count = disabledCount(word, ratio, language);
+  return count ? shuffled(decoyLetters(word, language), rng).slice(0, count) : [];
 }
 
 // ---- rounds ----
@@ -170,7 +171,7 @@ export interface NewRoundInput {
 }
 
 export function createRound(input: NewRoundInput, rng: () => number = Math.random): Round {
-  const checked = validateWord(input.word);
+  const checked = validateWord(input.word, input.language);
   if (!checked.ok) throw new Error(`Invalid word "${input.word}": ${checked.error}`);
   const toFind = Math.floor(input.toFind + rng());
   return {
@@ -182,8 +183,8 @@ export function createRound(input: NewRoundInput, rng: () => number = Math.rando
     ...(input.subject && { subject: input.subject }),
     level: input.level,
     maxWrong: input.maxWrong ?? DEFAULT_MAX_WRONG,
-    clueLetters: pickClueLetters(checked.word, toFind, rng, LETTER_FREQUENCY[input.language]),
-    disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng),
+    clueLetters: pickClueLetters(guessWord(checked.word, input.language), toFind, rng, LETTER_FREQUENCY[input.language]),
+    disabledLetters: pickDisabledLetters(checked.word, input.disabledRatio ?? 0, rng, input.language),
     boughtLetters: [],
     guessed: [],
   };
@@ -199,16 +200,16 @@ const isClue = (r: Round, c: Letter) => r.clueLetters.includes(c) || r.boughtLet
 /** The word's distinct letters that are still hidden. */
 export const hiddenLetters = (r: Round): Letter[] => {
   const used = usedLetters(r);
-  return uniqueLetters(r.word).filter((c) => !used.has(c));
+  return uniqueLetters(guessWord(r.word, r.language)).filter((c) => !used.has(c));
 };
 
-export const wrongLetters = (r: Round): Letter[] => r.guessed.filter((c) => !r.word.includes(c));
+export const wrongLetters = (r: Round): Letter[] => r.guessed.filter((c) => !guessWord(r.word, r.language).includes(c));
 
 export const wrongCount = (r: Round) => wrongLetters(r).length;
 
 export function roundStatus(r: Round): RoundStatus {
   const used = usedLetters(r);
-  if (r.word.split('').every((c) => used.has(c))) return 'won';
+  if ([...r.word].every((c) => used.has(guessLetter(c, r.language)))) return 'won';
   if (wrongCount(r) >= r.maxWrong) return 'lost';
   return 'playing';
 }
@@ -232,13 +233,15 @@ export const balloonsGone = (r: Round) =>
 export const balloonsLeft = (r: Round) => SCENE_STAGES - balloonsGone(r);
 
 export function keyState(r: Round, c: Letter): KeyState {
+  c = guessLetter(c, r.language);
   if (isClue(r, c)) return 'clue';
   if (r.disabledLetters.includes(c)) return 'off';
   if (!r.guessed.includes(c)) return 'idle';
-  return r.word.includes(c) ? 'ok' : 'no';
+  return guessWord(r.word, r.language).includes(c) ? 'ok' : 'no';
 }
 
 export function tileState(r: Round, c: Letter): TileState {
+  c = guessLetter(c, r.language);
   if (isClue(r, c)) return 'clue';
   return r.guessed.includes(c) ? 'ok' : 'hidden';
 }
@@ -249,8 +252,8 @@ export function tileState(r: Round, c: Letter): TileState {
  * (rule 6), its key was disabled at the start, or it is not a–z.
  */
 export function guess(r: Round, raw: string): Round {
-  const c = raw.toLowerCase();
-  if (!isLetter(c)) return r;
+  const c = guessLetter(raw, r.language);
+  if (!alphabetFor(r.language).includes(c)) return r;
   if (roundStatus(r) !== 'playing') return r;
   if (usedLetters(r).has(c)) return r;
   return { ...r, guessed: [...r.guessed, c] };

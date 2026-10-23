@@ -4,7 +4,7 @@ import { Animated, AppState, Easing, StyleSheet, Text, View } from 'react-native
 import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop, SvgXml } from 'react-native-svg';
 import { BalloonAnim, characterById, structureKey } from '../characters/rig';
 import { LIFT_OFF_MS } from '../game/onboarding';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 import { cloudXml, Icon } from './icons';
 import { WoodenSign } from './WoodenSign';
@@ -104,6 +104,7 @@ export function NameStage({ id, name, bad, compact, active = true }: { id: strin
 const SPEED = [[30, 120, 90], [64, 380, 130], [98, 610, 70], [300, 90, 120], [336, 330, 90], [270, 560, 140], [180, 700, 80], [350, 640, 60], [20, 520, 70]];
 
 export function LiftOff({ id, onDone }: { id: string; onDone: () => void }) {
+  const t = useTranslation();
   const [flight] = useState(() => new Animated.Value(0));
   useEffect(() => {
     const animation = Animated.timing(flight, { toValue: 1, duration: LIFT_OFF_MS, easing: Easing.inOut(Easing.cubic), useNativeDriver: true });

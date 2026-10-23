@@ -2,9 +2,10 @@
 
 ## Stack (decided 2026-10-20)
 
-- **Expo SDK 57**, React Native 0.86, React 19.2, TypeScript 6, Jest 29 (jest-expo 57).
-  Downgraded from SDK 58 on 2026-10-20 at the owner's request. Expo ships breaking
-  changes every SDK: check the versioned docs (`https://docs.expo.dev/versions/v57.0.0/`)
+- **Expo SDK 58**, React Native 0.88, React 19.3, TypeScript 6, Jest 30 (jest-expo 58).
+  Downgraded from SDK 58 to 57 on 2026-10-20 at the owner's request, then upgraded back to 58
+  on 2026-10-23, once the owner's iPhone Expo Go was on SDK 58 (Expo Go runs only one SDK).
+  Expo ships breaking changes every SDK: check the versioned docs (`https://docs.expo.dev/versions/v58.0.0/`)
   before using an Expo API, as [AGENTS.md](../AGENTS.md) says.
 - **Expo Router**, routes in `src/app/` (`_layout.tsx` = root Stack, `index.tsx` = Play).
   Non-route code stays outside `src/app/`.
@@ -17,7 +18,7 @@
 - Fonts: `@expo-google-fonts/fredoka` (titles, letters) and `nunito` (body). Loaded in
   `_layout.tsx`. The splash screen stays up until the fonts **and** the saved game are loaded.
 - Haptics: `expo-haptics`.
-- Audio: `expo-audio` for native playback, `expo-asset` for bundled sources; the browser uses Web Audio. See [audio-design.md](audio-design.md). Both Expo modules are included in SDK 57 Expo Go. Existing development builds need rebuilding to add the native audio module/config; there is no microphone permission or background audio service.
+- Audio: `expo-audio` for native playback, `expo-asset` for bundled sources; the browser uses Web Audio. See [audio-design.md](audio-design.md). Both Expo modules are included in SDK 58 Expo Go. Existing development builds need rebuilding to add the native audio module/config; there is no microphone permission or background audio service.
 
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
 with Expo Go. No dev build is needed yet.
@@ -57,13 +58,21 @@ Run tests, typecheck and lint before calling a task done (in `server/` too when 
 - **TypeScript 6 doesn't auto-include `@types/*`.** Test globals come from
   `"types": ["jest"]` in `tsconfig.json`. Add more there if you need them.
 - **`npm install` failed with ERESOLVE on `react-dom`** until `react-dom` was pinned to
-  the SDK's React version (`19.2.3` on SDK 57, via `npx expo install react-dom`). expo-router's
+  the SDK's React version (`19.3.0` on SDK 58, via `npx expo install react-dom`). expo-router's
   web dependencies pull it in.
 - **No 3D transforms (`rotateX`, `rotateY`, `perspective`) anywhere.** On iOS a single 3D-tilted view
   makes Core Animation depth-sort the flat views around it, and it slices them along long diagonal
   lines (parts of cards, text and characters vanish behind the background). The streak confetti's
   `rotateX` flutter did this on the owner's iPhone, and the web preview never shows it. Fake a flip
   with `scaleX`/`scaleY` going through 0 to −1 (the token coin and the confetti both do).
+- **Refs take React Native's instance types** (RN 0.87+ makes the strict TypeScript API the default):
+  `useRef<ViewInstance>`, `useRef<ScrollViewInstance>`, `useRef<TextInputInstance>`, all exported by
+  `react-native`. `useRef<View>` no longer type-checks: `View` is the component, not what the ref holds.
+  Deep imports from `react-native/Libraries/*` are type errors too.
+- **`react-test-renderer` is a declared dev dependency**, pinned to the SDK's React version. The
+  component tests import it, and jest-expo 58 no longer brings it in.
+- **`freezeOnBlur` does nothing since SDK 58**, and `activityEnabled` is off on purpose: see
+  [leaderboard.md](leaderboard.md).
 - On **web**, an `<Svg>` sized only by `style={StyleSheet.absoluteFill}` falls back to
   300×150. Always also pass `width="100%" height="100%"`.
 

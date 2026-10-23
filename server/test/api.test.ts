@@ -67,6 +67,23 @@ describe('sync', () => {
     assert.equal((await sync(p, snapshot(), [report(1, { wordId: 'Castle!' })])).statusCode, 400);
   });
 
+  it('syncs accented word IDs from every supported language and counts retries once', async () => {
+    const p = await newPlayer();
+    await sync(p, snapshot());
+    const reports = ['fr-été', 'fr-sœur', 'es-niño', 'de-straße'].map((wordId, i) => report(i + 1, { wordId }));
+    for (let i = 0; i < 2; i++) {
+      const res = await sync(p, snapshot({ language: 'de', wordsGuessed: 4 }), reports);
+      assert.equal(res.statusCode, 200);
+      assert.deepEqual(res.json<SyncResponse>(), { acked: 4, wordsGuessed: 4 });
+    }
+    const { rows } = await db.query<{ word_id: string; played: number }>('SELECT word_id, played FROM word_days ORDER BY word_id');
+    assert.equal(rows.length, 4);
+    assert.ok(rows.every(row => row.played === 1));
+    for (const wordId of ['en-éclair', 'fr-niño', 'de-house!', 'es-dos palabras']) {
+      assert.equal((await sync(p, snapshot(), [report(5, { wordId })])).statusCode, 400);
+    }
+  });
+
   it('takes the first snapshot as it is, then grows only with reported wins', async () => {
     const p = await newPlayer();
     // played 40 words before syncing existed

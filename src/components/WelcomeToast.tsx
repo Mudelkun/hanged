@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { Character } from '../characters/rig';
 import { WELCOME_MS } from '../game/onboarding';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 import { Avatar } from './GameHeader';
 import { Raised } from './Raised';
 
 export function WelcomeToast({ name, character, onDone }: { name: string; character: Character; onDone: () => void }) {
+  const t = useTranslation();
   const [show] = useState(() => new Animated.Value(0));
   useEffect(() => {
     const animation = Animated.sequence([

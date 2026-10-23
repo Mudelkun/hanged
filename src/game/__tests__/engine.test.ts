@@ -23,7 +23,8 @@ import {
 } from '../engine';
 import { EDGE_CLUES, LETTER_FREQUENCY, LONG_WORD_LENGTH } from '../config';
 import { LEVELS } from '../levels';
-import { WORDS } from '../words';
+import { wordsForLanguage } from '../words';
+const WORDS = wordsForLanguage('en');
 
 const round = (word: string, clues: string[] = [], maxWrong = 10, disabled: string[] = []): Round => ({
   id: 'r1',

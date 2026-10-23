@@ -10,7 +10,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop, SvgXml } from 'react-native-svg'
 
 import type { Period } from '../../server/src/contract';
 import { bodyXml, Character } from '../characters/rig';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { Avatar } from './GameHeader';
@@ -32,6 +32,7 @@ const PERIODS: { id: Period; label: 'board.week' | 'board.all' }[] = [
 ];
 
 export function PeriodSwitch({ period, onChange }: { period: Period; onChange: (p: Period) => void }) {
+  const t = useTranslation();
   return (
     <View style={styles.seg} accessibilityRole="tablist">
       {PERIODS.map((p) => {
@@ -55,18 +56,24 @@ export function PeriodSwitch({ period, onChange }: { period: Period; onChange: (
   );
 }
 
-const Score = ({ words, big }: { words: number; big?: boolean }) => (
-  <Text style={big ? styles.podiumScore : styles.rowScore}>
-    {words}
-    <Text style={big ? styles.podiumUnit : styles.rowUnit}> {t(words === 1 ? 'board.word' : 'board.words')}</Text>
-  </Text>
-);
+function Score({ words, big }: { words: number; big?: boolean }) {
+  const t = useTranslation();
+  return (
+    <Text style={big ? styles.podiumScore : styles.rowScore}>
+      {words}
+      <Text style={big ? styles.podiumUnit : styles.rowUnit}> {t(words === 1 ? 'board.word' : 'board.words')}</Text>
+    </Text>
+  );
+}
 
-const You = () => (
-  <View style={styles.you}>
-    <Text style={styles.youText}>{t('board.you')}</Text>
-  </View>
-);
+function You() {
+  const t = useTranslation();
+  return (
+    <View style={styles.you}>
+      <Text style={styles.youText}>{t('board.you')}</Text>
+    </View>
+  );
+}
 
 /** Podium places, left to right: 2nd, 1st, 3rd. */
 const PLACES = [
@@ -76,6 +83,7 @@ const PLACES = [
 ];
 
 const PodiumPlace = memo(function PodiumPlace({ entry, place }: { entry: Ranked; place: (typeof PLACES)[number] }) {
+  const t = useTranslation();
   const xml = useMemo(
     () => bodyXml(entry.character, place.at === 0 ? { pose: 'cheer', expr: 'joy' } : { expr: entry.me ? 'joy' : 'happy' }),
     [entry.character, entry.me, place.at],
@@ -150,6 +158,7 @@ export function Podium({ top }: { top: Ranked[] }) {
 }
 
 export const RankRow = memo(function RankRow({ entry }: { entry: Ranked }) {
+  const t = useTranslation();
   return (
     <View accessible accessibilityLabel={t('board.a11y.row', { rank: entry.rank, name: entry.name, count: entry.words })}>
       <Raised depth={3} shadowColor={colors.shadow} radius={20} outerStyle={styles.rowOuter} style={[styles.row, entry.me && styles.rowMe]}>

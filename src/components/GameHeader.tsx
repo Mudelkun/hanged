@@ -13,7 +13,7 @@ import { SvgXml } from 'react-native-svg';
 
 import { avatarRing, avatarXml, Character } from '../characters/rig';
 import { LEVELS } from '../game/levels';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
 import { sound } from '../audio';
 import { chevXml, crownXml, Icon, starXml } from './icons';
@@ -62,6 +62,7 @@ const CROWN = crownXml();
  * opens the level map.
  */
 const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; onPress?: () => void }) {
+  const t = useTranslation();
   const [pop] = useState(() => new Animated.Value(1));
   const prev = useRef(level);
   useEffect(() => {
@@ -94,23 +95,27 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
   );
 });
 
-const ProfileButton = ({ character }: { character: Character }) => (
-  <Pressable
-    onPress={() => { sound.unlock(); sound.play('panel-open'); router.push('/profile'); }}
-    hitSlop={6}
-    accessibilityRole="button"
-    accessibilityLabel={t('header.a11y.avatar')}
-    style={({ pressed }) => pressed && styles.levelPressed}
-  >
-    <Avatar character={character} size={46} />
-  </Pressable>
-);
+function ProfileButton({ character }: { character: Character }) {
+  const t = useTranslation();
+  return (
+    <Pressable
+      onPress={() => { sound.unlock(); sound.play('panel-open'); router.push('/profile'); }}
+      hitSlop={6}
+      accessibilityRole="button"
+      accessibilityLabel={t('header.a11y.avatar')}
+      style={({ pressed }) => pressed && styles.levelPressed}
+    >
+      <Avatar character={character} size={46} />
+    </Pressable>
+  );
+}
 
 /** Back to where the page was opened from (Play, if it was opened straight from a link). */
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
 /** A pushed page's header: back button, title, and the token balance when the page shows it. */
 export function BackHeader({ title, tokens }: { title: string; tokens?: number }) {
+  const t = useTranslation();
   return (
     <View style={styles.head}>
       <Pressable onPress={() => { sound.play('back'); goBack(); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
@@ -152,6 +157,7 @@ const nameSize = (name: string, width: number) =>
   Math.max(14, Math.min(27, Math.floor(width / ([...name].length * LETTER_WIDTH))));
 
 export function GameHeader({ name, character, wordsGuessed, level, tokens, onLevelPress }: Props) {
+  const t = useTranslation();
   // The name's room, measured: it changes with the phone and with the pills' widths
   const [nameWidth, setNameWidth] = useState(0);
   return (

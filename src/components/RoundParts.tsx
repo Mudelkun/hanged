@@ -8,7 +8,8 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { LETTER_BUY_COST, LETTER_BUY_COUNT } from '../game/config';
-import { t } from '../i18n';
+import { displayLetter } from '../game/languages';
+import { TranslationKey, useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 import { bulbXml, Icon, sparkXml } from './icons';
 import { popFrom } from './motion';
@@ -19,6 +20,7 @@ import { sound, Cue } from '../audio';
 // ---- misses ----
 
 export function MissesBar({ wrong, max }: { wrong: number; max: number }) {
+  const t = useTranslation();
   return (
     <View style={styles.misses}>
       <View style={styles.pips}>
@@ -44,6 +46,7 @@ const TILE_LOOK = {
 };
 
 export function Tile({ letter, look, w, h, sparkle = true }: { letter: string; look: TileLook; w: number; h: number; sparkle?: boolean }) {
+  const t = useTranslation();
   const [pop] = useState(() => new Animated.Value(1));
   // Pop when the tile turns over during play, not when it first appears
   const prevLook = useRef(look);
@@ -72,7 +75,7 @@ export function Tile({ letter, look, w, h, sparkle = true }: { letter: string; l
   return (
     <Animated.View style={{ transform: [{ scale: pop }] }}>
       <Raised shadowColor={c.shadow} radius={radius} style={[styles.tile, { width: w, height: h, backgroundColor: c.bg, borderColor: c.border }]}>
-        <Text style={[styles.tileText, { fontSize: Math.round(w * 0.6), color: c.text }]}>{letter.toUpperCase()}</Text>
+        <Text style={[styles.tileText, { fontSize: Math.round(w * 0.6), color: c.text }]}>{displayLetter(letter)}</Text>
       </Raised>
       {look === 'clue' && sparkle && (
         <View style={[styles.spark, { top: -spark * 0.4, right: -spark * 0.4 }]} pointerEvents="none">
@@ -114,6 +117,7 @@ export function LetterShopPill({ canAfford, onBuy, compact }: {
   onBuy: () => void;
   compact?: boolean;
 }) {
+  const t = useTranslation();
   const [refused, refuse] = useRefusal();
   const params = { count: LETTER_BUY_COUNT, cost: LETTER_BUY_COST };
   return (
@@ -141,19 +145,54 @@ export function LetterShopPill({ canAfford, onBuy, compact }: {
 
 // ---- description ----
 
+const subjectLabels: Record<string, TranslationKey> = {
+  "animal": "subjects.animal",
+  "food": "subjects.food",
+  "plant": "subjects.plant",
+  "object": "subjects.object",
+  "person": "subjects.person",
+  "place": "subjects.place",
+  "body": "subjects.body",
+  "material": "subjects.material",
+  "nature": "subjects.nature",
+  "action": "subjects.action",
+  "feeling": "subjects.feeling",
+  "describing": "subjects.describing",
+  "time": "subjects.time",
+  "quantity": "subjects.quantity",
+  "communication": "subjects.communication",
+  "idea": "subjects.idea",
+  "group": "subjects.group",
+  "event": "subjects.event",
+  "language": "subjects.language",
+  "quality": "subjects.quality",
+  "state": "subjects.state",
+  "mind": "subjects.mind",
+  "money": "subjects.money",
+  "amount": "subjects.amount",
+  "shape": "subjects.shape",
+  "relation": "subjects.relation",
+  "movement": "subjects.movement",
+  "senses": "subjects.senses",
+  "competition": "subjects.competition",
+  "manner": "subjects.manner"
+};
+
 interface DescriptionProps {
   text: string;
+  subject?: string;
   compact?: boolean;
 }
 
-export function DescriptionCard({ text, compact }: DescriptionProps) {
+export function DescriptionCard({ text, compact, subject }: DescriptionProps) {
+  const t = useTranslation();
   return (
     <Raised shadowColor={colors.shadow} radius={22} style={[styles.desc, compact && { paddingVertical: 7 }]}>
       <View style={styles.bulb}>
         <Icon xml={bulbXml} size={24} />
       </View>
       <View style={styles.descBody}>
-        <Text style={styles.chip}>{t('description.label')}</Text>
+        <Text style={styles.chip}>{subject && Object.hasOwn(subjectLabels, subject) ? t(subjectLabels[subject]) : t('description.label')}</Text>
         {/* Dictionary definitions are up to 140 characters: 4 lines on a 375 pt phone. */}
         <Text style={styles.descText} numberOfLines={4} adjustsFontSizeToFit minimumFontScale={0.85}>
           {text}
@@ -248,9 +287,9 @@ const styles = StyleSheet.create({
   descBody: { flex: 1, minWidth: 0 },
   chip: { fontFamily: fonts.display600, fontSize: 12, letterSpacing: 1, color: colors.butterT },
   descText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink, marginTop: 1 },
-  btn: { height: 56, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 },
+  btn: { minHeight: 56, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 },
   btnMuted: { backgroundColor: '#eadfd2' },
   btnDisabled: { opacity: 0.45 },
   btnGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
-  btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2 },
+  btnText: { fontFamily: fonts.display600, fontSize: 20, color: '#fff', letterSpacing: 0.2, flexShrink: 1, textAlign: 'center' },
 });

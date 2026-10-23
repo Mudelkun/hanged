@@ -7,6 +7,7 @@ export default function OnboardingLayout() {
     <OnboardingProvider>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="buddy" />
         <Stack.Screen name="name" />
       </Stack>
     </OnboardingProvider>

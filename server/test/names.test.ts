@@ -41,6 +41,12 @@ describe('player names', () => {
     for (const name of ['Admin', 'admin123', 'Hanged', 'Moderator', 'OfficialJo', 'Support']) assert.equal(problem(name), 'blocked', name);
   });
 
+  it('filters common French, Spanish and German abuse without blocking ordinary names', () => {
+    for (const name of ['Putain', 'Merde', 'Connard', 'Enculé', 'Puta', 'Cabrón', 'Mierda', 'Coño', 'Scheiße', 'Arschloch', 'Wichser', 'M.e.r.d.e', 'Connasse', 'Tapette', 'Fick'])
+      assert.equal(problem(name), 'blocked', name);
+    for (const name of ['Constance', 'Amaia', 'Scheider', 'François', 'Peña', 'Jürgen', 'Strauß', 'Fickle', 'Connor']) assert.equal(problem(name), null, name);
+  });
+
   it("doesn't block harmless names that hide a bad word", () => {
     for (const name of ['Titan', 'Grape', 'Sussex', 'Hancock', 'Yoshito', 'Nazir', 'Nigeria', 'Swanky', 'Torpedo', 'Bob', 'As Good', 'Cassandra', 'Dickens', 'Scunthorpe', 'Analise', 'Classic', 'Therapist'])
       assert.equal(problem(name), null, name);

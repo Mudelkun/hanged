@@ -30,7 +30,16 @@ export const RANDOM_NAMES: readonly string[] = ADJECTIVES.flatMap((a) => NOUNS.m
 );
 
 /** A new player's name until they pick one. Names don't have to be unique. */
-export const randomName = (rng: () => number = Math.random) => RANDOM_NAMES[Math.floor(rng() * RANDOM_NAMES.length)];
+const LOCAL_NAMES: Record<string, readonly string[]> = {
+  fr: ['RenardSouriant', 'PetitNuage', 'PandaJoyeux', 'LapinAgile', 'OursCurieux', 'LutinMalin', 'HibouRieur', 'KoalaCalme', 'ChatSerein', 'SoleilDoux'],
+  es: ['ZorroFeliz', 'PandaAlegre', 'ConejoVeloz', 'OsoCurioso', 'GatoSereno', 'KoalaAmable', 'SolBrillante', 'BúhoSabio', 'DelfínValiente', 'PingüinoRisueño'],
+  de: ['FroherFuchs', 'MutigerBär', 'KleinerPanda', 'FlinkerHase', 'LustigerIgel', 'SanfterKoala', 'KlugerDelfin', 'WacherSpatz', 'BunterFalter', 'StillerOtter'],
+};
+export const namesForLanguage = (language: string): readonly string[] => LOCAL_NAMES[language] ?? RANDOM_NAMES;
+export const randomName = (rng: () => number = Math.random, language = 'en') => {
+  const names = namesForLanguage(language);
+  return names[Math.floor(rng() * names.length)];
+};
 
 /**
  * A saved name the rules no longer take (the limit went from 20 to 15): its

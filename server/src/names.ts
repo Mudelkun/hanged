@@ -47,21 +47,34 @@ const EXTRA_WORDS = [
   '|milf|', '|thot[s]|', '|hoe[s]|', '|pedo|', 'p[a]edophile', 'paedo', 'molest', '|clit|', '|scum|',
   // Names that pretend to speak for the game.
   'admin', 'moderator', 'oficial', '|hanged|', '|suport|', '|staf|', '|system|', '|mod[s]|', '|developer|',
+  // Common French, Spanish and German abuse. Use the same matcher/transformers on device and server.
+  // Whole-word boundaries protect ordinary names such as Constance, Amaia and Scheider.
+  // Written as the matcher reads them: double letters as one, no accents, ß as ss.
+  '|putain|', '|pute[s]|', '|salope[s]|', '|salopard[s]|', '|conard[s]|', '|conasse[s]|', '|con|',
+  '|merde|', '|encule[s]|', '|pd|', '|tapete[s]|', '|negre[s]|', '|nique|',
+  '|puta[s]|', '|puto[s]|', '|mierda|', '|joder|', '|cabron[es]|', '|gilipollas|', '|maricon[es]|',
+  '|cono|', '|pendejo[s]|', '|pendeja[s]|', '|chingar|', '|chingada|', '|culero[s]|',
+  '|scheisse|', '|arschloch|', '|arsch|', '|fick[en]|', '|fotze[n]|',
+  '|hurensohn|', '|wichser|', '|schlampe[n]|', '|schwuchtel|', '|neger|',
+  '|moderateur|', '|administrateur|', '|administrador|', '|entwickler|',
 ];
 /** Real names its list blocks. */
 const ALLOWED_NAMES = ['analise'];
+/** The English list excuses "fick", which is German abuse: excuse only "fickle". */
+const UNEXCEPTED = new Set(['fick']);
+const EXCEPTED_WORDS = ['fickle'];
 
 const words = new DataSet<unknown>().addAll(englishDataset);
 for (const word of EXTRA_WORDS) words.addPhrase((phrase) => phrase.addPattern(parseRawPattern(word)));
 const built = words.build();
 const matcher = new RegExpMatcher({
   ...built,
-  whitelistedTerms: [...(built.whitelistedTerms ?? []), ...ALLOWED_NAMES],
+  whitelistedTerms: [...(built.whitelistedTerms ?? []).filter((term) => !UNEXCEPTED.has(term)), ...EXCEPTED_WORDS, ...ALLOWED_NAMES],
   ...englishRecommendedTransformers,
 });
 
-/** Accents off, so "Héil" reads as heil; other alphabets stay as they are. */
-const plain = (name: string) => name.normalize('NFKD').replace(/\p{M}/gu, '');
+/** Accents off, so "Héil" reads as heil, and ß as ss (the matcher skips it); other alphabets stay as they are. */
+const plain = (name: string) => name.normalize('NFKD').replace(/\p{M}/gu, '').replace(/ß/g, 'ss');
 
 export function isBlocked(name: string): boolean {
   const text = plain(name);

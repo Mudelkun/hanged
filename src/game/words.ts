@@ -3,16 +3,16 @@
  * It stays on the device so every level plays offline; the server never
  * serves words. Keep every read behind this module.
  */
-import rawWords from '../../data/words.json';
+import { isLanguage, Language } from './languages';
 import type { Level } from './levels';
 
 export interface WordEntry {
   id: string;
   word: string;
   language: string;
-  /** A dictionary definition (Open English WordNet, see data/CREDITS.md), never hand-written. */
+  /** A concise clue in the entry's language; provenance is documented in data/CREDITS.md. */
   description: string;
-  /** The WordNet sense the description comes from, e.g. "oewn-02124272-n". */
+  /** Dictionary sense (English) or original authored clue ID (other languages). */
   sense: string;
   /** How common the word is: 10 (everyone knows it) to 50 (a medium dictionary). Levels cap it (Level.maxRarity). */
   rarity: number;
@@ -24,11 +24,26 @@ export interface WordEntry {
   subject: string;
 }
 
-export const WORDS: readonly WordEntry[] = rawWords as WordEntry[];
-
-const BY_ID = new Map(WORDS.map((w) => [w.id, w]));
-
-export const wordById = (id: string): WordEntry | undefined => BY_ID.get(id);
+// Static require paths let Metro bundle all packs; only the requested pack is evaluated.
+const LOADERS: Record<Language, () => readonly WordEntry[]> = {
+  en: () => require('../../data/words.json'),
+  fr: () => require('../../data/words/fr.json'),
+  es: () => require('../../data/words/es.json'),
+  de: () => require('../../data/words/de.json'),
+};
+const PACKS = new Map<string, readonly WordEntry[]>();
+const INDEXES = new Map<string, Map<string, WordEntry>>();
+export function wordsForLanguage(language: string): readonly WordEntry[] {
+  if (!isLanguage(language)) return [];
+  if (!PACKS.has(language)) PACKS.set(language, LOADERS[language]());
+  return PACKS.get(language)!;
+}
+export function wordById(id: string): WordEntry | undefined {
+  const language = id.split('-')[0];
+  if (!isLanguage(language)) return undefined;
+  if (!INDEXES.has(language)) INDEXES.set(language, new Map(wordsForLanguage(language).map(w => [w.id, w])));
+  return INDEXES.get(language)!.get(id);
+}
 
 const POOLS = new Map<string, readonly WordEntry[]>();
 
@@ -45,9 +60,10 @@ function closest(words: readonly WordEntry[], distance: (w: WordEntry) => number
  * When none fit, the closest lengths, then the right kind, then the most
  * common, then the easiest. Cached for the bundled database.
  */
-export function levelPool(level: Level, language: string, words: readonly WordEntry[] = WORDS): readonly WordEntry[] {
+export function levelPool(level: Level, language: string, words: readonly WordEntry[] = wordsForLanguage(language)): readonly WordEntry[] {
   const key = `${language}:${level.minLength}-${level.maxLength}:${level.concreteOnly}:${level.maxRarity}:${level.maxDifficulty}`;
-  const cached = words === WORDS && POOLS.get(key);
+  const bundled = words === wordsForLanguage(language);
+  const cached = bundled && POOLS.get(key);
   if (cached) return cached;
   const inLanguage = words.filter((w) => w.language === language);
   if (inLanguage.length === 0) throw new Error(`No words for language "${language}"`);
@@ -55,7 +71,7 @@ export function levelPool(level: Level, language: string, words: readonly WordEn
   const byKind = closest(byLength, (w) => (level.concreteOnly && !w.concrete ? 1 : 0));
   const byRarity = closest(byKind, (w) => Math.max(0, w.rarity - level.maxRarity));
   const pool = closest(byRarity, (w) => Math.max(0, w.difficulty - level.maxDifficulty));
-  if (words === WORDS) POOLS.set(key, pool);
+  if (bundled) POOLS.set(key, pool);
   return pool;
 }
 
@@ -70,7 +86,7 @@ export function pickWord(
   language: string,
   seenIds: readonly string[],
   rng: () => number = Math.random,
-  words: readonly WordEntry[] = WORDS,
+  words: readonly WordEntry[] = wordsForLanguage(language),
 ): WordEntry {
   const pool = levelPool(level, language, words);
   const seen = new Set(seenIds);
@@ -90,7 +106,7 @@ export function seenWord(
   seenIds: readonly string[],
   word: WordEntry,
   level: Level,
-  words: readonly WordEntry[] = WORDS,
+  words: readonly WordEntry[] = wordsForLanguage(word.language),
 ): string[] {
   if (!seenIds.includes(word.id)) return [...seenIds, word.id];
   const restart = new Set(levelPool(level, word.language, words).map((w) => w.id));

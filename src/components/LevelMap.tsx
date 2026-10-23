@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Character } from '../characters/rig';
 import { LEVELS, levelByNumber, LevelProgress, wordsToNextLevel } from '../game/levels';
-import { t } from '../i18n';
+import { Translator, useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts, levelColor, worldColors } from '../theme';
 import { Avatar } from './GameHeader';
@@ -44,7 +44,7 @@ interface Props {
 }
 
 /** The line under the level: words left to the next stop, to clear the fog, or the top reached. */
-function nextLine(progress: LevelProgress, best: number) {
+function nextLine(progress: LevelProgress, best: number, t: Translator) {
   const count = wordsToNextLevel(progress);
   if (count === null) return t('levelMap.top');
   const key = progress.level < best ? 'levelMap.toLevel' : 'levelMap.toFog';
@@ -52,6 +52,7 @@ function nextLine(progress: LevelProgress, best: number) {
 }
 
 export function LevelMap({ progress, best, character, onClose }: Props) {
+  const t = useTranslation();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const level = progress.level;
@@ -187,7 +188,7 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
               <View style={[styles.barFill, { width: `${(progress.wins / total) * 100}%`, backgroundColor: c.main }]} />
             </View>
           )}
-          <Text style={[styles.next, top && { color: c.dark, fontSize: 15 }]}>{nextLine(progress, best)}</Text>
+          <Text style={[styles.next, top && { color: c.dark, fontSize: 15 }]}>{nextLine(progress, best, t)}</Text>
           {top && <Text style={styles.next}>{t('levelMap.topPay', { count: levelByNumber(level).tokenReward })}</Text>}
         </Raised>
       </View>

@@ -10,13 +10,14 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { DEFAULT_MAX_WRONG, LETTER_BUY_COST, LETTER_BUY_COUNT, LOSSES_TO_DROP, STREAK_BONUS_AT } from '../game/config';
 import { LEVELS } from '../game/levels';
-import { t, TranslationKey } from '../i18n';
+import { TranslationKey, useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { profileIconXml } from './icons';
 import { BoardNote } from './Leaderboard';
 import { Raised } from './Raised';
 import { LegalDocument } from './LegalDocument';
+import en from '../i18n/en.json';
 
 export const INFO_PAGES = {
   rules: { title: 'profile.rules', icon: profileIconXml.rules, color: '#5fd3a5' },
@@ -37,6 +38,7 @@ const firstLevel = (has: (l: (typeof LEVELS)[number]) => boolean) => LEVELS.find
 const RULES: { key: string; color: string; params?: () => Record<string, number> }[] = [
   { key: 'goal', color: colors.sky, params: () => ({ max: DEFAULT_MAX_WRONG }) },
   { key: 'guess', color: colors.mint },
+  { key: 'accents', color: colors.sky },
   { key: 'help', color: colors.butterD },
   {
     key: 'hard',
@@ -54,6 +56,7 @@ const RULES: { key: string; color: string; params?: () => Record<string, number>
 ];
 
 const CREDITS: { key: string; links: string[] }[] = [
+  { key: 'original', links: [] },
   { key: 'wordnet', links: ['https://en-word.net', 'https://creativecommons.org/licenses/by/4.0/'] },
   { key: 'scowl', links: ['http://wordlist.aspell.net'] },
   { key: 'princeton', links: ['https://wordnet.princeton.edu/license-and-commercial-use'] },
@@ -78,9 +81,9 @@ function InfoCard({ title, body, color, links }: { title: string; body: string; 
   );
 }
 
-const text = (key: string, params?: Record<string, number>) => t(key as TranslationKey, params);
-
 export function InfoContent({ page }: { page: InfoPage }) {
+  const t = useTranslation();
+  const text = (key: string, params?: Record<string, number>) => t(key as TranslationKey, params);
   switch (page) {
     case 'terms':
     case 'privacy':
@@ -96,6 +99,7 @@ export function InfoContent({ page }: { page: InfoPage }) {
           {CREDITS.map(({ key, links }) => (
             <InfoCard key={key} color={colors.butterD} title={text(`credits.${key}.title`)} body={text(`credits.${key}.body`)} links={links} />
           ))}
+          <InfoCard color={colors.butterD} title={t('credits.license')} body={en['credits.scowl.body']} />
         </>
       );
     default:

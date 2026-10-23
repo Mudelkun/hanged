@@ -14,7 +14,7 @@ const KNOWN_RARITY = 20;
 const LETTER_FREQUENCY = 'etaoinshrdlucmfwypvbgkjqxz';
 
 /** Misses playing `word`, given the player's words of the same length. */
-function missesFor(word, known) {
+function missesFor(word, known, frequency) {
   const used = new Set();
   let misses = 0;
   let left = new Set(word).size;
@@ -27,7 +27,7 @@ function missesFor(word, known) {
     const shared = {};
     for (const w of candidates) for (const c of new Set(w)) if (!used.has(c)) shared[c] = (shared[c] || 0) + 1;
     let pick = null;
-    for (const c of LETTER_FREQUENCY) if (!used.has(c) && (pick === null || (shared[c] || 0) > (shared[pick] || 0))) pick = c;
+    for (const c of frequency) if (!used.has(c) && (pick === null || (shared[c] || 0) > (shared[pick] || 0))) pick = c;
     used.add(pick);
     if (word.includes(pick)) left--;
     else misses++;
@@ -36,10 +36,10 @@ function missesFor(word, known) {
 }
 
 /** word → misses, for every entry of `words` ({ word, rarity }). */
-function measureDifficulty(words) {
+function measureDifficulty(words, frequency = LETTER_FREQUENCY) {
   const known = new Map();
   for (const { word, rarity } of words) if (rarity <= KNOWN_RARITY) (known.get(word.length) ?? known.set(word.length, []).get(word.length)).push(word);
-  return new Map(words.map(({ word }) => [word, missesFor(word, known.get(word.length) ?? [])]));
+  return new Map(words.map(({ word }) => [word, missesFor(word, known.get(word.length) ?? [], frequency)]));
 }
 
 module.exports = { measureDifficulty };

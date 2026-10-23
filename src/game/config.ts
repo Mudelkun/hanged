@@ -34,6 +34,9 @@ export const EDGE_CLUES = 2;
  */
 export const LETTER_FREQUENCY: Readonly<Record<string, string>> = {
   en: 'etaoinshrdlucmfwypvbgkjqxz',
+  fr: 'esaitnrulodcmpvqfbghjxzwykœ',
+  es: 'eaosrnidlctumpbgvyqhfzjñxkw',
+  de: 'enisratdhulcgmobwfkzpvßjyxq',
 };
 
 /**
@@ -91,5 +94,5 @@ export const LOSSES_TO_DROP = 3;
 /** PLACEHOLDER: the first rounds on a new level never count toward a drop. */
 export const LEVEL_GRACE_ROUNDS = 3;
 
-/** The MVP is English only (stored with every word from day one). */
+/** Fallback when none of the device's preferred languages is supported. */
 export const DEFAULT_LANGUAGE = 'en';

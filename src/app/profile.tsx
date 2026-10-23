@@ -17,13 +17,15 @@ import { BackHeader } from '../components/GameHeader';
 import { profileIconXml } from '../components/icons';
 import { INFO_PAGES, InfoPage } from '../components/InfoPages';
 import { PaperBackground } from '../components/PaperBackground';
+import { LanguageSheet } from '../components/LanguagePicker';
+import { LANGUAGES } from '../game/languages';
 import { DeleteSheet, ListGroup, ListItem, NameCard, ProfileFooter, StatTiles } from '../components/Profile';
-import { t, TranslationKey } from '../i18n';
+import { Translator, useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { colors } from '../theme';
 
 /** The info & legal rows, in the mockup's order. */
-const infoItems = (): ListItem[] =>
+const infoItems = (t: Translator): ListItem[] =>
   (Object.keys(INFO_PAGES) as InfoPage[]).map((page) => ({
     key: page,
     icon: INFO_PAGES[page].icon,
@@ -33,9 +35,11 @@ const infoItems = (): ListItem[] =>
   }));
 
 export default function ProfileScreen() {
+  const t = useTranslation();
   const { state, dispatch, deleteAccount } = useGame();
   const insets = useSafeAreaInsets();
   const [deleting, setDeleting] = useState(false);
+  const [choosingLanguage, setChoosingLanguage] = useState(false);
   const character = characterById(state.characterId);
   const setAudio = (setting: 'soundEnabled' | 'musicEnabled', enabled: boolean) => {
     sound.unlock();
@@ -47,8 +51,8 @@ export default function ProfileScreen() {
   const settings: ListItem[] = [
     { key: 'sound', icon: profileIconXml.sound, color: colors.coral, label: t('profile.sound'), toggle: { value: state.soundEnabled, onChange: value => setAudio('soundEnabled', value) } },
     { key: 'music', icon: profileIconXml.music, color: colors.mintD, label: t('profile.music'), toggle: { value: state.musicEnabled, onChange: value => setAudio('musicEnabled', value) } },
-    // The MVP is English only: the row shows the language, a picker comes with the second one.
-    { key: 'language', icon: profileIconXml.language, color: colors.sky, label: t('profile.language'), value: t(`language.${state.language}` as TranslationKey) },
+    { key: 'language', icon: profileIconXml.language, color: colors.sky, label: t('profile.language'),
+      value: LANGUAGES.find(l => l.id === state.language)?.name, onPress: () => setChoosingLanguage(true) },
   ];
 
   const onDeleted = async () => {
@@ -79,10 +83,11 @@ export default function ProfileScreen() {
         />
         <StatTiles words={state.wordsGuessed} tokens={state.tokens} level={state.levelProgress.level} />
         <ListGroup title={t('profile.settings')} items={settings} />
-        <ListGroup title={t('profile.info')} items={infoItems()} />
+        <ListGroup title={t('profile.info')} items={infoItems(t)} />
         <ProfileFooter version={appConfig.expo.version} onDelete={() => { sound.play('delete-open'); setDeleting(true); }} />
       </ScrollView>
       <DeleteSheet visible={deleting} character={character} onClose={() => setDeleting(false)} onConfirm={onDeleted} />
+      {choosingLanguage && <LanguageSheet onClose={() => setChoosingLanguage(false)} />}
     </View>
   );
 }

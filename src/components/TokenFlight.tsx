@@ -20,9 +20,9 @@
  * counted (`claim`) as is, without counting it again.
  */
 import { createContext, ReactNode, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View, ViewInstance } from 'react-native';
 
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
@@ -53,7 +53,7 @@ const MEASURE_TIMEOUT_MS = 300;
 /** The chip's box, centred on the flight's point. */
 const BOX = { w: 160, h: 40 };
 
-const centerOf = (view: View | null) =>
+const centerOf = (view: ViewInstance | null) =>
   new Promise<Point | null>((resolve) => {
     if (!view) return resolve(null);
     const timer = setTimeout(() => resolve(null), MEASURE_TIMEOUT_MS);
@@ -66,12 +66,12 @@ const centerOf = (view: View | null) =>
 function createHub(setFlights: ((f: (all: FlightData[]) => FlightData[]) => void) | null) {
   let origin: Origin | null = null;
   let waiter: { sign: Sign; take: (o: Origin) => void } | null = null;
-  let target: View | null = null;
+  let target: ViewInstance | null = null;
   let claimed: number | null = null;
   let nextId = 0;
   return {
     /** The focused screen's counter coin, where every flight lands. */
-    setTarget: (view: View | null) => {
+    setTarget: (view: ViewInstance | null) => {
       target = view;
     },
     /** A pill is showing the change to `balance`, so no other pill needs to count it. */
@@ -80,7 +80,7 @@ function createHub(setFlights: ((f: (all: FlightData[]) => FlightData[]) => void
     },
     isClaimed: (balance: number) => claimed === balance,
     /** An origin says: the next balance change in this direction starts at `view`. Resolves once measured. */
-    async send(view: View | null, sign: Sign) {
+    async send(view: ViewInstance | null, sign: Sign) {
       const o = { sign, at: await centerOf(view), time: Date.now() };
       if (waiter?.sign === sign) {
         const { take } = waiter;
@@ -128,9 +128,9 @@ export const useTokenFlights = () => useContext(TokenFlightContext);
  */
 export function useTokenOrigin() {
   const hub = useTokenFlights();
-  const ref = useRef<View>(null);
+  const ref = useRef<ViewInstance>(null);
   const send = useCallback((sign: Sign) => hub.send(ref.current, sign), [hub]);
-  return [ref as RefObject<View>, send] as const;
+  return [ref as RefObject<ViewInstance>, send] as const;
 }
 
 /** Wraps the app and draws the flights above every screen. */
@@ -151,6 +151,7 @@ export function TokenFlightProvider({ children }: { children: ReactNode }) {
 
 /** The "+N" / "−N" chip with a coin, also usable on its own. */
 export function TokenChip({ delta }: { delta: number }) {
+  const t = useTranslation();
   const gain = delta > 0;
   return (
     <View style={[styles.chip, gain ? styles.chipGain : styles.chipSpend]}>

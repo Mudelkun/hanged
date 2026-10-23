@@ -11,13 +11,12 @@ import { memo, useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { KeyState, Letter } from '../game/engine';
-import { t } from '../i18n';
+import { displayLetter, isLanguage, KEYBOARD_ROWS } from '../game/languages';
+import { useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 import { Raised } from './Raised';
 
 // Same letter order as the iPhone keyboard (QWERTY), rows centred like iOS.
-const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
-const PER_ROW = ROWS[0].length;
 const GAP = 5;
 
 const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string; shadow: string; text: string }> = {
@@ -29,11 +28,12 @@ const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string
 const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
   letter: Letter; state: KeyState; locked: boolean; w: number; h: number; onPress: (c: Letter) => void;
 }) {
+  const t = useTranslation();
   const used = state !== 'idle';
   const radius = Math.min(14, Math.round(w * 0.3));
   const fontSize = Math.round(Math.min(h * 0.46, w * 0.68));
   const label = t(state === 'off' ? 'play.a11y.key.off' : used ? 'play.a11y.key.used' : 'play.a11y.key', {
-    letter: letter.toUpperCase(),
+    letter: displayLetter(letter),
   });
   if (state === 'off') {
     return (
@@ -43,7 +43,7 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
   if (state === 'no') {
     return (
       <View accessible accessibilityLabel={label} style={[styles.key, styles.keyNo, { width: w, height: h, borderRadius: radius, marginTop: 4 }]}>
-        <Text style={[styles.keyText, styles.keyNoText, { fontSize }]}>{letter.toUpperCase()}</Text>
+        <Text style={[styles.keyText, styles.keyNoText, { fontSize }]}>{displayLetter(letter)}</Text>
       </View>
     );
   }
@@ -64,7 +64,7 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
           pressed={pressed}
           style={[styles.key, { width: w, height: h, borderRadius: radius, backgroundColor: c.bg, borderColor: c.border }]}
         >
-          <Text style={[styles.keyText, { color: c.text, fontSize }]}>{letter.toUpperCase()}</Text>
+          <Text style={[styles.keyText, { color: c.text, fontSize }]}>{displayLetter(letter)}</Text>
         </Raised>
       )}
     </Pressable>
@@ -72,6 +72,7 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
 });
 
 interface Props {
+  language?: string;
   keyState: (c: Letter) => KeyState;
   locked: boolean;
   onPress: (c: Letter) => void;
@@ -93,9 +94,11 @@ let lastHeight = 0;
  * (it is the only part that grows), so anything added to the Play screen later
  * takes the scene's spare room, then the keys', and nothing ever overflows.
  */
-export function LetterKeyboard({ keyState, locked, onPress, available, compact }: Props) {
+export function LetterKeyboard({ keyState, locked, onPress, available, compact, language = 'en' }: Props) {
   const [height, setHeight] = useState(lastHeight);
-  const w = Math.floor(Math.min(48, (available + 2 * BLEED - GAP * (PER_ROW - 1)) / PER_ROW));
+  const rows = KEYBOARD_ROWS[isLanguage(language) ? language : 'en'];
+  const perRow = Math.max(...rows.map(row => row.length));
+  const w = Math.floor(Math.min(48, (available + 2 * BLEED - GAP * (perRow - 1)) / perRow));
   // iOS keys are taller than wide; 10 keys per row makes them narrow.
   const maxH = compact ? Math.min(48, Math.round(w * 1.45)) : Math.min(58, Math.round(w * 1.6));
   const minH = compact ? 34 : 38;
@@ -113,7 +116,7 @@ export function LetterKeyboard({ keyState, locked, onPress, available, compact }
       onLayout={onLayout}
       style={[styles.kb, { gap: rowGap, paddingTop: padTop, flexBasis: chrome + 3 * maxH, minHeight: chrome + 3 * minH }]}
     >
-      {ROWS.map((row) => (
+      {rows.map((row) => (
         <View key={row} style={styles.row}>
           {row.split('').map((c) => (
             <Key key={c} letter={c} state={keyState(c)} locked={locked} w={w} h={h} onPress={onPress} />

@@ -19,7 +19,7 @@ import { Character } from '../characters/rig';
 import { feedback } from '../feedback';
 import { useSoundScope } from '../audio/AudioProvider';
 import { worldBands } from '../world/world';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { LEVELS } from '../game/levels';
 import { colors, confettiColors, fonts, levelColor, worldColors } from '../theme';
 import { Confetti } from './Confetti';
@@ -127,6 +127,7 @@ interface Props {
 }
 
 export function LevelChange({ from, to, best, character, width, compact, onLanded, onClose }: Props) {
+  const t = useTranslation();
   const audio = useSoundScope();
   const up = to > from;
   const cardW = Math.min(width, 360);

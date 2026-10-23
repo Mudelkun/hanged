@@ -20,6 +20,7 @@ import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, wron
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { checkName, keptName } from './names';
 import { LEGAL_VERSION, LegalAcceptance, STARTER_CHARACTERS } from './onboarding';
+import { isLanguage, Language } from './languages';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
 
 export interface GameState {
@@ -36,6 +37,8 @@ export interface GameState {
   /** Characters bought with tokens. Free ones (price 0) are owned without being listed. */
   unlockedCharacterIds: string[];
   language: string;
+  /** Unfinished rounds resume when returning to that language; switching cannot skip a hard word. */
+  pausedRounds: Partial<Record<Language, Round>>;
   /** Local playback preferences. Voices follow sound effects. */
   soundEnabled: boolean;
   musicEnabled: boolean;
@@ -62,14 +65,15 @@ export interface GameState {
 /** Reports kept while offline (~90 bytes each). Past it the oldest go: only statistics lose them. */
 export const REPORTS_KEPT = 2000;
 
-export const initialState = (): GameState => ({
+export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => ({
   version: 1,
   playerName: null,
   onboardingCompleted: false,
   legalAcceptance: null,
   characterId: DEFAULT_CHARACTER,
   unlockedCharacterIds: [],
-  language: DEFAULT_LANGUAGE,
+  language: isLanguage(language) ? language : DEFAULT_LANGUAGE,
+  pausedRounds: {},
   soundEnabled: true,
   musicEnabled: true,
   wordsGuessed: 0,
@@ -85,6 +89,7 @@ export const initialState = (): GameState => ({
 });
 
 export type GameAction =
+  | { type: 'language'; language: string; roundId: string; rng?: () => number }
   | { type: 'completeOnboarding'; name: string; characterId: string; accepted: boolean; at: number }
   | { type: 'audioSetting'; setting: 'soundEnabled' | 'musicEnabled'; enabled: boolean }
   | { type: 'hydrate'; state: GameState }
@@ -177,6 +182,20 @@ export const lettersForSale = (s: GameState) =>
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case 'language': {
+      if (!isLanguage(action.language) || action.language === state.language) return state;
+      const pausedRounds = { ...state.pausedRounds };
+      if (isLanguage(state.language)) {
+        if (state.round && roundStatus(state.round) === 'playing') pausedRounds[state.language] = state.round;
+        else delete pausedRounds[state.language];
+      }
+      const round = pausedRounds[action.language];
+      delete pausedRounds[action.language];
+      const changed = { ...state, language: action.language, pausedRounds, lastTokensEarned: 0 };
+      return round ? { ...changed, round } : gameReducer(changed, {
+        type: 'newRound', word: nextWord(changed, action.rng), roundId: action.roundId, rng: action.rng,
+      });
+    }
     case 'audioSetting':
       return state[action.setting] === action.enabled ? state : { ...state, [action.setting]: action.enabled };
     case 'hydrate': {
@@ -193,6 +212,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         s = { ...rest, seenWordIds: [...recentWordIds].reverse() };
       }
       s = withDefaults(s);
+      if (!isLanguage(s.language)) s = { ...s, language: DEFAULT_LANGUAGE, round: null };
+      if (s.round && s.round.language !== s.language) s = { ...s, round: null };
+      const paused = Object.entries(s.pausedRounds ?? {});
+      const validPaused = paused.filter(
+        ([language, round]) => isLanguage(language) && round && round.language === language &&
+          wordById(round.wordId) && Array.isArray(round.guessed) && Array.isArray(round.clueLetters) &&
+          Array.isArray(round.disabledLetters) && Array.isArray(round.boughtLetters) && roundStatus(round) === 'playing',
+      );
+      if (validPaused.length !== paused.length) s = { ...s, pausedRounds: Object.fromEntries(validPaused) };
       if (s.legalAcceptance && (typeof s.legalAcceptance.version !== 'string' ||
           !Number.isFinite(s.legalAcceptance.acceptedAt) || s.legalAcceptance.acceptedAt <= 0)) {
         s = { ...s, legalAcceptance: null };
@@ -225,6 +253,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'newRound': {
+      if (action.word.language !== state.language) return state;
       const level = levelByNumber(state.levelProgress.level);
       const round = createRound(
         {

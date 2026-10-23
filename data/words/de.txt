@@ -1,0 +1,407 @@
+# Deutsch — eigens verfasste Hinweise, mit KI-Unterstützung erstellt.
+# Wort | Hinweis | Thema | optionale Seltenheit (Standard: 20)
+katze | Haustier mit Schnurrhaaren, das miaut. | animal
+hund | Haustier, das bellt und oft gern spazieren geht. | animal
+kaninchen | Kleines Säugetier mit langen Ohren, das gern knabbert. | animal
+fuchs | Wildtier mit buschigem Schwanz, das als schlau gilt. | animal
+wolf | Wilder Verwandter des Hundes, der oft im Rudel lebt. | animal
+bär | Großes Säugetier mit dichtem Fell, das Winterruhe halten kann. | animal
+löwe | Große Raubkatze, deren Männchen eine Mähne trägt. | animal
+tiger | Große Raubkatze mit orangefarbenem Fell und schwarzen Streifen. | animal
+zebra | Afrikanisches Tier mit schwarzen und weißen Streifen. | animal
+giraffe | Afrikanisches Tier mit besonders langem Hals. | animal
+affe | Primat, der meist geschickt auf Bäume klettert. | animal
+panda | Schwarz-weißer Bär, der vor allem Bambus frisst. | animal
+koala | Australisches Säugetier, das Eukalyptusblätter frisst. | animal
+pferd | Großes Tier mit Mähne, auf dem man reiten kann. | animal
+kuh | Weibliches Rind, das auf Bauernhöfen oft für seine Milch gehalten wird. | animal
+schaf | Bauernhoftier, dessen Wolle zu Kleidung verarbeitet wird. | animal
+ziege | Tier mit Hörnern, das gut auf Felsen klettern kann. | animal
+schwein | Bauernhoftier mit rundem Rüssel. | animal
+huhn | Vogel auf dem Bauernhof, der regelmäßig Eier legt. | animal
+hahn | Männlicher Hühnervogel, der morgens kräht. | animal
+ente | Wasservogel mit breitem, flachem Schnabel. | animal
+gans | Großer Wasservogel mit langem Hals, der schnattert. | animal
+schwan | Großer Wasservogel mit langem, gebogenem Hals. | animal
+adler | Großer Greifvogel mit besonders scharfem Blick. | animal
+eule | Meist nachtaktiver Vogel mit großen Augen und leisem Flug. | animal
+uhu | Große Eulenart mit auffälligen Federbüscheln am Kopf. | animal
+rabe | Großer schwarzer Vogel mit kräftigem Schnabel. | animal
+taube | Vogel, der häufig in Städten lebt und gurrt. | animal
+spatz | Kleiner brauner Vogel, der oft in der Nähe von Häusern lebt. | animal
+papagei | Vogel mit gebogenem Schnabel, der Geräusche nachahmen kann. | animal
+pinguin | Seevogel, der gut schwimmt, aber nicht fliegen kann. | animal
+delfin | Kluges Meeressäugetier, das oft in Gruppen schwimmt. | animal
+wal | Großes Meeressäugetier, das zum Atmen auftaucht. | animal
+hai | Raubfisch, dessen Skelett aus Knorpel besteht. | animal
+robbe | Meeressäugetier, das sich an Stränden oder auf Eis ausruht. | animal
+schildkröte | Reptil, dessen Körper durch einen Panzer geschützt ist. | animal
+schlange | Langes Reptil ohne Beine. | animal
+eidechse | Kleines Reptil mit vier Beinen, das sich gern in der Sonne wärmt. | animal
+frosch | Kleines Tier, das gut springt und oft am Wasser lebt. | animal
+kröte | Amphibie mit meist warziger Haut, ähnlich einem Frosch. | animal
+krokodil | Großes Reptil mit kräftigen Kiefern, das im und am Wasser lebt. | animal
+schmetterling | Insekt mit großen Flügeln, das zuvor eine Raupe war. | animal
+biene | Insekt, das Honig herstellt. | animal
+ameise | Kleines Insekt, das in gut organisierten Staaten lebt. | animal
+fliege | Kleines geflügeltes Insekt, das sich oft auf Essen setzt. | animal
+mücke | Kleines Insekt, dessen Weibchen Blut saugen kann. | animal
+spinne | Tier mit acht Beinen, das oft ein Netz webt. | animal
+schnecke | Langsames Tier, das häufig ein Gehäuse auf dem Rücken trägt. | animal
+krabbe | Tier mit hartem Panzer und Scheren, das meist im Wasser lebt. | animal
+hummer | Großes Meerestier mit Panzer und zwei kräftigen Scheren. | animal
+garnele | Kleines Krebstier mit länglichem, gebogenem Körper. | animal
+krake | Meerestier mit acht Armen und Saugnäpfen. | animal
+qualle | Durchsichtiges Meerestier mit weichem Körper und oft brennenden Fangarmen. | animal
+igel | Kleines Säugetier, das sich zu einer stacheligen Kugel zusammenrollt. | animal
+eichhörnchen | Kleines Nagetier mit buschigem Schwanz, das auf Bäume klettert. | animal
+maus | Kleines Nagetier mit spitzer Schnauze und langem Schwanz. | animal
+ratte | Nagetier, das einer Maus ähnelt, aber meist größer ist. | animal
+biber | Nagetier, das Dämme aus Ästen baut. | animal
+otter | Geschickter Schwimmer mit langem Körper und dichtem Fell. | animal
+hirsch | Großes Wildtier, dessen Männchen ein verzweigtes Geweih trägt. | animal
+elefant | Großes Tier mit Rüssel und mächtigen Ohren. | animal
+nilpferd | Schweres afrikanisches Säugetier, das viel Zeit im Wasser verbringt. | animal
+nashorn | Großes Säugetier mit dicker Haut und einem oder zwei Hörnern auf der Nase. | animal
+känguru | Australisches Tier, das auf kräftigen Hinterbeinen hüpft. | animal
+kamel | Wüstentier, das je nach Art einen oder zwei Höcker hat. | animal
+dromedar | Wüstentier mit genau einem Höcker. | animal
+flamingo | Oft rosafarbener Vogel mit langen, dünnen Beinen. | animal
+strauß | Sehr großer afrikanischer Vogel, der schnell läuft, aber nicht fliegt. | animal
+libelle | Insekt mit langem Körper und vier durchsichtigen Flügeln. | animal
+marienkäfer | Kleiner, runder Käfer, oft rot mit schwarzen Punkten. | animal
+raupe | Längliche Larve, aus der ein Schmetterling wird. | animal
+fisch | Wassertier, das mit Kiemen atmet. | animal
+lachs | Fisch, der zum Laichen flussaufwärts schwimmt. | animal
+forelle | Süßwasserfisch, der kühle, klare Gewässer mag. | animal
+apfel | Runde Frucht mit Kerngehäuse, die rot, gelb oder grün sein kann. | food
+birne | Frucht mit Kerngehäuse, die unten meist breiter ist als oben. | food
+banane | Lange gelbe Frucht, die man vor dem Essen schält. | food
+orange | Runde Zitrusfrucht, deren Saft oft zum Frühstück getrunken wird. | food
+zitrone | Gelbe Zitrusfrucht mit sehr saurem Geschmack. | food
+erdbeere | Kleine rote Frucht mit winzigen Körnchen auf der Oberfläche. | food
+himbeere | Kleine Frucht, die aus vielen weichen roten Kügelchen besteht. | food
+kirsche | Kleine Frucht mit Stein und langem Stiel, oft rot. | food
+pfirsich | Steinfrucht mit meist samtiger Haut. | food
+aprikose | Kleine orangefarbene Steinfrucht mit süßem Fruchtfleisch. | food
+pflaume | Steinfrucht mit glatter Haut, die oft violett ist. | food
+traube | Kleine Frucht, die in Büscheln wächst und für Wein verwendet wird. | food
+melone | Große Sommerfrucht mit süßem, saftigem Fruchtfleisch. | food
+wassermelone | Große grüne Frucht mit meist rotem, sehr saftigem Inneren. | food
+ananas | Tropische Frucht mit schuppiger Schale und spitzen Blättern. | food
+mango | Tropische Frucht mit orangefarbenem Inneren und großem, flachem Kern. | food
+kiwi | Frucht mit brauner, pelziger Schale und grünem oder gelbem Inneren. | food
+walnuss | Frucht mit harter Schale und einem stark gefurchten essbaren Kern. | food
+mandel | Länglicher essbarer Kern, der für Marzipan verwendet wird. | food
+haselnuss | Kleine runde Frucht mit harter brauner Schale. | food
+karotte | Orangefarbene Wurzel, die roh oder gekocht gegessen wird. | food
+tomate | Saftige rote Frucht, die oft im Salat landet. | food
+gurke | Langes grünes Gemüse mit viel Wasser. | food
+salat | Kaltes Gericht aus Gemüse, oft mit einer würzigen Soße. | food
+zwiebel | Gemüse mit vielen Schichten, das beim Schneiden die Augen tränen lässt. | food
+knoblauch | Würzige Knolle, die aus mehreren Zehen besteht. | food
+lauch | Gemüse mit langem weißem Schaft und grünen Blättern. | food
+kohl | Gemüse mit großen Blättern, die oft einen festen Kopf bilden. | food
+brokkoli | Grünes Gemüse, dessen Röschen wie kleine Bäume aussehen. | food
+spinat | Gemüse mit zarten grünen Blättern. | food
+bohne | Essbarer Samen, der in einer länglichen Hülse wächst. | food
+zucchini | Längliches, meist grünes Gemüse aus der Familie der Kürbisse. | food
+aubergine | Gemüse mit glänzender, meist violetter Haut. | food
+kürbis | Große Frucht mit fester Schale, die zu Halloween ausgehöhlt wird. | food
+pilz | Lebewesen ohne grüne Blätter, das oft aus Stiel und Hut besteht. | nature
+brot | Lebensmittel aus Mehl, das im Ofen gebacken wird. | food
+brötchen | Kleines rundes Gebäck, das oft zum Frühstück belegt wird. | food
+keks | Kleines knuspriges Gebäck, das süß schmeckt. | food
+kuchen | Süßes Gebäck, das oft in Stücke geschnitten wird. | food
+torte | Festliches Gebäck, oft mit mehreren Böden und einer Cremefüllung. | food
+pfannkuchen | Flaches Gebäck aus flüssigem Teig, das in heißem Fett ausgebacken wird. | food
+käse | Lebensmittel aus geronnener Milch. | food
+butter | Fett aus Rahm, das oft auf Brot gestrichen wird. | food
+joghurt | Lebensmittel aus vergorener Milch, das man löffelt. | food
+milch | Weiße Flüssigkeit, mit der Säugetiere ihre Jungen ernähren. | food
+sahne | Fettreicher Teil der Milch, der sich aufschlagen lässt. | food
+schokolade | Süßigkeit, die aus Kakao hergestellt wird. | food
+bonbon | Kleine Süßigkeit, die man im Mund langsam zergehen lässt. | food
+honig | Süße Substanz, die Bienen herstellen. | food
+zucker | Süße Zutat für Getränke und Nachspeisen. | food
+salz | Weißes Würzmittel, das aus Meerwasser gewonnen werden kann. | food
+pfeffer | Gewürz aus kleinen Körnern, das gemahlen etwas Schärfe verleiht. | food
+reis | Getreide mit kleinen Körnern, das oft als Beilage dient. | food
+nudel | Geformtes Lebensmittel aus Teig, das meist in Wasser gekocht wird. | food
+suppe | Flüssiges Gericht, oft mit Gemüse oder anderen Einlagen. | food
+soße | Flüssige oder dickliche Beigabe zu einem Gericht. | food
+essig | Saure Flüssigkeit zum Würzen oder Einlegen von Lebensmitteln. | food
+marmelade | Süßer Fruchtaufstrich für Brot. | food
+eis | Gefrorene Süßspeise, die oft in einer Waffel serviert wird. | food
+pizza | Italienisches Gericht aus einem belegten, im Ofen gebackenen Teigfladen. | food
+gabel | Besteck mit mehreren Zinken. | object
+löffel | Besteck mit einer kleinen Mulde für Suppe oder Nachtisch. | object
+messer | Besteck mit einer scharfen Klinge zum Schneiden. | object
+teller | Flaches Gefäß, auf dem Essen serviert wird. | object
+glas | Meist durchsichtiges Gefäß ohne Henkel, aus dem man trinkt. | object
+tasse | Kleines Gefäß mit Henkel für heiße Getränke. | object
+schüssel | Tiefes, rundes Gefäß für Speisen oder Zutaten. | object
+flasche | Gefäß mit engem Hals für Flüssigkeiten. | object
+topf | Tiefes Gefäß, in dem auf dem Herd gekocht wird. | object
+pfanne | Flaches Kochgeschirr mit Griff zum Braten. | object
+ofen | Geschlossener Raum oder Apparat, in dem mit Hitze gebacken wird. | object
+kühlschrank | Gerät, das Lebensmittel kühl hält, ohne sie einzufrieren. | object
+tisch | Möbelstück mit einer Platte, an dem man isst oder arbeitet. | object
+stuhl | Sitzmöbel mit Rückenlehne für eine Person. | object
+sessel | Bequemer Sitzplatz mit Rückenlehne und meist zwei Armlehnen. | object
+sofa | Bequemes Sitzmöbel für mehrere Personen. | object
+bett | Möbelstück, in dem man schläft. | object
+kissen | Weiches Polster, auf das man beim Schlafen den Kopf legt. | object
+decke | Großes Stück Stoff, das beim Liegen warm hält. | object
+schrank | Geschlossenes Möbelstück zum Aufbewahren von Kleidung oder Gegenständen. | object
+regal | Möbelstück mit offenen Fächern zum Abstellen von Dingen. | object
+lampe | Gegenstand, der Licht erzeugt. | object
+kerze | Stück Wachs mit einem Docht, den man anzündet. | object
+spiegel | Glatte Fläche, in der man sein eigenes Bild sieht. | object
+uhr | Gegenstand, der die Zeit anzeigt. | object
+schlüssel | Kleiner Gegenstand, mit dem man ein Schloss öffnet. | object
+tür | Bewegliche Platte, die den Eingang eines Raums verschließt. | object
+fenster | Verglaste Öffnung, durch die Tageslicht in einen Raum kommt. | object
+vorhang | Stoff, der vor einer Öffnung hängt und sie verdecken kann. | object
+teppich | Dickes Gewebe, das auf dem Fußboden liegt. | object
+besen | Gerät mit langem Stiel zum Fegen. | object
+schwamm | Weicher Gegenstand, der Wasser aufsaugt und zum Reinigen dient. | object
+seife | Mittel zum Waschen, das mit Wasser schäumt. | object
+handtuch | Stück Stoff, mit dem man sich nach dem Waschen abtrocknet. | object
+bürste | Gegenstand mit Borsten zum Reinigen oder Frisieren. | object
+kamm | Gegenstand mit einer Reihe von Zinken zum Ordnen der Haare. | object
+schere | Werkzeug mit zwei beweglichen Klingen zum Ausschneiden. | object
+bleistift | Schreibgerät mit einer Mine aus Graphit. | object
+kugelschreiber | Schreibgerät, dessen Spitze Tinte über eine kleine rollende Kugel abgibt. | object
+radiergummi | Kleiner Gegenstand, der Bleistiftspuren vom Papier entfernt. | object
+heft | Zusammengebundene Papierseiten zum Schreiben. | object
+buch | Gebundene Seiten mit Texten oder Bildern zum Lesen. | object
+papier | Dünnes Material in Blättern, auf dem man schreibt oder druckt. | material
+umschlag | Hülle, in der ein Brief verschickt wird. | object
+briefmarke | Kleine aufgeklebte Wertmarke, mit der das Porto bezahlt wird. | object
+rucksack | Tasche, die mit zwei Trägern auf dem Rücken getragen wird. | object
+tasche | Behälter aus weichem Material zum Tragen von Dingen. | object
+koffer | Gepäckstück mit Griff für Reisen. | object
+regenschirm | Gegenstand, den man aufspannt, um bei nassem Wetter trocken zu bleiben. | object
+hut | Kopfbedeckung mit meist festem Rand. | object
+mütze | Weiche Kopfbedeckung, die oft warm hält. | object
+schal | Langer Stoffstreifen, der um den Hals getragen wird. | object
+handschuh | Kleidungsstück, das die Hand bedeckt und meist einzelne Finger hat. | object
+socke | Weiches Kleidungsstück für den Fuß, das im Schuh getragen wird. | object
+schuh | Gegenstand, der den Fuß beim Gehen schützt. | object
+stiefel | Schuh, dessen Schaft über den Knöchel reicht. | object
+hose | Kleidungsstück, das beide Beine getrennt bedeckt. | object
+hemd | Oberbekleidung mit Ärmeln, meist mit Kragen und Knöpfen. | object
+kleid | Einteiliges Kleidungsstück, das von den Schultern über die Beine fällt. | object
+rock | Kleidungsstück, das ab der Taille die Beine gemeinsam umgibt. | object
+mantel | Langes Kleidungsstück, das draußen über anderer Kleidung getragen wird. | object
+jacke | Kurzes Oberkleidungsstück mit Ärmeln, das vorne geöffnet werden kann. | object
+gürtel | Band um die Taille, das Kleidung festhält. | object
+knopf | Kleines Teil, das durch ein Loch geschoben wird, um Kleidung zu schließen. | object
+brille | Zwei Gläser in einem Gestell, die beim Sehen helfen. | object
+auto | Motorfahrzeug mit normalerweise vier Rädern. | object
+fahrrad | Fahrzeug mit zwei Rädern, das durch Treten angetrieben wird. | object
+zug | Fahrzeug aus mehreren Wagen, das auf Schienen fährt. | object
+flugzeug | Maschine mit Flügeln, die Menschen durch die Luft transportiert. | object
+schiff | Großes Fahrzeug, das auf dem Wasser fährt. | object
+boot | Kleines Wasserfahrzeug, das man rudern oder mit einem Motor antreiben kann. | object
+bus | Großes Straßenfahrzeug für viele Fahrgäste. | object
+lastwagen | Großes Motorfahrzeug zum Transport von Waren. | object
+motorrad | Motorfahrzeug mit zwei Rädern. | object
+rad | Rundes Teil, das sich dreht und ein Fahrzeug rollen lässt. | object
+lenkrad | Rundes Bedienteil, mit dem man ein Auto steuert. | object
+rakete | Flugkörper mit starkem Antrieb, der bis ins All gelangen kann. | object
+hubschrauber | Fluggerät mit großen Rotorblättern über der Kabine. | object
+ballon | Mit Luft oder Gas gefüllte Hülle zum Spielen oder Dekorieren. | object
+puppe | Spielzeug in der Gestalt eines Menschen. | object
+kuscheltier | Weiches Spielzeug, oft in Form eines Tieres. | object
+würfel | Kleiner Körper mit sechs quadratischen Seiten und oft aufgemalten Punkten. | object
+hammer | Werkzeug, mit dem man Nägel einschlägt. | object
+nagel | Spitzer Metallstift, der mit Schlägen in Holz getrieben wird. | object
+schraube | Metallteil mit Gewinde, das durch Drehen befestigt wird. | object
+säge | Werkzeug mit gezackter Klinge zum Zerteilen von Holz. | object
+schaufel | Werkzeug mit Stiel und breitem Blatt zum Bewegen von Erde. | object
+eimer | Gefäß mit Henkel zum Tragen von Wasser. | object
+leiter | Gerät mit Sprossen, auf dem man nach oben steigen kann. | object
+seil | Langes, kräftiges Band aus verdrehten oder geflochtenen Fasern. | object
+kette | Reihe miteinander verbundener Glieder. | object
+haus | Gebäude, in dem Menschen wohnen können. | place
+schule | Ort, an dem Kinder gemeinsam lernen. | place
+krankenhaus | Einrichtung, in der erkrankte oder verletzte Menschen behandelt werden. | place
+laden | Ort, an dem Waren verkauft werden. | place
+markt | Ort mit mehreren Verkaufsständen. | place
+bahnhof | Ort, an dem Züge halten und Reisende einsteigen. | place
+flughafen | Gelände, auf dem Passagiermaschinen starten und landen. | place
+hafen | Geschützter Ort, an dem Schiffe anlegen. | place
+brücke | Bauwerk, mit dem man einen Fluss oder eine Straße überquert. | place
+straße | Befestigter Weg für den Verkehr. | place
+garten | Gelände, auf dem Blumen, Gemüse oder Bäume gepflegt werden. | place
+park | Grünanlage zum Spazierengehen und Erholen. | place
+wald | Größere Fläche, die dicht mit Bäumen bewachsen ist. | place
+strand | Ufer aus Sand oder Kies am Meer oder an einem See. | place
+berg | Hohe natürliche Erhebung der Landschaft. | nature
+hügel | Kleine, meist abgerundete Erhebung der Landschaft. | nature
+tal | Tiefer gelegener Bereich zwischen Bergen oder Hügeln. | nature
+insel | Stück Land, das auf allen Seiten von Wasser umgeben ist. | nature
+see | Größeres Gewässer, das von Land umgeben ist. | nature
+fluss | Natürliches Gewässer, dessen Wasser in einem Bett weiterströmt. | nature
+ozean | Riesige Salzwasserfläche zwischen Kontinenten. | nature
+meer | Große Salzwasserfläche am Rand des Festlands. | nature
+wüste | Sehr trockenes Gebiet mit wenig Pflanzenwuchs. | nature
+vulkan | Öffnung oder Berg, aus dem Lava austreten kann. | nature
+wasserfall | Stelle, an der ein Bach oder Fluss steil in die Tiefe stürzt. | nature
+höhle | Natürlicher Hohlraum im Fels oder in der Erde. | nature
+felsen | Große, feste Gesteinsmasse in der Landschaft. | nature
+sand | Ansammlung sehr kleiner Gesteinskörner. | material
+erde | Material des Bodens, in dem Pflanzen wachsen. | material
+stein | Festes Stück eines Gesteins. | material
+holz | Hartes Material aus den Stämmen und Ästen von Bäumen. | material
+metall | Oft glänzendes Material, das Wärme gut leitet. | material
+eisen | Metall, das von Magneten angezogen und zur Herstellung von Stahl genutzt wird. | material
+silber | Helles, glänzendes Edelmetall, das für Schmuck verwendet wird. | material
+baumwolle | Weiche Pflanzenfaser, aus der Kleidung hergestellt wird. | material
+wolle | Warme Faser, die zum Beispiel aus dem Fell von Schafen gewonnen wird. | material
+seide | Feine, glänzende Faser, die bestimmte Insekten herstellen. | material
+sonne | Stern, der die Erde beleuchtet und erwärmt. | nature
+mond | Natürlicher Begleiter, der die Erde umkreist. | nature
+stern | Himmelskörper, der selbst Licht erzeugt. | nature
+wolke | Ansammlung winziger Wassertropfen oder Eiskristalle am Himmel. | nature
+regen | Wasser, das in Tropfen vom Himmel fällt. | nature
+schnee | Eiskristalle, die als Flocken vom Himmel fallen. | nature
+wind | Bewegte Luft, die man auf der Haut spüren kann. | nature
+gewitter | Wetterereignis mit Blitz und Donner. | nature
+blitz | Kurzer, sehr heller Lichtschein einer elektrischen Entladung am Himmel. | nature
+nebel | Feine Wassertröpfchen nahe dem Boden, die die Sicht erschweren. | nature
+regenbogen | Bunter Bogen am Himmel, wenn Sonnenlicht auf Wassertropfen trifft. | nature
+blume | Pflanze mit auffälligen Blüten, die oft als Schmuck dient. | plant
+baum | Große Pflanze mit Stamm und Ästen. | plant
+blatt | Meist grüner, flacher Teil einer Pflanze. | plant
+ast | Größerer Teil eines Baums, der vom Stamm abzweigt. | plant
+wurzel | Teil einer Pflanze, der Wasser aus dem Boden aufnimmt. | plant
+samen | Kleiner Pflanzenteil, aus dem eine neue Pflanze wachsen kann. | plant
+gras | Niedrige grüne Pflanzen mit schmalen Halmen und Blättern. | plant
+rose | Oft duftende Blume mit Stacheln am Stängel. | plant
+tulpe | Frühlingsblume mit einer becherförmigen Blüte. | plant
+margerite | Blume mit weißen Blütenblättern und gelber Mitte. | plant
+sonnenblume | Große Pflanze mit gelber Blüte, deren Kerne Öl liefern. | plant
+tanne | Nadelbaum, der häufig zu Weihnachten geschmückt wird. | plant
+eiche | Laubbaum mit gelappten Blättern, dessen Früchte kleine Hütchen tragen. | plant
+ahorn | Baum, aus dessen Saft ein süßer Sirup gewonnen werden kann. | plant
+palme | Baum warmer Regionen mit großen Blättern an der Spitze. | plant
+gesicht | Vorderseite des Kopfes mit Augen, Nase und Mund. | body
+nase | Körperteil im Gesicht, mit dem man riecht. | body
+mund | Öffnung im Gesicht, mit der man spricht und isst. | body
+zahn | Harter Teil im Mund, mit dem Nahrung zerkleinert wird. | body
+zunge | Bewegliches Organ im Mund, mit dem man schmeckt. | body
+ohr | Körperteil, mit dem man hört. | body
+haar | Dünner Faden, der aus der Haut wächst, besonders auf dem Kopf. | body
+hand | Körperteil am Ende des Arms mit fünf Fingern. | body
+finger | Einer der beweglichen Teile an der Hand. | body
+arm | Körperteil, der die Schulter mit der Hand verbindet. | body
+bein | Körperteil, mit dem man steht und geht. | body
+fuß | Körperteil am unteren Ende des Beins. | body
+knie | Gelenk, mit dem man das Bein beugt. | body
+schulter | Körperstelle, an der der Arm mit dem Rumpf verbunden ist. | body
+bauch | Körperbereich zwischen Brust und Becken. | body
+rücken | Hintere Seite des Körpers zwischen Schultern und Hüften. | body
+morgen | Tageszeit zwischen Sonnenaufgang und Mittag. | time
+abend | Tageszeit nach dem Nachmittag und vor der Nacht. | time
+nacht | Tageszeit, in der unsere Gegend kein direktes Sonnenlicht erhält. | time
+woche | Zeitraum von sieben Tagen. | time
+monat | Einer der zwölf Hauptabschnitte eines Jahres. | time
+jahr | Zeitraum von zwölf Monaten. | time
+frühling | Jahreszeit nach dem Winter und vor dem Sommer. | time
+sommer | Meist wärmste Jahreszeit. | time
+herbst | Jahreszeit, in der viele Bäume ihre Blätter verlieren. | time
+winter | Meist kälteste Jahreszeit. | time
+minute | Zeitraum von sechzig Sekunden. | time
+stunde | Zeitraum von sechzig Minuten. | time
+geburtstag | Tag, an dem man die eigene Geburt feiert. | time
+ferien | Zeit, in der keine Schule stattfindet. | time
+familie | Menschen, die durch Verwandtschaft oder enge Bindungen zusammengehören. | person
+kind | Junger Mensch, der noch nicht erwachsen ist. | person
+mutter | Frau, die ein oder mehrere Kinder hat. | person
+vater | Mann, der ein oder mehrere Kinder hat. | person
+bruder | Junge oder Mann mit denselben Eltern wie eine andere Person. | person
+schwester | Mädchen oder Frau mit denselben Eltern wie eine andere Person. | person
+nachbar | Person, die in der Nähe der eigenen Wohnung lebt. | person
+freund | Person, der man vertraut und die man gernhat. | person
+arzt | Person, die Krankheiten erkennt und behandelt. | person
+bäcker | Person, die beruflich Brot und anderes Gebäck herstellt. | person
+lehrer | Person, die beruflich unterrichtet. | person
+musiker | Person, die ein Instrument spielt oder Melodien komponiert. | person
+tänzer | Person, die sich im Rhythmus einer Melodie bewegt. | person
+maler | Künstler, der Bilder mit Farben gestaltet. | person
+fotograf | Person, die mit einer Kamera Bilder aufnimmt. | person
+architekt | Person, die Gebäude entwirft und plant. | person
+astronaut | Person, die für Reisen ins Weltall ausgebildet ist. | person
+entdecker | Person, die etwas bisher Unbekanntes findet oder erforscht. | person
+bibliothek | Ort, an dem man Bücher lesen oder ausleihen kann. | place
+bäckerei | Geschäft, in dem frisches Brot verkauft wird. | place
+apotheke | Geschäft, in dem man Medikamente bekommt. | place
+restaurant | Ort, an dem man zubereitete Speisen bestellt und bezahlt. | place
+kino | Ort, an dem Filme auf einer großen Leinwand gezeigt werden. | place
+theater | Ort, an dem Schauspieler vor Publikum auftreten. | place
+museum | Ort, an dem Kunstwerke oder besondere Gegenstände ausgestellt werden. | place
+schloss | Großes, prächtiges Wohngebäude für Fürsten oder Könige. | place
+zimmer | Einzelner, durch Wände abgetrennter Raum in einem Gebäude. | place
+küche | Raum, in dem Mahlzeiten zubereitet werden. | place
+treppe | Reihe von Stufen zwischen verschiedenen Höhen oder Stockwerken. | object
+aufzug | Kabine, die Menschen zwischen Stockwerken befördert. | object
+computer | Elektronisches Gerät, das Informationen verarbeitet und Programme ausführt. | object
+telefon | Gerät, mit dem man mit weit entfernten Menschen sprechen kann. | object
+tastatur | Anordnung von Tasten zum Eingeben von Text. | object
+bildschirm | Fläche eines Geräts, auf der Bilder und Texte erscheinen. | object
+drucker | Gerät, das Texte und Bilder auf Papier überträgt. | object
+gitarre | Saiteninstrument, das mit den Fingern gezupft oder angeschlagen wird. | object
+klavier | Großes Instrument mit schwarzen und weißen Tasten. | object
+geige | Kleines Saiteninstrument, das mit einem Bogen unter dem Kinn gespielt wird. | object
+trommel | Instrument, bei dem man auf eine gespannte Haut schlägt. | object
+trompete | Blechblasinstrument mit hellem, kräftigem Klang. | object
+flöte | Blasinstrument mit Löchern, die mit Fingern oder Klappen geschlossen werden. | object
+lächeln | Freundlicher Gesichtsausdruck mit angehobenen Mundwinkeln. | action
+singen | Mit der Stimme eine Melodie erzeugen. | action
+tanzen | Den Körper passend zu einem Rhythmus bewegen. | action
+rennen | Sich auf den Beinen schneller als beim Gehen bewegen. | action
+schwimmen | Sich mit Körperbewegungen im Wasser fortbewegen. | action
+zeichnen | Etwas mit Linien auf einer Fläche darstellen. | action
+schreiben | Buchstaben und Wörter mit einem Stift oder einer Tastatur festhalten. | action
+lesen | Einen Text anhand seiner Schriftzeichen verstehen. | action
+schlafen | Ruhen und dabei nicht wach sein. | action
+träumen | Im Schlaf Bilder oder Geschichten im Kopf erleben. | action
+zuhören | Aufmerksam verfolgen, was jemand sagt. | action
+schauen | Die Augen auf etwas richten. | action
+teilen | Anderen etwas von den eigenen Sachen abgeben. | action
+bauen | Aus verschiedenen Teilen ein Gebäude oder einen Gegenstand herstellen. | action
+lernen | Neues Wissen oder neue Fähigkeiten erwerben. | action
+reisen | Sich an Orte begeben, die weiter von zu Hause entfernt sind. | action
+mut | Kraft, trotz Angst zu handeln. | feeling
+geduld | Fähigkeit, ruhig zu bleiben, wenn man warten muss. | feeling
+glück | Gefühl großer Freude und Zufriedenheit. | feeling
+überraschung | Etwas, mit dem man nicht gerechnet hat. | feeling
+neugier | Wunsch, Neues zu entdecken und zu verstehen. | feeling
+fantasie | Fähigkeit, sich neue Bilder oder Ideen auszudenken. | idea
+erinnerung | Bild oder Gedanke an etwas Vergangenes im Gedächtnis. | idea
+abenteuer | Erlebnis voller Entdeckungen und unerwarteter Ereignisse. | idea
+stille | Zustand, in dem kaum oder kein Geräusch zu hören ist. | idea
+gleichgewicht | Zustand, in dem man stabil bleibt und nicht umfällt. | idea
+harmonie | Angenehmes Zusammenpassen verschiedener Dinge. | idea | 35
+dämmerung | Schwaches Licht am Himmel kurz vor Sonnenaufgang oder nach Sonnenuntergang. | nature | 35
+sternbild | Gruppe von Sternen, in der Menschen eine Figur erkennen. | nature | 35
+stalaktit | Mineralische Form, die von der Decke einer Höhle herabhängt. | nature | 35
+stalagmit | Mineralische Form, die vom Boden einer Höhle nach oben wächst. | nature | 35
+archipel | Gruppe mehrerer nahe beieinanderliegender Inseln. | nature | 35
+mündung | Stelle, an der ein Fluss in ein anderes Gewässer fließt. | nature | 35
+orchester | Gruppe von Menschen, die gemeinsam verschiedene Instrumente spielen. | person | 35
+kalligrafie | Kunst, Buchstaben besonders schön zu gestalten. | action | 35
+botanik | Wissenschaft von den Pflanzen. | idea | 35
+geologie | Wissenschaft von der Erde, ihren Gesteinen und ihrer Geschichte. | idea | 35
+astronomie | Wissenschaft von den Himmelskörpern und dem Weltall. | idea | 35
+symmetrie | Übereinstimmung von Formen auf beiden Seiten einer Achse. | idea | 35
+labyrinth | Netz von Wegen, in dem der Ausgang schwer zu finden ist. | place | 35
+teleskop | Instrument zum Beobachten weit entfernter Himmelskörper. | object | 35
+mikroskop | Instrument, mit dem winzige Dinge stark vergrößert betrachtet werden. | object | 35
+thermometer | Instrument zum Messen der Temperatur. | object | 35
+barometer | Instrument zum Messen des Luftdrucks. | object | 35
+sanduhr | Gerät, in dem feine Körner zur Zeitmessung von einem Behälter in einen anderen rieseln. | object | 35
+kompass | Instrument mit einer Nadel, die nach Norden zeigt. | object | 35

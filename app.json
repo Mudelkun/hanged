@@ -46,7 +46,18 @@
           "enableBackgroundRecording": false
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": [
+            "en",
+            "fr",
+            "es",
+            "de"
+          ]
+        }
+      ]
     ]
   }
 }

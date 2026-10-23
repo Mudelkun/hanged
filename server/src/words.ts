@@ -9,8 +9,11 @@ import type { Sql } from './db.ts';
 
 export const WORDS_FILE = new URL('../../data/words.json', import.meta.url);
 
-export async function seedWords(sql: Sql, file: URL | string = WORDS_FILE): Promise<number> {
-  const words: { id: string; word: string; language: string }[] = JSON.parse(await readFile(file, 'utf8'));
+export const WORD_FILES = [WORDS_FILE, ...['fr', 'es', 'de'].map(language => new URL(`../../data/words/${language}.json`, import.meta.url))];
+
+export async function seedWords(sql: Sql, file?: URL | string): Promise<number> {
+  const packs = await Promise.all((file ? [file] : WORD_FILES).map(async source => JSON.parse(await readFile(source, 'utf8'))));
+  const words: { id: string; word: string; language: string }[] = packs.flat();
   await sql.query(
     `INSERT INTO words (id, word, language)
      SELECT * FROM unnest($1::text[], $2::text[], $3::text[])

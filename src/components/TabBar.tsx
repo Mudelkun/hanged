@@ -8,7 +8,7 @@ import { Href, router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { t, TranslationKey } from '../i18n';
+import { TranslationKey, useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
 import { Icon, tabIconXml } from './icons';
 import { sound } from '../audio';
@@ -23,6 +23,7 @@ const TABS: { id: TabId; label: TranslationKey; href?: Href }[] = [
 ];
 
 export function TabBar({ active, compact }: { active: TabId; compact: boolean }) {
+  const t = useTranslation();
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.bar, { height: compact ? 60 : 68, marginBottom: Math.max(insets.bottom - 8, 10) }]}>

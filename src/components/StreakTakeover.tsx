@@ -19,7 +19,7 @@ import { feedback } from '../feedback';
 import { useSoundScope } from '../audio/AudioProvider';
 import { STREAK_BONUS_AT } from '../game/config';
 import { StreakMeter, streakMeter } from '../game/progress';
-import { t } from '../i18n';
+import { useTranslation } from '../i18n';
 import { colors, confettiColors, fonts, streakColor } from '../theme';
 import { Confetti } from './Confetti';
 import { coinXml, Icon, sparkXml, starXml } from './icons';
@@ -249,6 +249,7 @@ interface Props {
 }
 
 export function StreakTakeover({ streak, tokens, character, compact, onReveal, onDone }: Props) {
+  const t = useTranslation();
   const audio = useSoundScope();
   const meter = streakMeter(streak);
   const maxed = meter.tier >= STREAK_BONUS_AT.length;
