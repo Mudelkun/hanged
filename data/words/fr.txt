@@ -106,7 +106,7 @@ chou | Légume aux grandes feuilles souvent serrées en boule. | food
 brocoli | Légume vert dont les bouquets ressemblent à de petits arbres. | food
 épinard | Plante dont on mange les feuilles vertes tendres. | food
 haricot | Graine comestible que l’on peut aussi manger dans sa gousse verte. | food
-courgette | Légume allongé, souvent vert, de la famille des courges. | food
+courgette | Légume allongé, souvent vert, cousin du potiron. | food
 aubergine | Légume à peau souvent violette et brillante. | food
 citrouille | Grosse courge orange que l’on décore à Halloween. | food
 champignon | Aliment à pied et à chapeau, qui ne possède pas de feuilles. | food
@@ -193,7 +193,7 @@ chapeau | Accessoire porté sur la tête, généralement avec un bord. | object
 bonnet | Accessoire souple et chaud qui couvre la tête. | object
 écharpe | Longue bande de tissu portée autour du cou. | object
 gant | Vêtement qui couvre la main et sépare les doigts. | object
-chaussette | Vêtement souple porté sur le pied, sous la chaussure. | object
+chaussette | Vêtement souple qui couvre le pied, qu’on enfile avant ses souliers. | object
 chaussure | Objet que l’on met au pied pour marcher dehors. | object
 botte | Chaussure qui monte au-dessus de la cheville. | object
 pantalon | Vêtement qui couvre séparément les deux jambes. | object
@@ -400,7 +400,7 @@ stalactite | Formation minérale qui pend au plafond d’une grotte. | nature | 
 stalagmite | Formation minérale qui grandit depuis le sol d’une grotte. | nature | 35
 archipel | Ensemble d’îles proches les unes des autres. | nature | 35
 estuaire | Embouchure d’un fleuve où se mêlent eau douce et eau de mer. | nature | 35
-orchestre | Groupe de personnes qui jouent ensemble de différents instruments. | person | 35
+orchestre | Groupe de personnes qui jouent ensemble de différents instruments. | group | 35
 calligraphie | Art de tracer les lettres de manière élégante. | action | 35
 botanique | Science qui étudie les plantes. | idea | 35
 géologie | Science qui étudie la Terre, ses roches et son histoire. | idea | 35
@@ -412,3 +412,1174 @@ microscope | Instrument qui permet d’observer des choses trop petites pour nos
 thermomètre | Instrument qui mesure la température. | object | 35
 baromètre | Instrument qui mesure la pression de l’air. | object | 35
 sablier | Objet où du sable s’écoule pour mesurer une durée. | object | 35
+taureau | Mâle de la vache, puissant et parfois redouté. | animal
+veau | Petit de la vache. | animal
+agneau | Petit du mouton. | animal
+poussin | Petit oiseau jaune qui sort de l’œuf de la poule. | animal
+dindon | Grosse volaille mâle qui glougloute et fait la roue. | animal
+lapereau | Bébé de l’animal aux longues oreilles qui grignote des carottes. | animal
+chaton | Bébé du félin domestique qui miaule. | animal
+chiot | Petit du chien. | animal
+poulain | Petit du cheval. | animal
+âne | Animal aux longues oreilles qui brait. | animal
+mulet | Croisement entre un âne et une jument. | animal
+jument | Femelle du cheval. | animal
+bélier | Mâle de la brebis, aux cornes enroulées. | animal
+brebis | Femelle du mouton. | animal
+sanglier | Cochon sauvage des forêts, aux défenses pointues. | animal
+chevreuil | Petit cervidé gracieux des bois. | animal
+blaireau | Animal des bois au museau rayé de noir et blanc. | animal
+belette | Petit carnivore au corps long et souple. | animal
+taupe | Petit animal presque aveugle qui creuse des galeries. | animal
+hamster | Petit rongeur qui remplit ses joues de graines. | animal
+cochonnet | Petite boule que l’on vise à la pétanque. | object
+mouette | Oiseau blanc et gris des bords de mer. | animal
+pélican | Oiseau aquatique au grand bec en forme de poche. | animal
+héron | Grand oiseau aux longues pattes qui pêche dans les marais. | animal
+cigogne | Grand oiseau blanc qui, dit-on, apporte les bébés. | animal
+faucon | Rapace très rapide qui chasse en piqué. | animal
+vautour | Grand rapace qui se nourrit d’animaux morts. | animal
+merle | Oiseau noir au bec jaune qui chante dans les jardins. | animal
+rossignol | Petit oiseau célèbre pour son chant la nuit. | animal
+hirondelle | Oiseau migrateur qui annonce le printemps. | animal
+mésange | Petit oiseau coloré qui aime les graines en hiver. | animal
+pivert | Oiseau qui frappe les troncs avec son bec. | animal
+colibri | Minuscule oiseau qui fait du surplace devant les fleurs. | animal
+toucan | Oiseau tropical au bec énorme et coloré. | animal
+paon | Oiseau qui fait la roue avec sa queue colorée. | animal
+guépard | Félin tacheté, l’animal terrestre le plus rapide. | animal
+léopard | Grand félin au pelage couvert de taches. | animal
+panthère | Grand félin, parfois tout noir. | animal
+jaguar | Grand félin tacheté des forêts d’Amérique. | animal
+lynx | Félin sauvage aux oreilles terminées par des pinceaux. | animal
+hyène | Animal d’Afrique dont le cri ressemble à un rire. | animal
+gorille | Le plus grand des singes. | animal
+chimpanzé | Singe très intelligent, proche de l’humain. | animal
+lama | Animal des Andes à laine qui peut cracher. | animal
+bison | Gros bovin sauvage à bosse et à crinière. | animal
+élan | Très grand cervidé du Nord aux bois larges. | animal
+renne | Cervidé du Grand Nord qui tire le traîneau du père Noël. | animal
+morse | Gros animal marin à moustaches et longues défenses. | animal
+otarie | Mammifère marin à petites oreilles, cousin du phoque. | animal
+pieuvre | Animal marin à huit bras. | animal
+calmar | Animal marin à dix bras, cousin de la seiche. | animal
+hippocampe | Petit poisson dont la tête ressemble à celle d’un cheval. | animal
+espadon | Grand poisson dont le museau forme une longue épée. | animal
+thon | Grand poisson de mer souvent vendu en boîte. | animal
+sardine | Petit poisson souvent serré dans une boîte. | animal
+anguille | Poisson long qui ressemble à un serpent. | animal
+carpe | Poisson d’eau douce qui vit dans les étangs. | animal
+huître | Coquillage qui peut cacher une perle. | animal
+moule | Coquillage noir que l’on mange avec des frites. | animal
+scorpion | Animal du désert à pinces et à queue venimeuse. | animal
+sauterelle | Insecte vert qui fait de grands bonds. | animal
+grillon | Insecte qui chante le soir dans l’herbe. | animal
+cigale | Insecte qui chante tout l’été dans le Sud. | animal
+guêpe | Insecte rayé jaune et noir qui pique. | animal
+bourdon | Grosse abeille poilue qui vole en vrombissant. | animal
+scarabée | Insecte à carapace dure et brillante. | animal
+puce | Minuscule insecte sauteur qui pique les animaux. | animal
+termite | Insecte qui ronge le bois. | animal
+lombric | Ver de terre. | animal
+limace | Animal mou et gluant sans coquille. | animal
+salamandre | Petit amphibien noir et jaune. | animal
+caméléon | Lézard qui change de couleur. | animal
+iguane | Grand lézard vert à crête. | animal
+dinosaure | Animal géant disparu il y a des millions d’années. | animal
+mammouth | Éléphant laineux de la préhistoire. | animal
+licorne | Cheval imaginaire avec une seule pointe sur le front. | animal
+dragon | Créature légendaire qui crache du feu. | animal
+ouistiti | Tout petit singe à longue queue. | animal
+marmotte | Rongeur des montagnes qui siffle et dort tout l’hiver. | animal
+chinchilla | Petit rongeur à la fourrure très douce. | animal
+porcelet | Bébé de la truie. | animal
+caneton | Bébé de l’oiseau qui fait coin-coin. | animal
+oison | Petit de l’oie. | animal | 35
+corneille | Oiseau noir proche du corbeau. | animal
+perruche | Petit perroquet coloré qu’on garde en cage. | animal
+canari | Petit oiseau jaune qui chante en cage. | animal
+pintade | Volaille au plumage gris tacheté de blanc. | animal
+caille | Petit oiseau des champs, rond et brun. | animal
+faisan | Oiseau de chasse au plumage très coloré. | animal
+abricotier | Arbre fruitier qui donne de petits fruits orange et veloutés. | plant
+pamplemousse | Gros agrume au goût un peu amer. | food
+mandarine | Petit agrume facile à éplucher. | food
+clémentine | Petit agrume sucré, souvent mangé en hiver. | food
+myrtille | Petite baie bleue des bois. | food
+groseille | Petite baie rouge et acide en grappe. | food
+cassis | Petite baie noire au goût fort. | food
+mûre | Baie noire qui pousse sur les ronces. | food
+figue | Fruit violet plein de petits grains. | food
+datte | Fruit sucré du palmier. | food
+grenade | Fruit rempli de grains rouges et juteux. | food
+papaye | Fruit tropical à chair orange. | food
+avocat | Fruit vert à gros noyau, base du guacamole. | food
+olive | Petit fruit vert ou noir dont on tire une huile. | food
+châtaigne | Fruit brun qu’on grille en automne. | food
+cacahuète | Graine que l’on mange salée à l’apéritif. | food
+pistache | Petite graine verte dans une coquille entrouverte. | food
+radis | Petit légume rouge et piquant. | food
+navet | Légume racine blanc et violet. | food
+betterave | Légume racine rouge foncé. | food
+céleri | Légume aux longues tiges croquantes. | food
+artichaut | Légume dont on mange le cœur et le bas des feuilles. | food
+asperge | Légume en longue tige verte ou blanche. | food
+poivron | Légume creux rouge, vert ou jaune. | food
+piment | Petit légume qui brûle la bouche. | food
+patate | Mot familier pour la pomme de terre. | food
+lentille | Petite graine ronde et plate qu’on cuit en plat. | food
+maïs | Céréale aux grains jaunes sur un épi. | food
+blé | Céréale dont on fait la farine du pain. | food
+farine | Poudre blanche de céréale pour faire le pain. | food
+semoule | Grains fins de blé dur du couscous. | food
+couscous | Plat de semoule servi avec légumes et viande. | food
+omelette | Œufs battus et cuits à la poêle. | food
+jambon | Viande de porc que l’on met dans les sandwichs. | food
+saucisse | Viande hachée dans un boyau, grillée ou bouillie. | food
+saucisson | Charcuterie sèche que l’on coupe en rondelles. | food
+poulet | Volaille que l’on mange souvent rôtie. | food
+steak | Tranche de bœuf grillée. | food
+rôti | Gros morceau de viande cuit au four. | food
+lardon | Petit dé de poitrine de porc qu’on met dans la quiche. | food
+frites | Bâtonnets de pommes de terre plongés dans l’huile. | food
+purée | Légumes écrasés en pâte lisse. | food
+gratin | Plat cuit au four avec une croûte dorée. | food
+quiche | Tarte salée aux œufs et aux lardons. | food
+raclette | Fromage fondu servi sur des pommes de terre. | food
+fondue | Plat où l’on trempe du pain dans du fromage chaud et coulant. | food
+ratatouille | Plat provençal de légumes mijotés. | food
+lasagne | Plat de pâtes en couches avec sauce et fromage. | food
+spaghetti | Pâtes longues et fines. | food
+hamburger | Sandwich rond avec un steak haché. | food
+bouillon | Liquide chaud où ont cuit des légumes ou de la viande. | food
+tartine | Tranche de pain beurrée ou garnie. | food
+brioche | Pain doux et moelleux au beurre. | food
+madeleine | Petit gâteau en forme de coquillage. | food
+macaron | Petit biscuit rond et coloré fourré de crème. | food
+meringue | Douceur légère faite de blancs d’œufs et de sucre. | food
+gaufre | Pâtisserie quadrillée cuite dans un moule. | food
+beignet | Pâte frite, souvent sucrée ou fourrée. | food
+pancake | Petite crêpe épaisse à l’américaine. | food
+muffin | Petit gâteau rond et moelleux. | food
+cookie | Biscuit aux pépites de chocolat. | food
+caramel | Sucre fondu et doré. | food
+sorbet | Glace à l’eau parfumée aux fruits. | food
+chantilly | Crème fouettée sucrée. | food
+moutarde | Condiment jaune et piquant. | food
+ketchup | Sauce rouge sucrée à la tomate. | food
+mayonnaise | Sauce froide aux œufs et à l’huile. | food
+vinaigrette | Assaisonnement à l’huile et à la moutarde pour la salade. | food
+cannelle | Épice brune au parfum doux. | food
+vanille | Gousse au parfum sucré. | food
+persil | Herbe verte qu’on hache sur les plats. | food
+basilic | Herbe parfumée du pesto. | food
+thym | Petite herbe aromatique de Provence. | food
+muscade | Noix râpée pour parfumer la purée. | food
+safran | Épice rouge très chère qui colore le riz. | food
+cornichon | Petit concombre conservé dans le vinaigre. | food
+céréales | Flocons croquants du petit déjeuner. | food
+biscotte | Tranche de pain grillée et sèche. | food
+limonade | Boisson sucrée et pétillante. | food
+jus | Liquide pressé d’un fruit. | food
+café | Boisson noire et amère qui réveille. | food
+thé | Boisson chaude faite de feuilles infusées. | food
+tisane | Boisson chaude aux plantes. | food
+sirop | Liquide sucré qu’on mélange à l’eau. | food
+smoothie | Boisson épaisse de fruits mixés. | food
+cacao | Poudre qui sert à faire le chocolat. | food
+déjeuner | Repas de midi. | event
+dîner | Repas du soir. | event
+goûter | Petit repas de l’après-midi. | event
+entrée | Premier plat d’un repas. | food
+dessert | Plat sucré servi à la fin du repas. | food
+recette | Liste des étapes pour préparer un plat. | communication
+cuisinier | Personne qui prépare les repas. | person
+pâtissier | Personne qui fait les gâteaux. | person
+boucher | Commerçant qui vend la viande. | person
+fromager | Commerçant qui vend camembert, comté et brie. | person
+épicier | Commerçant qui vend de l’alimentation. | person
+serveur | Personne qui apporte les plats au restaurant. | person
+épicerie | Petit magasin d’alimentation. | place
+boucherie | Magasin où l’on achète la viande. | place
+pâtisserie | Magasin où l’on achète des gâteaux. | place
+supermarché | Grand magasin où l’on fait les courses. | place
+cantine | Salle où les élèves déjeunent. | place
+boulette | Petite bille de viande hachée. | food
+crudités | Légumes crus servis en entrée. | food
+tartelette | Petite pâtisserie individuelle garnie de fruits ou de crème. | food
+chocolatine | Viennoiserie fourrée de deux barres de cacao, dans le Sud-Ouest. | food
+viennoiserie | Pâtisserie du matin comme le croissant. | food
+praline | Amande enrobée de sucre caramélisé. | food
+nougat | Confiserie blanche aux amandes et au miel. | food
+guimauve | Bonbon mou et spongieux. | food
+réglisse | Bonbon noir au goût particulier. | food
+sucette | Bonbon au bout d’un bâton. | food
+popcorn | Grains de maïs éclatés qu’on mange au cinéma. | food
+chips | Fines tranches de pomme de terre frites. | food
+noisettier | Arbuste dont les petits fruits secs plaisent aux écureuils. | plant
+pruneau | Fruit violet séché, réputé pour aider la digestion. | food
+abats | Organes d’animaux que l’on cuisine. | food
+caviar | Œufs de poisson très chers. | food
+sushi | Bouchée japonaise de riz et de poisson. | food
+taboulé | Salade de semoule, tomate, menthe et persil. | food
+menthe | Plante très fraîche utilisée dans le thé. | plant
+gingembre | Racine au goût piquant et frais. | food
+miette | Tout petit morceau de pain. | food
+croûte | Partie dure à l’extérieur du pain. | food
+tranche | Morceau fin coupé dans un aliment. | food
+glaçon | Petit cube d’eau gelée. | food
+bocal | Pot en verre avec un couvercle. | object
+saladier | Grand bol pour servir la laitue. | object
+louche | Grande cuillère pour servir la soupe. | object
+spatule | Ustensile plat pour retourner les aliments. | object
+fouet | Ustensile pour battre les œufs. | object
+passoire | Ustensile percé de trous pour égoutter. | object
+râpe | Ustensile pour réduire le fromage en filaments. | object
+rouleau | Cylindre pour étaler la pâte. | object
+théière | Récipient à bec pour infuser des feuilles. | object
+cafetière | Appareil pour préparer le petit noir. | object
+bouilloire | Appareil qui fait chauffer l’eau. | object
+mixeur | Appareil qui réduit les aliments en purée. | object
+congélateur | Appareil qui garde les aliments gelés. | object
+plateau | Support plat pour porter la vaisselle. | object
+nappe | Tissu posé sur la table. | object
+couvercle | Ce qu’on pose sur une casserole pour la fermer. | object
+tablier | Vêtement qui protège quand on cuisine. | object
+torchon | Linge pour essuyer la vaisselle. | object
+poubelle | Récipient pour jeter les déchets. | object
+évier | Bac de la cuisine où l’on fait la vaisselle. | object
+robinet | Ce qu’on tourne pour faire couler l’eau. | object
+aspirateur | Appareil qui avale la poussière du sol. | object
+serpillière | Chiffon pour laver le sol à l’eau. | object
+chiffon | Morceau de tissu pour essuyer ou dépoussiérer. | object
+lessive | Produit pour laver le linge. | object
+cintre | Support pour suspendre un vêtement dans l’armoire. | object
+commode | Meuble bas à tiroirs pour ranger le linge. | object
+tiroir | Casier qui coulisse dans un meuble. | object
+tabouret | Siège sans dossier ni accoudoirs. | object
+bureau | Table de travail, souvent avec des tiroirs. | object
+matelas | Partie épaisse et moelleuse du lit. | object
+drap | Grand tissu qui couvre le matelas. | object
+couette | Grosse couverture moelleuse du lit. | object
+berceau | Petit lit de bébé qui se balance. | object
+hamac | Lit de toile suspendu entre deux arbres. | object
+radiateur | Appareil qui chauffe la pièce. | object
+ventilateur | Appareil à hélice qui fait de l’air frais. | object
+climatiseur | Appareil qui refroidit l’air d’une pièce. | object
+cheminée | Endroit de la maison où l’on fait du feu. | object
+interrupteur | Bouton pour allumer ou éteindre la lumière. | object
+ampoule | Objet en verre qui éclaire quand on l’allume. | object
+prise | Trou dans le mur où l’on branche les appareils. | object
+câble | Long fil qui transporte le courant. | object
+pile | Petit réservoir d’énergie pour les jouets. | object
+batterie | Réserve d’énergie d’un téléphone ou d’une voiture. | object
+chargeur | Appareil qui remplit la batterie d’un téléphone. | object
+télécommande | Petit boîtier pour changer de chaîne à distance. | object
+télévision | Appareil qui montre des émissions et des films. | object
+radio | Appareil pour écouter des émissions et de la musique. | object
+casque | Objet qui protège la tête ou se porte pour écouter. | object
+enceinte | Haut-parleur qui diffuse la musique. | object
+tablette | Écran tactile plus grand qu’un téléphone. | object
+appareil | Machine ou instrument, comme celui qui prend des photos. | object
+caméra | Appareil qui filme des images. | object
+console | Machine pour jouer aux jeux vidéo. | object
+manette | Ce qu’on tient pour jouer aux jeux vidéo. | object
+cadre | Bordure qui entoure un tableau ou une photo. | object
+tableau | Peinture accrochée au mur ou surface où l’on écrit en classe. | object
+affiche | Grande feuille imprimée collée au mur. | object
+vase | Récipient où l’on met des fleurs. | object
+cadenas | Petite serrure qu’on accroche. | object
+serrure | Mécanisme qui ferme une porte à clé. | object
+poignée | Partie qu’on tient pour ouvrir une porte. | object
+sonnette | Bouton qui retentit quand un visiteur arrive. | object
+boîte | Contenant en carton ou en métal avec un couvercle. | object
+carton | Boîte en papier épais pour déménager. | object
+panier | Contenant tressé avec une anse. | object
+corbeille | Petit panier ou poubelle de bureau. | object
+arrosoir | Récipient à bec pour donner de l’eau aux plantes. | object
+tuyau | Long tube où circule l’eau. | object
+râteau | Outil à dents pour ramasser les feuilles. | object
+brouette | Petit chariot à une roue pour le jardin. | object
+tondeuse | Machine qui coupe l’herbe. | object
+sécateur | Gros ciseaux pour tailler les plantes. | object
+pioche | Outil pour casser la terre dure. | object
+hache | Outil tranchant pour couper le bois. | object
+perceuse | Outil électrique qui fait des trous. | object
+pince | Outil pour serrer ou attraper. | object
+boulon | Grosse vis avec un écrou. | object
+écrou | Petit anneau fileté qui se visse sur un boulon. | object
+ruban | Bande étroite de tissu ou de papier. | object
+colle | Produit qui fait tenir deux choses ensemble. | object
+scotch | Ruban adhésif transparent. | object
+agrafeuse | Outil qui attache les feuilles avec de petits fils de métal. | object
+trombone | Petit fil de métal qui retient les feuilles ou instrument à coulisse. | object
+punaise | Petit clou pour fixer une affiche ou insecte. | object
+règle | Instrument droit pour tracer des traits. | object
+compas | Instrument pour tracer des cercles. | object
+équerre | Instrument pour tracer des angles droits. | object
+calculatrice | Appareil qui fait les opérations. | object
+trousse | Petite pochette qui range les crayons. | object
+feutre | Stylo à pointe épaisse pour colorier. | object
+pinceau | Outil à poils pour peindre. | object
+craie | Bâton blanc pour écrire au tableau. | object
+classeur | Dossier à anneaux pour ranger des feuilles. | object
+dossier | Chemise où l’on range des documents. | object
+carnet | Petit cahier de notes. | object
+agenda | Carnet où l’on note ses rendez-vous. | object
+calendrier | Tableau des jours, des semaines et des mois. | object
+journal | Feuilles imprimées qui donnent les nouvelles. | communication
+magazine | Revue illustrée qui paraît régulièrement. | communication
+dictionnaire | Livre qui explique le sens des mots. | object
+album | Livre de photos ou disque de chansons. | object
+lettre | Message écrit qu’on envoie par la poste. | communication
+carte | Plan d’un lieu, ou as, roi ou dame d’un jeu. | object
+billet | Ticket pour entrer quelque part ou papier-monnaie. | object
+ticket | Petit papier qui prouve qu’on a payé. | object
+portefeuille | Petit étui pour ranger l’argent et les cartes. | object
+pochette | Petit sac plat. | object
+sacoche | Sac avec une bandoulière. | object
+trousseau | Ensemble de clés réunies. | object
+bijou | Objet précieux que l’on porte pour se parer. | object
+bague | Anneau que l’on porte au doigt. | object
+collier | Bijou que l’on porte autour du cou. | object
+bracelet | Bijou que l’on porte au poignet. | object
+boucle | Anneau, comme celui qu’on porte à l’oreille. | object
+couronne | Cercle précieux que porte un roi sur la tête. | object
+diamant | Pierre précieuse très dure et brillante. | material
+perle | Petite bille brillante formée dans une huître. | material
+pyjama | Vêtement que l’on porte pour dormir. | object
+peignoir | Vêtement chaud que l’on enfile après le bain. | object
+chausson | Soulier doux pour la maison. | object
+pantoufle | Chaussure d’intérieur ; celle de Cendrillon était en verre. | object
+sandale | Chaussure ouverte pour l’été. | object
+basket | Chaussure de sport. | object
+tongs | Sandales à lanière entre les orteils. | object
+talon | Arrière du pied ou de la chaussure. | body
+lacet | Cordon qui ferme la chaussure. | object
+maillot | Vêtement pour nager ou pour faire du sport. | object
+short | Pantalon court pour l’été. | object
+jean | Pantalon en toile bleue solide. | object
+pull | Vêtement chaud en laine qu’on enfile par la tête. | object
+gilet | Vêtement sans manches ou à boutons. | object
+blouson | Veste courte et chaude. | object
+imperméable | Manteau qui protège de la pluie. | object
+anorak | Veste chaude à capuche pour le froid. | object
+capuche | Partie d’un vêtement qui couvre la tête. | object
+cravate | Bande de tissu nouée autour du cou. | object
+nœud | Boucle faite en serrant une corde. | object
+costume | Veste et pantalon assortis, ou déguisement. | object
+uniforme | Vêtement identique pour tout un groupe. | object
+déguisement | Costume pour se transformer en un autre. | object
+masque | Objet qui cache le visage. | object
+casquette | Chapeau à visière. | object
+béret | Chapeau rond et plat. | object
+moufle | Gant où seul le pouce est séparé. | object
+collant | Vêtement fin qui couvre les jambes. | object
+manche | Partie du vêtement qui couvre le bras. | object
+col | Partie du vêtement autour du cou. | object
+poche | Petit sac cousu dans un vêtement. | object
+fermeture | Système à glissière qui clôt un vêtement ou un sac. | object
+tissu | Matière faite de fils tissés. | material
+dentelle | Tissu fin et ajouré. | material
+velours | Tissu doux au toucher, à poils courts. | material
+cuir | Peau d’animal préparée pour faire des sacs. | material
+fourrure | Pelage épais de certains animaux. | material
+plastique | Matière légère fabriquée à partir du pétrole. | material
+caoutchouc | Matière souple et élastique. | material
+argile | Terre que l’on modèle pour faire des pots. | material
+cire | Matière molle qui sert à faire les bougies. | material
+acier | Métal très solide fait de fer. | material
+cuivre | Métal rouge orangé qui conduit l’électricité. | material
+bronze | Métal brun de la médaille de troisième place. | material
+aluminium | Métal léger des canettes. | material
+béton | Matériau gris et dur des immeubles. | material
+brique | Bloc rouge pour construire des murs. | material
+ciment | Poudre qui durcit avec l’eau. | material
+marbre | Pierre lisse et veinée des statues. | material
+granit | Pierre très dure et granuleuse. | material
+charbon | Roche noire qui brûle. | material
+pétrole | Liquide noir tiré du sous-sol. | material
+crâne | Os de la tête. | body
+front | Partie du visage au-dessus des yeux. | body
+sourcil | Poils au-dessus de l’œil. | body
+paupière | Peau qui ferme l’œil. | body
+cil | Poil au bord de la paupière. | body
+joue | Partie ronde du visage sous l’œil. | body
+menton | Bas du visage. | body
+lèvre | Bord de la bouche. | body
+gorge | Intérieur du cou. | body
+nuque | Arrière du cou. | body
+poitrine | Avant du torse. | body
+coude | Articulation au milieu du bras. | body
+poignet | Articulation entre la main et le bras. | body
+pouce | Le plus gros doigt de la main. | body
+ongle | Partie dure au bout des doigts. | body
+orteil | Doigt du pied. | body
+cheville | Articulation entre le pied et la jambe. | body
+mollet | Arrière de la jambe sous le genou. | body
+cuisse | Haut de la jambe. | body
+hanche | Côté du corps sous la taille. | body
+nombril | Petit creux au milieu du ventre. | body
+squelette | Ensemble des os du corps. | body
+muscle | Partie du corps qui permet de bouger. | body
+cœur | Organe qui pompe le sang. | body
+poumon | Organe qui sert à respirer. | body
+cerveau | Organe de la pensée, dans la tête. | body
+estomac | Organe où l’on digère les aliments. | body
+foie | Gros organe qui nettoie le sang. | body
+rein | Organe qui filtre le sang. | body
+peau | Enveloppe qui couvre le corps. | body
+sang | Liquide rouge qui circule dans le corps. | body
+veine | Vaisseau qui ramène le sang au cœur. | body
+colonne | Pilier qui soutient un bâtiment. | object
+moustache | Poils au-dessus de la lèvre. | body
+barbe | Poils qui poussent sur le menton et les joues. | body
+tresse | Cheveux entrelacés. | body
+frange | Cheveux coupés sur le front. | body
+rhume | Petite maladie qui fait couler le nez. | state
+grippe | Maladie avec fièvre et courbatures. | state
+fièvre | Température du corps trop élevée. | state
+toux | Bruit qu’on fait pour dégager la gorge. | state
+éternuement | Expulsion brusque d’air par le nez. | action
+blessure | Coupure ou dommage au corps. | state
+bosse | Gonflement sur la tête après un choc. | state
+bleu | Couleur du ciel par beau temps. | describing
+pansement | Bande qu’on colle sur une plaie. | object
+plâtre | Coque dure pour soigner un os cassé. | object
+béquille | Appui pour marcher avec une jambe blessée. | object
+médicament | Produit qui soigne une maladie. | object
+pilule | Petit médicament à avaler. | object
+vaccin | Piqûre qui protège d’une maladie. | object
+seringue | Instrument avec une aiguille pour piquer. | object
+infirmière | Personne qui soigne les malades. | person
+dentiste | Médecin qui soigne les dents. | person
+vétérinaire | Médecin des animaux. | person
+chirurgien | Médecin qui opère. | person
+ambulance | Véhicule qui transporte les blessés. | object
+santé | Bon état du corps et de l’esprit. | state
+douleur | Sensation de mal. | feeling
+sommeil | État où l’on dort. | state
+bâillement | Grande ouverture de bouche quand on est fatigué. | action
+fatigue | Besoin de se reposer. | state
+faim | Envie de manger. | feeling
+soif | Envie de boire. | feeling
+dentifrice | Pâte pour se laver les dents. | object
+shampooing | Savon pour laver les cheveux. | object
+baignoire | Grande cuve pour prendre un bain. | object
+douche | Pluie d’eau pour se laver debout. | object
+lavabo | Petit évier de la salle de bain. | object
+toilettes | Pièce où se trouve la cuvette des WC. | place
+parfum | Liquide qui sent bon. | object
+maquillage | Produits pour colorer le visage. | object
+rouge | Couleur du sang et des fraises. | describing
+rasoir | Instrument pour couper les poils. | object
+mouchoir | Petit carré de tissu ou de papier pour le nez. | object
+bébé | Enfant tout petit qui ne marche pas encore. | person
+garçon | Enfant de sexe masculin. | person
+fille | Enfant de sexe féminin. | person
+adolescent | Jeune qui n’est plus un enfant mais pas encore adulte. | person
+adulte | Personne qui a fini de grandir. | person
+vieillard | Personne très âgée. | person
+mari | Homme marié, par rapport à sa femme. | person
+épouse | Femme mariée, par rapport à son mari. | person
+oncle | Frère du père ou de la mère. | person
+tante | Sœur du père ou de la mère. | person
+cousin | Enfant de l’oncle ou de la tante. | person
+neveu | Fils du frère ou de la sœur. | person
+nièce | Fille du frère ou de la sœur. | person
+jumeau | Enfant né en même temps qu’un frère ou une sœur, de la même grossesse. | person
+parrain | Homme qui veille sur un enfant au baptême. | person
+copain | Ami, en langage familier. | person
+camarade | Compagnon de classe ou de jeu. | person
+invité | Personne que l’on reçoit chez soi. | person
+inconnu | Personne qu’on n’a jamais rencontrée. | person
+élève | Enfant qui va à l’école. | person
+étudiant | Personne qui fait des études supérieures. | person
+maîtresse | Femme qui fait la classe aux petits. | person
+directeur | Personne qui dirige une école ou une entreprise. | person
+policier | Agent chargé de faire respecter la loi. | person
+gendarme | Militaire qui veille à la sécurité. | person
+soldat | Membre d’une armée. | person
+pilote | Personne qui conduit un avion ou une voiture de course. | person
+capitaine | Chef d’un navire ou d’une équipe. | person
+marin | Personne qui travaille sur un bateau. | person
+pêcheur | Personne qui attrape des poissons. | person
+agriculteur | Personne qui cultive la terre. | person
+fermier | Personne qui s’occupe des champs et des animaux. | person
+berger | Personne qui garde les moutons. | person
+jardinier | Personne qui entretient les plantes et les pelouses. | person
+facteur | Personne qui distribue le courrier. | person
+chauffeur | Personne qui conduit un véhicule. | person
+mécanicien | Personne qui répare les moteurs. | person
+plombier | Personne qui répare les tuyaux. | person
+électricien | Personne qui installe les fils et les prises. | person
+menuisier | Artisan qui travaille le bois. | person
+maçon | Ouvrier qui construit des murs. | person
+coiffeur | Personne qui coupe les cheveux. | person
+vendeur | Personne qui conseille les clients dans un magasin. | person
+caissier | Personne qui encaisse l’argent dans un magasin. | person
+juge | Personne qui rend la justice. | person
+journaliste | Personne qui écrit ou présente l’actualité. | person
+écrivain | Personne qui écrit des livres. | person
+poète | Personne qui écrit des vers. | person
+chanteur | Personne dont le métier est de pousser la chansonnette. | person
+acteur | Personne qui joue dans les films. | person
+clown | Artiste au nez rouge qui fait rire au cirque. | person
+magicien | Artiste qui fait apparaître un lapin d’un chapeau. | person
+jongleur | Artiste qui lance et rattrape plusieurs objets. | person
+acrobate | Artiste qui fait des sauts et des équilibres. | person
+sculpteur | Artiste qui façonne des statues. | person
+inventeur | Personne qui crée des choses nouvelles. | person
+savant | Personne qui sait beaucoup de choses en science. | person
+chercheur | Personne qui fait des découvertes en laboratoire. | person
+ingénieur | Personne qui conçoit des machines ou des ponts. | person
+informaticien | Personne qui travaille avec les ordinateurs. | person
+banquier | Personne qui gère l’argent des clients. | person
+patron | Chef d’une entreprise. | person
+ouvrier | Personne qui fait un travail manuel. | person
+roi | Homme qui règne sur un pays. | person
+reine | Femme qui règne ou épouse du roi. | person
+prince | Fils d’un roi. | person
+princesse | Fille d’un roi. | person
+chevalier | Guerrier en armure, comme ceux de la Table ronde. | person
+pirate | Bandit des mers. | person
+sorcière | Femme qui fait de la magie avec un balai. | person
+fantôme | Esprit qu’on imagine sous un drap blanc. | person
+géant | Être immense des contes. | person
+fée | Petite créature magique avec une baguette. | person
+lutin | Petit être malicieux des légendes. | person
+héros | Personne courageuse qu’on admire. | person
+voleur | Personne qui prend ce qui ne lui appartient pas. | person
+champion | Vainqueur d’une compétition. | person
+gardien | Personne qui surveille un lieu ou les buts. | person
+arbitre | Personne qui fait respecter les règles d’un match. | person
+entraîneur | Personne qui fait travailler une équipe. | person
+spectateur | Personne assise dans le public. | person
+touriste | Personne qui visite un pays en vacances. | person
+voyageur | Personne qui parcourt le monde. | person
+village | Petit groupe de maisons à la campagne. | place
+ville | Grande agglomération avec beaucoup d’habitants. | place
+capitale | Ville principale d’un pays. | place
+quartier | Partie d’une ville. | place
+banlieue | Villes autour d’une grande ville. | place
+campagne | Endroit avec des champs, loin des villes. | place
+ferme | Endroit où l’on élève des animaux et cultive. | place
+grange | Bâtiment où l’on range le foin. | place
+étable | Bâtiment où dorment les vaches. | place
+écurie | Bâtiment où vivent les chevaux. | place
+poulailler | Abri où dorment les poules. | place
+moulin | Bâtiment qui moud le grain avec le vent ou l’eau. | place
+église | Bâtiment où les chrétiens prient. | place
+mairie | Bâtiment de la commune où l’on se marie. | place
+poste | Lieu où l’on envoie lettres et colis. | place
+banque | Lieu où l’on garde son argent. | place
+usine | Bâtiment où l’on fabrique des objets. | place
+immeuble | Grand bâtiment à plusieurs étages. | place
+appartement | Logement dans un immeuble. | place
+tour | Bâtiment haut et étroit. | place
+phare | Tour lumineuse qui guide les bateaux. | place
+stade | Grand terrain de sport avec des gradins. | place
+piscine | Bassin où l’on nage. | place
+gymnase | Salle où l’on fait du sport. | place
+patinoire | Piste de glace pour faire des glissades et des pirouettes. | place
+zoo | Parc où l’on voit des animaux du monde entier. | place
+cirque | Spectacle sous un chapiteau avec clowns et acrobates. | place
+hôtel | Lieu où l’on dort en voyage. | place
+camping | Terrain où l’on dort sous la tente. | place
+prison | Lieu où l’on enferme les criminels. | place
+tribunal | Lieu où l’on juge. | place
+caserne | Bâtiment des pompiers ou des soldats. | place
+laboratoire | Salle où l’on fait des expériences. | place
+université | Établissement d’études supérieures. | place
+collège | École entre le primaire et le lycée. | place
+lycée | École avant l’université. | place
+classe | Salle où les élèves apprennent. | place
+couloir | Passage étroit qui relie des pièces. | place
+grenier | Pièce sous le toit. | place
+cave | Pièce sous la maison, souvent fraîche. | place
+garage | Endroit où l’on range la voiture. | place
+salon | Pièce où l’on reçoit et se détend. | place
+balcon | Petite plateforme à l’extérieur d’un étage. | place
+terrasse | Espace dehors où l’on s’assoit. | place
+toit | Ce qui couvre une maison. | object
+mur | Paroi qui sépare deux pièces. | object
+plafond | Haut d’une pièce. | object
+plancher | Sol d’une pièce en bois. | object
+cour | Espace ouvert entouré de bâtiments. | place
+trottoir | Bord de la rue réservé aux piétons. | place
+carrefour | Endroit où plusieurs routes se croisent. | place
+autoroute | Grande voie rapide, souvent à péage. | place
+tunnel | Passage creusé sous terre ou dans une montagne. | place
+parking | Endroit où l’on gare les voitures. | place
+fontaine | Construction d’où jaillit de l’eau. | place
+statue | Sculpture qui représente une personne. | object
+monument | Grand bâtiment ou statue célèbre. | place
+cathédrale | Grande église d’une ville. | place
+pyramide | Monument à base carrée et à pointe. | place
+frontière | Limite entre deux pays. | place
+pays | Territoire avec ses habitants et son gouvernement. | place
+continent | Très grande étendue de terre comme l’Afrique. | place
+planète | Astre qui tourne autour d’une étoile. | nature
+univers | Tout ce qui existe dans l’espace. | nature
+galaxie | Immense ensemble d’étoiles. | nature
+comète | Astre à longue queue lumineuse. | nature
+étang | Petite étendue d’eau calme. | nature
+marais | Terrain humide plein de roseaux. | nature
+source | Endroit où l’eau sort de la terre. | nature
+ruisseau | Tout petit cours d’eau. | nature
+vague | Eau qui se soulève à la surface de la mer. | nature
+marée | Montée et descente de la mer. | nature
+falaise | Haut mur de roche au bord de la mer. | nature
+dune | Colline de sable. | nature
+glacier | Énorme masse de glace en montagne. | nature
+sommet | Point le plus haut d’une montagne. | nature
+prairie | Grand champ d’herbe. | nature
+champ | Terre cultivée. | nature
+jungle | Forêt tropicale très dense. | nature
+savane | Grande plaine d’herbes en Afrique. | nature
+banquise | Glace qui flotte sur la mer. | nature
+oasis | Point d’eau dans le désert. | nature
+caillou | Petite pierre. | nature
+boue | Terre mouillée et collante. | nature
+poussière | Fines particules qui se déposent. | nature
+flaque | Petite étendue d’eau sur le sol après la pluie. | nature
+grêle | Pluie de petits grains de glace. | nature
+tempête | Vent très violent. | nature
+ouragan | Tempête tropicale très forte. | nature
+tornade | Tourbillon de vent destructeur. | nature
+tonnerre | Bruit qui suit l’éclair. | nature
+rosée | Gouttelettes du matin sur l’herbe. | nature
+givre | Fine couche de glace blanche. | nature
+verglas | Glace transparente sur la route. | nature
+chaleur | Température élevée. | nature
+fraîcheur | Légère sensation de froid agréable. | nature
+ciel | Espace bleu au-dessus de nous. | nature
+horizon | Ligne où le ciel semble toucher la terre. | nature
+ombre | Zone sombre derrière un objet éclairé. | nature
+lumière | Ce qui permet de voir. | nature
+feu | Flammes qui brûlent et chauffent. | nature
+flamme | Langue de feu. | nature
+fumée | Nuage gris qui sort du feu. | nature
+cendre | Poudre grise qui reste après le feu. | nature
+tremblement | Secousse de la terre ou du corps. | event
+buisson | Petit arbuste touffu. | plant
+ronce | Plante piquante qui donne des mûres. | plant
+fougère | Plante des sous-bois aux grandes feuilles découpées. | plant
+mousse | Petite plante verte et douce sur les pierres. | plant
+lierre | Plante qui grimpe sur les murs. | plant
+cactus | Plante piquante du désert. | plant
+bambou | Grande tige creuse que mange le panda. | plant
+roseau | Plante à tige haute au bord de l’eau. | plant
+coquelicot | Fleur rouge des champs. | plant
+pâquerette | Petite fleur blanche des pelouses. | plant
+pissenlit | Fleur jaune qui devient une boule à souffler. | plant
+lavande | Plante violette très parfumée. | plant
+muguet | Petite fleur blanche en clochettes du premier mai. | plant
+violette | Petite fleur mauve. | plant
+orchidée | Fleur exotique très élégante. | plant
+jonquille | Fleur jaune du printemps. | plant
+lys | Grande fleur blanche et parfumée. | plant
+nénuphar | Plante aux larges feuilles qui flotte sur l’eau. | plant
+trèfle | Petite plante à trois feuilles. | plant
+bouleau | Arbre à l’écorce blanche. | plant
+peuplier | Grand arbre fin et élancé. | plant
+saule | Arbre aux branches qui tombent vers l’eau. | plant
+platane | Arbre des places à l’écorce qui pèle. | plant
+olivier | Arbre méditerranéen au feuillage argenté, symbole de paix. | plant
+pommier | Arbre fruitier dont on fait le cidre. | plant
+cerisier | Arbre fruitier aux fleurs roses, célèbre au Japon. | plant
+châtaignier | Arbre dont les fruits bruns se cachent dans des bogues piquantes. | plant
+sapinière | Forêt de conifères qui restent verts en hiver. | place
+écorce | Peau d’un arbre. | plant
+tronc | Partie principale d’un arbre. | plant
+bourgeon | Pousse qui deviendra feuille ou fleur. | plant
+pétale | Partie colorée d’une fleur. | plant
+épine | Pointe qui pique sur une tige. | plant
+tige | Partie longue qui porte les feuilles. | plant
+camionnette | Petit véhicule utilitaire pour livrer. | object
+tracteur | Véhicule qui tire les machines agricoles. | object
+trottinette | Planche à roues avec un guidon. | object
+voilier | Bateau qui avance grâce au vent. | object
+canoë | Petit bateau qu’on fait avancer à la pagaie. | object
+paquebot | Très grand bateau de croisière. | object
+métro | Train qui roule sous la ville. | object
+tramway | Train de ville qui roule sur des rails dans la rue. | object
+taxi | Voiture avec chauffeur qu’on paie pour un trajet. | object
+montgolfière | Ballon qui vole avec de l’air chaud. | object
+parachute | Grande toile qui freine celui qui saute d’un avion. | object
+traîneau | Véhicule qui glisse sur la neige. | object
+remorque | Véhicule tiré par un autre. | object
+skateboard | Planche à roulettes. | object
+patin | Chaussure pour glisser sur la glace. | object
+ski | Longue planche pour glisser sur la neige. | object
+luge | Petit traîneau pour descendre les pentes. | object
+moteur | Machine qui fait avancer un véhicule. | object
+pneu | Caoutchouc gonflé autour de la roue. | object
+essence | Carburant des voitures. | material
+voyage | Déplacement vers un lieu lointain. | event
+football | Sport où l’on marque des buts avec le pied. | competition
+basketball | Sport où l’on lance un ballon dans un panier. | competition
+tennis | Sport de raquette au-dessus d’un filet. | competition
+rugby | Sport avec un ballon ovale. | competition
+handball | Sport où l’on marque avec la main. | competition
+volleyball | Sport où l’on renvoie le ballon par-dessus un filet. | competition
+natation | Sport qui consiste à nager. | competition
+judo | Sport de combat japonais avec ceinture. | competition
+escrime | Sport de combat à l’épée. | competition
+boxe | Sport de combat avec des gants. | competition
+cyclisme | Sport pratiqué à vélo. | competition
+athlétisme | Courses, sauts et lancers. | competition
+gymnastique | Sport d’agilité et de souplesse. | competition
+équitation | Sport pratiqué à cheval. | competition
+escalade | Sport où l’on grimpe sur des parois. | competition
+marathon | Course à pied très longue. | competition
+golf | Sport où l’on met une petite balle dans des trous. | competition
+match | Rencontre sportive. | competition
+tournoi | Compétition en plusieurs matchs. | competition
+médaille | Récompense ronde des champions. | object
+trophée | Coupe remise au vainqueur. | object
+raquette | Instrument pour frapper la balle au tennis. | object
+filet | Mailles de fil tendues. | object
+sifflet | Petit instrument qui fait un son aigu. | object
+équipe | Groupe qui joue ensemble. | group
+victoire | Fait de gagner. | event
+défaite | Fait de perdre. | event
+record | Meilleure performance jamais réalisée. | competition
+jeu | Activité pour s’amuser. | event
+puzzle | Image découpée en pièces à assembler. | object
+échecs | Jeu de stratégie avec rois et reines. | competition
+dominos | Jeu de pièces à points qu’on aligne. | object
+toupie | Jouet qui tourne sur sa pointe. | object
+balançoire | Siège suspendu sur lequel on va et vient. | object
+toboggan | Pente pour glisser. | object
+bille | Petite boule de verre pour jouer. | object
+marionnette | Poupée qu’on anime avec les mains ou des fils. | object
+peinture | Liquide coloré qu’on étale au pinceau. | object
+dessin | Image faite au crayon. | object
+sculpture | Œuvre en trois dimensions. | object
+musique | Art des sons. | idea
+chanson | Texte chanté sur une mélodie. | communication
+mélodie | Suite agréable de notes. | idea
+concert | Spectacle de musique. | event
+spectacle | Représentation devant un public. | event
+film | Histoire racontée en images animées. | communication
+histoire | Récit ou passé des hommes. | communication
+conte | Histoire merveilleuse pour enfants. | communication
+roman | Long récit inventé. | communication
+poème | Texte en vers. | communication
+harpe | Grand instrument à cordes pincées. | object
+accordéon | Instrument à soufflet et à touches. | object
+saxophone | Instrument à anche en métal, star du jazz. | object
+violoncelle | Grand instrument à cordes et à archet qu’on joue assis, entre les genoux. | object
+micro | Appareil qui amplifie la voix. | object
+leçon | Ce que le professeur enseigne. | communication
+devoir | Travail à faire à la maison. | communication
+examen | Épreuve pour vérifier ce qu’on sait. | event
+note | Chiffre qui évalue un devoir. | communication
+récréation | Pause entre les cours. | event
+alphabet | Ensemble des lettres. | language
+grammaire | Règles d’une langue. | language
+orthographe | Bonne façon d’écrire les mots. | language
+calcul | Opération avec des nombres. | idea
+addition | Opération qui ajoute des nombres. | idea
+soustraction | Opération qui retire un nombre. | idea
+multiplication | Opération qui répète une addition. | idea
+division | Opération qui partage un nombre. | idea
+géographie | Étude de la terre et des pays. | idea
+mathématiques | Science des nombres et des formes. | idea
+science | Connaissance du monde par l’observation. | idea
+demain | Le jour après aujourd’hui. | time
+hier | Le jour avant aujourd’hui. | time
+journée | Temps entre le matin et le soir. | time
+seconde | Soixantième partie d’une minute. | time
+siècle | Période de cent ans. | time
+décennie | Période de dix ans. | time
+saison | L’une des quatre parties de l’année. | time
+lundi | Premier jour de la semaine. | time
+mardi | Deuxième jour de la semaine. | time
+mercredi | Jour sans école pour beaucoup d’enfants. | time
+jeudi | Quatrième jour de la semaine. | time
+vendredi | Dernier jour d’école de la semaine. | time
+samedi | Premier jour du week-end. | time
+dimanche | Dernier jour de la semaine. | time
+janvier | Premier mois de l’année. | time
+février | Mois le plus court de l’année. | time
+mars | Mois du début du printemps. | time
+avril | Mois des poissons farceurs. | time
+juin | Mois de l’été qui commence. | time
+juillet | Mois de la fête nationale française. | time
+septembre | Mois de la rentrée scolaire. | time
+octobre | Mois d’Halloween. | time
+novembre | Avant-dernier mois de l’année. | time
+décembre | Mois de Noël. | time
+midi | Le milieu de la journée. | time
+minuit | Le milieu de la nuit. | time
+aube | Moment où le jour se lève. | time
+passé | Temps qui est derrière nous. | time
+avenir | Temps qui viendra. | time
+présent | Moment actuel ou cadeau. | time
+moment | Court espace de temps. | time
+instant | Moment très court. | time
+retard | Fait d’arriver après l’heure. | time
+fête | Moment joyeux où l’on célèbre. | event
+mariage | Cérémonie où deux personnes s’unissent. | event
+naissance | Arrivée d’un bébé au monde. | event
+noël | Fête de décembre avec un sapin et des cadeaux. | event
+carnaval | Fête où l’on se déguise dans les rues. | event
+halloween | Fête des citrouilles et des déguisements effrayants. | event
+pâques | Fête du printemps avec des œufs en chocolat. | event
+cadeau | Objet offert pour faire plaisir. | object
+invitation | Demande à venir à une fête. | communication
+défilé | Marche en cortège dans la rue. | event
+promenade | Petite marche pour le plaisir. | event
+course | Compétition de vitesse ou achats. | event
+réunion | Rencontre de plusieurs personnes. | event
+accident | Événement imprévu qui fait des dégâts. | event
+incendie | Grand feu qui détruit. | event
+inondation | Eau qui recouvre une région. | event
+joie | Sentiment de grand plaisir. | feeling
+tristesse | Sentiment quand on a du chagrin. | feeling
+colère | Sentiment quand on est très fâché. | feeling
+peur | Sentiment devant un danger. | feeling
+honte | Gêne après une faute. | feeling
+fierté | Satisfaction de ce qu’on a fait. | feeling
+jalousie | Envie de ce que les autres ont. | feeling
+amour | Sentiment très fort pour quelqu’un. | feeling
+amitié | Lien entre deux amis. | feeling
+tendresse | Douceur affectueuse. | feeling
+espoir | Attente de quelque chose de bien. | feeling
+ennui | Sentiment quand on ne sait pas quoi faire. | feeling
+inquiétude | Peur de ce qui pourrait arriver. | feeling
+calme | Absence d’agitation. | state
+envie | Désir d’avoir ou de faire quelque chose. | feeling
+plaisir | Sensation agréable. | feeling
+chagrin | Peine profonde. | feeling
+regret | Tristesse d’avoir fait ou pas fait quelque chose. | feeling
+confiance | Fait de croire en quelqu’un. | feeling
+timidité | Gêne devant les autres. | feeling
+gentillesse | Qualité de celui qui est aimable. | quality
+politesse | Bonnes manières. | quality
+honnêteté | Qualité de celui qui dit la vérité. | quality
+générosité | Qualité de celui qui donne volontiers. | quality
+sagesse | Qualité d’une personne réfléchie. | quality
+force | Puissance physique. | quality
+vitesse | Rapidité d’un mouvement. | quality
+beauté | Qualité de ce qui est agréable à regarder. | quality
+idée | Pensée qui vient à l’esprit. | idea
+pensée | Ce qui se passe dans l’esprit. | mind
+mémoire | Capacité à se souvenir. | mind
+rêve | Images qu’on voit en dormant. | mind
+secret | Chose qu’on ne doit pas dire. | idea
+mystère | Chose qu’on ne comprend pas. | idea
+question | Phrase pour demander. | communication
+réponse | Ce qu’on dit à une question. | communication
+vérité | Ce qui est vrai. | idea
+mensonge | Ce qui n’est pas vrai. | communication
+promesse | Engagement à faire quelque chose. | communication
+blague | Petite histoire pour faire rire. | communication
+conseil | Avis pour aider quelqu’un. | communication
+message | Information transmise. | communication
+nouvelle | Information récente ou court récit. | communication
+parole | Mot prononcé. | communication
+phrase | Suite de mots qui a un sens. | language
+mot | Groupe de lettres qui a un sens. | language
+chiffre | Signe qui écrit les nombres. | quantity
+nombre | Quantité qu’on compte. | quantity
+moitié | L’une des deux parties égales. | quantity
+douzaine | Groupe de 12, comme les œufs d’une boîte. | quantity
+centaine | Environ 100 unités. | quantity
+millier | Environ 1 000 unités. | quantity
+million | Mille fois mille. | quantity
+poids | Lourdeur d’un objet. | quantity
+taille | Hauteur ou grandeur. | quantity
+longueur | Distance d’un bout à l’autre. | quantity
+largeur | Distance d’un côté à l’autre. | quantity
+hauteur | Distance du pied jusqu’au sommet. | quantity
+cercle | Forme ronde. | shape
+carré | Forme à quatre côtés égaux. | shape
+triangle | Forme à trois côtés. | shape
+rectangle | Forme à quatre angles droits. | shape
+losange | Forme en diamant. | shape
+spirale | Ligne qui tourne en s’éloignant du centre. | shape
+cube | Forme à six faces carrées. | shape
+sphère | Boule parfaite. | shape
+cône | Forme d’un cornet de glace. | shape
+ligne | Trait continu. | shape
+point | Petit rond ou unité de score. | shape
+couleur | Ce que l’œil voit : rouge, bleu, vert… | senses
+jaune | Couleur du soleil et du citron. | describing
+vert | Couleur de l’herbe. | describing
+violet | Couleur entre le bleu et le rouge. | describing
+marron | Couleur du chocolat. | describing
+gris | Couleur entre le noir et le blanc. | describing
+noir | Couleur de la nuit. | describing
+blanc | Couleur de la neige. | describing
+doré | De la couleur de l’or. | describing
+argenté | Qui brille comme une pièce de métal gris clair. | describing
+bruit | Son désagréable ou fort. | senses
+odeur | Ce que sent le nez. | senses
+goût | Ce que sent la langue. | senses
+toucher | Sens qui passe par la peau. | senses
+regard | Façon dont on pose les yeux sur quelque chose. | senses
+voix | Son produit par la gorge. | senses
+cri | Son très fort de la voix. | senses
+monnaie | Pièces qu’on rend après un achat. | money
+pièce | Petit disque de métal pour payer. | money
+prix | Somme à payer pour un objet. | money
+salaire | Argent gagné en travaillant. | money
+trésor | Ensemble d’objets précieux caché. | money
+tirelire | Petite boîte où l’on garde ses économies. | object
+richesse | Fait d’avoir beaucoup d’argent. | money
+marcher | Avancer à pied. | action
+sauter | Quitter le sol d’un bond. | action
+grimper | Monter en s’aidant des mains. | action
+tomber | Perdre l’équilibre et aller au sol. | action
+pleurer | Verser des larmes. | action
+rire | Montrer sa joie par des éclats de voix. | action
+parler | Dire des mots. | action
+crier | Parler très fort. | action
+chuchoter | Parler tout bas. | action
+manger | Avaler des aliments. | action
+boire | Avaler un liquide. | action
+cuisiner | Préparer à manger. | action
+jouer | S’amuser. | action
+gagner | Être le vainqueur. | action
+perdre | Ne pas gagner ou égarer. | action
+chercher | Essayer de trouver. | action
+trouver | Découvrir ce qu’on cherchait. | action
+cacher | Mettre hors de vue. | action
+ouvrir | Faire qu’une chose ne soit plus fermée. | action
+fermer | Boucher une ouverture. | action
+pousser | Faire avancer en appuyant. | action
+tirer | Ramener vers soi. | action
+porter | Tenir quelque chose en se déplaçant. | action
+lancer | Envoyer dans l’air. | action
+attraper | Saisir quelque chose qui bouge. | action
+couper | Séparer avec une lame. | action
+coller | Faire tenir deux choses ensemble. | action
+peindre | Mettre de la couleur au pinceau. | action
+colorier | Remplir un dessin avec des crayons de couleur. | action
+compter | Dire les nombres dans l’ordre. | action
+penser | Réfléchir dans sa tête. | action
+oublier | Ne plus se souvenir. | action
+comprendre | Saisir le sens. | action
+expliquer | Faire comprendre. | action
+demander | Poser une question. | action
+répondre | Dire quelque chose après une question. | action
+aider | Apporter son soutien. | action
+attendre | Rester jusqu’à ce que quelque chose arrive. | action
+arriver | Atteindre un lieu. | action
+partir | Quitter un lieu. | action
+rentrer | Revenir chez soi. | action
+voler | Se déplacer dans l’air. | action
+rouler | Avancer en tournant. | action
+glisser | Se déplacer sur une surface lisse. | action
+plonger | Sauter dans l’eau la tête la première. | action
+pêcher | Attraper des poissons. | action
+planter | Mettre une graine en terre. | action
+arroser | Donner de l’eau aux plantes. | action
+nettoyer | Rendre propre. | action
+ranger | Mettre chaque chose à sa place. | action
+laver | Nettoyer avec de l’eau. | action
+réparer | Remettre en état. | action
+casser | Mettre en morceaux. | action
+acheter | Obtenir contre de l’argent. | action
+vendre | Céder contre de l’argent. | action
+payer | Donner de l’argent pour quelque chose. | action
+offrir | Donner en cadeau. | action
+envoyer | Faire partir vers quelqu’un. | action
+recevoir | Obtenir ce qu’on vous donne. | action
+téléphoner | Appeler quelqu’un. | action
+visiter | Aller voir un lieu. | action
+explorer | Parcourir un lieu inconnu. | action
+découvrir | Trouver quelque chose de nouveau. | action
+inventer | Créer quelque chose de nouveau. | action
+grandir | Prendre des centimètres en vieillissant. | action
+respirer | Faire entrer et sortir l’air. | action
+siffler | Faire un son aigu avec les lèvres. | action
+applaudir | Taper des mains pour féliciter. | action
+embrasser | Donner un baiser. | action
+saluer | Dire bonjour. | action
+remercier | Exprimer sa reconnaissance. | action
+grand | De taille élevée. | describing
+petit | De faible taille. | describing
+gros | Large et épais. | describing
+mince | Fin et étroit. | describing
+long | Qui s’étend loin. | describing
+court | De faible longueur. | describing
+lourd | Difficile à soulever. | describing
+léger | Facile à soulever. | describing
+rapide | Qui va vite. | describing
+lent | Qui va doucement. | describing
+chaud | De température élevée. | describing
+froid | De basse température. | describing
+mouillé | Couvert ou imbibé d’eau. | describing
+sec | Sans eau. | describing
+propre | Sans saleté. | describing
+sale | Couvert de taches. | describing
+nouveau | Qui vient d’arriver. | describing
+ancien | Qui date d’autrefois. | describing
+jeune | Qui n’est pas vieux. | describing
+vieux | Qui a beaucoup d’années. | describing
+joli | Agréable à regarder. | describing
+beau | Très agréable à regarder. | describing
+heureux | Plein de joie. | describing
+triste | Qui a du chagrin. | describing
+gentil | Aimable avec les autres. | describing
+méchant | Qui fait du mal. | describing
+drôle | Qui fait rire. | describing
+sérieux | Qui ne plaisante pas. | describing
+courageux | Qui n’a pas peur du danger. | describing
+peureux | Qui s’effraie facilement. | describing
+fatigué | Qui a besoin de repos. | describing
+malade | Qui n’est pas en bonne santé. | describing
+content | Satisfait. | describing
+fâché | En colère. | describing
+bruyant | Qui fait beaucoup de vacarme. | describing
+silencieux | Qui ne fait pas de bruit. | describing
+facile | Pas difficile. | describing
+difficile | Pas facile. | describing
+dangereux | Qui peut faire du mal. | describing
+délicieux | Très bon à manger. | describing
+sucré | Qui a un goût doux, comme le miel. | describing
+salé | Qui a le goût de l’eau de mer. | describing
+amer | Au goût âpre comme le café noir. | describing
+piquant | Qui brûle la langue ou fait mal au toucher. | describing
+doux | Agréable au toucher. | describing
+rugueux | Qui accroche au toucher. | describing
+brillant | Qui renvoie la lumière. | describing
+sombre | Peu éclairé. | describing
+énorme | Très gros. | describing
+minuscule | Très petit. | describing
+étrange | Bizarre. | describing
+magique | Qui semble sortir d’un conte de fées. | describing
+célèbre | Connu de tous. | describing
+riche | Qui a beaucoup d’argent. | describing
+pauvre | Qui a peu d’argent. | describing
+plein | Rempli. | describing
+vide | Sans rien dedans. | describing
+rond | En forme de cercle. | describing
+pointu | Qui se termine en un bout fin et piquant. | describing
+endormi | Qui est plongé dans le sommeil. | describing
+curieux | Qui veut tout savoir. | describing
+gourmand | Qui aime manger. | describing
+paresseux | Qui n’aime pas l’effort. | describing
+généreux | Qui donne volontiers. | describing
+patient | Qui sait attendre. | describing
+aimable | Agréable avec les autres. | describing
+honnête | Qui ne ment pas. | describing
+sauvage | Qui vit en liberté dans la nature. | describing
+ornithorynque | Mammifère d’Australie à bec de canard qui pond des œufs. | animal | 35
+tamanoir | Grand fourmilier d’Amérique du Sud. | animal | 35
+pangolin | Mammifère couvert d’écailles qui mange des fourmis. | animal | 35
+axolotl | Salamandre mexicaine qui garde ses branchies toute sa vie. | animal | 35
+narval | Cétacé du Grand Nord à longue dent torsadée. | animal | 35
+lamantin | Gros mammifère marin paisible qui broute les herbiers. | animal | 35
+okapi | Animal de la forêt congolaise aux pattes rayées. | animal | 35
+tapir | Mammifère à petite trompe des forêts tropicales. | animal | 35
+wombat | Marsupial australien trapu qui creuse des terriers. | animal | 35
+mangouste | Petit carnivore agile qui attaque les serpents. | animal | 35
+albatros | Grand oiseau de mer aux ailes immenses. | animal | 35
+cormoran | Oiseau marin noir qui plonge pour pêcher. | animal | 35
+alouette | Petit oiseau des champs qui chante en vol. | animal | 35
+bouvreuil | Petit oiseau à poitrine rouge. | animal | 35
+scolopendre | Mille-pattes venimeux. | animal | 35
+mygale | Grosse araignée velue. | animal | 35
+crustacé | Animal à carapace comme le crabe. | animal | 35
+mollusque | Animal mou souvent protégé par une coquille. | animal | 35
+amphibien | Animal qui vit dans l’eau puis sur terre. | animal | 35
+marsupial | Mammifère qui porte son petit dans une poche. | animal | 35
+chrysanthème | Fleur d’automne aux nombreux pétales. | plant | 35
+rhododendron | Arbuste aux grosses grappes de fleurs. | plant | 35
+eucalyptus | Arbre australien aux feuilles parfumées. | plant | 35
+séquoia | Arbre géant de Californie. | plant | 35
+baobab | Arbre africain au tronc énorme. | plant | 35
+glycine | Plante grimpante aux grappes mauves. | plant | 35
+chlorophylle | Pigment vert des plantes. | material | 35
+photosynthèse | Fabrication de sucre par les plantes grâce à la lumière. | idea | 35
+écosystème | Ensemble des êtres vivants d’un milieu. | nature | 35
+biodiversité | Variété des espèces vivantes. | nature | 35
+stratosphère | Couche de l’atmosphère au-dessus des nuages. | nature | 35
+atmosphère | Couche d’air autour de la Terre. | nature | 35
+hémisphère | Moitié de la Terre. | place | 35
+équateur | Ligne imaginaire au milieu de la Terre. | place | 35
+péninsule | Terre entourée d’eau sur trois côtés. | place | 35
+fjord | Long bras de mer entre des montagnes. | nature | 35
+geyser | Source qui projette de l’eau chaude. | nature | 35
+lagune | Étendue d’eau salée séparée de la mer. | nature | 35
+mangrove | Forêt d’arbres les pieds dans l’eau salée. | nature | 35
+toundra | Plaine froide sans arbres du Grand Nord. | nature | 35
+avalanche | Chute de neige qui dévale une montagne. | nature | 35
+séisme | Secousse de la terre. | event | 35
+météorite | Pierre tombée de l’espace. | nature | 35
+éclipse | Le Soleil ou la Lune caché par un autre astre. | nature | 35
+nébuleuse | Nuage de gaz et de poussières dans l’espace. | nature | 35
+magnétisme | Force des aimants. | idea | 35
+électricité | Énergie qui allume les lampes. | idea | 35
+gravité | Force qui fait tomber les objets. | idea | 35
+oxygène | Gaz que nous respirons. | material | 35
+hydrogène | Gaz le plus léger. | material | 35
+molécule | Groupe d’atomes liés. | material | 35
+algorithme | Suite d’étapes pour résoudre un problème. | idea | 35
+hiéroglyphe | Signe de l’écriture égyptienne ancienne. | language | 35
+parchemin | Peau préparée pour écrire, autrefois. | material | 35
+manuscrit | Texte écrit à la main. | communication | 35
+encyclopédie | Ouvrage qui rassemble toutes les connaissances. | object | 35
+hélice | Pièce à pales qui tourne pour propulser. | object | 35
+gouvernail | Pièce qui dirige un bateau. | object | 35
+catapulte | Machine qui lançait des pierres. | object | 35
+boussole | Instrument qui indique le nord. | object | 35
+kaléidoscope | Tube qui montre des motifs colorés changeants. | object | 35
+xylophone | Instrument à lames frappées. | object | 35
+clavecin | Ancien instrument à clavier aux cordes pincées. | object | 35
+cornemuse | Instrument à sac et à tuyaux. | object | 35
+tambourin | Petite percussion plate à grelots. | object | 35
+mandoline | Petit instrument à cordes en forme de poire. | object | 35
+chapiteau | Grande tente de cirque. | object | 35
+amphithéâtre | Salle en gradins. | place | 35
+aqueduc | Pont qui transporte de l’eau. | place | 35
+forteresse | Château fortifié. | place | 35
+donjon | Tour principale d’un château fort. | place | 35
+monastère | Lieu où vivent des moines. | place | 35
+observatoire | Lieu où l’on étudie les étoiles. | place | 35
+gondole | Barque de Venise. | object | 35
+dirigeable | Ballon allongé à moteur. | object | 35
+kayak | Petit bateau à pagaie double. | object | 35
+quotidien | Qui revient chaque jour. | describing | 35
+mélancolie | Tristesse douce et rêveuse. | feeling | 35
+nostalgie | Regret du passé. | feeling | 35
+enthousiasme | Grande joie d’agir. | feeling | 35
+persévérance | Fait de continuer malgré les difficultés. | quality | 35
+générique | Liste des noms à la fin d’un film. | communication | 35
+anecdote | Petite histoire curieuse. | communication | 35
+proverbe | Phrase courte qui donne une leçon. | communication | 35
+devinette | Question amusante à résoudre. | communication | 35
+charade | Énigme où l’on devine un mot syllabe par syllabe. | communication | 35
+énigme | Question difficile à résoudre. | communication | 35
+paradoxe | Idée qui semble contradictoire. | idea | 35
+hypothèse | Supposition à vérifier. | idea | 35
+philosophie | Réflexion sur le sens de la vie. | idea | 35
+démocratie | Gouvernement par le peuple. | idea | 35
+archéologue | Personne qui fouille les vestiges du passé. | person | 35
+paléontologue | Personne qui étudie les fossiles. | person | 35
+astronome | Savant qui étudie les étoiles. | person | 35
+cartographe | Personne qui dessine les plans des territoires. | person | 35
+ventriloque | Artiste qui parle sans bouger les lèvres. | person | 35
+funambule | Artiste qui marche sur un fil. | person | 35
+fossile | Reste d’un être vivant pris dans la pierre. | nature | 35
+quartz | Minéral transparent très courant. | material | 35
+émeraude | Pierre précieuse verte. | material | 35
+saphir | Pierre précieuse bleue. | material | 35
+rubis | Pierre précieuse rouge. | material | 35
+améthyste | Pierre violette. | material | 35
+porcelaine | Céramique blanche et fine. | material | 35
+mosaïque | Image faite de petits morceaux. | object | 35
+vitrail | Fenêtre de verre coloré. | object | 35
+tapisserie | Tissu décoré accroché au mur. | object | 35
+zigzag | Ligne qui change brusquement de direction. | shape | 35
+hexagone | Forme à six côtés. | shape | 35
+pentagone | Forme à cinq côtés. | shape | 35
+cylindre | Forme d’une boîte de conserve. | shape | 35
+parallélogramme | Quadrilatère dont les côtés opposés vont dans la même direction. | shape | 35
+mai | Mois du muguet et de la fête du Travail. | time
+août | Mois des grandes vacances, en plein été. | time

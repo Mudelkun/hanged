@@ -33,7 +33,7 @@ test.each(LANGUAGES)('$id has complete strings, matching placeholders, subjects 
 
 test.each(['fr', 'es', 'de'])('%s pack has valid unique words, short clues without the answer, and solvable rounds', language => {
   const words = wordsForLanguage(language);
-  expect(words.length).toBeGreaterThanOrEqual(400);
+  expect(words.length).toBeGreaterThanOrEqual(1500);
   expect(new Set(words.map(w => w.id)).size).toBe(words.length);
   const alphabet = alphabetFor(language);
   expect(new Set(KEYBOARD_ROWS[language as 'fr'].join(''))).toEqual(new Set(alphabet));

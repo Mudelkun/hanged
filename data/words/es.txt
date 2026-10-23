@@ -153,7 +153,7 @@ cama | Mueble en el que se duerme. | object
 almohada | Cojín sobre el que se apoya la cabeza al dormir. | object
 manta | Pieza de tejido que abriga en la cama. | object
 armario | Mueble cerrado donde se guarda ropa u otros objetos. | object
-estantería | Mueble con varios estantes para colocar objetos. | object
+estantería | Mueble con baldas para colocar libros y objetos. | object
 lámpara | Objeto que produce luz para iluminar un espacio. | object
 vela | Pieza de cera con una mecha que se enciende. | object
 espejo | Superficie que devuelve tu imagen. | object
@@ -195,7 +195,7 @@ vestido | Prenda de una sola pieza que baja desde los hombros y cubre parte de l
 falda | Prenda que empieza en la cintura y rodea las piernas sin separarlas. | object
 abrigo | Prenda gruesa que se lleva encima de la ropa cuando hace frío. | object
 chaqueta | Prenda corta con mangas que se lleva sobre otras prendas. | object
-cinturón | Tira que rodea la cintura y ayuda a sujetar la ropa. | object
+cinturón | Tira que rodea la cadera y sujeta el pantalón. | object
 botón | Pieza pequeña que se pasa por un ojal para cerrar una prenda. | object
 gafas | Dos lentes montadas en una estructura para ayudar a ver. | object
 coche | Vehículo de motor que suele tener cuatro ruedas. | object
@@ -205,7 +205,7 @@ avión | Aparato con alas que transporta personas por el aire. | object
 barco | Vehículo que flota y se desplaza por el agua. | object
 autobús | Vehículo grande que transporta pasajeros por carretera. | object
 camión | Vehículo grande destinado al transporte de mercancías. | object
-moto | Vehículo de motor de dos ruedas. | object
+moto | Vehículo de dos ruedas que funciona con gasolina. | object
 rueda | Pieza circular que gira para que avance un vehículo. | object
 volante | Pieza que gira el conductor para dirigir un coche. | object
 cohete | Vehículo impulsado a gran velocidad que puede llegar al espacio. | object
@@ -350,7 +350,7 @@ cocina | Parte de una casa donde se preparan las comidas. | place
 ascensor | Cabina que transporta personas de una planta a otra. | object
 ordenador | Aparato electrónico que procesa información y ejecuta programas. | object
 teléfono | Aparato que permite hablar con una persona que está lejos. | object
-teclado | Conjunto de teclas para escribir en un aparato. | object
+teclado | Conjunto de botones para escribir en un ordenador. | object
 pantalla | Superficie donde un aparato muestra imágenes. | object
 impresora | Aparato que reproduce texto o imágenes sobre papel. | object
 guitarra | Instrumento de cuerdas que se pulsan o rasguean con los dedos. | object
@@ -393,11 +393,11 @@ estalactita | Formación mineral que cuelga del techo de una cueva. | nature | 3
 estalagmita | Formación mineral que crece desde el suelo de una cueva. | nature | 35
 archipiélago | Conjunto de islas cercanas entre sí. | nature | 35
 estuario | Desembocadura de un río donde se mezclan agua dulce y agua salada. | nature | 35
-orquesta | Conjunto de personas que tocan distintos instrumentos juntas. | person | 35
+orquesta | Conjunto de personas que tocan distintos instrumentos juntas. | group | 35
 caligrafía | Arte de escribir las letras de forma bella. | action | 35
 botánica | Ciencia que estudia las plantas. | idea | 35
 geología | Ciencia que estudia la Tierra, sus rocas y su historia. | idea | 35
-astronomía | Ciencia que estudia los astros y el universo. | idea | 35
+astronomía | Ciencia que estudia las estrellas y el universo. | idea | 35
 simetría | Correspondencia de formas a ambos lados de un eje. | idea | 35
 laberinto | Red de caminos en la que cuesta encontrar la salida. | place | 35
 telescopio | Instrumento para observar astros muy lejanos. | object | 35
@@ -405,3 +405,1125 @@ microscopio | Instrumento para observar cosas demasiado pequeñas para verlas a 
 termómetro | Instrumento que mide la temperatura. | object | 35
 barómetro | Instrumento que mide la presión del aire. | object | 35
 brújula | Instrumento con una aguja que indica el norte. | object | 35
+toro | Macho bovino fuerte, con cuernos. | animal
+ternero | Cría de la vaca. | animal
+cordero | Cría de la oveja. | animal
+pollito | Cría amarilla de la gallina. | animal
+pavo | Ave grande de corral que se come en Navidad. | animal
+gatito | Cría del felino doméstico que maúlla. | animal
+cachorro | Cría del perro o de otros mamíferos. | animal
+potro | Cría del caballo. | animal
+burro | Animal de orejas largas que rebuzna. | animal
+mula | Cruce entre un asno y una yegua. | animal
+yegua | Hembra del caballo. | animal
+carnero | Macho de la oveja, de cuernos enroscados. | animal
+jabalí | Cerdo salvaje del bosque, con colmillos. | animal
+corzo | Ciervo pequeño y ágil de los bosques. | animal
+tejón | Animal del bosque con la cara rayada de blanco y negro. | animal
+comadreja | Pequeño carnívoro de cuerpo largo y flexible. | animal
+topo | Animalito casi ciego que cava galerías. | animal
+hámster | Roedor pequeño que guarda semillas en los carrillos. | animal
+gaviota | Ave blanca y gris de la costa. | animal
+pelícano | Ave acuática de pico con bolsa. | animal
+garza | Ave de patas largas que pesca en los pantanos. | animal
+cigüeña | Ave blanca que, según dicen, trae a los bebés. | animal
+halcón | Ave rapaz muy veloz. | animal
+buitre | Ave rapaz que come animales muertos. | animal
+mirlo | Pájaro negro de pico amarillo. | animal
+ruiseñor | Pájaro famoso por cantar de noche. | animal
+golondrina | Pájaro que anuncia la primavera. | animal
+carpintero | Artesano que trabaja la madera. | person
+colibrí | Pájaro diminuto que se queda quieto en el aire ante las flores. | animal
+tucán | Ave tropical de pico enorme y colorido. | animal
+guepardo | Felino moteado, el animal terrestre más rápido. | animal
+leopardo | Gran felino de piel con manchas. | animal
+pantera | Gran felino, a veces todo negro. | animal
+jaguar | Gran felino moteado de América. | animal
+lince | Felino salvaje con pinceles en las orejas. | animal
+hiena | Animal africano cuyo grito parece una risa. | animal
+gorila | El más grande de los simios. | animal
+chimpancé | Simio muy inteligente, pariente cercano del ser humano. | animal
+llama | Animal de los Andes que puede escupir. | animal
+alpaca | Animal andino de lana muy suave. | animal
+bisonte | Gran bovino salvaje con joroba. | animal
+alce | Ciervo enorme del norte de astas anchas. | animal
+reno | Ciervo del norte que tira del trineo de Papá Noel. | animal
+morsa | Animal marino con bigotes y colmillos largos. | animal
+calamar | Animal marino de diez brazos. | animal
+atún | Pez grande que suele venderse en lata. | animal
+sardina | Pez pequeño apretado en latas. | animal
+anguila | Pez largo parecido a una serpiente. | animal
+carpa | Pez de agua dulce de los estanques. | animal
+ostra | Molusco que puede esconder una perla. | animal
+mejillón | Molusco negro que se cocina al vapor. | animal
+escorpión | Animal del desierto con pinzas y cola venenosa. | animal
+saltamontes | Insecto verde que da grandes saltos. | animal
+grillo | Insecto que canta por la noche en la hierba. | animal
+cigarra | Insecto que canta todo el verano. | animal
+avispa | Insecto amarillo y negro que pica. | animal
+abejorro | Abeja grande y peluda que zumba. | animal
+escarabajo | Insecto de caparazón duro y brillante. | animal
+pulga | Insecto diminuto que salta y pica a los animales. | animal
+termita | Insecto que roe la madera. | animal
+lombriz | Gusano de tierra. | animal
+babosa | Animal blando y viscoso sin concha. | animal
+salamandra | Anfibio negro y amarillo. | animal
+camaleón | Reptil que cambia de color. | animal
+iguana | Reptil verde con cresta. | animal
+dinosaurio | Animal gigante que desapareció hace millones de años. | animal
+mamut | Elefante lanudo prehistórico. | animal
+unicornio | Caballo imaginario con un cuerno en la frente. | animal
+dragón | Criatura legendaria que escupe fuego. | animal
+mapache | Animal con antifaz que lava su comida. | animal
+marmota | Roedor de montaña que duerme todo el invierno. | animal
+chinchilla | Roedor de pelaje muy suave. | animal
+lechón | Cerdito que aún mama. | animal
+patito | Cría del ave que hace cuac. | animal
+corneja | Ave negra parecida al cuervo. | animal
+periquito | Loro pequeño que se tiene en jaula. | animal
+canario | Pájaro amarillo que canta en jaula. | animal
+codorniz | Ave pequeña y redonda del campo. | animal
+faisán | Ave de caza de plumaje muy colorido. | animal
+pomelo | Cítrico grande de sabor algo amargo. | food
+mandarina | Cítrico pequeño fácil de pelar. | food
+arándano | Baya azul pequeña. | food
+grosella | Baya roja y ácida en racimo. | food
+mora | Baya negra que crece en las zarzas. | food
+higo | Fruta morada llena de semillitas. | food
+dátil | Fruto dulce de la palmera. | food
+granada | Fruta llena de granos rojos y jugosos. | food
+papaya | Fruta tropical de pulpa naranja. | food
+coco | Fruto de cáscara dura con agua dentro. | food
+aguacate | Fruta verde de hueso grande, base del guacamole. | food
+aceituna | Fruto pequeño, verde o negro, del olivo. | food
+castaña | Fruto marrón que se asa en otoño. | food
+cacahuete | Semilla que se come salada como aperitivo. | food
+pistacho | Semilla verde en una cáscara entreabierta. | food
+rábano | Raíz pequeña, roja y picante. | food
+nabo | Raíz blanca y morada que se cocina. | food
+remolacha | Raíz de color rojo oscuro. | food
+apio | Verdura de tallos largos y crujientes. | food
+alcachofa | Verdura de la que se come el corazón. | food
+espárrago | Verdura de tallo largo, verde o blanco. | food
+pimiento | Hortaliza hueca, roja, verde o amarilla. | food
+guindilla | Pimiento pequeño que pica mucho. | food
+patata | Tubérculo con el que se hacen las tortillas. | food
+lenteja | Legumbre pequeña, redonda y plana. | food
+garbanzo | Legumbre redonda del cocido. | food
+maíz | Cereal de granos amarillos en mazorca. | food
+trigo | Cereal del que se hace la harina del pan. | food
+harina | Polvo blanco de cereal para hacer pan. | food
+tortilla | Plato de huevo batido, con o sin patata. | food
+jamón | Pierna de cerdo curada. | food
+chorizo | Embutido rojo de pimentón. | food
+salchicha | Embutido que se asa o se hierve. | food
+pollo | Ave que se come a menudo asada. | food
+filete | Loncha fina de carne. | food
+albóndiga | Bolita de carne picada. | food
+croqueta | Bocado empanado y frito, cremoso por dentro. | food
+paella | Plato valenciano de arroz en una sartén ancha. | food
+gazpacho | Sopa fría de tomate. | food
+empanada | Masa rellena horneada o frita. | food
+puré | Verduras aplastadas en una pasta suave. | food
+lasaña | Pasta en capas con salsa y queso. | food
+espagueti | Pasta larga y fina. | food
+hamburguesa | Bocadillo redondo con carne picada. | food
+caldo | Líquido caliente donde se cocieron verduras o carne. | food
+tostada | Rebanada de pan dorada. | food
+magdalena | Bizcocho pequeño en molde de papel. | food
+bizcocho | Pastel esponjoso y sencillo. | food
+churro | Masa frita alargada que se moja en chocolate. | food
+buñuelo | Masa frita, dulce o rellena. | food
+gofre | Dulce cuadriculado hecho en un molde. | food
+flan | Postre de huevo con caramelo. | food
+natillas | Crema dulce de huevo y leche. | food
+turrón | Dulce navideño de almendra. | food
+merengue | Dulce ligero de claras y azúcar. | food
+sorbete | Helado de agua con sabor a fruta. | food
+mostaza | Salsa amarilla y picante. | food
+kétchup | Salsa roja y dulce de tomate. | food
+mayonesa | Salsa fría de huevo y aceite. | food
+canela | Especia marrón de aroma dulce. | food
+vainilla | Especia de aroma dulce que da una orquídea tropical. | food
+perejil | Hierba verde que se pica sobre los platos. | food
+albahaca | Hierba aromática del pesto. | food
+orégano | Hierba seca de la pizza. | food
+azafrán | Especia roja y cara que colorea el arroz. | food
+pepinillo | Pequeña hortaliza verde conservada en vinagre. | food
+cereales | Copos crujientes del desayuno. | food
+limonada | Bebida de cítrico con agua y azúcar. | food
+zumo | Líquido exprimido de una fruta. | food
+café | Bebida negra y amarga que despierta. | food
+infusión | Bebida caliente de hierbas. | food
+batido | Bebida espesa de leche o fruta. | food
+cacao | Polvo con el que se hace el chocolate. | food
+desayuno | Primera comida del día. | event
+almuerzo | Comida del mediodía. | event
+cena | Comida de la noche. | event
+merienda | Comida ligera de la tarde. | event
+postre | Plato dulce al final de la comida. | food
+receta | Pasos para preparar un plato. | communication
+cocinero | Persona que prepara la comida. | person
+pastelero | Persona que hace tartas y dulces. | person
+carnicero | Comerciante que vende filetes y chuletas. | person
+camarero | Persona que sirve en un restaurante. | person
+carnicería | Tienda donde se compran filetes y chuletas. | place
+pastelería | Tienda donde se compran dulces y tartas. | place
+supermercado | Tienda grande donde se hace la compra. | place
+comedor | Sala de la casa donde está la mesa grande. | place
+regaliz | Golosina negra de sabor especial. | food
+piruleta | Caramelo en la punta de un palo. | food
+palomitas | Granos de maíz reventados que se comen en el cine. | food
+miga | Trocito pequeño de pan. | food
+corteza | Parte dura de fuera del pan o del árbol. | food
+rebanada | Trozo fino cortado de un alimento. | food
+tarro | Recipiente de cristal con tapa. | object
+ensaladera | Bol grande para servir la lechuga. | object
+cucharón | Cubierto grande y hondo para servir la sopa. | object
+espátula | Utensilio plano para dar la vuelta a la comida. | object
+batidora | Aparato que tritura los alimentos. | object
+colador | Utensilio con agujeros para escurrir. | object
+rallador | Utensilio para deshacer el queso en tiras. | object
+rodillo | Cilindro para estirar la masa. | object
+tetera | Recipiente con pico para infusionar hojas. | object
+cafetera | Aparato para preparar la bebida negra que despierta por la mañana. | object
+hervidor | Aparato que calienta el agua. | object
+tostadora | Aparato que dora el pan. | object
+congelador | Aparato que mantiene la comida helada. | object
+lavavajillas | Aparato que friega los platos. | object
+microondas | Aparato que calienta rápido la comida. | object
+bandeja | Superficie plana para llevar platos. | object
+mantel | Tela que se pone sobre la mesa. | object
+tapa | Lo que cierra una olla. | object
+delantal | Prenda que protege al cocinar. | object
+trapo | Tela para secar o limpiar. | object
+basura | Desechos que se tiran. | object
+fregadero | Pila de la cocina donde se friegan los platos. | object
+grifo | Lo que se abre para que salga el agua. | object
+aspiradora | Aparato que se traga el polvo del suelo. | object
+fregona | Utensilio para limpiar el suelo con agua. | object
+detergente | Producto para lavar la ropa. | object
+percha | Soporte para colgar la ropa en el armario. | object
+cómoda | Mueble bajo con cajones. | object
+cajón | Compartimento que se desliza dentro de un mueble. | object
+taburete | Asiento sin respaldo ni brazos. | object
+escritorio | Mesa de trabajo con cajones. | object
+colchón | Parte gruesa y blanda de la cama. | object
+sábana | Tela grande que cubre el colchón. | object
+edredón | Manta gruesa y mullida. | object
+cuna | Camita de bebé. | object
+hamaca | Cama de tela colgada entre dos árboles. | object
+radiador | Aparato que calienta la habitación. | object
+ventilador | Aparato con aspas que da aire fresco. | object
+chimenea | Lugar de la casa donde se enciende fuego. | object
+interruptor | Botón para encender o apagar la luz. | object
+bombilla | Objeto de cristal que da luz. | object
+enchufe | Agujero de la pared donde se conectan aparatos. | object
+cable | Hilo largo que lleva la corriente. | object
+pila | Pequeña reserva de energía para juguetes. | object
+batería | Reserva de energía de un móvil o un coche. | object
+cargador | Aparato que llena la batería del móvil. | object
+mando | Aparatito para cambiar de canal a distancia. | object
+televisión | Aparato que muestra programas y películas. | object
+radio | Aparato para escuchar emisiones y música. | object
+casco | Objeto que protege la cabeza. | object
+auriculares | Aparatos que se ponen en las orejas para escuchar. | object
+altavoz | Aparato que difunde el sonido. | object
+tableta | Pantalla táctil más grande que un móvil. | object
+cámara | Aparato para hacer fotos o grabar. | object
+consola | Máquina para jugar a videojuegos. | object
+marco | Borde que rodea un cuadro o una foto. | object
+cuadro | Pintura que se cuelga en la pared. | object
+póster | Lámina impresa que se pega en la pared. | object
+jarrón | Recipiente donde se ponen flores. | object
+candado | Cerradura pequeña que se cuelga. | object
+cerradura | Mecanismo que cierra una puerta con llave. | object
+picaporte | Pieza que se agarra para abrir una puerta. | object
+timbre | Botón que suena cuando llega alguien. | object
+caja | Recipiente con tapa de cartón o metal. | object
+cesta | Recipiente trenzado con asa. | object
+papelera | Cubo pequeño para tirar desechos en la oficina. | object
+regadera | Recipiente con pitorro para dar agua a las plantas. | object
+manguera | Tubo largo por donde sale el agua. | object
+rastrillo | Herramienta con dientes para juntar hojas. | object
+carretilla | Carrito de una rueda para el jardín. | object
+cortacésped | Máquina que siega la hierba. | object
+hacha | Herramienta afilada para cortar leña. | object
+taladro | Herramienta eléctrica que hace agujeros. | object
+alicates | Herramienta para apretar o cortar alambre. | object
+tuerca | Pieza con rosca que se enrosca en un tornillo. | object
+cinta | Tira estrecha de tela o de papel. | object
+pegamento | Producto que une dos cosas. | object
+grapadora | Herramienta que une hojas con pequeños alambres. | object
+chincheta | Clavito para fijar un papel. | object
+regla | Instrumento recto para trazar líneas. | object
+compás | Instrumento para trazar círculos. | object
+calculadora | Aparato que hace operaciones. | object
+estuche | Bolsita para guardar lápices. | object
+rotulador | Bolígrafo de punta gruesa para colorear. | object
+pincel | Herramienta con pelos para pintar. | object
+tiza | Barrita blanca para escribir en la pizarra. | object
+pizarra | Superficie donde se escribe en clase. | object
+carpeta | Funda para guardar hojas. | object
+libreta | Cuaderno pequeño de notas. | object
+agenda | Libreta para apuntar las citas. | object
+calendario | Tabla de días, semanas y meses. | object
+periódico | Hojas impresas con las noticias del día. | communication
+revista | Publicación ilustrada que sale cada cierto tiempo. | communication
+diccionario | Libro que explica el significado de las palabras. | object
+álbum | Libro de fotos o disco de canciones. | object
+carta | Mensaje escrito que se manda por correo. | communication
+mapa | Dibujo de un lugar con sus calles y caminos. | object
+billete | Entrada para un tren o papel moneda. | object
+entrada | Papel que permite pasar a un espectáculo. | object
+cartera | Funda pequeña para el dinero y las tarjetas. | object
+monedero | Bolsita para guardar la calderilla. | object
+joya | Objeto precioso que se lleva de adorno. | object
+anillo | Aro que se lleva en el dedo. | object
+collar | Joya que se lleva al cuello. | object
+pulsera | Joya que se lleva en la muñeca. | object
+pendiente | Joya que se lleva en la oreja. | object
+corona | Aro precioso que lleva un rey en la cabeza. | object
+diamante | Piedra preciosa muy dura y brillante. | material
+perla | Bolita brillante que se forma dentro de una ostra. | material
+pijama | Ropa para dormir. | object
+albornoz | Bata que se pone al salir del baño. | object
+zapatilla | Calzado cómodo para casa o para deporte. | object
+sandalia | Calzado abierto para el verano. | object
+chancla | Sandalia con tira entre los dedos. | object
+cordón | Cuerda que ata el zapato. | object
+bañador | Prenda para nadar. | object
+vaqueros | Pantalones de tela azul resistente. | object
+jersey | Prenda de lana que se mete por la cabeza. | object
+chaleco | Prenda sin mangas. | object
+cazadora | Chaqueta corta. | object
+impermeable | Abrigo que protege de la lluvia. | object
+capucha | Parte de una prenda que cubre la cabeza. | object
+corbata | Tira de tela que se anuda al cuello. | object
+nudo | Lazo apretado en una cuerda. | object
+traje | Chaqueta y pantalón a juego. | object
+uniforme | Ropa igual para todo un grupo. | object
+disfraz | Ropa para parecer otra persona o un personaje. | object
+máscara | Objeto que tapa la cara. | object
+gorra | Sombrero con visera. | object
+boina | Gorro redondo y plano. | object
+manopla | Guante con el pulgar separado. | object
+medias | Prenda fina que cubre las piernas. | object
+manga | Parte de la prenda que cubre el brazo. | object
+cuello | Parte del cuerpo que une la cabeza con el tronco. | body
+bolsillo | Abertura cosida en una prenda para guardar cosas. | object
+cremallera | Cierre de dientes de una prenda o bolsa. | object
+tela | Material hecho de hilos tejidos. | material
+encaje | Tela fina con calados. | material
+terciopelo | Tela muy suave al tacto. | material
+cuero | Piel de animal curtida. | material
+piel | Capa que cubre el cuerpo. | body
+plástico | Material ligero hecho con petróleo. | material
+cristal | Material duro y transparente. | material
+arcilla | Tierra que se moldea para hacer vasijas. | material
+cera | Materia blanda de las velas. | material
+acero | Metal muy resistente hecho con hierro. | material
+cobre | Metal rojizo que conduce la electricidad. | material
+bronce | Metal de la medalla del tercer puesto. | material
+aluminio | Metal ligero de las latas. | material
+hormigón | Material gris y duro de los edificios. | material
+ladrillo | Bloque rojo para levantar paredes. | material
+cemento | Polvo que se endurece con agua. | material
+mármol | Piedra lisa y veteada de las estatuas. | material
+granito | Piedra muy dura y granulada. | material
+carbón | Roca negra que arde. | material
+petróleo | Líquido negro sacado del subsuelo. | material
+cráneo | Hueso de la cabeza. | body
+frente | Parte de la cara encima de los ojos. | body
+ceja | Pelos encima del ojo. | body
+párpado | Piel que cierra el ojo. | body
+pestaña | Pelo del borde del párpado. | body
+mejilla | Parte redonda de la cara bajo el ojo. | body
+barbilla | Parte baja de la cara. | body
+labio | Borde de la boca. | body
+garganta | Interior del cuello. | body
+nuca | Parte de atrás del cuello. | body
+pecho | Parte delantera del tronco. | body
+codo | Articulación del medio del brazo. | body
+pulgar | El dedo más gordo de la mano. | body
+uña | Parte dura en la punta de los dedos. | body
+tobillo | Articulación entre el pie y la pierna. | body
+pantorrilla | Parte de atrás de la pierna bajo la rodilla. | body
+muslo | Parte alta de la pierna. | body
+cadera | Lado del cuerpo bajo la cintura. | body
+ombligo | Hoyito en medio de la barriga. | body
+esqueleto | Conjunto de huesos del cuerpo. | body
+músculo | Parte del cuerpo que permite moverse. | body
+corazón | Órgano que bombea la sangre. | body
+pulmón | Órgano que sirve para respirar. | body
+cerebro | Órgano del pensamiento, dentro de la cabeza. | body
+estómago | Órgano donde se digiere la comida. | body
+hígado | Órgano grande que limpia la sangre. | body
+riñón | Órgano que filtra la sangre. | body
+sangre | Líquido rojo que recorre el cuerpo. | body
+vena | Vaso que lleva la sangre al corazón. | body
+hueso | Pieza dura del esqueleto. | body
+bigote | Pelo encima del labio. | body
+barba | Pelo que crece en el mentón y las mejillas. | body
+trenza | Pelo entrelazado. | body
+flequillo | Pelo cortado sobre la frente. | body
+resfriado | Enfermedad leve que hace moquear. | state
+gripe | Enfermedad con fiebre y dolores. | state
+fiebre | Temperatura del cuerpo demasiado alta. | state
+tos | Ruido que se hace para despejar la garganta. | state
+estornudo | Expulsión brusca de aire por la nariz. | action
+herida | Corte o daño en el cuerpo. | state
+chichón | Bulto en la cabeza tras un golpe. | state
+moratón | Mancha morada en la piel tras un golpe. | state
+tirita | Tira que se pega sobre un corte. | object
+venda | Tira de tela para cubrir una herida. | object
+escayola | Funda dura para curar un hueso roto. | object
+muleta | Apoyo para andar con una pierna herida. | object
+medicina | Producto que cura una enfermedad. | object
+pastilla | Medicina pequeña que se traga. | object
+vacuna | Pinchazo que protege de una enfermedad. | object
+jeringa | Instrumento con aguja para pinchar. | object
+enfermera | Persona que cuida a los pacientes. | person
+dentista | Médico de los dientes. | person
+veterinario | Médico de los animales. | person
+cirujano | Médico que opera. | person
+ambulancia | Vehículo que lleva a los heridos. | object
+salud | Buen estado del cuerpo y la mente. | state
+dolor | Sensación de daño. | feeling
+sueño | Ganas de dormir o lo que se ve al dormir. | state
+bostezo | Gran apertura de boca por cansancio. | action
+cansancio | Necesidad de reposo. | state
+hambre | Ganas de comer. | feeling
+sed | Ganas de beber. | feeling
+dentífrico | Pasta para lavarse los dientes. | object
+champú | Jabón para lavar el pelo. | object
+bañera | Pila grande para bañarse. | object
+ducha | Lluvia de agua para lavarse de pie. | object
+lavabo | Pila del cuarto de baño. | object
+retrete | Taza del baño. | object
+perfume | Líquido que huele bien. | object
+maquillaje | Productos para colorear la cara. | object
+secador | Aparato de aire caliente para el pelo. | object
+cuchilla | Hoja afilada para afeitar. | object
+pañuelo | Cuadrado de tela o papel para la nariz. | object
+bebé | Niño muy pequeño que aún no anda. | person
+chico | Niño o muchacho. | person
+chica | Niña o muchacha. | person
+adolescente | Joven que ya no es niño pero aún no es adulto. | person
+adulto | Persona que ya ha terminado de crecer. | person
+anciano | Persona de mucha edad. | person
+marido | Hombre casado, respecto de su mujer. | person
+esposa | Mujer casada, respecto de su marido. | person
+abuelo | Padre del padre o de la madre. | person
+abuela | Madre del padre o de la madre. | person
+tío | Hermano del padre o de la madre. | person
+tía | Hermana del padre o de la madre. | person
+primo | Hijo del tío o de la tía. | person
+sobrino | Hijo del hermano o de la hermana. | person
+nieto | Hijo del hijo o de la hija. | person
+gemelo | Hermano nacido en el mismo parto que otro. | person
+padrino | Hombre que acompaña a un niño en el bautizo. | person
+compañero | Persona que estudia o trabaja contigo. | person
+invitado | Persona a la que se recibe en casa. | person
+desconocido | Persona a la que nunca has visto. | person
+alumno | Niño que va a la escuela. | person
+estudiante | Persona que va a clase en un instituto o la universidad. | person
+maestra | Mujer que da clase a los pequeños. | person
+director | Persona que dirige una escuela o una empresa. | person
+policía | Agente que hace cumplir la ley. | person
+soldado | Miembro de un ejército. | person
+piloto | Persona que conduce un avión o un coche de carreras. | person
+capitán | Jefe de un barco o de un equipo. | person
+marinero | Persona que trabaja en un barco. | person
+pescador | Persona que atrapa peces. | person
+agricultor | Persona que cultiva la tierra. | person
+granjero | Persona que se ocupa de los animales y los campos. | person
+pastor | Persona que cuida las ovejas. | person
+jardinero | Persona que cuida las plantas y el césped. | person
+cartero | Persona que reparte el correo. | person
+conductor | Persona que maneja un vehículo. | person
+mecánico | Persona que arregla motores. | person
+fontanero | Persona que arregla las tuberías. | person
+electricista | Persona que instala cables y enchufes. | person
+albañil | Obrero que levanta paredes. | person
+peluquero | Persona que corta y peina el cabello. | person
+vendedor | Persona que atiende a los clientes de una tienda. | person
+cajero | Persona que cobra en una tienda. | person
+abogado | Persona que defiende a alguien ante un juez. | person
+juez | Persona que imparte justicia. | person
+periodista | Persona que escribe o presenta las noticias. | person
+escritor | Autor de novelas y cuentos. | person
+poeta | Persona que escribe versos. | person
+cantante | Persona que actúa con su voz en conciertos. | person
+actor | Persona que interpreta papeles en películas. | person
+payaso | Artista de nariz roja que hace reír en el circo. | person
+mago | Artista que saca conejos de un sombrero. | person
+malabarista | Artista que lanza y recoge varios objetos. | person
+acróbata | Artista que hace saltos y equilibrios. | person
+escultor | Artista que talla estatuas. | person
+inventor | Persona que crea cosas nuevas. | person
+científico | Persona que investiga en un laboratorio. | person
+ingeniero | Persona que diseña máquinas o puentes. | person
+informático | Persona que trabaja con ordenadores. | person
+banquero | Persona que gestiona el dinero de los clientes. | person
+jefe | Persona que manda en un grupo o empresa. | person
+obrero | Persona que hace un trabajo manual. | person
+rey | Hombre que reina en un país. | person
+reina | Mujer que gobierna un país o esposa del rey. | person
+príncipe | Hijo de un rey. | person
+princesa | Hija de un rey. | person
+caballero | Guerrero medieval con armadura y espada. | person
+pirata | Bandido de los mares. | person
+bruja | Mujer que hace magia con una escoba. | person
+fantasma | Espíritu que se imagina bajo una sábana blanca. | person
+gigante | Ser enorme de los cuentos. | person
+hada | Pequeña criatura mágica con varita. | person
+duende | Ser pequeño y travieso de las leyendas. | person
+héroe | Persona valiente a la que se admira. | person
+ladrón | Persona que se lleva lo que no es suyo. | person
+campeón | Ganador de una competición. | person
+portero | Jugador que para los goles. | person
+árbitro | Persona que hace cumplir las reglas de un partido. | person
+entrenador | Persona que prepara a un equipo. | person
+espectador | Persona sentada entre el público. | person
+turista | Persona que visita un país de vacaciones. | person
+viajero | Persona que recorre el mundo. | person
+pueblo | Grupo pequeño de casas en el campo. | place
+ciudad | Población grande con muchos habitantes. | place
+capital | Ciudad principal de un país. | place
+barrio | Parte de una ciudad. | place
+campo | Terreno con cultivos, lejos de la ciudad. | place
+granja | Lugar donde se crían animales y se cultiva. | place
+establo | Edificio donde duermen las vacas. | place
+cuadra | Edificio donde viven los caballos. | place
+gallinero | Refugio donde duermen las aves de corral. | place
+molino | Edificio que muele el grano con viento o agua. | place
+iglesia | Edificio donde rezan los cristianos. | place
+ayuntamiento | Edificio donde trabaja el alcalde. | place
+correos | Lugar donde se envían cartas y paquetes. | place
+banco | Lugar donde se guarda el dinero o asiento del parque. | place
+fábrica | Edificio donde se producen objetos en serie. | place
+oficina | Lugar donde se trabaja sentado. | place
+edificio | Construcción grande. | place
+piso | Vivienda dentro de un edificio. | place
+rascacielos | Torre altísima. | place
+torre | Construcción alta y estrecha. | place
+faro | Torre con luz que guía a los barcos. | place
+estadio | Gran campo de deporte con gradas. | place
+piscina | Estanque artificial donde se nada. | place
+gimnasio | Sala donde se hace deporte. | place
+zoológico | Parque con animales de todo el mundo. | place
+circo | Espectáculo bajo una carpa con payasos. | place
+hotel | Lugar donde se duerme de viaje. | place
+cárcel | Lugar donde se encierra a los delincuentes. | place
+tribunal | Lugar donde se juzga. | place
+cuartel | Edificio de los soldados. | place
+laboratorio | Sala donde se hacen experimentos. | place
+universidad | Centro de estudios superiores. | place
+instituto | Centro de secundaria. | place
+aula | Sala donde los alumnos aprenden. | place
+pasillo | Paso estrecho que une habitaciones. | place
+desván | Cuarto bajo el tejado. | place
+sótano | Cuarto bajo la casa. | place
+garaje | Lugar donde se guarda el coche. | place
+salón | Sala de la casa donde se descansa. | place
+balcón | Plataforma pequeña fuera de una planta. | place
+terraza | Espacio al aire libre donde sentarse. | place
+tejado | Lo que cubre una casa. | object
+pared | Muro que separa habitaciones. | object
+techo | Parte de arriba de una habitación. | object
+suelo | Superficie sobre la que se anda. | object
+patio | Espacio abierto rodeado de edificios. | place
+acera | Borde de la calle para los peatones. | place
+cruce | Lugar donde se cruzan varias calles. | place
+autopista | Carretera grande y rápida. | place
+túnel | Paso excavado bajo tierra o en una montaña. | place
+aparcamiento | Lugar donde se dejan los coches. | place
+fuente | Construcción de donde brota agua. | place
+estatua | Escultura que representa a una persona. | object
+monumento | Edificio o estatua famosa. | place
+catedral | Gran iglesia de una ciudad. | place
+pirámide | Monumento de base cuadrada y punta. | place
+frontera | Límite entre dos países. | place
+país | Territorio con sus habitantes y su gobierno. | place
+continente | Gran extensión de tierra como África. | place
+planeta | Astro que gira alrededor de una estrella. | nature
+universo | Todo lo que existe en el espacio. | nature
+galaxia | Inmenso conjunto de estrellas. | nature
+cometa | Astro con cola luminosa o juguete que vuela. | nature
+estanque | Pequeña extensión de agua tranquila. | nature
+pantano | Terreno húmedo y fangoso. | nature
+manantial | Lugar donde el agua brota de la tierra. | nature
+arroyo | Río muy pequeño. | nature
+ola | Agua que se levanta en el mar. | nature
+marea | Subida y bajada del mar. | nature
+acantilado | Pared alta de roca junto al mar. | nature
+duna | Colina de arena. | nature
+glaciar | Enorme masa de hielo en la montaña. | nature
+cumbre | Punto más alto de una montaña. | nature
+pradera | Gran campo de hierba. | nature
+selva | Bosque tropical muy denso. | nature
+sabana | Gran llanura de hierba en África. | nature
+oasis | Lugar con agua en el desierto. | nature
+guijarro | Piedra pequeña y redonda. | nature
+barro | Tierra mojada y pegajosa. | nature
+polvo | Partículas finas que se posan. | nature
+charco | Agua acumulada en el suelo tras la lluvia. | nature
+granizo | Lluvia de bolitas de hielo. | nature
+tempestad | Tormenta fuerte en el mar. | nature
+huracán | Tormenta tropical muy fuerte. | nature
+tornado | Remolino de viento destructor. | nature
+trueno | Ruido que sigue al rayo. | nature
+rocío | Gotitas de la mañana sobre la hierba. | nature
+escarcha | Capa fina de hielo blanco. | nature
+hielo | Agua congelada. | nature
+calor | Temperatura alta. | nature
+frío | Temperatura baja. | nature
+cielo | Espacio azul sobre nosotros. | nature
+horizonte | Línea donde el cielo parece tocar la tierra. | nature
+sombra | Zona oscura detrás de un objeto iluminado. | nature
+luz | Lo que permite ver. | nature
+fuego | Llamas que queman y calientan. | nature
+humo | Nube gris que sale del fuego. | nature
+ceniza | Polvo gris que queda tras el fuego. | nature
+terremoto | Sacudida fuerte de la tierra. | event
+arbusto | Planta leñosa pequeña. | plant
+zarza | Planta con pinchos que da moras. | plant
+helecho | Planta de hojas grandes y recortadas. | plant
+musgo | Plantita verde y suave sobre las piedras. | plant
+hiedra | Planta que trepa por las paredes. | plant
+cactus | Planta del desierto con pinchos. | plant
+bambú | Caña hueca que come el panda. | plant
+junco | Planta de tallo alto junto al agua. | plant
+amapola | Flor roja de los campos. | plant
+lavanda | Planta morada muy perfumada. | plant
+violeta | Florecilla morada. | plant
+orquídea | Flor exótica muy elegante. | plant
+narciso | Flor amarilla de primavera. | plant
+lirio | Flor grande y perfumada. | plant
+trébol | Planta pequeña de tres hojas. | plant
+abedul | Árbol de corteza blanca. | plant
+álamo | Árbol alto y esbelto. | plant
+sauce | Árbol de ramas que cuelgan hacia el agua. | plant
+olivo | Árbol mediterráneo de hojas plateadas. | plant
+manzano | Árbol frutal del que se hace la sidra. | plant
+cerezo | Árbol de flores rosas famoso en Japón. | plant
+castaño | Árbol de frutos con erizos que pinchan. | plant
+pino | Árbol de hojas como agujas y piñas. | plant
+tronco | Parte principal de un árbol. | plant
+brote | Yema que será hoja o flor. | plant
+pétalo | Parte de color de una flor. | plant
+espina | Pincho del tallo. | plant
+tallo | Parte larga que sostiene las hojas. | plant
+furgoneta | Vehículo para repartir. | object
+tractor | Vehículo que tira de la maquinaria del campo. | object
+patinete | Tabla con ruedas y manillar. | object
+velero | Barco que avanza con el viento. | object
+canoa | Barca que se mueve con remo. | object
+crucero | Barco enorme de vacaciones. | object
+submarino | Barco que navega bajo el agua. | object
+metro | Tren que va bajo la ciudad. | object
+tranvía | Tren urbano que va por raíles en la calle. | object
+taxi | Coche con conductor que se paga por trayecto. | object
+paracaídas | Tela grande que frena a quien salta de un avión. | object
+trineo | Vehículo que se desliza sobre la nieve. | object
+remolque | Vehículo arrastrado por otro. | object
+monopatín | Tabla con ruedas. | object
+patín | Calzado para deslizarse. | object
+esquí | Tabla larga para bajar por la nieve. | object
+motor | Máquina que hace avanzar un vehículo. | object
+neumático | Goma inflada alrededor de la rueda. | object
+gasolina | Combustible de los coches. | material
+viaje | Desplazamiento a un lugar lejano. | event
+fútbol | Deporte en el que se marcan goles con el pie. | competition
+baloncesto | Deporte en el que se lanza la pelota a una canasta. | competition
+tenis | Deporte de raqueta sobre una red. | competition
+rugby | Deporte con balón ovalado. | competition
+balonmano | Deporte de equipo en el que la pelota se lanza a la portería. | competition
+voleibol | Deporte en el que se pasa el balón por encima de una red. | competition
+natación | Deporte que se practica en la piscina. | competition
+judo | Deporte de lucha japonés con cinturón. | competition
+esgrima | Deporte de combate con espada. | competition
+boxeo | Deporte de combate con guantes. | competition
+ciclismo | Deporte que se practica en bicicleta. | competition
+atletismo | Carreras, saltos y lanzamientos. | competition
+gimnasia | Deporte de agilidad y flexibilidad. | competition
+equitación | Deporte que se practica a caballo. | competition
+escalada | Deporte de trepar por paredes. | competition
+maratón | Carrera a pie muy larga. | competition
+golf | Deporte de meter una bolita en hoyos. | competition
+partido | Encuentro deportivo. | competition
+torneo | Competición de varios partidos. | competition
+medalla | Premio redondo de los campeones. | object
+trofeo | Copa para el ganador. | object
+raqueta | Instrumento para golpear la pelota en el tenis. | object
+red | Malla de hilos. | object
+silbato | Instrumento que da un sonido agudo. | object
+equipo | Grupo que juega unido. | group
+victoria | Hecho de ganar. | event
+derrota | Hecho de perder. | event
+récord | Mejor marca de la historia. | competition
+juego | Actividad para divertirse. | event
+puzle | Imagen cortada en piezas para montar. | object
+ajedrez | Juego de estrategia con reyes y reinas. | competition
+dominó | Juego de fichas con puntos. | object
+baraja | Conjunto de cartas para jugar. | object
+peonza | Juguete que gira sobre su punta. | object
+columpio | Asiento colgado para balancearse. | object
+tobogán | Rampa para deslizarse. | object
+canica | Bolita de cristal para jugar. | object
+marioneta | Muñeco que se mueve con hilos. | object
+pintura | Líquido de color que se aplica con pincel. | object
+dibujo | Imagen hecha a lápiz. | object
+escultura | Obra en tres dimensiones. | object
+música | Arte de los sonidos. | idea
+canción | Texto cantado con melodía. | communication
+melodía | Sucesión agradable de notas. | idea
+concierto | Espectáculo de música. | event
+espectáculo | Representación ante el público. | event
+película | Historia contada en imágenes. | communication
+historia | Relato o pasado de la humanidad. | communication
+cuento | Historia maravillosa para niños. | communication
+novela | Relato largo inventado. | communication
+poema | Texto en verso. | communication
+arpa | Gran instrumento de cuerdas pulsadas. | object
+acordeón | Instrumento de fuelle y teclas. | object
+saxofón | Instrumento metálico del jazz. | object
+violonchelo | Gran instrumento de cuerda y arco que se toca sentado, entre las rodillas. | object
+micrófono | Aparato que amplifica la voz. | object
+lección | Lo que enseña el profesor. | communication
+deberes | Tarea para hacer en casa. | communication
+examen | Prueba para ver lo que se sabe. | event
+nota | Número que califica un trabajo. | communication
+recreo | Pausa entre clases. | event
+alfabeto | Conjunto de las letras. | language
+gramática | Reglas de una lengua. | language
+ortografía | Forma correcta de escribir. | language
+suma | Operación que añade números. | idea
+resta | Operación que quita un número. | idea
+multiplicación | Operación que repite una suma. | idea
+división | Operación que reparte un número. | idea
+geografía | Estudio de la tierra y los países. | idea
+matemáticas | Ciencia de los números y las formas. | idea
+ciencia | Conocimiento del mundo por la observación. | idea
+hoy | El día en el que estamos. | time
+ayer | El día antes de hoy. | time
+segundo | Sexagésima parte de un minuto. | time
+siglo | Periodo de cien años. | time
+década | Periodo de diez años. | time
+lunes | Primer día de la semana. | time
+martes | Segundo día de la semana. | time
+miércoles | Día a mitad de semana. | time
+jueves | Cuarto día de la semana. | time
+viernes | Último día de clase de la semana. | time
+sábado | Primer día del fin de semana. | time
+domingo | Último día de la semana. | time
+enero | Primer mes del año. | time
+febrero | El mes más corto del año. | time
+marzo | Mes en que empieza la primavera. | time
+abril | Cuarto mes del año. | time
+mayo | Quinto mes del año. | time
+junio | Mes en que empieza el verano. | time
+julio | Séptimo mes del año. | time
+agosto | Mes de vacaciones en pleno verano. | time
+septiembre | Mes de la vuelta al cole. | time
+octubre | Mes de Halloween. | time
+noviembre | Penúltimo mes del año. | time
+diciembre | Mes de la Navidad. | time
+mediodía | La mitad del día. | time
+medianoche | Las doce en punto, cuando todo está oscuro. | time
+amanecer | Momento en que sale el sol. | time
+pasado | Tiempo que ya quedó atrás. | time
+futuro | Tiempo que vendrá. | time
+presente | Momento actual o regalo. | time
+momento | Espacio corto de tiempo. | time
+instante | Momento brevísimo. | time
+retraso | Hecho de llegar después de la hora. | time
+cita | Encuentro acordado con alguien. | event
+fiesta | Celebración alegre. | event
+boda | Ceremonia en la que dos personas se casan. | event
+nacimiento | Llegada de un bebé al mundo. | event
+navidad | Fiesta de diciembre con árbol y regalos. | event
+carnaval | Fiesta en la que la gente se disfraza en la calle. | event
+pascua | Fiesta de primavera con huevos de chocolate. | event
+regalo | Objeto que se da para alegrar a alguien. | object
+invitación | Petición para ir a una fiesta. | communication
+desfile | Marcha en fila por la calle. | event
+paseo | Caminata corta por placer. | event
+carrera | Competición de velocidad. | event
+reunión | Encuentro de varias personas. | event
+accidente | Suceso imprevisto que causa daños. | event
+incendio | Gran fuego que destruye. | event
+inundación | Agua que cubre una zona. | event
+alegría | Sentimiento de gran gusto. | feeling
+tristeza | Sentimiento de pena. | feeling
+enfado | Sentimiento de estar muy molesto. | feeling
+miedo | Sentimiento ante un peligro. | feeling
+vergüenza | Apuro tras una falta. | feeling
+orgullo | Satisfacción por lo que se ha hecho. | feeling
+celos | Malestar por miedo a perder un cariño. | feeling
+amor | Sentimiento muy fuerte hacia alguien. | feeling
+amistad | Lazo entre dos amigos. | feeling
+ternura | Dulzura cariñosa. | feeling
+esperanza | Confianza en que pasará algo bueno. | feeling
+aburrimiento | Sentimiento de no saber qué hacer. | feeling
+preocupación | Inquietud por lo que pueda pasar. | feeling
+calma | Ausencia de agitación. | state
+ganas | Deseo de hacer algo. | feeling
+placer | Sensación agradable. | feeling
+pena | Tristeza profunda. | feeling
+confianza | Hecho de creer en alguien. | feeling
+timidez | Apuro delante de los demás. | feeling
+bondad | Cualidad de quien es bueno con los demás. | quality
+educación | Buenos modales o enseñanza. | quality
+honradez | Cualidad de quien no engaña. | quality
+generosidad | Cualidad de quien da con gusto. | quality
+sabiduría | Cualidad de una persona que sabe mucho. | quality
+fuerza | Potencia física. | quality
+velocidad | Rapidez de un movimiento. | quality
+belleza | Cualidad de lo que es agradable de ver. | quality
+idea | Pensamiento que viene a la mente. | idea
+pensamiento | Lo que pasa por la mente. | mind
+memoria | Capacidad de recordar. | mind
+secreto | Algo que no se debe contar. | idea
+misterio | Algo que no se entiende. | idea
+pregunta | Frase para pedir información. | communication
+respuesta | Lo que se dice ante una pregunta. | communication
+verdad | Lo que es cierto. | idea
+mentira | Lo que no es cierto. | communication
+promesa | Compromiso de hacer algo. | communication
+chiste | Historia corta para hacer reír. | communication
+consejo | Opinión para ayudar a alguien. | communication
+mensaje | Información que se envía. | communication
+noticia | Información reciente. | communication
+palabra | Grupo de letras con significado. | language
+frase | Grupo de palabras con sentido. | language
+letra | Signo del alfabeto. | language
+número | Cantidad que se cuenta. | quantity
+mitad | Una de dos partes iguales. | quantity
+docena | Grupo de 12, como los huevos de una caja. | quantity
+centenar | Unas 100 unidades. | quantity
+millar | Unas 1000 unidades. | quantity
+millón | Mil veces mil. | quantity
+peso | Lo que pesa un objeto. | quantity
+tamaño | Lo grande o pequeño que es algo. | quantity
+longitud | Distancia de un extremo al otro. | quantity
+anchura | Distancia de un lado al otro. | quantity
+altura | Distancia del pie a la cima. | quantity
+círculo | Forma redonda. | shape
+cuadrado | Forma de cuatro lados iguales. | shape
+triángulo | Forma de tres lados. | shape
+rectángulo | Forma de cuatro ángulos rectos. | shape
+rombo | Forma de diamante. | shape
+espiral | Línea que gira alejándose del centro. | shape
+esfera | Bola perfecta. | shape
+cono | Forma de un cucurucho de helado. | shape
+línea | Trazo continuo. | shape
+punto | Pequeño círculo o unidad del marcador. | shape
+color | Lo que ve el ojo: rojo, azul, verde… | senses
+amarillo | Color del sol y del limón. | describing
+verde | Color de la hierba. | describing
+morado | Color entre el azul y el rojo. | describing
+marrón | Color del chocolate. | describing
+gris | Color entre el negro y el blanco. | describing
+negro | Color de la noche. | describing
+blanco | Color de la nieve. | describing
+dorado | Del color del oro. | describing
+plateado | Que brilla como un metal gris claro. | describing
+ruido | Sonido molesto o fuerte. | senses
+olor | Lo que percibe la nariz. | senses
+sabor | Lo que percibe la lengua. | senses
+tacto | Sentido que pasa por la piel. | senses
+mirada | Forma de poner los ojos en algo. | senses
+voz | Sonido que sale de la garganta. | senses
+grito | Sonido muy fuerte de la voz. | senses
+dinero | Monedas y billetes para pagar. | money
+moneda | Disco pequeño de metal para pagar. | money
+precio | Lo que hay que pagar por algo. | money
+sueldo | Dinero que se gana trabajando. | money
+tesoro | Conjunto escondido de objetos preciosos. | money
+hucha | Cajita donde se guardan los ahorros. | object
+riqueza | Hecho de tener mucho dinero. | money
+caminar | Avanzar a pie. | action
+saltar | Despegarse del suelo de un brinco. | action
+trepar | Subir ayudándose de las manos. | action
+caer | Perder el equilibrio e ir al suelo. | action
+llorar | Derramar lágrimas. | action
+reír | Mostrar alegría con carcajadas. | action
+hablar | Decir palabras. | action
+gritar | Hablar muy alto. | action
+susurrar | Hablar muy bajito. | action
+comer | Tragar alimentos. | action
+beber | Tragar un líquido. | action
+cocinar | Preparar la comida. | action
+jugar | Divertirse. | action
+ganar | Ser el vencedor. | action
+perder | No ganar o extraviar. | action
+buscar | Intentar encontrar. | action
+encontrar | Hallar lo que se buscaba. | action
+esconder | Poner fuera de la vista. | action
+abrir | Hacer que algo deje de estar cerrado. | action
+cerrar | Tapar una abertura. | action
+empujar | Mover algo apretando. | action
+tirar | Lanzar o atraer hacia uno. | action
+llevar | Transportar algo de un sitio a otro. | action
+lanzar | Mandar por el aire. | action
+atrapar | Coger algo que se mueve. | action
+cortar | Separar con una hoja afilada. | action
+pegar | Unir con cola. | action
+pintar | Dar color con pincel. | action
+colorear | Rellenar un dibujo con lápices. | action
+contar | Decir los números en orden. | action
+pensar | Reflexionar. | action
+olvidar | Dejar de recordar. | action
+entender | Captar el sentido. | action
+explicar | Hacer comprender. | action
+preguntar | Pedir información a alguien. | action
+responder | Dar una contestación. | action
+ayudar | Echar una mano. | action
+esperar | Quedarse hasta que algo ocurra. | action
+llegar | Alcanzar un lugar. | action
+salir | Irse de un lugar. | action
+volver | Regresar. | action
+volar | Moverse por el aire. | action
+rodar | Avanzar dando vueltas. | action
+resbalar | Deslizarse sin querer. | action
+bucear | Nadar bajo el agua. | action
+pescar | Atrapar peces. | action
+plantar | Meter una semilla en la tierra. | action
+regar | Dar agua a las plantas. | action
+limpiar | Quitar la suciedad. | action
+ordenar | Poner cada cosa en su sitio. | action
+lavar | Limpiar con agua. | action
+arreglar | Reparar. | action
+romper | Hacer pedazos. | action
+comprar | Conseguir a cambio de dinero. | action
+vender | Dar a cambio de dinero. | action
+pagar | Dar dinero por algo. | action
+regalar | Dar como obsequio. | action
+enviar | Mandar algo a alguien. | action
+recibir | Obtener lo que te dan. | action
+llamar | Telefonear o decir el nombre de alguien. | action
+visitar | Ir a ver un lugar o a alguien. | action
+explorar | Recorrer un lugar desconocido. | action
+descubrir | Hallar algo nuevo. | action
+inventar | Crear algo nuevo. | action
+crecer | Hacerse más alto con los años. | action
+respirar | Meter y sacar el aire. | action
+silbar | Hacer un sonido agudo con los labios. | action
+aplaudir | Dar palmas para felicitar. | action
+abrazar | Rodear a alguien con cariño. | action
+saludar | Decir hola. | action
+agradecer | Dar las gracias. | action
+sonreír | Curvar los labios de alegría. | action
+grande | De tamaño elevado. | describing
+pequeño | De poco tamaño. | describing
+gordo | Ancho y grueso. | describing
+delgado | Fino y estrecho. | describing
+largo | Que se extiende mucho. | describing
+corto | De poca longitud. | describing
+pesado | Difícil de levantar. | describing
+ligero | Fácil de levantar. | describing
+rápido | Que va deprisa. | describing
+lento | Que va despacio. | describing
+caliente | De temperatura alta. | describing
+mojado | Lleno de agua. | describing
+seco | Sin agua. | describing
+limpio | Sin suciedad. | describing
+sucio | Cubierto de manchas. | describing
+nuevo | Recién hecho o comprado. | describing
+antiguo | De otros tiempos. | describing
+joven | Que no es viejo. | describing
+viejo | Que tiene muchos años. | describing
+bonito | Agradable de ver. | describing
+guapo | De buen aspecto. | describing
+feliz | Lleno de alegría. | describing
+triste | Que siente pena. | describing
+amable | Agradable con los demás. | describing
+malvado | Que hace daño. | describing
+gracioso | Que hace reír. | describing
+serio | Que no bromea. | describing
+valiente | Que no teme el peligro. | describing
+miedoso | Que se asusta fácilmente. | describing
+cansado | Que necesita reposo. | describing
+enfermo | Que no está sano. | describing
+contento | Satisfecho. | describing
+enfadado | Muy molesto. | describing
+tranquilo | Sereno. | describing
+ruidoso | Que hace mucho jaleo. | describing
+silencioso | Que no hace nada de ruido. | describing
+fácil | Que no cuesta. | describing
+difícil | Que cuesta mucho. | describing
+peligroso | Que puede hacer daño. | describing
+delicioso | Muy rico de comer. | describing
+dulce | Con sabor parecido al de la miel. | describing
+salado | Con sabor a agua de mar. | describing
+amargo | De sabor áspero como el café solo. | describing
+picante | Que quema la lengua. | describing
+suave | Agradable al tacto. | describing
+áspero | Rugoso al tacto. | describing
+brillante | Que refleja la luz. | describing
+oscuro | Con poca luz. | describing
+enorme | Muy grande. | describing
+diminuto | Muy pequeño. | describing
+extraño | Raro. | describing
+mágico | Que parece de un cuento de hadas. | describing
+famoso | Conocido por todos. | describing
+rico | Que tiene mucho dinero o muy sabroso. | describing
+pobre | Que tiene poco dinero. | describing
+lleno | Que no le cabe más. | describing
+vacío | Sin nada dentro. | describing
+redondo | Con forma de círculo. | describing
+puntiagudo | Que termina en un extremo afilado. | describing
+dormido | Que está en pleno sueño. | describing
+curioso | Que quiere saberlo todo. | describing
+goloso | Que adora los dulces. | describing
+perezoso | Que no quiere esforzarse. | describing
+generoso | Que da con gusto. | describing
+paciente | Que sabe esperar. | describing
+honrado | Que no engaña. | describing
+salvaje | Que vive libre en la naturaleza. | describing
+ornitorrinco | Mamífero australiano con pico de pato que pone huevos. | animal | 35
+pangolín | Mamífero cubierto de escamas que come hormigas. | animal | 35
+ajolote | Anfibio mexicano que conserva sus branquias toda la vida. | animal | 35
+narval | Cetáceo del Ártico con un colmillo largo y retorcido. | animal | 35
+manatí | Gran mamífero marino tranquilo que pasta en el agua. | animal | 35
+okapi | Animal de la selva del Congo con patas rayadas. | animal | 35
+tapir | Mamífero con trompa corta de las selvas tropicales. | animal | 35
+wombat | Marsupial australiano rechoncho que cava madrigueras. | animal | 35
+mangosta | Pequeño carnívoro ágil que ataca a las serpientes. | animal | 35
+albatros | Gran ave marina de alas inmensas. | animal | 35
+cormorán | Ave marina negra que bucea para pescar. | animal | 35
+alondra | Pájaro de campo que canta mientras vuela. | animal | 35
+escolopendra | Ciempiés venenoso. | animal | 35
+tarántula | Araña grande y peluda. | animal | 35
+crustáceo | Animal con caparazón como el cangrejo. | animal | 35
+molusco | Animal blando, a menudo con concha. | animal | 35
+anfibio | Animal que vive en el agua y luego en tierra. | animal | 35
+marsupial | Mamífero que lleva a su cría en una bolsa. | animal | 35
+crisantemo | Flor de otoño de muchos pétalos. | plant | 35
+rododendro | Arbusto de grandes ramilletes de flores. | plant | 35
+eucalipto | Árbol australiano de hojas aromáticas. | plant | 35
+secuoya | Árbol gigante de California. | plant | 35
+baobab | Árbol africano de tronco enorme. | plant | 35
+glicinia | Planta trepadora de racimos malvas. | plant | 35
+clorofila | Pigmento verde de las plantas. | material | 35
+fotosíntesis | Proceso por el que las plantas fabrican azúcar con la luz. | idea | 35
+ecosistema | Conjunto de seres vivos de un medio. | nature | 35
+biodiversidad | Variedad de especies vivas. | nature | 35
+estratosfera | Capa de la atmósfera por encima de las nubes. | nature | 35
+atmósfera | Capa de aire que rodea la Tierra. | nature | 35
+hemisferio | Mitad de la Tierra. | place | 35
+ecuador | Línea imaginaria en medio de la Tierra. | place | 35
+península | Tierra rodeada de agua por tres lados. | place | 35
+fiordo | Brazo de mar largo entre montañas. | nature | 35
+géiser | Fuente que lanza agua caliente. | nature | 35
+laguna | Extensión de agua más pequeña que un lago. | nature | 35
+manglar | Bosque de árboles con raíces en agua salada. | nature | 35
+tundra | Llanura fría sin árboles del norte. | nature | 35
+avalancha | Masa de nieve que cae por una montaña. | nature | 35
+seísmo | Sacudida de la tierra. | event | 35
+meteorito | Piedra caída del espacio. | nature | 35
+eclipse | El Sol o la Luna tapados por otro astro. | nature | 35
+nebulosa | Nube de gas y polvo en el espacio. | nature | 35
+magnetismo | Fuerza de los imanes. | idea | 35
+electricidad | Energía que enciende las lámparas. | idea | 35
+gravedad | Fuerza que hace caer los objetos. | idea | 35
+oxígeno | Gas que respiramos. | material | 35
+hidrógeno | El gas más ligero. | material | 35
+molécula | Grupo de átomos unidos. | material | 35
+algoritmo | Serie de pasos para resolver un problema. | idea | 35
+jeroglífico | Signo de la antigua escritura egipcia. | language | 35
+pergamino | Piel preparada para escribir, en otros tiempos. | material | 35
+manuscrito | Texto escrito a mano. | communication | 35
+enciclopedia | Obra que reúne todos los saberes. | object | 35
+hélice | Pieza con palas que gira para impulsar. | object | 35
+timón | Pieza que dirige un barco. | object | 35
+catapulta | Máquina que lanzaba piedras. | object | 35
+caleidoscopio | Tubo que muestra figuras de colores cambiantes. | object | 35
+xilófono | Instrumento de láminas que se golpean. | object | 35
+clavicémbalo | Antiguo instrumento de teclado de cuerdas pulsadas. | object | 35
+gaita | Instrumento de bolsa y tubos. | object | 35
+pandereta | Tambor pequeño y plano con sonajas. | object | 35
+mandolina | Instrumento pequeño de cuerdas en forma de pera. | object | 35
+anfiteatro | Sala con gradas. | place | 35
+acueducto | Puente que lleva agua. | place | 35
+fortaleza | Castillo fortificado. | place | 35
+monasterio | Lugar donde viven monjes. | place | 35
+observatorio | Lugar desde el que se estudian los astros. | place | 35
+góndola | Barca de Venecia. | object | 35
+dirigible | Globo alargado con motor. | object | 35
+kayak | Barca pequeña de remo doble. | object | 35
+cotidiano | Que ocurre cada día. | describing | 35
+melancolía | Tristeza suave y soñadora. | feeling | 35
+nostalgia | Añoranza del pasado. | feeling | 35
+entusiasmo | Gran alegría por hacer algo. | feeling | 35
+perseverancia | Seguir adelante a pesar de las dificultades. | quality | 35
+anécdota | Historia breve y curiosa. | communication | 35
+refrán | Frase corta que da una enseñanza. | communication | 35
+adivinanza | Pregunta divertida que hay que resolver. | communication | 35
+acertijo | Problema ingenioso que hay que resolver. | communication | 35
+enigma | Pregunta difícil de resolver. | communication | 35
+paradoja | Idea que parece contradictoria. | idea | 35
+hipótesis | Suposición que hay que comprobar. | idea | 35
+filosofía | Reflexión sobre el sentido de la vida. | idea | 35
+democracia | Gobierno del pueblo. | idea | 35
+arqueólogo | Persona que excava restos del pasado. | person | 35
+paleontólogo | Persona que estudia los fósiles. | person | 35
+astrónomo | Científico que estudia las estrellas. | person | 35
+cartógrafo | Persona que dibuja los planos de los territorios. | person | 35
+ventrílocuo | Artista que habla sin mover los labios. | person | 35
+equilibrista | Artista que camina sobre un alambre. | person | 35
+fósil | Resto de un ser vivo atrapado en la piedra. | nature | 35
+cuarzo | Mineral transparente muy común. | material | 35
+esmeralda | Piedra preciosa verde. | material | 35
+zafiro | Piedra preciosa azul. | material | 35
+rubí | Piedra preciosa roja. | material | 35
+amatista | Piedra morada. | material | 35
+porcelana | Cerámica blanca y fina. | material | 35
+mosaico | Imagen hecha con trocitos. | object | 35
+vidriera | Ventana de cristales de colores. | object | 35
+tapiz | Tela decorada que se cuelga en la pared. | object | 35
+zigzag | Línea que cambia de dirección bruscamente. | shape | 35
+hexágono | Forma de seis lados. | shape | 35
+pentágono | Forma de cinco lados. | shape | 35
+cilindro | Forma de una lata de conservas. | shape | 35
+paralelogramo | Cuadrilátero con los lados opuestos en la misma dirección. | shape | 35
+murciélago | Mamífero volador que duerme cabeza abajo. | animal
+caracola | Concha grande en espiral donde se oye el mar. | animal
+langosta | Crustáceo grande de mar, o insecto que arrasa cosechas. | animal
+gusano | Animal pequeño, blando y alargado sin patas. | animal
+ciempiés | Bicho alargado con muchísimas patas. | animal
+luciérnaga | Insecto que brilla en la oscuridad. | animal
+polilla | Mariposa nocturna que se come la ropa. | animal
+renacuajo | Cría de la rana, con cola. | animal
+puercoespín | Roedor cubierto de púas. | animal
+lagartija | Reptil pequeño que toma el sol en las paredes. | animal
+víbora | Serpiente venenosa. | animal
+cebolleta | Bulbo tierno de tallo verde y sabor suave. | food
+coliflor | Hortaliza blanca en forma de árbol pequeño. | food
+guisante | Semilla verde y redonda en vaina. | food
+nectarina | Fruta parecida al melocotón pero de piel lisa. | food
+macedonia | Mezcla de frutas troceadas. | food
+ensalada | Plato frío de verduras crudas. | food
+sándwich | Dos rebanadas de pan de molde con relleno. | food
+servilleta | Papel o tela para limpiarse la boca en la mesa. | object
+vajilla | Conjunto de platos, vasos y tazas. | object
+cubierto | Tenedor, cuchara o cuchillo. | object
+botijo | Vasija de barro con pitorro que mantiene el agua fresca. | object
+abanico | Objeto que se mueve para darse aire. | object
+linterna | Lámpara pequeña que se lleva en la mano. | object
+prismáticos | Instrumento para ver lo que está lejos. | object
+termo | Botella que mantiene caliente el líquido. | object
+cantimplora | Botella para llevar agua de excursión. | object
+saco | Bolsa grande de tela. | object
+juguete | Objeto con el que juegan los niños. | object
+pelota | Bola para jugar. | object
+rompecabezas | Juego de piezas que se encajan. | object
+videojuego | Partida que se juega en una pantalla con un mando. | object
+cuadrilla | Grupo de trabajadores. | group
+rebaño | Grupo de ovejas. | group
+manada | Grupo de animales salvajes. | group
+enjambre | Grupo de abejas. | group
+multitud | Mucha gente junta. | group
+vecindario | Conjunto de personas que viven en una misma zona. | group
