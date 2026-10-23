@@ -21,7 +21,8 @@ export const NAME_MAX = 15;
  */
 export const NAME_SENT_MAX = 64;
 
-export type NameProblem = 'short' | 'long' | 'characters' | 'blocked';
+/** `taken` never comes from checkName: only the server knows (GET /v1/names/available). */
+export type NameProblem = 'short' | 'long' | 'characters' | 'blocked' | 'taken';
 export type NameCheck = { ok: true; name: string } | { ok: false; problem: NameProblem };
 
 /** Trimmed, single-spaced, no control or invisible characters; empty → null. */
@@ -84,6 +85,21 @@ export function isBlocked(name: string): boolean {
     // Spelled out with spaces or dots ("f.u.c.k", "a s s"): the letters together.
     matcher.hasMatch(text.replace(/[\s_.'’-]+/g, ''))
   );
+}
+
+/**
+ * What makes two names the same name (they're unique: owner's call, 2026-10-23).
+ * Case, accents, spaces and - _ . ' don't count, so "Zoë" is "zoe" and "Ro-da" is "Roda".
+ */
+export const nameKey = (name: string) => plain(name).toLowerCase().replace(/[\s_.'’-]+/g, '');
+
+/** "Roda2", "Roda3"… for numbers from..to, the name cut so each fits NAME_MAX: what a taken name falls back to. */
+export function nameVariants(name: string, from: number, to: number): string[] {
+  const letters = [...name];
+  return Array.from({ length: to - from + 1 }, (_, i) => {
+    const n = String(from + i);
+    return letters.slice(0, NAME_MAX - n.length).join('').trimEnd() + n;
+  });
 }
 
 /** The name as it will be saved, or why it can't be. */

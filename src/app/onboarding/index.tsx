@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LanguagePicker, languageStyles } from '../../components/LanguagePicker';
 import { PaperBackground } from '../../components/PaperBackground';
 import { BigButton } from '../../components/RoundParts';
+import { Wordmark } from '../../components/Wordmark';
 import { useTranslation } from '../../i18n';
 import { colors } from '../../theme';
 import { useGame } from '../../state/GameContext';
@@ -17,7 +18,7 @@ export default function OnboardingScreen() {
     <PaperBackground />
     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24,
       paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}>
-      <Text style={[languageStyles.title, { color: colors.coralD, marginBottom: 24 }]}>{t('onboarding.logo')}</Text>
+      <View style={{ alignItems: 'center', marginBottom: 18 }} accessible accessibilityLabel={t('app.name')}><Wordmark width={250} /></View>
       <Text style={languageStyles.title} accessibilityRole="header">{t('language.title')}</Text>
       <Text style={languageStyles.help}>{t('language.help')}</Text>
       <LanguagePicker />

@@ -105,6 +105,11 @@
             `<path d="M${x - 8 * side},${y - 14} L${x + 7 * side},${y - 8}" stroke="${OUTLINE}" stroke-width="3.4" stroke-linecap="round"/>`;
         case 'joy':
           return `<path d="M${x - 7},${y + 2} Q${x},${y - 8} ${x + 7},${y + 2}" fill="none" stroke="${lash}" stroke-width="3.5" stroke-linecap="round"/>`;
+        case 'whoa': // big shining eyes under raised, even brows: surprised and enjoying it (the app icon)
+          return `<ellipse cx="${x}" cy="${y}" rx="9.5" ry="10.5" fill="#fff" stroke="${OUTLINE}" stroke-width="2.4"/>` +
+            `<ellipse cx="${x}" cy="${y + 1.5}" rx="6.8" ry="7.8" fill="#7a4a30"/><ellipse cx="${x}" cy="${y + 2}" rx="4" ry="4.6" fill="${eye}"/>` +
+            `<circle cx="${x + 3}" cy="${y - 2.2}" r="2.8" fill="#fff"/><circle cx="${x - 2.2}" cy="${y + 5}" r="1.4" fill="#fff"/>` +
+            `<path d="M${x - 7},${y - 16} Q${x},${y - 21} ${x + 7},${y - 16}" fill="none" stroke="${OUTLINE}" stroke-width="3" stroke-linecap="round"/>`;
         case 'nervous':
           return `<ellipse cx="${x - 2}" cy="${y + 1}" rx="5" ry="6.5" fill="${eye}"/>` +
             `<circle cx="${x - 0.5}" cy="${y - 2}" r="1.8" fill="#fff"/>`;
@@ -147,6 +152,9 @@
       case 'blep':
         return `<path d="M${x - 1},${y + 3} v4 a3.5,3.5 0 0 0 7,0 v-4" ${s(TONGUE, 'stroke-width="2"')}/>` +
           line(`M${x - 7},${y + 1} q3.5,4 7,0 q3.5,4 7,0`, 2.6);
+      case 'whoa': // an open "oh!" whose corners lift a little
+        return `<path d="M${x - 9},${y + 1} Q${x},${y + 4} ${x + 9},${y + 1} Q${x + 10},${y + 18} ${x},${y + 20} Q${x - 10},${y + 18} ${x - 9},${y + 1} Z" ${s(MOUTH_IN, 'stroke-width="2.5"')}/>` +
+          `<path d="M${x - 6},${y + 17} Q${x},${y + 11} ${x + 6},${y + 17} Q${x + 4},${y + 20} ${x},${y + 20} Q${x - 4},${y + 20} ${x - 6},${y + 17} Z" fill="${TONGUE}"/>`;
       case 'joy':
         return `<path d="M${x - 9},${y - 1} H${x + 9} Q${x + 9},${y + 12} ${x},${y + 12} Q${x - 9},${y + 12} ${x - 9},${y - 1} Z" ${s(MOUTH_IN, 'stroke-width="2.5"')}/>` +
           `<ellipse cx="${x}" cy="${y + 8}" rx="4.5" ry="3" fill="${TONGUE}"/>`;
@@ -191,7 +199,7 @@
       ? `<path d="M${nx - 5},${ny - 2.5} Q${nx},${ny - 5.5} ${nx + 5},${ny - 2.5} Q${nx + 4},${ny + 2.5} ${nx},${ny + 3.5} Q${nx - 4},${ny + 2.5} ${nx - 5},${ny - 2.5} Z" fill="${c.nose}" stroke="${OUTLINE}" stroke-width="2"/>`
       : '';
     // A fang peeks under a closed mouth (open mouths show their own inside)
-    const fang = c.fang && !['joy', 'scared', 'ko', 'sleepy', 'fierce', 'blep'].includes(expr)
+    const fang = c.fang && !['joy', 'whoa', 'scared', 'ko', 'sleepy', 'fierce', 'blep'].includes(expr)
       ? `<path d="M${FACE.mouth[0] + 2},${FACE.mouth[1] + 4} l2.5,6 l2.5,-6.5 Z" fill="#fff" stroke="${OUTLINE}" stroke-width="1.8" stroke-linejoin="round"/>`
       : '';
     return cheeks + nose + drawEyes(c, expr) + drawMouth(expr, c.mouth) + fang + drawOverlays(expr);
@@ -241,15 +249,22 @@
     const layer = (k) => (opts.layers && opts.layers[k]) || (Math.abs(pose[k]) > ARM_FRONT_AT ? 'front' : 'back');
     const armsIn = (l) => (layer('armL') === l ? arms.armL : '') + (layer('armR') === l ? arms.armR : '');
 
+    // opts.turn (-1..1): a three-quarter view, positive turns the face to the viewer's right. The face
+    // slides that way and narrows, the marks and the top follow it less, the back slot (ears) slides away.
+    const tn = opts.turn || 0;
+    const slide = (dx, svg, sx = 1) =>
+      tn && svg ? `<g transform="translate(${100 + dx * tn} 0) scale(${sx} 1) translate(-100 0)">${svg}</g>` : svg;
     const headShape = `<ellipse cx="${HEAD.cx}" cy="${HEAD.cy}" rx="${HEAD.rx}" ry="${HEAD.ry}"`;
     const head =
       `<g transform="${rot(pose.head, JOINTS.neck)}">` +
-      (d.back ? d.back(c) : '') +
+      slide(-8, d.back ? d.back(c) : '') +
       `${headShape} ${s(c.fur)}/>` +
-      (d.marks ? `<clipPath id="${id}-head">${headShape}/></clipPath><g clip-path="url(#${id}-head)">${d.marks(c)}</g>${headShape} fill="none" stroke="${OUTLINE}" stroke-width="${SW}"/>` : '') +
-      (d.front ? d.front(c) : '') +
-      drawFace(c, expr) +
-      (d.top ? d.top(c, id) : '') +
+      (d.marks ? `<clipPath id="${id}-head">${headShape}/></clipPath><g clip-path="url(#${id}-head)">${slide(10, d.marks(c))}</g>${headShape} fill="none" stroke="${OUTLINE}" stroke-width="${SW}"/>` : '') +
+      // Turned, the face is clipped to the head: what slides past the far edge goes round the back
+      (tn ? `<clipPath id="${id}-face">${headShape}/></clipPath><g clip-path="url(#${id}-face)">` : '') +
+      slide(16, (d.front ? d.front(c) : '') + drawFace(c, expr), 1 - 0.14 * Math.abs(tn)) +
+      (tn ? `</g>` : '') +
+      slide(6, d.top ? d.top(c, id) : '') +
       `</g>`;
 
     const joints = opts.showJoints
@@ -586,6 +601,6 @@
     render, signature, avatar, avatarRing, tube, CHARACTERS, POSES, JOINTS, FACE, VIEWBOX, OUTLINE, SW,
     EXPRESSIONS: ['happy', 'joy', 'nervous', 'worried', 'scared', 'ko'],
     // Attitude faces: the personas use them, the game never does
-    MOODS: ['cool', 'smug', 'side', 'wink', 'fierce', 'calm', 'sleepy', 'blep'],
+    MOODS: ['cool', 'smug', 'side', 'wink', 'fierce', 'calm', 'sleepy', 'blep', 'whoa'],
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -5,17 +5,18 @@
  *   POST /v1/sync         the device's snapshot + new round reports (auth)
  *   DELETE /v1/players/me deletes the player (auth)
  *   GET  /v1/leaderboard  ?period=week|all[&me=<player id>]
+ *   GET  /v1/names/available ?name=<name>[&me=<player id>] → { available }
  *   GET  /health          for Railway
  */
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import Fastify, { type FastifyServerOptions } from 'fastify';
 
-import { LIMITS, type Period, type SyncRequest } from './contract.ts';
+import { LIMITS, type NameAvailableResponse, type Period, type SyncRequest } from './contract.ts';
 import type { Db } from './db.ts';
 import { createLeaderboard } from './leaderboard.ts';
 import { NAME_SENT_MAX } from './names.ts';
-import { credentials, deletePlayer, register, sync } from './players.ts';
+import { credentials, deletePlayer, nameAvailable, register, sync } from './players.ts';
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
 const UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
@@ -30,6 +31,7 @@ const report = {
     level: int(1, 99),
     won: { type: 'boolean' },
     wrong: int(0, 26),
+    tokens: int(0, 1_000),
     description: { type: 'boolean' },
     letters: { type: 'boolean' },
     at: int(0, 2 ** 53 - 1),
@@ -68,8 +70,18 @@ const boardQuery = {
   },
 };
 
-export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs?: number } = {}) {
-  const { boardTtlMs, ...fastifyOpts } = opts;
+const nameQuery = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['name'],
+  properties: {
+    name: { type: 'string', minLength: 1, maxLength: NAME_SENT_MAX },
+    me: { type: 'string', pattern: UUID },
+  },
+};
+
+export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs?: number; newPlayersPerHour?: number } = {}) {
+  const { boardTtlMs, newPlayersPerHour = 20, ...fastifyOpts } = opts;
   // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's.
   const app = Fastify({ trustProxy: true, bodyLimit: 256 * 1024, ...fastifyOpts });
   // The app doesn't need CORS; the web preview (npx expo start --web) does. DELETE isn't allowed by default.
@@ -82,7 +94,7 @@ export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs
     return { ok: true };
   });
 
-  app.post('/v1/players', { config: { rateLimit: { max: 20, timeWindow: '1 hour' } } }, async (_req, reply) =>
+  app.post('/v1/players', { config: { rateLimit: { max: newPlayersPerHour, timeWindow: '1 hour' } } }, async (_req, reply) =>
     reply.code(201).send(await register(db)),
   );
 
@@ -102,6 +114,13 @@ export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs
     '/v1/leaderboard',
     { schema: { querystring: boardQuery } },
     async (req) => leaderboard(req.query.period, req.query.me),
+  );
+
+  // Names are public on the boards, so saying one is taken gives nothing away.
+  app.get<{ Querystring: { name: string; me?: string } }>(
+    '/v1/names/available',
+    { schema: { querystring: nameQuery } },
+    async (req): Promise<NameAvailableResponse> => ({ available: await nameAvailable(db, req.query.name, req.query.me) }),
   );
 
   return app;

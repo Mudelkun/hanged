@@ -13,7 +13,7 @@ import '../../design/characters/balloons.js';
 
 export type Expression = 'happy' | 'joy' | 'nervous' | 'worried' | 'scared' | 'ko';
 /** The personas' attitude faces (Characters page only). */
-export type Mood = 'cool' | 'smug' | 'side' | 'wink' | 'fierce' | 'calm' | 'sleepy' | 'blep';
+export type Mood = 'cool' | 'smug' | 'side' | 'wink' | 'fierce' | 'calm' | 'sleepy' | 'blep' | 'whoa';
 export type Angles = Partial<Record<'head' | 'armL' | 'armR' | 'legL' | 'legR' | 'tail' | 'elbowL' | 'elbowR', number>>;
 
 export interface Character {

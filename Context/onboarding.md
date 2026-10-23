@@ -9,11 +9,13 @@ UI: `src/components/Onboarding.tsx`; artwork and transition: `OnboardingArt.tsx`
 
 - The welcome is the buddy picker. Coco and Bun are free; Coco starts selected. Both float under ten
   balloons. Tapping either the figure or its card brings it forward, cheers, changes its speech bubble,
-  and changes “Let’s go, …!”. No price or gender labels. The logo uses the Play tiles.
+  and changes “Let’s go, …!”. No price or gender labels. The logo (here and on the language page) is the
+  brand's compact wordmark, `Wordmark` ([branding.md](branding.md)), so it carries over from the loading screen.
 - The second screen starts with the same friendly random name supplied by `GameProvider`. The name,
   dice, 15-character limit, and messages reuse `PlayerNameInput`, `nameHelp`, `checkName` and `randomName`
   with Profile. The wooden sign follows the draft; an invalid name tilts it and worries the character.
-  A too-short name waits for the attempted submission, matching Profile.
+  A too-short name waits for the attempted submission, matching Profile. Play asks the server whether the
+  name is free (names are unique, [profile.md](profile.md)); offline it goes through and the sync settles it.
 - Consent is never preselected. A pale Play button stays tappable to explain a refusal: invalid names
   focus the field; missing consent wiggles the checkbox and shows “Tick the box to start playing”.
   The keyboard’s Done key only dismisses the keyboard. The name screen scrolls above the keyboard.
@@ -45,7 +47,8 @@ UI: `src/components/Onboarding.tsx`; artwork and transition: `OnboardingArt.tsx`
 - Root `Stack.Protected` gates the tabs, Profile and info routes. A deep link cannot skip onboarding.
   Completion switches to Play automatically and removes the onboarding history. Deletion resets the save
   and returns to the buddy picker; Profile no longer issues a conflicting navigation after the reset.
-- The splash waits for fonts, save, first round and friendly name. Delete/reset deals a round and assigns
+- The splash waits for fonts, save, first round and friendly name, then the loading screen plays over the
+  app ([branding.md](branding.md)); for a new player it has no buddy and fades into onboarding. Delete/reset deals a round and assigns
   a fresh name in the same batch so the application providers remain mounted.
 - The provider passes no state to sync and starts no sync until current consent is saved. Completion
   starts the normal background sync; network success is never required to play.

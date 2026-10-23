@@ -36,6 +36,12 @@ export const chevXml = (dir: 'l' | 'r', c = '#4b3a35') =>
     '0 0 24 24',
     `<path d="${dir === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`,
   );
+// Not in the mockup: the leaderboard's Find-me pill, pointing to the player's row.
+export const arrowXml = (dir: 'up' | 'down', c = '#4b3a35') =>
+  svg(
+    '0 0 24 24',
+    `<path d="${dir === 'up' ? 'M12 19V5M6 11l6-6 6 6' : 'M12 5v14M6 13l6 6 6-6'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  );
 export const checkXml = svg(
   '0 0 24 24',
   '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>',

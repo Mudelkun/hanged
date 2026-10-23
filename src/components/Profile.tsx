@@ -6,7 +6,7 @@
  * No photo upload (owner's call, 2026-10-22): the avatar is the character.
  */
 import { memo, ReactNode, useEffect, useRef, useState } from 'react';
-import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, TextInputInstance, View } from 'react-native';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TextInputInstance, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { Character, faceXml } from '../characters/rig';
@@ -22,7 +22,7 @@ import { checkXml, chevXml, closeXml, coinXml, diceXml, Icon, penXml, starXml, t
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { BigButton } from './RoundParts';
-import { nameHelp, PlayerNameInput } from './PlayerNameInput';
+import { nameHelp, nameProblem, PlayerNameInput, useNameAvailability } from './PlayerNameInput';
 
 // ---- the name card ----
 
@@ -30,8 +30,12 @@ const SAVED_MS = 2400;
 
 interface NameCardProps {
   name: string;
+  /** The name the player asked for, taken by someone else before it reached the server (GameState.takenName). */
+  takenName: string | null;
   character: Character;
   onRename: (name: string) => void;
+  /** GameContext's nameIsFree: names are unique. */
+  isNameFree: (name: string) => Promise<boolean>;
   onChangeCharacter: () => void;
 }
 
@@ -41,13 +45,14 @@ interface NameCardProps {
  * random name, Cancel and Save. A problem shows as the player types, except
  * "too short", which waits for Save (every name is too short at first).
  */
-export function NameCard({ name, character, onRename, onChangeCharacter }: NameCardProps) {
+export function NameCard({ name, takenName, character, onRename, isNameFree, onChangeCharacter }: NameCardProps) {
   const t = useTranslation();
   const [draft, setDraft] = useState<string | null>(null);
   const [triedSave, setTriedSave] = useState(false);
   const [saved, setSaved] = useState(false);
   const [pop] = useState(() => new Animated.Value(1));
   const input = useRef<TextInputInstance>(null);
+  const availability = useNameAvailability(isNameFree);
 
   useEffect(() => {
     if (!saved) return;
@@ -57,7 +62,7 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
 
   const editing = draft !== null;
   const check = editing ? checkName(draft) : null;
-  const problem = check && !check.ok && (check.problem !== 'short' || triedSave) ? check.problem : null;
+  const problem = check && nameProblem(check, triedSave, availability.taken);
 
   const startEdit = () => {
     sound.play('edit');
@@ -65,16 +70,17 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
     setTriedSave(false);
     setSaved(false);
   };
-  const save = () => {
-    if (!check) return;
-    if (!check.ok) {
-      setTriedSave(true);
-      feedback.refused();
-      sound.play('name-invalid');
-      return;
-    }
+  const refuse = () => {
+    setTriedSave(true);
+    feedback.refused();
+    sound.play('name-invalid');
+  };
+  const save = async () => {
+    if (!check || availability.checking) return;
+    if (!check.ok || check.name === availability.taken) return refuse();
+    if (check.name === name) return setDraft(null);
+    if (!(await availability.isFree(check.name))) return refuse();
     setDraft(null);
-    if (check.name === name) return;
     onRename(check.name);
     sound.play('name-save');
     feedback.characterPicked();
@@ -146,6 +152,12 @@ export function NameCard({ name, character, onRename, onChangeCharacter }: NameC
           )}
         </View>
       </View>
+
+      {takenName && !editing && !saved && (
+        <Text style={[styles.note, styles.noteBad]} accessibilityLiveRegion="polite">
+          {t('profile.name.wasTaken', { taken: takenName, name })}
+        </Text>
+      )}
 
       {editing && (
         <View style={styles.editBar}>
@@ -231,6 +243,36 @@ export interface ListItem {
   toggle?: { value: boolean; onChange: (enabled: boolean) => void };
 }
 
+const TRACK_W = 50, TRACK_H = 30, KNOB = 24, KNOB_GAP = (TRACK_H - KNOB) / 2;
+const KNOB_TRAVEL = TRACK_W - KNOB - KNOB_GAP * 2;
+
+/**
+ * Our own on/off switch: the native iOS 26 UISwitch is wider than the frame
+ * React Native measures for it and draws off-centre in the row.
+ */
+export function Toggle({ value, onValueChange, accessibilityLabel }: {
+  value: boolean;
+  onValueChange: (enabled: boolean) => void;
+  accessibilityLabel: string;
+}) {
+  const [on] = useState(() => new Animated.Value(value ? 1 : 0));
+  useEffect(() => {
+    Animated.spring(on, { toValue: value ? 1 : 0, useNativeDriver: true, speed: 20, bounciness: 6 }).start();
+  }, [on, value]);
+  return (
+    <Pressable
+      onPress={() => onValueChange(!value)}
+      accessibilityRole="switch"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ checked: value }}
+      hitSlop={8}
+      style={[styles.toggle, { backgroundColor: value ? colors.mintD : colors.line }]}
+    >
+      <Animated.View style={[styles.toggleKnob, { transform: [{ translateX: Animated.multiply(on, KNOB_TRAVEL) }] }]} />
+    </Pressable>
+  );
+}
+
 /** A titled white group of rows (SETTINGS, INFO & LEGAL). */
 export function ListGroup({ title, items }: { title: string; items: ListItem[] }) {
   return (
@@ -243,8 +285,7 @@ export function ListGroup({ title, items }: { title: string; items: ListItem[] }
           <View key={item.key} style={[styles.row, i > 0 && styles.rowLine]}>
             <View style={[styles.rowIcon, { backgroundColor: item.color }]}><Icon xml={item.icon} size={17} /></View>
             <Text style={styles.rowLabel}>{item.label}</Text>
-            <Switch accessibilityLabel={item.label} value={item.toggle.value} onValueChange={item.toggle.onChange}
-              trackColor={{ false: colors.line, true: colors.mintD }} thumbColor="#fff" ios_backgroundColor={colors.line} />
+            <Toggle accessibilityLabel={item.label} value={item.toggle.value} onValueChange={item.toggle.onChange} />
           </View>
         ) : (
           <Pressable
@@ -453,6 +494,11 @@ const styles = StyleSheet.create({
   rowIcon: { width: 30, height: 30, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   rowLabel: { ...display('500', 15.5), flex: 1 },
   rowValue: display('500', 14, colors.muted),
+  toggle: { width: TRACK_W, height: TRACK_H, borderRadius: TRACK_H / 2, padding: KNOB_GAP, justifyContent: 'center' },
+  toggleKnob: {
+    width: KNOB, height: KNOB, borderRadius: KNOB / 2, backgroundColor: '#fff',
+    shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 2, shadowOffset: { width: 0, height: 1 }, elevation: 2,
+  },
 
   foot: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginHorizontal: 8, marginTop: 2 },
   footText: { flexShrink: 1, fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted },

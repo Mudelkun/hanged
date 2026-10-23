@@ -23,9 +23,10 @@ everything again.
 | | |
 |---|---|
 | `POST /v1/players` | New anonymous player → `{ id, secret }`. Rate limit: 20 per hour per IP. |
-| `POST /v1/sync` | `Authorization: Bearer <id>:<secret>`. Body: the player snapshot + up to 200 round reports. → `{ acked, wordsGuessed }` |
+| `POST /v1/sync` | `Authorization: Bearer <id>:<secret>`. Body: the player snapshot + up to 200 round reports. → `{ acked, wordsGuessed, name }` |
 | `DELETE /v1/players/me` | Same auth. Deletes the player (App Store Guideline 5.1.1(v)) → `204`, or `401` if unknown. |
 | `GET /v1/leaderboard?period=week\|all&me=<id>` | Top 50 + the asking player's rank. No auth: ranks are public. |
+| `GET /v1/names/available?name=<name>&me=<id>` | `{ available }`: no one else holds the name (the asker's own counts as free). No auth: names are public on the boards. |
 | `GET /health` | `SELECT 1`, for Railway. |
 
 Every body and query is validated by a JSON schema in [app.ts](../server/src/app.ts) before a
@@ -48,12 +49,14 @@ account and registers again on the next sync, and that first sync re-seeds the s
 ## Round reports and the sync
 
 The reducer queues a **report** for every finished round, in the same step that wins or loses it:
-`{ seq, wordId, level, won, wrong, description, letters, at }` in `state.reports`, saved with the game
+`{ seq, wordId, level, won, wrong, tokens, description, letters, at }` in `state.reports`, saved with the game
 ([progression-and-tokens.md](progression-and-tokens.md)). `seq` counts 1, 2, 3… per device and is never
 reused. `description` means the description was shown during play. Current clients always show it
 from the start and report `true`; older clients required a free or paid reveal. Previously queued
 reports keep their original values. The wire field and database column stay compatible.
-`at` comes in on the `guess` action, so the reducer stays pure.
+`at` comes in on the `guess` action, so the reducer stays pure. `tokens` is what the round paid (0 for a
+loss), for the leaderboard's "tokens earned" tiebreak ([leaderboard.md](leaderboard.md)); it's optional
+on the wire, because reports queued before it existed don't have it.
 
 [GameContext](../src/state/GameContext.tsx) runs a sync:
 - once the save is loaded and current onboarding consent is accepted. **Never before**: the first sync sets the player's starting score on the
@@ -80,11 +83,16 @@ The server, in **one transaction** that locks the player's row (`FOR UPDATE`):
    - After that, the score grows by **at most the wins reported in that sync**. Editing the saved number
      doesn't move the leaderboard. Sending fake reports still would: real anti-cheat (plausibility
      checks, rate per hour) comes later.
-3. Copies the rest of the snapshot, and adds to `rounds_played`/`rounds_won`. The name goes through
-   `checkName` ([names.ts](../server/src/names.ts), shared with the app): one it refuses is stored as null.
+3. Copies the rest of the snapshot, and adds to `rounds_played`/`rounds_won`/`tokens_earned`/`misses`.
+   The name goes through `checkName` ([names.ts](../server/src/names.ts), shared with the app): one it
+   refuses is stored as null. **Names are unique** (`name_key`, see [profile.md](profile.md)): a name
+   someone else holds becomes the first free variant ("Roda2"…"Roda99", then up to 4 digits), and the
+   response's `name` tells the app, which adopts it (the reducer's `nameTaken`). The player's own key skips
+   the lookup. Two players taking a name at the same moment: the unique index fails one sync, and its
+   retry gets a variant.
    The schema lets names up to 64 through (`NAME_SENT_MAX`), so a too-long name never fails the whole sync.
-4. Adds the wins to `player_weeks` (the Monday, UTC, of each report's `at`, capped at the server's now,
-   so a fast device clock can't file wins in a future week).
+4. Adds the rounds to `player_weeks` (the Monday, UTC, of each report's `at`, capped at the server's now,
+   so a fast device clock can't file wins in a future week): wins, highest level, tokens earned, misses.
 5. Adds every report to `word_days`. Rows are written in key order so two syncs can't deadlock on the
    same words.
 
@@ -99,8 +107,8 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 
 | Table | |
 |---|---|
-| `players` | id, secret hash, name, character, language, `words_guessed` (the score), level, tokens, rounds played/won, `last_seq`, `score_at` (when the score last rose: ties go to who got there first), `synced_at` (null = never synced) |
-| `player_weeks` | `(player_id, week)` → words guessed that week |
+| `players` | id, secret hash, name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
+| `player_weeks` | `(player_id, week)` → words guessed, highest level played, tokens earned and misses that week |
 | `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs (`npm run seed:words`), to show words in the statistics. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
 | `word_stats` (view) | each word over all time: played, won, lost, `loss_rate`, `avg_wrong`, … |
@@ -155,6 +163,8 @@ is an indexed count, which is O(rank). Cache it if it ever shows up in the metri
   because `pg` returns bigints as strings. Multi-statement SQL goes through `exec`, because PGlite's
   `query` takes one statement.
 - Keep the app's checks and the server's schemas in step with `LIMITS` in `contract.ts`.
+- `POST /v1/players` allows 20 an hour per IP; the tests build the app with `newPlayersPerHour` raised,
+  since they make more players than that.
 - **`names.ts` is shared like `contract.ts`**: the app imports it, so its only import is the `obscenity`
   filter, which is in **both** `package.json` files (Metro can't see `server/node_modules`, so the app
   bundles its own copy; keep the two versions the same). The server re-checks names because the app's check

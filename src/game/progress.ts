@@ -30,6 +30,12 @@ export interface GameState {
    * a moment: the provider gives a new player a random name (names.randomName).
    */
   playerName: string | null;
+  /**
+   * Names are unique, and a name picked offline may turn out to be someone
+   * else's: the sync then gives the player a free variant ("Roda2") and keeps
+   * the one they asked for here, so Profile can say so. Cleared by a rename.
+   */
+  takenName: string | null;
   onboardingCompleted: boolean;
   legalAcceptance: LegalAcceptance | null;
   /** The character the player plays with. Always one they own (ownsCharacter). */
@@ -68,6 +74,7 @@ export const REPORTS_KEPT = 2000;
 export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => ({
   version: 1,
   playerName: null,
+  takenName: null,
   onboardingCompleted: false,
   legalAcceptance: null,
   characterId: DEFAULT_CHARACTER,
@@ -105,6 +112,8 @@ export type GameAction =
   | { type: 'reportsSent'; upTo: number }
   /** A new name. Ignored unless names.checkName takes it. */
   | { type: 'rename'; name: string }
+  /** The server holds `name` because `sent` was someone else's. Ignored if the player renamed meanwhile. */
+  | { type: 'nameTaken'; sent: string; name: string }
   /** The account was deleted: everything starts over, as on a new phone. */
   | { type: 'reset' };
 
@@ -152,13 +161,14 @@ const withDefaults = (saved: GameState): GameState => {
 };
 
 /** The outbox once `round` (just finished) is queued. */
-function queueReport(s: GameState, round: Round, won: boolean, at: number): Pick<GameState, 'reports' | 'nextReportSeq'> {
+function queueReport(s: GameState, round: Round, won: boolean, tokens: number, at: number): Pick<GameState, 'reports' | 'nextReportSeq'> {
   const report: RoundReport = {
     seq: s.nextReportSeq,
     wordId: round.wordId,
     level: round.level,
     won,
     wrong: wrongCount(round),
+    tokens,
     description: true, // Descriptions are visible from the start of every round.
     letters: round.boughtLetters.length > 0,
     at,
@@ -281,17 +291,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (status === 'playing') return { ...state, round };
       const won = status === 'won';
       const levelProgress = afterRound(state.levelProgress, won);
+      const streak = won ? state.streak + 1 : 0;
+      // The round's own level pays, not the level this win may move the player up to.
+      const earned = won ? tokenReward(round.level, streak) : 0;
       const ended = {
         ...state,
         round,
         levelProgress,
         bestLevel: Math.max(state.bestLevel, levelProgress.level),
-        ...queueReport(state, round, won, action.at),
+        ...queueReport(state, round, won, earned, action.at),
       };
-      if (!won) return { ...ended, streak: 0 };
-      const streak = state.streak + 1;
-      // The round's own level pays, not the level this win may move the player up to.
-      const earned = tokenReward(round.level, streak);
+      if (!won) return { ...ended, streak };
       return {
         ...ended,
         wordsGuessed: state.wordsGuessed + 1,
@@ -346,7 +356,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'rename': {
       const check = checkName(action.name);
-      return check.ok && check.name !== state.playerName ? { ...state, playerName: check.name } : state;
+      return check.ok && check.name !== state.playerName ? { ...state, playerName: check.name, takenName: null } : state;
+    }
+
+    case 'nameTaken': {
+      const check = checkName(action.name);
+      if (!check.ok || state.playerName !== action.sent || check.name === action.sent) return state;
+      return { ...state, playerName: check.name, takenName: action.sent };
     }
 
     case 'reset':

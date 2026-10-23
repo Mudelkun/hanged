@@ -36,7 +36,7 @@ const infoItems = (t: Translator): ListItem[] =>
 
 export default function ProfileScreen() {
   const t = useTranslation();
-  const { state, dispatch, deleteAccount } = useGame();
+  const { state, dispatch, deleteAccount, nameIsFree } = useGame();
   const insets = useSafeAreaInsets();
   const [deleting, setDeleting] = useState(false);
   const [choosingLanguage, setChoosingLanguage] = useState(false);
@@ -77,8 +77,10 @@ export default function ProfileScreen() {
       >
         <NameCard
           name={state.playerName ?? t('player.defaultName')}
+          takenName={state.takenName}
           character={character}
           onRename={(name) => dispatch({ type: 'rename', name })}
+          isNameFree={nameIsFree}
           onChangeCharacter={() => { sound.play('tab'); router.dismissTo('/characters'); }}
         />
         <StatTiles words={state.wordsGuessed} tokens={state.tokens} level={state.levelProgress.level} />

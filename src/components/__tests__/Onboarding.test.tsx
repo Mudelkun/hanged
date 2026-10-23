@@ -7,7 +7,7 @@ import { BuddyScreen, NameScreen } from '../Onboarding';
 import { BigButton } from '../RoundParts';
 import { LiftOff } from '../OnboardingArt';
 
-const mockGame = { state: { ...initialState(), playerName: 'SunnyOtter' }, completeOnboarding: jest.fn() };
+const mockGame = { state: { ...initialState(), playerName: 'SunnyOtter' }, completeOnboarding: jest.fn(), nameIsFree: jest.fn(async () => true) };
 const mockAudio = { play: jest.fn(), voice: jest.fn(), cancel: jest.fn() };
 jest.mock('../../state/GameContext', () => ({ useGame: () => mockGame }));
 jest.mock('../../audio/AudioProvider', () => ({ useSoundScope: () => mockAudio }));
@@ -52,6 +52,21 @@ test('consent starts unchecked, refusal nudges it, and invalid names never start
   await act(async () => button('Let’s play!').props.onPress());
   expect(view.root.findAllByType(LiftOff)).toHaveLength(0);
   expect(mockGame.completeOnboarding).not.toHaveBeenCalled();
+});
+
+test('a name someone else has never starts lift-off, and says so', async () => {
+  mockGame.nameIsFree.mockResolvedValueOnce(false);
+  await act(async () => { view = create(<OnboardingProvider><NameScreen /></OnboardingProvider>); });
+  await act(async () => checkbox().props.onPress());
+  await enter('Roda');
+  await act(async () => button('Let’s play!').props.onPress());
+  expect(mockGame.nameIsFree).toHaveBeenCalledWith('Roda');
+  expect(shows('Someone already has this name. Try another, or add a number')).toBe(true);
+  expect(button('Let’s play!').props.muted).toBe(true);
+  expect(view.root.findAllByType(LiftOff)).toHaveLength(0);
+  // Another name clears it
+  await enter('Roda7');
+  expect(button('Let’s play!').props.muted).toBe(false);
 });
 
 test('legal tabs preserve draft and consent; completion waits for lift-off', async () => {

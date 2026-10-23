@@ -343,5 +343,6 @@
 
   const DURATION = 900; // ms per stage transition, unless the stage sets `dur`
 
-  global.BalloonAnim = { STAGES, LOOPS, BALLOONS, POP_ORDER, frame, scene, SCENE, CAMERA, DURATION };
+  // balloon, burst and cloud are also drawn by the logo, the icon and the loading screen (design/branding.html)
+  global.BalloonAnim = { STAGES, LOOPS, BALLOONS, POP_ORDER, frame, scene, balloon, burst, cloud, SCENE, CAMERA, DURATION };
 })(typeof window !== 'undefined' ? window : globalThis);

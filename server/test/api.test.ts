@@ -5,6 +5,7 @@ import { buildApp } from '../src/app.ts';
 import type { LeaderboardResponse, PlayerSnapshot, RegisterResponse, RoundReport, SyncResponse } from '../src/contract.ts';
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
+import { nameVariants } from '../src/names.ts';
 import { nextScore } from '../src/players.ts';
 import { seedWords } from '../src/words.ts';
 
@@ -14,7 +15,7 @@ let app: Awaited<ReturnType<typeof buildApp>>;
 before(async () => {
   db = await embedded();
   await migrate(db);
-  app = await buildApp(db, { boardTtlMs: 0 });
+  app = await buildApp(db, { boardTtlMs: 0, newPlayersPerHour: 1_000 });
 });
 after(async () => {
   await app.close();
@@ -75,7 +76,7 @@ describe('sync', () => {
     for (let i = 0; i < 2; i++) {
       const res = await sync(p, snapshot({ language: 'de', wordsGuessed: 4 }), reports);
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.json<SyncResponse>(), { acked: 4, wordsGuessed: 4 });
+      assert.deepEqual(res.json<SyncResponse>(), { acked: 4, wordsGuessed: 4, name: 'Roda' });
     }
     const { rows } = await db.query<{ word_id: string; played: number }>('SELECT word_id, played FROM word_days ORDER BY word_id');
     assert.equal(rows.length, 4);
@@ -91,7 +92,7 @@ describe('sync', () => {
     assert.equal((await sync(p, snapshot({ wordsGuessed: 40 }))).json<SyncResponse>().wordsGuessed, 40);
     // claims 1000 with one reported win: only the win counts
     const res = (await sync(p, snapshot({ wordsGuessed: 1000 }), [report(1)])).json<SyncResponse>();
-    assert.deepEqual(res, { acked: 1, wordsGuessed: 41 });
+    assert.deepEqual(res, { acked: 1, wordsGuessed: 41, name: 'Roda' });
   });
 
   it('counts a report once, even when sent again', async () => {
@@ -99,7 +100,7 @@ describe('sync', () => {
     await sync(p, snapshot());
     await sync(p, snapshot({ wordsGuessed: 2 }), [report(1), report(2, { won: false })]);
     const again = (await sync(p, snapshot({ wordsGuessed: 2 }), [report(1), report(2, { won: false }), report(3)])).json<SyncResponse>();
-    assert.deepEqual(again, { acked: 3, wordsGuessed: 2 });
+    assert.deepEqual(again, { acked: 3, wordsGuessed: 2, name: 'Roda' });
     const { rows } = await db.query<{ played: number; won: number }>(`SELECT played, won FROM word_stats WHERE word_id = 'en-castle'`);
     assert.deepEqual(rows, [{ played: 3, won: 2 }]);
   });
@@ -127,6 +128,9 @@ describe('sync', () => {
 });
 
 describe('leaderboard', () => {
+  const winsAt = (from: number, wins: number, over: Partial<RoundReport> = {}) =>
+    Array.from({ length: wins }, (_, i) => report(from + i, over));
+
   it('ranks by words guessed, then level, and gives my rank', async () => {
     const [a, b, c] = [await newPlayer(), await newPlayer(), await newPlayer()];
     await sync(a, snapshot({ name: 'Ann', wordsGuessed: 10, level: 2 }));
@@ -138,6 +142,39 @@ describe('leaderboard', () => {
       [[1, 'Bea', 30], [2, 'Cal', 10], [3, 'Ann', 10]],
     );
     assert.deepEqual(res.me, { rank: 3, words: 10 });
+  });
+
+  it('breaks a tie on words and level by tokens earned, then fewer misses, then who got there first', async () => {
+    const [a, b, c, d] = [await newPlayer(), await newPlayer(), await newPlayer(), await newPlayer()];
+    for (const p of [a, b, c, d]) await sync(p, snapshot({ name: null }));
+    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 2 }), winsAt(1, 2, { tokens: 2, wrong: 5 }));
+    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 2 }), winsAt(1, 2, { tokens: 3, wrong: 9 }));
+    await sync(c, snapshot({ name: 'Cal', wordsGuessed: 2 }), winsAt(1, 2, { tokens: 2, wrong: 1 }));
+    // Same as Cal in every way, but later
+    await sync(d, snapshot({ name: 'Dee', wordsGuessed: 2 }), winsAt(1, 2, { tokens: 2, wrong: 1 }));
+    for (const period of ['all', 'week'] as const) {
+      const res = await board(period, a.id);
+      assert.deepEqual(res.entries.map((e) => e.name), ['Bea', 'Cal', 'Dee', 'Ann'], period);
+      assert.deepEqual(res.me, { rank: 4, words: 2 }, period);
+    }
+  });
+
+  it("never lowers a rank for spending: the balance doesn't count, tokens earned do", async () => {
+    const [a, b] = [await newPlayer(), await newPlayer()];
+    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 1, tokens: 500 }), [report(1, { tokens: 1 })]);
+    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 1, tokens: 0 }), [report(1, { tokens: 4 })]);
+    assert.deepEqual((await board('all')).entries.map((e) => e.name), ['Bea', 'Ann']);
+  });
+
+  it("ranks this week by the highest level played that week, and counts lost rounds' misses", async () => {
+    const [a, b] = [await newPlayer(), await newPlayer()];
+    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 1 }), [report(1, { level: 5, won: false }), report(2, { level: 4, wrong: 0 })]);
+    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 1, level: 9 }), [report(1, { level: 4, wrong: 0 })]);
+    assert.deepEqual((await board('week')).entries.map((e) => e.name), ['Ann', 'Bea']);
+    // All time uses the current level
+    assert.deepEqual((await board('all')).entries.map((e) => e.name), ['Bea', 'Ann']);
+    const { rows } = await db.query<{ misses: number }>('SELECT misses FROM player_weeks WHERE player_id = $1', [a.id]);
+    assert.deepEqual(rows.map((r) => r.misses), [2]);
   });
 
   it('counts this week from reported wins only, and skips players without one', async () => {
@@ -156,7 +193,7 @@ describe('leaderboard', () => {
 
   it('has no rank for a player without words', async () => {
     const p = await newPlayer();
-    await sync(p, snapshot());
+    await sync(p, snapshot(), [report(1, { won: false })]);
     assert.equal((await board('all', p.id)).me, null);
     assert.equal((await board('week', p.id)).me, null);
   });
@@ -183,6 +220,41 @@ describe('names', () => {
     const p = await newPlayer();
     await sync(p, snapshot({ name: 'BigDick' }));
     assert.equal(await nameOf(p.id), null);
+  });
+});
+
+describe('unique names', () => {
+  const available = async (name: string, me?: string) =>
+    (await app.inject({ url: `/v1/names/available?name=${encodeURIComponent(name)}${me ? `&me=${me}` : ''}` })).json<{ available: boolean }>()
+      .available;
+
+  it('gives a taken name the first free variant, however it is spelled', async () => {
+    const [a, b, c] = [await newPlayer(), await newPlayer(), await newPlayer()];
+    assert.equal((await sync(a, snapshot({ name: 'Zoë' }))).json<SyncResponse>().name, 'Zoë');
+    assert.equal((await sync(b, snapshot({ name: 'zoe' }))).json<SyncResponse>().name, 'zoe2');
+    assert.equal((await sync(c, snapshot({ name: 'Z-O-E' }))).json<SyncResponse>().name, 'Z-O-E3');
+    // A player keeps their own name, and may change its case
+    assert.equal((await sync(a, snapshot({ name: 'ZOË' }))).json<SyncResponse>().name, 'ZOË');
+    // Once b moves on, the name is free again
+    await sync(b, snapshot({ name: 'Bea' }));
+    assert.equal((await sync(c, snapshot({ name: 'zoe2' }))).json<SyncResponse>().name, 'zoe2');
+  });
+
+  it('says whether a name is free, counting my own as free', async () => {
+    const p = await newPlayer();
+    await sync(p, snapshot({ name: 'Sunny Otter' }));
+    assert.equal(await available('sunnyotter'), false);
+    assert.equal(await available('SunnyOtter', p.id), true);
+    assert.equal(await available('Sunny Owl'), true);
+    // A name the rules refuse is never available
+    assert.equal(await available('x'), false);
+  });
+
+  it('cuts a variant so it fits the limit', () => {
+    assert.deepEqual(nameVariants('Roda', 2, 3), ['Roda2', 'Roda3']);
+    assert.deepEqual(nameVariants('Maximilianusxyz', 9, 10), ['Maximilianusxy9', 'Maximilianusx10']);
+    assert.deepEqual(nameVariants('Ana Maria Lopez', 10, 10), ['Ana Maria Lop10']);
+    assert.deepEqual(nameVariants('Ana Mariaaaa Lo', 10, 10), ['Ana Mariaaaa10']);
   });
 });
 

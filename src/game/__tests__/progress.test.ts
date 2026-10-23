@@ -530,6 +530,11 @@ describe('round reports (server outbox)', () => {
     expect(s.nextReportSeq).toBe(3);
   });
 
+  it('reports the tokens a round paid (the leaderboard ranks by tokens earned, never the balance)', () => {
+    const s = loseRound(winRound(initialState()));
+    expect(s.reports.map((r) => r.tokens)).toEqual([tokenReward(1, 1), 0]);
+  });
+
   it('drops what the server confirmed, and keeps the seq counting', () => {
     let s = loseRound(winRound(initialState()));
     s = gameReducer(s, { type: 'reportsSent', upTo: 1 });

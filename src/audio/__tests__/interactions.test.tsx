@@ -1,8 +1,7 @@
 import { act, create, ReactTestRenderer } from 'react-test-renderer';
-import { Switch } from 'react-native';
 import { characterById } from '../../characters/rig';
 import { GameScene } from '../../components/GameScene';
-import { ListGroup } from '../../components/Profile';
+import { ListGroup, Toggle } from '../../components/Profile';
 import { balloonSounds } from '../scenes';
 
 const mockAudio = { play: jest.fn(), voice: jest.fn(), sequence: jest.fn(() => () => {}), cancel: jest.fn() };
@@ -35,7 +34,7 @@ test('profile exposes two independently controlled, accessible audio switches', 
     { key: 'fx', icon: '<svg/>', color: '#abc', label: 'Sound effects & voices', toggle: { value: false, onChange: effects } },
     { key: 'music', icon: '<svg/>', color: '#abc', label: 'Music', toggle: { value: true, onChange: music } },
   ]} />); });
-  const switches = view.root.findAllByType(Switch);
+  const switches = view.root.findAllByType(Toggle);
   expect(switches).toHaveLength(2);
   expect(switches[0].props.value).toBe(false); expect(switches[1].props.value).toBe(true);
   expect(switches[0].props.accessibilityLabel).toBe('Sound effects & voices');

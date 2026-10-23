@@ -36,6 +36,8 @@ The playlist plays Little Detours, Sunday Window, then Updraft, with four second
 - Navigation, map opening/closing, Profile editing/saving/random names, validation, deletion, links, and user-requested Leaderboard refresh success/failure use the corresponding inventory cues. Background refreshes, idle motion, disabled controls, OS keyboard typing, and the always-visible description remain quiet.
 - Onboarding reuses choose/hello for buddy selection, dice and name-invalid for name/consent feedback,
   panel cues for the legal sheet, and primary/joy for lift-off. Idle figures are quiet; there are no new assets.
+- The loading screen plays `tile` as each letter of the wordmark turns and `level-rise` on lift-off, with one
+  haptic tap when the word is solved; cues a tap skipped over stay quiet ([branding.md](branding.md)).
 
 Tests cover take rotation, cancellation/mute, stale loads/async replies, voice exclusion, ducking, playlist transitions, resource bounds, inventory completeness, animation landmarks, and save migration. Export bundles are checked for iOS, Android, and web. Real-device listening remains necessary to judge speaker balance and native playback latency.
 

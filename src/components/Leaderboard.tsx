@@ -1,20 +1,19 @@
 /*
- * The Leaderboard's parts, after the mockup (design/ui-mockup.html,
- * "leaderboard"): the This week / All time switch, the podium of the top 3
- * standing on their blocks under a sky, and a row per player after that.
- * The player's own entry wears the YOU badge.
+ * The Leaderboard's parts: the This week / All time switch and one row per
+ * player. The top 3 wear gold, silver and bronze medals (no podium: the
+ * owner's call). The player's own row is coral with the YOU badge, and the
+ * floating Find-me pill scrolls to it.
  */
-import { memo, useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop, SvgXml } from 'react-native-svg';
+import { memo, useEffect, useState } from 'react';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Period } from '../../server/src/contract';
-import { bodyXml, Character } from '../characters/rig';
+import { Character } from '../characters/rig';
 import { useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { Avatar } from './GameHeader';
-import { cloudXml, Icon, sparkXml } from './icons';
+import { arrowXml, cloudXml, Icon, sparkXml } from './icons';
 import { Raised } from './Raised';
 
 /** A board entry ready to draw: the player's own entry already shows their local name and character. */
@@ -24,6 +23,8 @@ export interface Ranked {
   character: Character;
   words: number;
   me: boolean;
+  /** Ranked outside the top: drawn under it, after a dotted break. */
+  pinned?: boolean;
 }
 
 const PERIODS: { id: Period; label: 'board.week' | 'board.all' }[] = [
@@ -56,12 +57,12 @@ export function PeriodSwitch({ period, onChange }: { period: Period; onChange: (
   );
 }
 
-function Score({ words, big }: { words: number; big?: boolean }) {
+function Score({ words, me }: { words: number; me: boolean }) {
   const t = useTranslation();
   return (
-    <Text style={big ? styles.podiumScore : styles.rowScore}>
+    <Text style={[styles.rowScore, me && styles.rowScoreMe]}>
       {words}
-      <Text style={big ? styles.podiumUnit : styles.rowUnit}> {t(words === 1 ? 'board.word' : 'board.words')}</Text>
+      <Text style={[styles.rowUnit, me && styles.rowUnitMe]}> {t(words === 1 ? 'board.word' : 'board.words')}</Text>
     </Text>
   );
 }
@@ -75,106 +76,155 @@ function You() {
   );
 }
 
-/** Podium places, left to right: 2nd, 1st, 3rd. */
-const PLACES = [
-  { at: 1, figure: 92, block: 96, top: '#e3f1fb', bottom: '#cfe4f4', medal: '#5a7d9c' },
-  { at: 0, figure: 104, block: 112, top: '#ffe48a', bottom: '#ffd25c', medal: '#c48a00' },
-  { at: 2, figure: 86, block: 84, top: '#ffd8bf', bottom: '#ffc4a1', medal: '#c0663a' },
+/** Medal colours for the top 3: gold, silver, bronze. */
+const MEDALS = [
+  { fill: '#ffd667', edge: '#f0b43a', text: '#9a6a00' },
+  { fill: '#e6eef6', edge: '#bccddd', text: '#5a7d9c' },
+  { fill: '#ffd8bf', edge: '#f2b08a', text: '#c0663a' },
 ];
 
-const PodiumPlace = memo(function PodiumPlace({ entry, place }: { entry: Ranked; place: (typeof PLACES)[number] }) {
-  const t = useTranslation();
-  const xml = useMemo(
-    () => bodyXml(entry.character, place.at === 0 ? { pose: 'cheer', expr: 'joy' } : { expr: entry.me ? 'joy' : 'happy' }),
-    [entry.character, entry.me, place.at],
-  );
-  const id = `podium${place.at}`;
-  return (
-    <View
-      style={styles.place}
-      accessible
-      accessibilityLabel={t('board.a11y.row', { rank: entry.rank, name: entry.name, count: entry.words })}
-    >
-      <SvgXml xml={xml} width={(place.figure * 220) / 260} height={place.figure} style={styles.figure} />
-      <View style={[styles.block, { height: place.block }]}>
-        <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-          <Defs>
-            <LinearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={place.top} />
-              <Stop offset="1" stopColor={place.bottom} />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill={`url(#${id})`} />
-        </Svg>
-        <View style={styles.medal}>
-          <Text style={[styles.medalText, { color: place.medal }]}>{entry.rank}</Text>
-        </View>
-        <View style={styles.podiumName}>
-          <Text style={styles.podiumNameText} numberOfLines={1}>
-            {entry.name}
-          </Text>
-          {entry.me && <You />}
-        </View>
-        <Score words={entry.words} big />
-      </View>
-    </View>
-  );
-});
+/** Fixed row heights, so the list can jump straight to any row (`getItemLayout`). */
+const ROW = { height: 58, depth: 3 };
+const ME_ROW = { height: 72, depth: 4 };
+const ROW_GAP = 8;
+/** The dotted break above the player's own row when it's pinned under the top. */
+const PIN_GAP = 30;
 
-/** The top 3 under a sky; a missing place stays empty. */
-export function Podium({ top }: { top: Ranked[] }) {
+/** The height a row takes in the list, gaps included. */
+export const rowSpan = (e: Ranked) => {
+  const r = e.me ? ME_ROW : ROW;
+  return r.height + r.depth + ROW_GAP + (e.pinned ? PIN_GAP : 0);
+};
+
+function RankChip({ rank, me }: { rank: number; me: boolean }) {
+  const medal = MEDALS[rank - 1];
+  if (!medal && !me) {
+    return (
+      <Text style={styles.rank} numberOfLines={1} adjustsFontSizeToFit>
+        {rank}
+      </Text>
+    );
+  }
   return (
-    <Raised shadowColor={colors.shadow} radius={28} outerStyle={styles.podiumOuter} style={styles.podiumCard}>
-      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-        <Defs>
-          <LinearGradient id="podiumSky" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#c9ebff" />
-            <Stop offset="0.6" stopColor="#e9f7ff" />
-            <Stop offset="1" stopColor="#fff7ec" />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill="url(#podiumSky)" />
-      </Svg>
-      <View style={[styles.deco, { left: 14, top: 14, opacity: 0.9 }]}>
-        <Icon xml={cloudXml()} size={60} height={30} />
-      </View>
-      <View style={[styles.deco, { right: 18, top: 30, opacity: 0.8 }]}>
-        <Icon xml={cloudXml()} size={46} height={23} />
-      </View>
-      <View style={[styles.deco, { left: '40%', top: 10 }]}>
-        <Icon xml={sparkXml()} size={16} />
-      </View>
-      <View style={[styles.deco, { right: '32%', top: 8 }]}>
-        <Icon xml={sparkXml('#ff9fbf')} size={12} />
-      </View>
-      <View style={styles.podium}>
-        {PLACES.map((place) => {
-          const entry = top[place.at];
-          return entry ? <PodiumPlace key={place.at} entry={entry} place={place} /> : <View key={place.at} style={styles.place} />;
-        })}
-      </View>
-    </Raised>
+    <View style={[styles.medal, medal ? { backgroundColor: medal.fill, borderColor: medal.edge } : styles.medalMe]}>
+      <Text style={[styles.medalText, { color: medal ? medal.text : colors.coralD }]} numberOfLines={1}>
+        {rank}
+      </Text>
+    </View>
   );
 }
 
-export const RankRow = memo(function RankRow({ entry }: { entry: Ranked }) {
+const SPARK = sparkXml();
+const SPARK_PINK = sparkXml('#ffd1dc');
+
+/**
+ * One player. The player's own row is the star of the board: coral, taller,
+ * with sparkles, and it pops each time `flash` grows (the Find-me button).
+ */
+export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Ranked; flash?: number }) {
   const t = useTranslation();
+  const [scale] = useState(() => new Animated.Value(1));
+  useEffect(() => {
+    if (!flash) return;
+    scale.setValue(1);
+    // Waits for the scroll to land first
+    Animated.sequence([
+      Animated.delay(320),
+      Animated.timing(scale, { toValue: 1.06, duration: 110, useNativeDriver: true }),
+      Animated.spring(scale, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }),
+    ]).start();
+  }, [flash, scale]);
+  const { me } = entry;
+  const r = me ? ME_ROW : ROW;
   return (
-    <View accessible accessibilityLabel={t('board.a11y.row', { rank: entry.rank, name: entry.name, count: entry.words })}>
-      <Raised depth={3} shadowColor={colors.shadow} radius={20} outerStyle={styles.rowOuter} style={[styles.row, entry.me && styles.rowMe]}>
-        <Text style={styles.rank}>{entry.rank}</Text>
-        <Avatar character={entry.character} size={42} plain />
-        <View style={styles.rowName}>
-          <Text style={styles.rowNameText} numberOfLines={1}>
-            {entry.name}
-          </Text>
-          {entry.me && <You />}
+    <View style={{ height: rowSpan(entry) }}>
+      {entry.pinned && (
+        <View style={styles.pinGap}>
+          {[0, 1, 2].map((i) => <View key={i} style={styles.pinDot} />)}
         </View>
-        <Score words={entry.words} />
-      </Raised>
+      )}
+      <Animated.View
+        accessible
+        accessibilityLabel={t('board.a11y.row', { rank: entry.rank, name: entry.name, count: entry.words })}
+        style={{ transform: [{ scale }] }}
+      >
+        <Raised
+          depth={r.depth}
+          shadowColor={me ? colors.coralD : colors.shadow}
+          radius={me ? 24 : 20}
+          style={[styles.row, { height: r.height }, me && styles.rowMe]}
+        >
+          {me && (
+            <>
+              <View style={[styles.deco, { left: 92, top: 6 }]}>
+                <Icon xml={SPARK} size={13} />
+              </View>
+              <View style={[styles.deco, { right: 10, top: 5 }]}>
+                <Icon xml={SPARK_PINK} size={10} />
+              </View>
+            </>
+          )}
+          <RankChip rank={entry.rank} me={me} />
+          <Avatar character={entry.character} size={me ? 50 : 42} plain={!me} />
+          <View style={styles.rowName}>
+            <Text style={[styles.rowNameText, me && styles.rowNameMe]} numberOfLines={1}>
+              {entry.name}
+            </Text>
+            {me && <You />}
+          </View>
+          <Score words={entry.words} me={me} />
+        </Raised>
+      </Animated.View>
     </View>
   );
 });
+
+const ARROW = { up: arrowXml('up', colors.coralD), down: arrowXml('down', colors.coralD) };
+
+/**
+ * The floating Find-me pill. It shows while the player's own row is off
+ * screen, its arrow points to it (`direction`), and tapping it scrolls there.
+ */
+export function FindMe({ entry, visible, direction, onPress }: { entry: Ranked; visible: boolean; direction: 'up' | 'down'; onPress: () => void }) {
+  const t = useTranslation();
+  const [shown] = useState(() => new Animated.Value(visible ? 1 : 0));
+  useEffect(() => {
+    Animated.spring(shown, { toValue: visible ? 1 : 0, friction: 6, tension: 140, useNativeDriver: true }).start();
+  }, [visible, shown]);
+  return (
+    <Animated.View
+      pointerEvents={visible ? 'box-none' : 'none'}
+      style={[
+        styles.findMe,
+        {
+          opacity: shown,
+          transform: [
+            { translateY: shown.interpolate({ inputRange: [0, 1], outputRange: [24, 0] }) },
+            { scale: shown.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
+          ],
+        },
+      ]}
+    >
+      <Pressable
+        onPress={onPress}
+        disabled={!visible}
+        hitSlop={6}
+        accessibilityRole="button"
+        accessibilityLabel={t('board.a11y.findMe', { rank: entry.rank })}
+      >
+        {({ pressed }) => (
+          <Raised depth={4} pressed={pressed} shadowColor={colors.coralD} radius={26} style={styles.findMeInner}>
+            <Avatar character={entry.character} size={32} plain />
+            <Text style={styles.findMeText}>{t('board.findMe', { rank: entry.rank })}</Text>
+            <View style={styles.findMeArrow}>
+              <Icon xml={ARROW[direction]} size={14} />
+            </View>
+          </Raised>
+        )}
+      </Pressable>
+    </Animated.View>
+  );
+}
 
 /** A card in place of the board: offline, empty, or loading. */
 export function BoardNote({ title, body, action, onAction }: { title?: string; body: string; action?: string; onAction?: () => void }) {
@@ -199,54 +249,49 @@ const display = (weight: '600' | '700', fontSize: number, color: string = colors
 });
 
 const styles = StyleSheet.create({
-  seg: { flexDirection: 'row', backgroundColor: '#f6ebdd', borderRadius: 19, padding: 5 },
+  seg: { flexDirection: 'row', backgroundColor: '#f6ebdd', borderRadius: 19, padding: 5, marginBottom: 12 },
   segItem: { flex: 1 },
   segInner: { alignItems: 'center', paddingVertical: 9 },
   segOn: { backgroundColor: '#fff' },
   segText: display('600', 15.5, '#b29c8c'),
   segTextOn: { color: colors.coralD },
 
-  podiumOuter: { marginTop: 10 },
-  podiumCard: {
-    borderWidth: 3,
-    borderColor: '#fff',
-    paddingTop: 8,
-    paddingHorizontal: 10,
-  },
   deco: { position: 'absolute' },
-  podium: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 8 },
-  place: { flex: 1, maxWidth: 110, alignItems: 'center' },
-  figure: { marginBottom: -6, zIndex: 1 },
-  block: { width: '100%', borderTopLeftRadius: 18, borderTopRightRadius: 18, borderBottomLeftRadius: 6, borderBottomRightRadius: 6, overflow: 'hidden', alignItems: 'center', paddingTop: 8, paddingHorizontal: 4 },
-  medal: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', marginBottom: 3 },
+  // Grows into a pill for a long rank (the player's own row can be far down)
+  medal: { minWidth: 32, height: 32, borderRadius: 16, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 },
+  medalMe: { backgroundColor: '#fff', borderColor: '#fff' },
   medalText: display('700', 16),
-  podiumName: { flexDirection: 'row', alignItems: 'center', gap: 4, maxWidth: '100%' },
-  podiumNameText: { ...display('600', 15), flexShrink: 1 },
-  podiumScore: { ...display('700', 19), marginTop: 1 },
-  podiumUnit: display('600', 11, 'rgba(75,58,53,0.6)'),
 
-  you: { backgroundColor: colors.coral, borderRadius: 8, paddingHorizontal: 6, paddingVertical: 1 },
-  youText: { ...display('600', 10.5, '#fff'), letterSpacing: 0.4 },
+  you: { backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 6, paddingVertical: 1 },
+  youText: { ...display('700', 10.5, colors.coralD), letterSpacing: 0.4 },
 
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 11,
-    paddingVertical: 6,
     paddingLeft: 10,
     paddingRight: 14,
-    borderRadius: 20,
     backgroundColor: '#fff',
     borderWidth: 1.5,
     borderColor: colors.line,
   },
-  rowOuter: { marginBottom: 8 },
-  rowMe: { borderColor: colors.coral, backgroundColor: '#fff6f4' },
-  rank: { width: 28, textAlign: 'center', ...display('700', 17, '#c4ad9b') },
+  rowMe: { backgroundColor: colors.coral, borderWidth: 3, borderColor: '#fff', paddingLeft: 9, gap: 10 },
+  rank: { width: 32, textAlign: 'center', ...display('700', 17, '#c4ad9b') },
   rowName: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
   rowNameText: { ...display('600', 17), flexShrink: 1 },
+  rowNameMe: display('700', 18, '#fff'),
   rowScore: display('700', 21),
+  rowScoreMe: { color: '#fff', fontSize: 23 },
   rowUnit: display('600', 12, colors.muted),
+  rowUnitMe: { color: 'rgba(255,255,255,0.85)' },
+
+  pinGap: { height: PIN_GAP, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingBottom: 4 },
+  pinDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.tabIdle },
+
+  findMe: { position: 'absolute', bottom: 12, alignSelf: 'center' },
+  findMeInner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.coral, paddingLeft: 5, paddingRight: 6, paddingVertical: 5 },
+  findMeText: display('700', 16, '#fff'),
+  findMeArrow: { width: 26, height: 26, borderRadius: 13, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
 
   note: { marginTop: 24, alignItems: 'center', paddingHorizontal: 24, gap: 8 },
   noteTitle: display('700', 20),

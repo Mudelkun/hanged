@@ -20,4 +20,6 @@ export const feedback = {
   characterUnlocked: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
   characterPicked: () => safe(Haptics.selectionAsync()),
   refused: () => safe(Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
+  // The loading screen's word is solved: one tap, not one per letter (see above)
+  launch: () => safe(Haptics.selectionAsync()),
 };

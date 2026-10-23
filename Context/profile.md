@@ -12,7 +12,7 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
   **"Change character"** (opens the Characters tab), and the camera badge on the face is a little cat.
 - **The name is the only thing the player edits here.** It's filtered. Onboarding offers a random name
   and the same `PlayerNameInput` and validation messages; see [onboarding.md](onboarding.md).
-- Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md).
+- Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md). The switches are our own `Toggle` (in `Profile.tsx`), not React Native's `Switch`: on iOS 26 the native switch is wider than the frame React Native gives it and draws off-centre in the row.
 - **Privacy policy and terms of use** share onboarding's explicit draft placeholder (`LegalDocument`).
   **Contact & support** still says "Coming soon". The actual legal texts and privacy policy URL remain to be supplied before release.
 
@@ -72,8 +72,19 @@ null, and boards show the default name.
     name that contains it to `server/test/names.test.ts`. Write it as the matcher reads it: no accents
     ("coño" → `cono`), double letters as one ("connard" → `conard`), or it silently never matches.
   - The English list plus common French, Spanish and German abuse in `EXTRA_WORDS`.
-- **Names aren't unique** (open question in CLAUDE.md). Players can't report a name yet (Guideline 1.2: plan it
-  before the leaderboard goes live).
+- **Names are unique** (owner's call, 2026-10-23). Two names are the same when their `nameKey` is: case,
+  accents (and ß as ss), spaces and `- _ . '` don't count, so "Zoë", "zoe" and "Z-O-E" are one name. Only
+  the server knows who holds what, and the app is offline first, so it's settled twice:
+  - **Online, before saving**: Profile's Save and onboarding's Play ask `GET /v1/names/available`
+    (`useNameAvailability` in [PlayerNameInput.tsx](../src/components/PlayerNameInput.tsx), through
+    `GameContext.nameIsFree`, 3 s timeout). A taken name shows "Someone already has this name" until the
+    field changes. Offline, or on any error, the name goes through.
+  - **On sync**: the server gives a name someone else holds the first free variant ("Roda2", cut to fit
+    15) and returns it; the reducer's `nameTaken` adopts it and keeps the asked-for name in `takenName`,
+    so the Profile card says "“Roda” was taken, so you're Roda2 for now". A rename clears it. If the player
+    renamed while that sync was out, the variant is ignored and the next sync sends the new name.
+  - Random names are only about 600, so they collide often: they get a number the same way.
+- Players can't report a name yet (Guideline 1.2: plan it before the leaderboard goes live).
 - **Random names** (`RANDOM_NAMES`): an adjective and a noun from two small, friendly lists, in one word
   ("SunnyOtter"), only the pairs that fit in 10 (about 600, short so they show big), never a character's name. A test checks that
   every one passes `checkName`. `GameProvider` gives one to any save whose `playerName` is null: a new

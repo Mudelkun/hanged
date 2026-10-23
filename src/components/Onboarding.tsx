@@ -21,9 +21,10 @@ import { LegalPage } from './LegalDocument';
 import { LanguageSheet } from './LanguagePicker';
 import { BuddyGlow, LiftOff, NameStage, OnboardingBalloon, OnboardingCloud, OnboardingSky, OnboardingSun } from './OnboardingArt';
 import { PaperBackground } from './PaperBackground';
-import { nameHelp, PlayerNameInput } from './PlayerNameInput';
+import { nameHelp, nameProblem, PlayerNameInput, useNameAvailability } from './PlayerNameInput';
 import { Raised } from './Raised';
 import { BigButton, Tile } from './RoundParts';
+import { Wordmark } from './Wordmark';
 
 const BALLOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 24"><path d="M10 1.5c4.7 0 7.5 3.5 7.5 7.6 0 4.6-3.6 7.6-7.5 8.6-3.9-1-7.5-4-7.5-8.6 0-4.1 2.8-7.6 7.5-7.6zM8.5 19.5h3l-1.5-2z" fill="#fff"/><path d="M10 20c-1 1.4 1 2.2 0 3.5" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>';
 
@@ -82,12 +83,7 @@ export function BuddyScreen() {
       <View style={{ position: 'absolute', right: -18, top: 250 * scale, opacity: .9 }}><OnboardingCloud width={110} /></View>
       <View style={{ position: 'absolute', left: '40%', bottom: 24, opacity: .7 }}><OnboardingCloud width={70} /></View>
       <View style={[styles.logo, { top: Math.max(insets.top + 8, (compact ? 42 : 58) * scale) }]} accessible accessibilityLabel={t('app.name')}>
-        <View style={styles.logoLetters}>
-          {[...t('onboarding.logo')].map((letter, i) => <View key={i} style={{ transform: [{ translateY: [0, -4, 2, -3, 1, -2][i] }, { rotate: `${[-6, 4, -3, 5, -4, 6][i]}deg` }] }}>
-            <Tile letter={letter} look={i % 3 === 1 ? 'clue' : 'ok'} w={40} h={46} sparkle={false} />
-          </View>)}
-        </View>
-        <Text style={styles.logoSub}>{t('onboarding.subtitle')}</Text>
+        <Wordmark width={compact ? 250 : 280} />
       </View>
       {STARTER_CHARACTERS.map(id => <FloatingChoice key={id} id={id} selected={id === characterId} scale={scale} onPress={() => choose(id)} />)}
       <View style={styles.heroClouds} pointerEvents="none">
@@ -155,7 +151,7 @@ function LegalSheet({ page, onSelect, onClose }: { page: LegalPage; onSelect: (p
 export function NameScreen() {
   const t = useTranslation();
   const draft = useOnboarding();
-  const { state, completeOnboarding } = useGame();
+  const { state, completeOnboarding, nameIsFree } = useGame();
   const returning = state.onboardingCompleted;
   const audio = useSoundScope();
   const focused = useIsFocused();
@@ -170,24 +166,28 @@ export function NameScreen() {
   const [choosingLanguage, setChoosingLanguage] = useState(false);
   const [shake] = useState(() => new Animated.Value(0));
   const check = checkName(draft.name);
-  const problem = !check.ok && (check.problem !== 'short' || tried) ? check.problem : null;
-  const able = check.ok && draft.accepted;
+  const availability = useNameAvailability(nameIsFree);
+  const problem = nameProblem(check, tried, availability.taken);
+  const able = check.ok && problem !== 'taken' && draft.accepted;
   const finish = useCallback(() => completeOnboarding(draft.name, draft.characterId), [completeOnboarding, draft.name, draft.characterId]);
   useEffect(() => {
     if (!lifting) return;
     const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
     return () => sub.remove();
   }, [lifting]);
-  const play = () => {
-    if (lifting) return;
+  const refuseName = () => { audio.play('name-invalid'); feedback.refused(); input.current?.focus(); };
+  const play = async () => {
+    if (lifting || availability.checking) return;
     setTried(true);
-    if (!check.ok) { audio.play('name-invalid'); feedback.refused(); input.current?.focus(); return; }
+    if (!check.ok || problem === 'taken') return refuseName();
     if (!draft.accepted) {
       setNudged(true); audio.play('name-invalid'); feedback.refused();
       shake.setValue(0);
       Animated.sequence([1, -1, .6, -.6, 0].map(toValue => Animated.timing(shake, { toValue, duration: 70, useNativeDriver: true }))).start();
       return;
     }
+    // Returning players keep the name they have (no field here).
+    if (!returning && !(await availability.isFree(check.name))) return refuseName();
     Keyboard.dismiss();
     audio.play('primary');
     if (returning) { finish(); return; }
@@ -262,8 +262,6 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper }, fill: { flex: 1 }, spacer: { flex: 1, minHeight: 12 },
   hero: { flex: 1, minHeight: 270, overflow: 'hidden' },
   logo: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 5 },
-  logoLetters: { flexDirection: 'row', gap: 5 },
-  logoSub: { marginTop: 9, paddingVertical: 3, paddingHorizontal: 12, borderRadius: 10, backgroundColor: 'rgba(255,255,255,.75)', fontFamily: fonts.display600, fontSize: 13, letterSpacing: 2.6, color: colors.skyT },
   glow: { position: 'absolute', width: 240, height: 240, left: -38, top: 80 },
   bubble: { position: 'absolute', top: 4, backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, borderBottomWidth: 3, borderRadius: 15, paddingVertical: 5, paddingHorizontal: 11 },
   bubbleText: { fontFamily: fonts.display600, fontSize: 14.5, color: colors.ink },

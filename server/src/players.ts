@@ -10,7 +10,7 @@ import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypt
 
 import type { RegisterResponse, RoundReport, SyncRequest, SyncResponse } from './contract.ts';
 import type { Db, Sql } from './db.ts';
-import { checkName } from './names.ts';
+import { checkName, nameKey, nameVariants } from './names.ts';
 
 const hash = (secret: string) => createHash('sha256').update(secret).digest('hex');
 
@@ -59,10 +59,48 @@ const allowedName = (name: string | null) => {
   return check.ok ? check.name : null;
 };
 
+/** Tried in turn when the name is taken: "Roda2"…"Roda99", then up to four digits. */
+const VARIANT_RANGES = [[2, 99], [100, 9_999]] as const;
+
+/**
+ * Names are unique (nameKey: case, accents, spaces and punctuation aside). A
+ * name someone else holds falls back to the first free variant ("Roda2"),
+ * which the app adopts from the response; null if every one is taken. The
+ * unique index has the last word: a player taking the same name at the same
+ * moment fails this sync, and the retry picks the next variant.
+ */
+async function freeName(sql: Sql, playerId: string, wanted: string): Promise<string | null> {
+  let candidates = [wanted];
+  for (const [from, to] of VARIANT_RANGES) {
+    candidates = [...candidates, ...nameVariants(wanted, from, to)].filter((n) => checkName(n).ok);
+    const { rows } = await sql.query<{ name_key: string }>(
+      'SELECT name_key FROM players WHERE name_key = ANY($1) AND id <> $2',
+      [candidates.map(nameKey), playerId],
+    );
+    const taken = new Set(rows.map((r) => r.name_key));
+    const free = candidates.find((n) => !taken.has(nameKey(n)));
+    if (free) return free;
+    candidates = [];
+  }
+  return null;
+}
+
+/** No one else holds the name (the player's own counts as free), and it passes checkName. */
+export async function nameAvailable(db: Db, raw: string, me?: string): Promise<boolean> {
+  const check = checkName(raw);
+  if (!check.ok) return false;
+  const { rows } = await db.query('SELECT 1 FROM players WHERE name_key = $1 AND id IS DISTINCT FROM $2::uuid', [
+    nameKey(check.name),
+    me ?? null,
+  ]);
+  return rows.length === 0;
+}
+
 interface PlayerRow {
   secret_hash: string;
   last_seq: number;
   words_guessed: number;
+  name_key: string | null;
   synced_at: Date | null;
 }
 
@@ -70,7 +108,7 @@ interface PlayerRow {
 export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest): Promise<SyncResponse | null> {
   return db.tx(async (sql) => {
     const { rows } = await sql.query<PlayerRow>(
-      'SELECT secret_hash, last_seq, words_guessed, synced_at FROM players WHERE id = $1 FOR UPDATE',
+      'SELECT secret_hash, last_seq, words_guessed, name_key, synced_at FROM players WHERE id = $1 FOR UPDATE',
       [who.id],
     );
     const held = rows[0];
@@ -80,18 +118,25 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
     const wins = fresh.filter((r) => r.won).length;
     const words = nextScore(held.words_guessed, held.synced_at === null, player.wordsGuessed, wins);
     const acked = fresh.length ? fresh[fresh.length - 1].seq : held.last_seq;
+    const wanted = allowedName(player.name);
+    // Every sync sends the name: only look it up when it isn't already the player's own.
+    const name = wanted && (nameKey(wanted) === held.name_key ? wanted : await freeName(sql, who.id, wanted));
     await sql.query(
       `UPDATE players SET
-         name = $2, character_id = $3, language = $4, level = $5, tokens = $6,
-         score_at = CASE WHEN $7 > words_guessed THEN now() ELSE score_at END,
-         words_guessed = $7,
-         rounds_played = rounds_played + $8, rounds_won = rounds_won + $9,
-         last_seq = $10, synced_at = now()
+         name = $2, name_key = $3, character_id = $4, language = $5, level = $6, tokens = $7,
+         score_at = CASE WHEN $8 > words_guessed THEN now() ELSE score_at END,
+         words_guessed = $8,
+         rounds_played = rounds_played + $9, rounds_won = rounds_won + $10,
+         tokens_earned = tokens_earned + $11, misses = misses + $12,
+         last_seq = $13, synced_at = now()
        WHERE id = $1`,
-      [who.id, allowedName(player.name), player.characterId, player.language, player.level, player.tokens, words, fresh.length, wins, acked],
+      [
+        who.id, name, name && nameKey(name), player.characterId, player.language, player.level, player.tokens, words,
+        fresh.length, wins, sum(fresh, earned), sum(fresh, (r) => r.wrong), acked,
+      ],
     );
     if (fresh.length) await addRounds(sql, who.id, fresh);
-    return { acked, wordsGuessed: words };
+    return { acked, wordsGuessed: words, name };
   });
 }
 
@@ -110,6 +155,9 @@ export function deletePlayer(db: Db, who: Credentials): Promise<boolean> {
   });
 }
 
+const earned = (r: RoundReport) => r.tokens ?? 0;
+const sum = (reports: RoundReport[], of: (r: RoundReport) => number) => reports.reduce((n, r) => n + of(r), 0);
+
 /** Week (Monday, UTC) and day (UTC) of an epoch-ms column. */
 const WEEK = `date_trunc('week', to_timestamp(at / 1000.0) AT TIME ZONE 'UTC')::date`;
 const DAY = `(to_timestamp(at / 1000.0) AT TIME ZONE 'UTC')::date`;
@@ -118,14 +166,20 @@ async function addRounds(sql: Sql, playerId: string, reports: RoundReport[]) {
   // A device clock ahead of ours must not file wins in a week that hasn't started.
   const now = Date.now();
   const at = (r: RoundReport) => Math.min(r.at, now);
-  const won = reports.filter((r) => r.won);
-  if (won.length)
-    await sql.query(
-      `INSERT INTO player_weeks (player_id, week, words)
-       SELECT $1, ${WEEK} AS week, count(*)::int FROM unnest($2::float8[]) AS t(at) GROUP BY week ORDER BY week
-       ON CONFLICT (player_id, week) DO UPDATE SET words = player_weeks.words + excluded.words, score_at = now()`,
-      [playerId, won.map(at)],
-    );
+  // Lost rounds count too (misses); the week's board skips rows without a word.
+  await sql.query(
+    `INSERT INTO player_weeks (player_id, week, words, level, tokens_earned, misses)
+     SELECT $1, ${WEEK} AS week, count(*) FILTER (WHERE won), max(level), sum(tokens), sum(wrong)
+     FROM unnest($2::float8[], $3::bool[], $4::int[], $5::int[], $6::int[]) AS r(at, won, level, tokens, wrong)
+     GROUP BY week ORDER BY week
+     ON CONFLICT (player_id, week) DO UPDATE SET
+       words = player_weeks.words + excluded.words,
+       level = greatest(player_weeks.level, excluded.level),
+       tokens_earned = player_weeks.tokens_earned + excluded.tokens_earned,
+       misses = player_weeks.misses + excluded.misses,
+       score_at = CASE WHEN excluded.words > 0 THEN now() ELSE player_weeks.score_at END`,
+    [playerId, reports.map(at), reports.map((r) => r.won), reports.map((r) => r.level), reports.map(earned), reports.map((r) => r.wrong)],
+  );
   // Rows are locked in key order, so two players' syncs can't deadlock on the same words.
   await sql.query(
     `INSERT INTO word_days (word_id, day, played, won, wrong, descriptions, letters)

@@ -50,7 +50,7 @@ poses and faces (balloons, won `cheer`, streak takeover).
     `front`, instead of the `ARM_FRONT_AT` rule.
   - **Props**: `under` (behind the body: Rocco's hidden tile), `held` (on the belly, under the arms: Bao's
     tea, Sage's book) and `over` (over the head: Biscuit's ball).
-  - **Attitude faces** (`MOODS`): cool, smug, side, wink, fierce, calm, sleepy, blep.
+  - **Attitude faces** (`MOODS`): cool, smug, side, wink, fierce, calm, sleepy, blep, whoa (the app icon's face: big shining eyes, raised brows, an open "oh!" whose corners lift a little: surprised and enjoying it). `render` also takes `turn` (-1..1) for a three-quarter view: the face slides and narrows, the ears slide the other way (the app icon uses it; 0 draws as before).
 - Skin options added with the 5 new characters (Pip, Sage, Rocco, Koa, Vesper): `beak`, `fang`, `eye`
   (pupil colour), `lash` (stroke colour for line-drawn eyes: Bao's are white so closed, joy and KO eyes
   show on its dark patches) and `decor.arm` (drawn with the arm: Vesper's wings).
@@ -98,6 +98,8 @@ Two numbers drive the scene, both from the engine ([game-engine.md](game-engine.
   ~80 elements, like the old hanging. balloons.js draws one path per cloud, skips
   clouds and ground the camera can't see, and `trim()` cuts every decimal to one
   place. Measure a frame (`scene(...).length`, count of `<`) before adding scenery.
+- `BalloonAnim` also exports `balloon`, `burst` and `cloud`, so the brand (design/brand/brand.js: the
+  wordmark, the loading screen) and the design page's icons draw the game's own balloons and clouds.
 - **iOS keeps stale attributes** (owner-reported: one balloon drawn far from the
   bunch on the phone, fine in the browser). SvgXml re-renders by element position;
   when an element is reused for something that lacks one of its attributes,

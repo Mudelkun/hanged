@@ -3,7 +3,7 @@
  * server/src/contract.ts). The game never waits for it: without
  * EXPO_PUBLIC_API_URL or without a connection every call just fails.
  */
-import type { LeaderboardResponse, Period, RegisterResponse, SyncRequest, SyncResponse } from '../../server/src/contract';
+import type { LeaderboardResponse, NameAvailableResponse, Period, RegisterResponse, SyncRequest, SyncResponse } from '../../server/src/contract';
 
 const BASE = (process.env.EXPO_PUBLIC_API_URL ?? '').replace(/\/+$/, '');
 const TIMEOUT_MS = 10_000;
@@ -16,10 +16,13 @@ export class ApiError extends Error {
   }
 }
 
-async function call<T>(path: string, init: { method?: 'GET' | 'POST' | 'DELETE'; body?: unknown; account?: Account } = {}): Promise<T> {
+async function call<T>(
+  path: string,
+  init: { method?: 'GET' | 'POST' | 'DELETE'; body?: unknown; account?: Account; timeoutMs?: number } = {},
+): Promise<T> {
   if (!BASE) throw new ApiError(0);
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => ctrl.abort(), init.timeoutMs ?? TIMEOUT_MS);
   try {
     const res = await fetch(BASE + path, {
       method: init.method ?? 'GET',
@@ -43,4 +46,7 @@ export const api = {
   deletePlayer: (account: Account) => call<void>('/v1/players/me', { method: 'DELETE', account }),
   leaderboard: (period: Period, me?: string) =>
     call<LeaderboardResponse>(`/v1/leaderboard?period=${period}${me ? `&me=${me}` : ''}`),
+  /** Short timeout: the player is waiting on Save, and offline the sync settles it later. */
+  nameAvailable: (name: string, me?: string | null) =>
+    call<NameAvailableResponse>(`/v1/names/available?name=${encodeURIComponent(name)}${me ? `&me=${me}` : ''}`, { timeoutMs: 3_000 }),
 };

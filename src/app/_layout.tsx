@@ -3,9 +3,10 @@ import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, Nunito_900Blac
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { LaunchScreen } from '../components/LaunchScreen';
 import { TokenFlightProvider } from '../components/TokenFlight';
 import { AudioProvider } from '../audio/AudioProvider';
 import { GameProvider, useGame } from '../state/GameContext';
@@ -14,14 +15,20 @@ import { needsOnboarding } from '../game/onboarding';
 
 SplashScreen.preventAutoHideAsync();
 
-/** Keeps the splash screen up until the fonts and the saved game are loaded. */
+/**
+ * Keeps the splash screen up until the fonts and the saved game are loaded, then mounts the app
+ * with the loading screen over it: once per launch (it hides the native splash on its first frame).
+ */
 function Gate({ fontsDone, children }: { fontsDone: boolean; children: ReactNode }) {
   const { ready, state } = useGame();
   const done = fontsDone && ready && !!state.round && !!state.playerName;
-  useEffect(() => {
-    if (done) SplashScreen.hideAsync();
-  }, [done]);
-  return done ? children : null;
+  const [launching, setLaunching] = useState(true);
+  const launched = useCallback(() => setLaunching(false), []);
+  if (!done) return null;
+  return <>
+    {children}
+    {launching && <LaunchScreen characterId={needsOnboarding(state) ? null : state.characterId} onDone={launched} />}
+  </>;
 }
 
 function Routes() {

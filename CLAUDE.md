@@ -12,6 +12,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `design/characters/balloons.js` + `balloons.html` (+ `balloons.png`): **the animation the app uses**. 10 stages, built on the shared rig. A round shows **one balloon per allowed miss** and every miss pops exactly one (`balloonsGone`). Each pop sinks the character a little more; at stage 10 the last balloon pops, they hang in the air for a beat, fall, and land hard on their bottom (squash, shake, bounce, dust, cracks), then sit dazed with stars. With fewer allowed wrong guesses, the pose stage is `round(wrong * 10 / maxWrong)`.
 - `design/characters/hanging.js` + `hanging.html`: the **old** 10-stage hanging animation, kept only because the mockup still draws it. The gallows is already there when the round starts. The character does one step per stage: wave, rope, throw, noose, stool, climb, stand, noose on, wobble, tip. They stay on the stool until stage 10, which is the only stage where they fall and hang. With fewer allowed wrong guesses, show stage `round(wrong * 10 / maxWrong)`.
 - `design/world/world.js`: **the level path's world** (terraces over the clouds, the castle at the top), drawn by the app's level map and level-up card and by the preview `design/level-top.html` (+ `level-top.png`). Same idea as the characters: edit it there, never a copy in `src/`.
+- `design/brand/`: **the brand**. `brand.js` draws the wordmark (Play's letter tiles hanging from the game's balloons) and the loading screen's frames, for the app and for the preview `design/branding.html` (+ `branding.png`); `icon-art.png` is the app icon's art (the owner's, adopted 2026-10-23) and `export.html` renders `assets/icon.png` and the native splash image from it. Edit the brand there, never a copy in `src/`.
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
@@ -43,6 +44,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The Characters page: character prices (and why), buying and picking, ownership in the save, every place the character shows | [Context/characters-shop.md](Context/characters-shop.md) |
 | The Profile page: player names (the filter, random names), the info and legal pages, deleting the account | [Context/profile.md](Context/profile.md) |
 | Onboarding: buddy selection, name and consent, lift-off, existing saves and the first-word welcome | [Context/onboarding.md](Context/onboarding.md) |
+| The app icon, the wordmark, the native splash and the loading screen, regenerating their assets | [Context/branding.md](Context/branding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
@@ -55,6 +57,7 @@ src/state/          GameContext: the reducer + AsyncStorage + server sync; useLe
 src/net/            the only code that talks to the server: api.ts, sync.ts
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/world/          world.ts: imports design/world/world.js (the level path's world), parses it in bands
+src/brand/          brand.ts: imports design/brand/brand.js (the wordmark and the loading screen's frames)
 src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
@@ -139,7 +142,7 @@ A level's difficulty is set by:
 
 ### Leaderboard
 - Each player's score is **the number of words they have guessed**. Spending tokens never lowers it.
-- The leaderboard ranks players by that score and shows it as a plain count, not gems. Ties go to the higher level, then to whoever got there first. Tokens never count toward the rank: spending them must not lower it. The mockup has **This week / All time** tabs and highlights the current player with a "YOU" badge.
+- The leaderboard ranks players by that score and shows it as a plain count, not gems. Ties go to the higher level, then to more **tokens earned** (owner's call, 2026-10-23), then to fewer wrong guesses, then to whoever got there first. The token **balance** never counts toward the rank: spending tokens must not lower it. The mockup has **This week / All time** tabs and highlights the current player with a "YOU" badge.
 - Each row shows the player's name and profile picture, or their character's face if they haven't uploaded one (see Profile page).
 
 ### Characters
@@ -162,7 +165,7 @@ This is the player's own page. It holds personal customization, app settings, an
 - **How the player gets there:** Profile is **not** a bottom tab. The player taps their **avatar button** at the top-left of the Play, Leaderboard and Characters screens, and Profile opens as a pushed screen with a back button.
 - **Navigation rule:** the bottom tab bar has **at most 4 items**: Play · Versus · Leaderboard · Characters. Any new section needs a different entry point, such as a header button or a link inside an existing screen. Never add a fifth tab.
 
-- **Player name**: editable, and the only thing the player edits here. It's public, because it shows on the leaderboard and in online matches, so it's **filtered** (offensive words, names that pose as the game) on the device and again on the server. At most **15 characters**, for long real names; the Play header shrinks a long name to fit. Onboarding offers a **random friendly name** ("SunnyOtter"), which the player can keep or edit (owner's calls, 2026-10-22; [Context/onboarding.md](Context/onboarding.md)).
+- **Player name**: editable, and the only thing the player edits here. It's public, because it shows on the leaderboard and in online matches, so it's **filtered** (offensive words, names that pose as the game) on the device and again on the server. At most **15 characters**, for long real names; the Play header shrinks a long name to fit. Names are **unique** (owner's call, 2026-10-23), ignoring case, accents, spaces and punctuation; a name picked offline that turns out to be taken becomes a free variant ("Roda2") on the next sync ([Context/profile.md](Context/profile.md)). Onboarding offers a **random friendly name** ("SunnyOtter"), which the player can keep or edit (owner's calls, 2026-10-22; [Context/onboarding.md](Context/onboarding.md)).
 - **Profile picture: not for now** (owner's call, 2026-10-22). No uploads, to keep out user-uploaded content and the privacy work it brings: the avatar is the face of the player's selected character, everywhere, and "Change character" replaces "Change photo". Kept for later: the player can upload one from the photo library or take one with the camera. Ask for that permission only when the player taps "Change photo". Crop the picture to a circle.
   - Until a picture is uploaded, the avatar is the face of the player's selected character.
   - The profile picture (or that fallback) is the avatar used on the leaderboard and in online matches.
@@ -219,7 +222,6 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Progression**: what moves the player up a level (a number of words won, a streak)? (Decided: 20 levels, and dropping down after 3 losses in a row. The exact numbers are placeholders.)
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
-- **Player names**: must they be unique? (For now: not unique, 2 to 15 characters (owner's call), letters in any language, digits, spaces and `- _ . '`: [Context/profile.md](Context/profile.md).)
 - **App language**: does it change only the UI text, or the word list too?
 - **Legal pages**: who writes the privacy policy and terms, and where are they hosted?
 - **Online two-player**: how do players find each other (invite a friend, random match, or both)? Do words guessed there count toward the leaderboard and toward earning tokens?

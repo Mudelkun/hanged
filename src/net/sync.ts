@@ -33,6 +33,19 @@ export async function savedPlayerId(): Promise<string | null> {
   return (await savedAccount())?.id ?? null;
 }
 
+/**
+ * false only when the server says someone else holds the name (names are
+ * unique). Offline it can't know and says true: the next sync settles it, and
+ * a taken name then comes back as a free variant (the reducer's `nameTaken`).
+ */
+export async function nameIsFree(name: string): Promise<boolean> {
+  try {
+    return (await api.nameAvailable(name, await savedPlayerId())).available;
+  } catch {
+    return true;
+  }
+}
+
 const snapshot = (s: GameState): PlayerSnapshot => ({
   name: s.playerName,
   characterId: s.characterId,
@@ -62,8 +75,11 @@ export function createSync(dispatch: (a: GameAction) => void) {
       if (!s) return null;
       const pending = s.reports.filter((r) => r.seq > acked);
       const reports = pending.slice(0, LIMITS.reportsPerSync);
+      const player = snapshot(s);
       try {
-        acked = (await api.sync(me, { player: snapshot(s), reports })).acked;
+        const res = await api.sync(me, { player, reports });
+        acked = res.acked;
+        if (player.name && res.name && res.name !== player.name) dispatch({ type: 'nameTaken', sent: player.name, name: res.name });
       } catch (e) {
         // The server doesn't know this player (e.g. its database was reset): start over next time.
         if (e instanceof ApiError && e.status === 401) await AsyncStorage.removeItem(ACCOUNT_KEY);

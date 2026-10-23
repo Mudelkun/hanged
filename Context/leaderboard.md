@@ -3,16 +3,27 @@
 Route: [src/app/(tabs)/leaderboard.tsx](../src/app/(tabs)/leaderboard.tsx). Parts:
 [src/components/Leaderboard.tsx](../src/components/Leaderboard.tsx). Data:
 [src/state/useLeaderboard.ts](../src/state/useLeaderboard.ts). Server side: [server.md](server.md).
-It follows the mockup's Leaderboard screen. **The owner will rework the design**, so the
-layout is the mockup's and nothing more.
+It started from the mockup's Leaderboard screen; the owner then dropped the podium (2026-10-23):
+every player is a row, and the player's own row is the one that stands out.
 
 ## Ranking (owner's rules + engineering fixes)
 
-- **The score is the number of words guessed** (CLAUDE.md). The owner first suggested also ranking by
-  level and tokens. Tokens stay out, because spending them would drop a player's rank, and CLAUDE.md says
-  spending never lowers the score. **Level breaks ties**, then **whoever got there first** (`score_at`).
-- **All time**: `players.words_guessed`. **This week**: wins reported since Monday 00:00 UTC
-  (`player_weeks`). Its ties go to whoever got there first.
+- **The score is the number of words guessed** (CLAUDE.md). Ties, in order (owner's call, 2026-10-23):
+  1. **the higher level**,
+  2. **more tokens earned**: earned, **never the balance**. The owner asked for the balance; it would let
+     spending (characters, letters) drop a player's rank, and CLAUDE.md says spending never lowers it.
+     Tokens earned only grow, and reward winning on harder levels and keeping streaks,
+  3. **fewer wrong guesses** (all rounds, won and lost),
+  4. **whoever got there first** (`score_at`), then the id, so the order never flips between loads.
+- **All time**: `players`: `words_guessed`, the **current** level, and all-time totals.
+  **This week**: `player_weeks`: wins reported since Monday 00:00 UTC, the **highest level played that
+  week**, and that week's tokens earned and misses. A lost round adds a week row too (its misses), so the
+  board skips rows with no word.
+- Tokens earned and misses are summed **from the round reports** (each report carries the tokens it paid),
+  not sent as totals. Rounds played before syncing existed, or reports dropped from a full outbox, don't
+  count: it's only a tiebreak. Reports queued by an app from before 2026-10-23 have no `tokens` and count 0.
+- Each order is one ascending row (`ORDER` in [leaderboard.ts](../server/src/leaderboard.ts), descending
+  columns negated) that migration 003 indexes as is, so the top 50 and a player's rank both read the index.
 - The **server** ranks; the device only sends its data. A player shows up once they have one word in the
   period.
 
@@ -23,12 +34,19 @@ layout is the mockup's and nothing more.
   - Tokens never move here, so the pill is the still one. A screen where tokens move (Play, Characters)
     has a live `TokenPill`; flights land on the focused one ([play-screen.md](play-screen.md), TokenPill).
 - `PeriodSwitch`: This week (the default) / All time.
-- `Podium`: the top 3 under a sky. 2nd, 1st and 3rd stand on their blocks, and 1st cheers. A missing place
-  stays empty.
-- `RankRow`: rank, face, name and score for the rest of the top 50.
-- The player's own entry has the **YOU** badge and a coral border. It shows the **local** name and
-  character, which may be newer than the server's copy. If the player is ranked but outside the top 50,
-  their row is **pinned** under the list.
+- **No podium** (owner's call, 2026-10-23). `RankRow` for everyone in the top 50: rank, face, name and
+  score. The top 3 wear a gold, silver or bronze **medal** chip in place of the plain number.
+- The player's own row is the **star**: coral fill, white border, taller, a bigger face, sparkles, the
+  **YOU** badge (white), and its rank in a white chip (a pill for a long rank). It shows the **local** name
+  and character, which may be newer than the server's copy. If the player is ranked but outside the top
+  50, their row is **pinned** at the end of the list, after a dotted break (`pinned`, keyed `me`).
+- **Find me** (`FindMe`): a floating coral pill ("You · #12", with an arrow up or down) that shows while
+  the player's own row is off screen and hides when it's in view. Tapping it scrolls the row to the
+  middle, and the row pops. The screen knows which rows are on screen from `onViewableItemsChanged`.
+  - **Rows have fixed heights** (`rowSpan`, pinned break included), so `getItemLayout` lets
+    `scrollToIndex` reach any row, even one not rendered yet. Changing a row's height means changing
+    `ROW` / `ME_ROW` / `PIN_GAP`, never letting content size it. The list has **no header** for the same
+    reason (an empty board is the `ListEmptyComponent`).
 - The screen can also show:
   - **Offline** (no connection, server down, or no `EXPO_PUBLIC_API_URL`): "You're offline", which also
     says their words still count, plus Try again.

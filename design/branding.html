@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanged Branding</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Same "Sunny meadow" palette as ui-mockup.html */
+  :root{
+    --page1:#d7f0ff; --page2:#fff3e3; --paper:#fffaf1; --ink:#4b3a35; --muted:#a8948a;
+    --line:#f3e6d6; --shadow:#ecd9c3;
+    --coral:#ff7b6b; --coral-d:#e85c4d; --coral-l:#ffe5df;
+    --mint:#5fd3a5; --mint-d:#38b283; --mint-l:#dcf7ea; --mint-t:#2a9a6e;
+    --butter:#ffd667; --butter-d:#f0b43a; --butter-l:#fff3cc; --butter-t:#9a6a00;
+    --sky:#6cc4ff; --sky-l:#e0f3ff; --sky-t:#2a86c8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(180deg,var(--page1) 0%,#eaf7ff 22%,var(--page2) 100%);font-family:Nunito,"Segoe UI",sans-serif;color:var(--ink);
+    width:1900px;padding:56px 64px 64px}
+  .fd{font-family:Fredoka,Nunito,sans-serif}
+
+  /* page header */
+  .kicker{font-weight:900;font-size:13px;letter-spacing:2.4px;color:#9b847a}
+  h1{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:46px;line-height:1.05;margin-top:8px}
+  h1 em{font-style:normal;color:var(--coral-d)}
+  .lead{font-weight:800;font-size:17px;color:#9b847a;margin-top:10px;max-width:980px;line-height:1.4}
+  .sec{display:flex;align-items:baseline;gap:12px;margin:44px 0 18px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px}
+  .sec small{font-weight:500;font-size:17px;color:#9b847a}
+  .card{background:#fff;border:2px solid var(--line);border-radius:28px;box-shadow:0 5px 0 var(--shadow)}
+
+  /* 1 · icon */
+  .icons{display:grid;grid-template-columns:250px 250px 1fr;gap:22px;align-items:stretch}
+  .icons2{display:grid;grid-template-columns:250px 1fr;gap:22px;margin-top:26px}
+  .refc{padding:16px 16px 20px;background:#fdfdff}
+  .refc img{display:block;width:100%;border-radius:16px;border:2px solid #e8e6f4}
+  .main{padding:24px;display:flex;gap:30px;position:relative;border-color:#ffc4b9;box-shadow:0 5px 0 #ffd2c9}
+  .main .info{flex:1;min-width:0;display:flex;flex-direction:column}
+  .badge{position:absolute;top:-14px;right:22px;background:var(--coral);color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;padding:5px 13px;border-radius:13px;box-shadow:0 3px 0 var(--coral-d)}
+  .ico{border-radius:22.4%;overflow:hidden;box-shadow:0 10px 24px -10px rgba(40,90,140,.45);flex:none}
+  .ico svg{display:block;width:100%;height:100%}
+  .wall{border-radius:20px;background:linear-gradient(160deg,#8e7bdc,#e48fb5 55%,#ffc59a);display:flex;align-items:flex-end;justify-content:center;gap:18px;padding:16px 0 12px}
+  .wall .app{display:flex;flex-direction:column;align-items:center;gap:5px;color:#fff;font-family:-apple-system,"Segoe UI",Nunito,sans-serif;font-weight:600;font-size:12.5px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .wall .px{font-size:11px;opacity:.85}
+  .iname{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:22px;margin-top:14px}
+  .idesc{font-weight:800;font-size:14.5px;color:#9b847a;line-height:1.42;margin-top:6px}
+  .took{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-top:12px}
+  .took div{font-weight:800;font-size:13.5px;color:#6d5a52;display:flex;gap:8px;align-items:baseline}
+  .took div::before{content:"\2713";color:var(--mint-d);font-weight:900}
+  .buds{display:flex;gap:14px;align-items:center;margin-top:16px;font-weight:800;font-size:13.5px;color:#9b847a}
+  /* 2 · wordmark */
+  .wm{display:grid;grid-template-columns:1.25fr 1fr;gap:26px}
+  .hero{border-radius:28px;background:linear-gradient(180deg,#dff1ff,#f3faff);border:2px solid #cfe6f6;box-shadow:0 5px 0 #cfe6f6;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;height:560px}
+  .hero svg.mark{width:820px;position:relative}
+  .tag{position:absolute;left:22px;top:18px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;letter-spacing:1.5px;color:var(--sky-t)}
+  .side{display:grid;grid-template-rows:auto auto 1fr;gap:26px}
+  .side .card{padding:20px 22px;position:relative}
+  .side .tag{position:static;margin-bottom:10px;color:#9b847a}
+  .compact{display:flex;justify-content:center;padding:6px 0 2px}
+  .compact svg{width:420px}
+  .lock{display:flex;align-items:center;gap:22px;padding:4px 6px}
+  .lock .ico{width:116px;height:116px}
+  .lock .nm{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:66px;line-height:.95;letter-spacing:-.5px}
+  .lock .sb{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:21px;color:var(--sky-t);letter-spacing:.3px;margin-top:6px}
+  .parts{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+  .part{display:flex;gap:11px;align-items:center;font-weight:800;font-size:13.5px;line-height:1.3;color:#6d5a52}
+  .part i{flex:none;width:34px;height:34px;border-radius:11px;border:3px solid #3a2b4d;display:flex;align-items:center;justify-content:center;font-family:Fredoka,Nunito,sans-serif;font-style:normal;font-weight:700;font-size:18px;color:#3a2b4d}
+  .part span{display:block;font-weight:800;font-size:12px;color:var(--muted)}
+
+  /* 3 · loading screen */
+  .load{display:flex;gap:56px;align-items:flex-start}
+  .live{flex:none;display:flex;flex-direction:column;align-items:center;gap:16px}
+  .phone{width:400px;height:860px;border-radius:58px;background:#3a2d29;padding:11px;box-shadow:0 34px 60px -24px rgba(150,95,50,.45),inset 0 0 0 2px #574540;flex:none}
+  .screen{width:100%;height:100%;border-radius:47px;overflow:hidden;background:#dff1ff}
+  .screen svg{display:block;width:100%;height:100%}
+  .phone.sm{width:236px;height:508px;border-radius:38px;padding:7px}
+  .phone.sm .screen{border-radius:31px}
+  .ctrl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:420px}
+  button{font:inherit;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:15px;border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:7px 14px;cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+  button.on{background:var(--sky-l);border-color:#b9dcf5;color:var(--sky-t);box-shadow:0 3px 0 #b9dcf5}
+  button.go{background:var(--coral);border-color:var(--coral);color:#fff;box-shadow:0 3px 0 var(--coral-d)}
+  .clock{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14px;color:#9b847a;min-width:110px;text-align:center}
+  .story{flex:1;min-width:0}
+  .frames{display:flex;justify-content:space-between}
+  .fr{width:236px;display:flex;flex-direction:column;gap:12px}
+  .cap .t{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:13px;color:var(--sky-t);letter-spacing:.5px}
+  .cap b{display:block;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:18px;margin-top:1px}
+  .cap span{display:block;font-weight:800;font-size:13px;color:#9b847a;line-height:1.38;margin-top:3px}
+  .tl{margin-top:30px;padding:20px 22px 18px}
+  .tl h3{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:19px;margin-bottom:14px}
+  .track{position:relative;height:150px}
+  .bar{position:absolute;height:26px;border-radius:9px;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:13px;display:flex;align-items:center;padding:0 9px;white-space:nowrap;overflow:hidden}
+  .ticks{position:absolute;left:0;right:0;bottom:0;height:20px;border-top:2px solid var(--line)}
+  .ticks i{position:absolute;top:4px;transform:translateX(-50%);font-style:normal;font-weight:800;font-size:12px;color:var(--muted)}
+  .ticks i::before{content:"";position:absolute;left:50%;top:-6px;width:2px;height:6px;background:var(--line)}
+
+  /* notes */
+  .notes{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:26px;margin-top:44px}
+  .panel{padding:20px 22px}
+  .ptitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:21px}
+  .li{display:flex;gap:10px;font-weight:800;font-size:14px;line-height:1.42;margin-top:10px}
+  .li .d{flex:none;width:22px;height:22px;border-radius:50%;background:var(--butter-l);border:1.5px solid #ffe39a;color:var(--butter-t);font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .li i{font-style:normal;color:var(--muted)}
+  .li code{font-family:Consolas,monospace;font-size:12.5px;background:#f6ebdd;border-radius:6px;padding:1px 5px}
+</style>
+</head>
+<body>
+<div class="kicker">HANGED · BRANDING</div>
+<h1>A word that <em>hangs from balloons.</em></h1>
+<div class="lead">The logo is made of the game itself: the letter tiles from Play, each one hanging from one of the balloons your buddy floats under. The loading screen starts as a word to guess, solves it, brings your buddy up and lifts off into Play.</div>
+
+<div class="sec">1 · The app icon <small>two versions, each next to the reference it follows</small></div>
+<div class="icons" id="icons"></div>
+<div class="icons2" id="icons2"></div>
+
+<div class="sec">2 · The wordmark <small>for the loading screen, the onboarding welcome and the App Store</small></div>
+<div class="wm">
+  <div class="hero"><div class="tag">FULL LOCKUP</div><svg class="mark" id="hero"></svg></div>
+  <div class="side">
+    <div class="card"><div class="tag">COMPACT · TILES ONLY, FOR TIGHT SPOTS</div><div class="compact"><svg id="compact"></svg></div></div>
+    <div class="card"><div class="tag">HORIZONTAL · STORE AND SOCIAL</div><div class="lock" id="lock"></div></div>
+    <div class="card"><div class="tag">BUILT FROM THE GAME'S OWN PIECES</div><div class="parts" id="parts"></div></div>
+  </div>
+</div>
+
+<div class="sec">3 · The loading screen <small>about 3 seconds, cold start only</small></div>
+<div class="load">
+  <div class="live">
+    <div class="phone"><div class="screen" id="live"></div></div>
+    <div class="ctrl"><button class="go" id="replay">↻ Replay</button><div class="clock" id="clock"></div></div>
+    <div class="ctrl" id="chars"></div>
+  </div>
+  <div class="story">
+    <div class="frames" id="frames"></div>
+    <div class="card tl"><h3>Timeline</h3><div class="track" id="track"></div></div>
+  </div>
+</div>
+<div class="notes" id="notes"></div>
+
+<script src="characters/rig.js"></script>
+<script src="characters/balloons.js"></script>
+<script src="brand/brand.js"></script>
+<script>
+/*
+ * Branding, design study: the app icon, the wordmark and the loading screen.
+ * The balloons, clouds and buddies come from design/characters (rig.js +
+ * balloons.js), the code the app draws with; the tiles are Play's letter
+ * tiles (mint = correct, butter = clue) given the characters' outline.
+ * ?t=2.2 freezes the live phone at that second (for the screenshot), ?char=bun picks the buddy.
+ */
+const R = HangedRig, B = BalloonAnim, OUT = R.OUTLINE, SW = R.SW;
+const CH = Object.fromEntries(R.CHARACTERS.map((c) => [c.id, c]));
+const BAL = B.BALLOONS.map((b) => b[2]); // the game's balloon colours
+const params = new URLSearchParams(location.search);
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const ease = {
+  in: (p) => p * p * p,
+  out: (p) => 1 - (1 - p) ** 3,
+  inOut: (p) => (p < 0.5 ? 4 * p ** 3 : 1 - (-2 * p + 2) ** 3 / 2),
+  back: (p) => 1 + 2.70158 * (p - 1) ** 3 + 1.70158 * (p - 1) ** 2,
+};
+let uid = 0;
+
+// The wordmark and the loading screen are the brand's (brand/brand.js), drawn by the app too
+const { wordmark, SPLASH: S, BOX, BOX_COMPACT } = HangedBrand;
+
+/* ---------- the icon (1024 × 1024, iOS rounds the corners) ----------
+ * From the owner's sketch (design/icon-sketch.jpg) and reference (design/icon-reference.jpg):
+ * the buddy up close, paws on his cheeks, going "whoa!" as the red balloon above him pops.
+ * Rubber shards and speed slashes fly off, the purple balloon is the one left, yellow
+ * alarm marks, a white sticker outline. Built from the rig, the game's balloon and cloud.
+ */
+/** The sky, then `inner` zoomed by [z, x, y]: scale z around the point x, y (1 = as drawn). */
+function iconFrame(inner, [z, zx, zy] = [1, 0, 0]) {
+  const id = `ig${++uid}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" stop-color="#1e95ff"/><stop offset=".55" stop-color="#62bfff"/><stop offset="1" stop-color="#c6e9ff"/></linearGradient></defs>` +
+    `<rect width="1024" height="1024" fill="url(#${id})"/>` +
+    `<g transform="translate(${zx} ${zy}) scale(${z}) translate(${-zx} ${-zy})">` +
+    B.cloud(120, 196, 3) + B.cloud(70, 900, 3.6) + B.cloud(990, 760, 3) + B.cloud(930, 980, 4) + inner + `</g></svg>`;
+}
+const turn = ([x, y], deg, [cx, cy]) => {
+  const r = (deg * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c];
+};
+// A jagged burst: a star whose spikes are not all the same length
+const SPIKES = [1, 0.7, 0.96, 0.78, 1.1, 0.68, 0.9, 0.8, 1.04, 0.72, 0.88, 0.84];
+function jag(cx, cy, R, r, rot = 0) {
+  const n = SPIKES.length;
+  let d = '';
+  for (let i = 0; i < n * 2; i++) {
+    const a = (Math.PI * i) / n + rot, k = i % 2 ? r : R * SPIKES[i / 2];
+    d += `${i ? 'L' : 'M'}${(cx + Math.cos(a) * k).toFixed(1)},${(cy + Math.sin(a) * k).toFixed(1)}`;
+  }
+  return d + 'Z';
+}
+const shard = ([x, y, rot, s], col) =>
+  `<path transform="translate(${x} ${y}) rotate(${rot}) scale(${s})" d="M-22,-8 Q0,-20 24,-6 L14,10 Q0,0 -16,8 Z" fill="${col}" stroke="${OUT}" stroke-width="5" stroke-linejoin="round"/>`;
+const inked = (d, w, col) =>
+  `<path d="${d}" stroke="${OUT}" stroke-width="${w + 14}" stroke-linecap="round" fill="none"/><path d="${d}" stroke="${col}" stroke-width="${w}" stroke-linecap="round" fill="none"/>`;
+/** The character's white sticker outline: the same drawing, all white and thicker. */
+const sticker = (svg, w) => svg.replace(/fill="(?!none)[^"]*"/g, 'fill="#fff"').replace(/stroke="[^"]*"/g, 'stroke="#fff"')
+  .replace(/stroke-width="[^"]*"/g, `stroke-width="${w}"`).replace(/ opacity="[^"]*"/g, '');
+
+const ICON = {
+  // Paws up on his cheeks (bent elbows), the head tilted the other way from the body, a little turned
+  pose: { head: -8, armL: 170, elbowL: 60, armR: -160, elbowR: -50, legL: 0, legR: 0, tail: 0 },
+  lean: -10, turn: 0.3,
+  scale: 5.6, head: [500, 574], // where the head's centre lands
+  red: [780, 150, 5.2, '#ff6b78'], purple: [870, 410, 3.8, '#b58cff'], // [x, y, scale, colour]
+  zoom: [1.2, 560, 300], // closer in: more head, less body
+  pop: [696, 232], // the burst, tearing the red balloon's lower left
+  shards: [[432, 130, -20, 2.1], [546, 80, 30, 1.7], [480, 246, 60, 1.9], [598, 150, -50, 1.5], [386, 316, 10, 1.4],
+    [770, 398, 70, 1.7], [826, 476, 20, 1.3], [640, 376, -30, 1.5]], // [x, y, rotation, scale]
+  slashes: 'M600,196 L360,86 M620,246 L400,260 M650,156 L584,54 M630,308 L500,376',
+  alarm: 'M300,300 L262,240 M378,264 L370,190 M232,360 L164,332',
+  shake: 'M136,700 q-26,50 -6,104 M166,830 q-20,40 -2,80 M900,640 q24,40 8,90 M940,560 q18,30 6,64',
+};
+function iconPop(id) {
+  const { pose, lean, turn: tn, scale: sc, head: [hx, hy], red, purple, pop, shards, slashes, alarm, shake, zoom } = ICON;
+  const head = turn([100, 80], lean, [100, 204]); // rig.js leans around the feet
+  const at = `translate(${hx - head[0] * sc} ${hy - head[1] * sc}) scale(${sc})`;
+  const body = R.render(CH[id], { bare: true, expr: 'whoa', angles: pose, lean, turn: tn });
+  const gloss = `<g transform="rotate(${lean} 100 204) rotate(${pose.head} 100 124)" fill="#fff">` +
+    `<ellipse cx="74" cy="50" rx="19" ry="7" transform="rotate(-30 74 50)" opacity=".3"/><ellipse cx="96" cy="40" rx="5" ry="3" opacity=".45"/></g>`;
+  const knot = ([x, y, s]) => [x, y + 33 * s];
+  const [rx, ry] = knot(red), [qx, qy] = knot(purple);
+  return iconFrame(
+    `<path d="${slashes}" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".9"/>` +
+    `<path d="M${rx},${ry} q-10,140 -70,250 M${qx},${qy} q-30,160 -110,300" stroke="${OUT}" stroke-width="8" fill="none" stroke-linecap="round"/>` +
+    B.balloon(purple[0], purple[1], purple[3], { scale: purple[2] }, 0) +
+    B.balloon(red[0], red[1], red[3], { scale: red[2] }, 0) +
+    `<path d="${jag(pop[0], pop[1], 170, 72, 0.2)}" fill="#ffd23d" stroke="#f08a00" stroke-width="8" stroke-linejoin="round"/>` +
+    `<path d="${jag(pop[0] + 6, pop[1] - 4, 96, 42, 0.5)}" fill="#fff"/>` +
+    shards.map((sh) => shard(sh, red[3])).join('') +
+    inked(alarm, 22, '#ffd23d') +
+    `<path d="${shake}" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none" opacity=".85"/>` +
+    `<g transform="${at}">${sticker(body, 9)}${body}${gloss}</g>`, zoom);
+}
+/* ---------- version 2: a paw holding the balloons ----------
+ * After the owner's second reference (design/icon-reference-2.jpg): five big glossy
+ * balloons fill the top, each tilted so its knot points at the fist. The buddy's paw
+ * comes in from the bottom left, fingers curled round the strings, thumb over the top;
+ * the string ends poke out below. Motion lines, yellow marks, a white sticker outline.
+ * The balloons are the game's (balloons.js); the paw takes the buddy's colours.
+ */
+const HAND = {
+  fist: [600, 772, -14], // the fist's centre and tilt
+  grip: [610, 640], // where the strings go into the fist
+  // [knot x, knot y, scale, colour], back to front
+  bunch: [[392, 600, 6.6, '#5aa8ff'], [752, 580, 6.2, '#ff8fc8'], [430, 468, 8, '#ffd23d'],
+    [690, 492, 7.4, '#b07cff'], [560, 452, 8.6, '#ff5d73']],
+  tails: 'M664,880 q14,60 4,120 M684,872 q26,70 30,140 M650,884 q-4,60 -22,130',
+  motion: 'M380,700 q-30,40 -18,90 M420,640 q-22,26 -16,60 M820,880 q20,40 4,80',
+  marks: 'M822,720 L870,660 M846,792 L924,772 M836,862 L900,884',
+};
+// A balloon whose knot sits at x, y, tilted by deg: the game's balloon, with a lighter outline
+// for its size, a shade on its lower side and an extra glint
+function bigBalloon([x, y, sc, col], deg, shade) {
+  const b = (fill) => B.balloon(0, -33 * sc, fill, { scale: sc }, 0).replace(/stroke-width="[^"]*"/, `stroke-width="${10 / sc}"`);
+  return `<g transform="translate(${x} ${y}) rotate(${deg.toFixed(1)})">${b(col)}${b(`url(#${shade})`)}` +
+    `<circle cx="${-15 * sc}" cy="${-30 * sc}" r="${2.6 * sc}" fill="#fff" opacity=".85"/></g>`;
+}
+/** The arm and fist, in fist units. grow > 0 draws it all white and that much wider: the sticker outline. */
+function fist(fur, pad, grow = 0) {
+  const [fx, fy, rot] = HAND.fist, ink = grow ? fur : OUT, o = 12 + grow, sk = `stroke="${ink}" stroke-width="${o}"`;
+  const lump = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fur}" ${sk}/>`;
+  const arm = 'M-420,420 L-40,40';
+  return `<g transform="translate(${fx} ${fy}) rotate(${rot})">` +
+    `<path d="${arm}" stroke="${ink}" stroke-width="${240 + 2 * o}" stroke-linecap="round"/>` +
+    `<path d="${arm}" stroke="${fur}" stroke-width="240" stroke-linecap="round"/>` +
+    lump(-10, 10, 150, 140) + // the back of the paw
+    (grow ? '' : `<ellipse cx="-70" cy="80" rx="56" ry="62" fill="${pad}"/>`) + // the palm pad
+    lump(100, 92, 64, 50) + lump(116, 10, 72, 56) + lump(100, -74, 70, 54) + // curled fingers, bottom to top
+    `<g transform="rotate(-24 -40 -100)">${lump(-40, -100, 92, 56)}</g>` + // the thumb, over the top
+    (grow ? '' :
+      `<ellipse cx="28" cy="-118" rx="30" ry="24" fill="${pad}"/>` + // the thumb's pad
+      `<ellipse cx="-70" cy="-40" rx="46" ry="18" transform="rotate(-30 -70 -40)" fill="#fff" opacity=".3"/>`) +
+    `</g>`;
+}
+function iconHand(id) {
+  const c = CH[id], fur = c.limb || c.fur, pad = c.paw || c.belly || '#fff3e6';
+  const [gx, gy] = HAND.grip, shade = `sh${++uid}`;
+  const tilt = ([x, y]) => (Math.atan2(x - gx, gy - y) * 180) / Math.PI; // knots point at the fist
+  const strings = HAND.bunch.map(([x, y]) => `M${x},${y} Q${(x + gx) / 2},${(y + gy) / 2 + 20} ${gx},${gy}`).join('');
+  return iconFrame(
+    `<defs><radialGradient id="${shade}" cx=".35" cy=".3" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/>` +
+    `<stop offset="1" stop-color="#000" stop-opacity=".22"/></radialGradient></defs>` +
+    B.cloud(130, 860, 5) + B.cloud(900, 920, 5.5) +
+    `<path d="${strings} ${HAND.tails}" stroke="${OUT}" stroke-width="8" fill="none" stroke-linecap="round"/>` +
+    HAND.bunch.map((bl) => bigBalloon(bl, tilt(bl), shade)).join('') +
+    `<path d="${HAND.motion}" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none" opacity=".9"/>` +
+    inked(HAND.marks, 20, '#ffd23d') +
+    fist('#fff', '#fff', 14) + fist(fur, pad));
+}
+
+const ico = (svg, px) => `<div class="ico" style="width:${px}px;height:${px}px">${svg}</div>`;
+/** A version's card: the icon, on a home screen at real sizes, and with other buddies. */
+const iconCard = ({ draw, size, badge, name, desc, took = [] }) => `<div class="card main"><div class="badge">${badge}</div>${ico(draw('coco'), size)}<div class="info">
+    <div class="wall"><div class="app">${ico(draw('coco'), 76)}Hanged</div>
+      ${[60, 40, 29].map((px) => `<div class="app">${ico(draw('coco'), px)}<span class="px">${px}</span></div>`).join('')}</div>
+    <div class="iname">${name}</div><div class="idesc">${desc}</div>
+    ${took.length ? `<div class="took">${took.map((t) => `<div>${t}</div>`).join('')}</div>` : ''}
+    <div class="buds">Works with any buddy:${['bun', 'mochi', 'ember', 'pip'].map((b) => ico(draw(b), 72)).join('')}</div>
+  </div></div>`;
+
+document.getElementById('icons').innerHTML =
+  `<div class="card refc"><img src="brand/icon-sketch.jpg" alt="The owner's sketch of the icon"><div class="iname">Your sketch</div>` +
+  `<div class="idesc">Close-up, cropped at the bottom, head tilted. One arm out, balloons in the corner.</div></div>` +
+  `<div class="card refc"><img src="brand/icon-reference.jpg" alt="The owner's reference icon"><div class="iname">Your reference</div>` +
+  `<div class="idesc">The pop is the story: paws on cheeks, tears, the balloon bursting above.</div></div>` +
+  iconCard({
+    draw: iconPop, size: 440, badge: 'Version 1', name: 'Pop! Whoa!',
+    desc: 'The game in one picture: a wrong letter pops a balloon and your buddy goes "whoa!". Surprised, and enjoying the ride a little. Drawn from the game\'s own pieces (the rig\'s Coco, the game\'s balloons and clouds), so it matches what players see in Play.',
+    took: ['Face fills the frame, tilted', 'Paws on his cheeks', 'Big shining eyes, brows up', 'An open "oh!", corners lifting',
+      'The red balloon bursting', 'Rubber shards, speed slashes', 'Yellow alarm marks', 'White sticker outline, gloss'],
+  });
+document.getElementById('icons2').innerHTML =
+  `<div class="card refc"><img src="brand/icon-reference-2.jpg" alt="The owner's second reference icon"><div class="iname">The app icon</div>` +
+  `<div class="idesc">Your reference, adopted as is: five big glossy balloons, a paw gripping the strings.</div></div>` +
+  iconCard({
+    draw: iconHand, size: 440, badge: 'Version 2', name: 'Holding on',
+    desc: 'No face: the balloons are the star, and the paw is whoever you play. Five of the game\'s balloons, big and glossy, tilted so they all pull on one fist.',
+    took: ['Five big balloons fill the top', 'Each knot points at the fist', 'Fingers curled round the strings', 'Thumb over the top, pads showing',
+      'String ends poke out below', 'Motion lines, yellow marks', 'White sticker outline, gloss', 'Fluffy clouds at the bottom'],
+  });
+
+/* ---------- 2 · the wordmark ---------- */
+const hero = document.getElementById('hero');
+hero.setAttribute('viewBox', BOX.join(' '));
+const compact = document.getElementById('compact');
+compact.setAttribute('viewBox', BOX_COMPACT.join(' '));
+compact.innerHTML = wordmark({ balloons: false, bob: 0 });
+document.getElementById('lock').innerHTML =
+  `<div class="ico" style="width:116px;height:116px"><img src="../assets/icon.png" alt="" style="width:100%;height:100%"></div>` + `<div><div class="nm">Hanged</div><div class="sb">word guessing game</div></div>`;
+document.getElementById('parts').innerHTML = [
+  ['H', '#5fd3a5', 'Correct-letter tile', 'Play\'s mint'],
+  ['A', '#ffd667', 'Clue tile', 'Play\'s butter'],
+  ['', '#ff7a7a', 'The game\'s balloons', 'balloons.js, same colours'],
+  ['Aa', '#fff', 'Fredoka Bold', 'the app\'s display font'],
+].map(([ch, bg, a, b]) => `<div class="part"><i style="background:${bg};${ch ? '' : 'border-radius:50% 50% 46% 46%'}">${ch}</i><div>${a}<span>${b}</span></div></div>`).join('');
+
+/* ---------- 3 · the loading screen (390 × 844 points) ---------- */
+const statusBar = `<text x="54" y="35" font-family="Nunito" font-weight="800" font-size="16" fill="#3a2b4d">9:41</text>` +
+  `<g fill="#3a2b4d" transform="translate(286 23)"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/>` +
+  `<rect x="27" y=".5" width="22" height="11.5" rx="3.5" fill="none" stroke="#3a2b4d" stroke-opacity=".45" stroke-width="1.4"/><rect x="29" y="2.5" width="16" height="7.5" rx="2"/></g>` +
+  `<rect x="135" y="11" width="120" height="34" rx="17" fill="#000"/>`;
+
+/** The loading screen at second t (0 = the native splash), with buddy `id`, in a phone: the app fades it into Play. */
+function splash(t, id) {
+  const paper = seg(t, ...S.fade);
+  return HangedBrand.splash(t, { character: CH[id] }).replace('</svg>',
+    (paper > 0 ? `<rect width="390" height="844" fill="#fffaf1" opacity="${paper.toFixed(2)}"/>` : '') +
+    (paper > 0.6 ? `<text x="195" y="430" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="20" fill="#a8948a" opacity="${((paper - 0.6) / 0.4).toFixed(2)}">Play screen</text>` : '') +
+    statusBar + '</svg>');
+}
+
+// The hero wordmark: the full lockup, gently floating
+function drawHero(t) { hero.innerHTML = wordmark({ t }); }
+
+const FRAMES = [
+  { t: 0, when: '0 s · until the app is ready', title: 'The native splash', text: 'Six blank tiles under six balloons: a word to guess. One still image on the sky colour, shown by iOS while the app loads.' },
+  { t: 0.58, when: '0.15 – 1 s', title: 'The word solves itself', text: 'Each tile swells like a balloon about to pop, then springs into its letter: H, A, N, G, E, D, with a tick that climbs the scale.' },
+  { t: 1.36, when: '1 – 1.6 s', title: 'Solved!', text: 'The tiles hop in a wave, the tagline pops in, and the word floats up to make room.' },
+  { t: 2.25, when: '1.25 – 2.5 s', title: 'Your buddy floats up', text: 'The player\'s own character, waving under its balloons. If the app is still loading, everything keeps bobbing here.' },
+  { t: 2.82, when: '2.5 – 3.1 s', title: 'Lift-off', text: 'The balloons carry it all up and away, the clouds rush past, and Play fades in underneath.' },
+];
+let buddyId = CH[params.get('char')] ? params.get('char') : 'coco';
+function drawFrames() {
+  document.getElementById('frames').innerHTML = FRAMES.map((f) => `<div class="fr">
+    <div class="phone sm"><div class="screen">${splash(f.t, buddyId)}</div></div>
+    <div class="cap"><div class="t">${f.when}</div><b>${f.title}</b><span>${f.text}</span></div></div>`).join('');
+}
+
+// Timeline bars: [from, to, label, bg, fg, row]
+const BARS = [
+  [-0.5, 0, 'Native splash', '#e0f3ff', '#2a86c8', 0],
+  [S.start, S.solved, 'Letters turn, one every 0.1 s', '#dcf7ea', '#2a9a6e', 0],
+  [S.solved, S.solved + 0.45, 'Wave + tagline', '#fff3cc', '#9a6a00', 1],
+  [S.up[0], S.up[1], 'Word rises', '#efe9ff', '#7656dc', 2],
+  [S.buddy[0], S.buddy[1], 'Buddy floats up', '#ffe3ee', '#bb3369', 3],
+  [S.buddy[1], S.exit, 'Hold (longer if loading)', '#f6ebdd', '#9b847a', 1],
+  [S.exit, S.exit + S.lift, 'Lift-off', '#ffe5df', '#e05040', 0],
+];
+(function drawTrack() {
+  const lo = -0.5, hi = 3.2, x = (s) => `${(((s - lo) / (hi - lo)) * 100).toFixed(2)}%`;
+  const w = (a, b) => `${(((b - a) / (hi - lo)) * 100).toFixed(2)}%`;
+  document.getElementById('track').innerHTML =
+    BARS.map(([a, b, l, bg, fg, row]) => `<div class="bar" style="left:${x(a)};width:${w(a, b)};top:${row * 31}px;background:${bg};color:${fg}">${l}</div>`).join('') +
+    `<div class="ticks">${[0, 0.5, 1, 1.5, 2, 2.5, 3].map((s) => `<i style="left:${x(s)}">${s} s</i>`).join('')}</div>`;
+})();
+
+// The live phone
+const live = document.getElementById('live'), clock = document.getElementById('clock');
+const frozen = params.has('t') ? +params.get('t') : null;
+let t0 = performance.now();
+function tick(now) {
+  const el = (now - t0) / 1000;
+  if (el > S.end + 1) t0 = now; // loop, with a second of Play in between
+  const t = frozen ?? Math.min(el, S.end);
+  live.innerHTML = splash(t, buddyId);
+  clock.textContent = `${t.toFixed(1)} s`;
+  drawHero(now / 1000);
+  if (frozen == null) requestAnimationFrame(tick);
+}
+document.getElementById('replay').onclick = () => (t0 = performance.now());
+const PICK = ['coco', 'bun', 'mochi', 'ember', 'ribbit', 'pip'];
+function drawChars() {
+  document.getElementById('chars').innerHTML = PICK.map((id) => `<button data-id="${id}" class="${id === buddyId ? 'on' : ''}">${CH[id].name}</button>`).join('');
+}
+document.getElementById('chars').onclick = (e) => {
+  const id = e.target.dataset && e.target.dataset.id;
+  if (!id) return;
+  buddyId = id; t0 = performance.now();
+  drawChars(); drawFrames();
+  if (frozen != null) requestAnimationFrame(tick);
+};
+
+document.getElementById('notes').innerHTML = [
+  ['In the app', [
+    'Frame 0 is the iOS splash (<code>app.json</code>): the sky colour <code>#dff1ff</code> and the blank wordmark (<code>assets/splash-icon.png</code>, from <code>brand/export.html</code>), centred. The animated screen starts from that exact picture, so there\'s no jump.',
+    'It starts once the fonts and the save are loaded (the native splash covers that), never waits for the network, and takes about 3 seconds. Cold start only; a tap skips to lift-off.',
+    'A new player has no buddy yet: the word plays alone, then the screen fades into onboarding, which opens with the same wordmark.',
+    'With Reduce Motion on, the word shows at once and the screen fades.',
+    'The frames are drawn by <code>brand/brand.js</code>, the same code as this page (<code>src/components/LaunchScreen.tsx</code>).',
+  ]],
+  ['Sound and feel', [
+    'A soft tick, Play\'s tile sound, as each letter turns.',
+    'One light haptic tap when the word is solved: no buzz per letter (you found that annoying on the keyboard).',
+    'A rising sound on lift-off.',
+    'Follows the Sound effects switch and the iOS silent switch, like every other sound.',
+  ]],
+  ['Decided', [
+    'The app icon is your second reference, the paw holding five balloons (<code>brand/icon-art.png</code>), cropped to a square by <code>brand/export.html</code>: <code>assets/icon.png</code>.',
+    'Version 1 and the vector Version 2 stay on this page as explorations.',
+    'The app name might change. The wordmark is just letter tiles, so a new name means new letters, not a new logo.',
+  ]],
+].map(([title, items]) => `<div class="card panel"><div class="ptitle">${title}</div>${items.map((x, i) => `<div class="li"><div class="d">${i + 1}</div><div>${x}</div></div>`).join('')}</div>`).join('');
+
+drawChars();
+drawFrames();
+document.fonts.ready.then(() => { drawFrames(); requestAnimationFrame(tick); });
+</script>
+</body>
+</html>

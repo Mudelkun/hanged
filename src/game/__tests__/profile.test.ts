@@ -56,6 +56,25 @@ describe('rename', () => {
   });
 });
 
+describe('a name someone else already had (names are unique)', () => {
+  const s = { ...initialState(), playerName: 'Roda' };
+
+  it('takes the variant the server gave, and remembers the one asked for', () => {
+    const taken = gameReducer(s, { type: 'nameTaken', sent: 'Roda', name: 'Roda2' });
+    expect([taken.playerName, taken.takenName]).toEqual(['Roda2', 'Roda']);
+    // Picking a name of their own clears the note
+    expect(gameReducer(taken, { type: 'rename', name: 'Bea' }).takenName).toBeNull();
+  });
+
+  it('ignores it once the player has renamed since that sync', () => {
+    expect(gameReducer(s, { type: 'nameTaken', sent: 'Sunny Otter', name: 'Sunny Otter2' })).toBe(s);
+  });
+
+  it('ignores a name the rules refuse', () => {
+    expect(gameReducer(s, { type: 'nameTaken', sent: 'Roda', name: 'BigDick' })).toBe(s);
+  });
+});
+
 describe('reset (account deleted)', () => {
   it('starts over as a new player', () => {
     const played = { ...initialState(), playerName: 'Roda', wordsGuessed: 40, tokens: 120, unlockedCharacterIds: ['ember'], characterId: 'ember', nextReportSeq: 41 };

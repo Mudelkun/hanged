@@ -14,7 +14,7 @@ import { needsOnboarding } from '../game/onboarding';
 import { Language, languageForLocales } from '../game/languages';
 import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
-import { createSync } from '../net/sync';
+import { createSync, nameIsFree } from '../net/sync';
 
 const STORAGE_KEY = 'hanged.game.v1';
 /** Finished rounds wait this long for more before a sync, so a run of quick words is one request. */
@@ -33,6 +33,8 @@ interface GameContextValue {
    * device. Resolves false (and changes nothing) when the server can't be reached.
    */
   deleteAccount: () => Promise<boolean>;
+  /** Names are unique: false only when the server says someone else has it (offline: true, the sync settles it). */
+  nameIsFree: (name: string) => Promise<boolean>;
   completeOnboarding: (name: string, characterId: string) => void;
   welcomePending: boolean;
   dismissWelcome: () => void;
@@ -118,7 +120,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [sync]);
 
   const value = useMemo(
-    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, completeOnboarding, welcomePending, dismissWelcome }),
+    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, nameIsFree, completeOnboarding, welcomePending, dismissWelcome }),
     [state, ready, startNextRound, changeLanguage, sync, deleteAccount, completeOnboarding, welcomePending, dismissWelcome],
   );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

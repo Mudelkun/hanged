@@ -19,6 +19,8 @@ export interface RoundReport {
   won: boolean;
   /** Wrong guesses when the round ended. */
   wrong: number;
+  /** Tokens the round paid (0 for a loss). Missing from reports queued before 2026-10-23: counts as 0. */
+  tokens?: number;
   /** Description shown during play; always true on current clients, optional reveal on older ones. */
   description: boolean;
   /** The player bought letters. */
@@ -55,6 +57,17 @@ export interface SyncResponse {
   acked: number;
   /** The score the server holds (it may cap a jump the reports don't explain). */
   wordsGuessed: number;
+  /**
+   * The name the server holds. Names are unique: one someone else already has
+   * comes back as a free variant ("Roda2"), which the app adopts. null: the
+   * filter refused it (the app keeps its own and boards show the default).
+   */
+  name: string | null;
+}
+
+/** GET /v1/names/available: nobody else holds this name (nameKey), and it passes checkName. */
+export interface NameAvailableResponse {
+  available: boolean;
 }
 
 export interface LeaderboardEntry {
