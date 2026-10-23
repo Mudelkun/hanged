@@ -126,7 +126,8 @@ redirects to Profile.
 - **Game rules**: cards in player words, matching CLAUDE.md's rules. **Every number comes from the config**
   (`DEFAULT_MAX_WRONG`, `LETTER_BUY_*`, `STREAK_BONUS_AT[0]`, `LOSSES_TO_DROP`, the
   first level that sells letters / shows the subject, `LEVELS.length`), so a placeholder change updates the
-  sheet. A rule change that adds a new idea needs a new card (`RULES` + `rules.*` keys).
+  sheet. A rule change that adds a new idea needs a new card (`RULES` + `rules.*` keys). The last card,
+  Versus, points to each mode's own rules (the "?" on its card in the Versus tab, numbers from `MODES`).
 - **Credits**: [data/CREDITS.md](../data/CREDITS.md) in player words: Open English WordNet (CC BY 4.0, with
   the list of changes), SCOWL (its full permission notice, which its licence requires), Princeton WordNet. Links
   open in the browser. **If the word sources or CREDITS.md change, change `credits.*` in `en.json` too.**

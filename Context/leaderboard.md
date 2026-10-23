@@ -65,7 +65,7 @@ The bottom tabs are an Expo Router `Tabs` group, [src/app/(tabs)/_layout.tsx](..
   [TabBar](../src/components/TabBar.tsx) itself, so a full-screen overlay (the level path) can still
   cover it.
 - A `TabBar` entry with an `href` navigates; an entry without one is drawn disabled ("Coming soon").
-  Play, Leaderboard and Characters navigate; Versus is still disabled.
+  All four navigate (Versus since 2026-10-23, [versus.md](versus.md)).
   **Never a 5th tab** (CLAUDE.md).
 - Screens **stay mounted** when the player switches tabs, so Play keeps its round, its result and
   its animations' state. Each animation loop stops itself while its tab is hidden (`useIsFocused`).

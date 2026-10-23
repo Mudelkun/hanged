@@ -102,6 +102,30 @@ export const diceXml = (c = '#2a86c8') =>
     `<rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="#fff" stroke="${c}" stroke-width="2.2"/><g fill="${c}"><circle cx="8.5" cy="8.5" r="1.7"/><circle cx="15.5" cy="8.5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="8.5" cy="15.5" r="1.7"/><circle cx="15.5" cy="15.5" r="1.7"/></g>`,
   );
 
+// Not in the mockup: the Versus modes (Word Rush's stopwatch, Balloon Battle's balloon, Word Duel's two cards).
+export const modeIconXml = {
+  rush: (c: string) =>
+    svg(
+      '0 0 24 24',
+      `<rect x="9.5" y="1.5" width="5" height="3" rx="1.3" fill="${c}"/><circle cx="12" cy="13.5" r="8.4" fill="${c}"/><circle cx="12" cy="13.5" r="5.9" fill="#fff"/><path d="M12 10v3.8l2.6 1.7" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+    ),
+  battle: (c: string) =>
+    svg(
+      '0 0 24 24',
+      `<path d="M12 1.8c4.2 0 6.8 3.1 6.8 6.9 0 4.3-3.6 7.7-6.8 7.7S5.2 13 5.2 8.7c0-3.8 2.6-6.9 6.8-6.9z" fill="${c}"/><path d="M10.8 16.3h2.4L12 18.2z" fill="${c}"/><path d="M12 18.2q-1.8 2.2.4 4" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/><ellipse cx="9.4" cy="6.6" rx="1.4" ry="2" fill="#fff" opacity=".75"/>`,
+    ),
+  duel: (c: string) =>
+    svg(
+      '0 0 24 24',
+      `<rect x="2" y="5.5" width="10.5" height="14" rx="2.6" fill="${c}" opacity=".5" transform="rotate(-11 7.2 12.5)"/><rect x="11.5" y="4" width="10.5" height="14" rx="2.6" fill="${c}" transform="rotate(9 16.8 11)"/><path d="M15.2 9.2a1.9 1.9 0 1 1 2.4 1.9c-.5.2-.7.6-.7 1.1v.5" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" transform="rotate(9 16.8 11)"/><circle cx="16.9" cy="14.6" r="1" fill="#fff" transform="rotate(9 16.8 11)"/>`,
+    ),
+};
+// Not in the mockup: a balloon for counts (Balloon Battle), and the "more" button of a friend's row.
+export const balloonXml = (c: string) =>
+  svg('0 0 24 24', `<path d="M12 2c3.8 0 6 2.8 6 6.2 0 3.9-3.2 7-6 7s-6-3.1-6-7C6 4.8 8.2 2 12 2z" fill="${c}"/><path d="M11 15h2l-1 1.7z" fill="${c}"/><path d="M12 16.7q-1.4 2.1.4 4.3" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round"/>`);
+export const moreXml = (c = '#a8948a') =>
+  svg('0 0 24 24', `<g fill="${c}"><circle cx="5.5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="18.5" cy="12" r="2.2"/></g>`);
+
 export const tabIconXml = {
   play: (c: string) =>
     svg(

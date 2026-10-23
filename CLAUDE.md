@@ -16,9 +16,9 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
-**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), and the **Profile** page (name, stats, info and legal pages, account deletion). Versus isn't built yet.
+**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), the **Profile** page (name, stats, info and legal pages, account deletion), and **Versus** (online multiplayer: Word Rush, Balloon Battle, Word Duel; friends, lobbies, invites, matchmaking, and an admin on/off switch), played over a WebSocket on the same server ([Context/versus.md](Context/versus.md)).
 
-**Stack:** Expo SDK 58 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard and word statistics only. **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
+**Stack:** Expo SDK 58 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard, word statistics and Versus (its WebSocket referee; chosen 2026-10-23 for cost: no third-party realtime service). **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
 ---
 
@@ -46,6 +46,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Onboarding: buddy selection, name and consent, lift-off, existing saves and the first-word welcome | [Context/onboarding.md](Context/onboarding.md) |
 | The app icon, the wordmark, the native splash and the loading screen, regenerating their assets | [Context/branding.md](Context/branding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
+| Versus (online multiplayer): the modes, the live socket, friends, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
@@ -53,8 +54,8 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 ```
 src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx, (tabs)/characters.tsx, profile.tsx, info/[page].tsx
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
-src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard
-src/net/            the only code that talks to the server: api.ts, sync.ts
+src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard; VersusContext + versus.ts (Versus state)
+src/net/            the only code that talks to the server: api.ts, sync.ts, live.ts (the Versus socket)
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/world/          world.ts: imports design/world/world.js (the level path's world), parses it in bands
 src/brand/          brand.ts: imports design/brand/brand.js (the wordmark and the loading screen's frames)
@@ -62,16 +63,17 @@ src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
 data/words.json     the word database (built by scripts/check-words.js: hand-written words + generated from the dictionaries)
-server/             the API (its own package, deployed on Railway): src/contract.ts is shared with the app
+server/             the API (its own package, deployed on Railway). Shared with the app: src/contract.ts, versus-contract.ts, names.ts,
+                    and the round rules engine.ts, languages.ts, rules.ts (src/game/engine.ts and languages.ts re-export them)
 ```
 
 ### Rules that apply to every task
 
-- **The game rules live in `src/game/` as pure functions with tests.** UI code asks the engine (`roundStatus`, `keyState`, …) and never re-implements a rule.
+- **The game rules live in `src/game/` as pure functions with tests** (the round engine itself in `server/src/engine.ts`, shared so the Versus server judges with the same rules; `src/game/engine.ts` re-exports it). UI code asks the engine (`roundStatus`, `keyState`, …) and never re-implements a rule.
 - **Score only in the reducer, in the step that wins the round**, never in a screen or an effect ([Context/progression-and-tokens.md](Context/progression-and-tokens.md)).
 - **Never fork the characters into `src/`.** Edit `design/characters/*.js`; the app and the mockup both read it.
 - **Every UI string goes in `src/i18n/en.json`.**
-- Placeholder answers to the open questions (starting tokens, levels, letters to find) live only in `src/game/config.ts` and `src/game/levels.ts`, and are marked PLACEHOLDER.
+- Placeholder answers to the open questions (starting tokens, levels, letters to find) live only in `src/game/config.ts` and `src/game/levels.ts` (the round constants the engine needs: `server/src/rules.ts`, re-exported by config.ts; Versus modes: `MODES` in `server/src/versus-contract.ts`), and are marked PLACEHOLDER.
 
 ---
 
@@ -150,9 +152,11 @@ A level's difficulty is set by:
 - Some characters are free. The others are locked and are unlocked by spending **tokens**.
 
 ### Two-player mode (online)
-- Two-player mode is **online**: the two players are on separate devices. This means the game needs a backend with real-time sync, so check with the owner before picking one.
-- The players take turns. One player picks a word from the list or types their own, and the other player guesses it.
-- A typed word must pass the same word constraints (letters only, at most 15). It's checked before it's sent, and the server never shows it to the guesser.
+- Two-player mode is **online**: the players are on separate devices. It's the **Versus** tab (built 2026-10-23, owner's request): a WebSocket on the existing server, which deals the words, judges every guess and keeps the clocks, so the guesser's device never holds the word ([Context/versus.md](Context/versus.md)).
+- Players find each other both ways (owner, 2026-10-23): **friends** (search by name, requests, invites, a lobby code) and **matchmaking** with random players of a close rating.
+- Three modes: **Word Rush** (the owner's timed challenge: the same words for everyone, most words in 2:00 wins), **Balloon Battle** (misses pop your balloons, words pop the leader's, last one floating wins) and **Word Duel** (the original two-player idea: each picks a word for the other, then both guess; best of 3).
+- In Word Duel a typed word must pass the same word constraints (letters only, at most 15) and be a word of the language's pack. The server checks it and never shows it to the guesser.
+- An admin switch (the server's `/admin` page) turns Versus off at any moment; players then see "Versus is taking a break".
 
 ### Languages
 - The **MVP is English only**.
@@ -224,4 +228,4 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
 - **App language**: does it change only the UI text, or the word list too?
 - **Legal pages**: who writes the privacy policy and terms, and where are they hosted?
-- **Online two-player**: how do players find each other (invite a friend, random match, or both)? Do words guessed there count toward the leaderboard and toward earning tokens?
+- **Online two-player**: do words guessed there count toward the leaderboard and toward earning tokens? (For now they don't: Versus has its own rating. Finding each other is decided: friends and matchmaking.)

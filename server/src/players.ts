@@ -50,7 +50,7 @@ export function nextScore(held: number, firstSync: boolean, reported: number, wi
 }
 
 /** The row exists and the secret is its own. */
-const owns = (row: { secret_hash: string } | undefined, who: Credentials): boolean =>
+export const owns = (row: { secret_hash: string } | undefined, who: Credentials): boolean =>
   !!row && timingSafeEqual(Buffer.from(row.secret_hash), Buffer.from(hash(who.secret)));
 
 /** The name to keep: one the filter refuses (a modified app) is dropped, and the app shows its default. */

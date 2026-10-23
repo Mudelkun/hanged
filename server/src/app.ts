@@ -7,16 +7,46 @@
  *   GET  /v1/leaderboard  ?period=week|all[&me=<player id>]
  *   GET  /v1/names/available ?name=<name>[&me=<player id>] → { available }
  *   GET  /health          for Railway
+ * Versus (online multiplayer): its socket and friends routes (versus/routes.ts),
+ * and the admin page with its on/off switch (admin.ts).
  */
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import websocket from '@fastify/websocket';
 import Fastify, { type FastifyServerOptions } from 'fastify';
+
+import { adminRoutes } from './admin.ts';
 
 import { LIMITS, type NameAvailableResponse, type Period, type SyncRequest } from './contract.ts';
 import type { Db } from './db.ts';
 import { createLeaderboard } from './leaderboard.ts';
 import { NAME_SENT_MAX } from './names.ts';
 import { credentials, deletePlayer, nameAvailable, register, sync } from './players.ts';
+import { VERSUS_LIMITS } from './versus-contract.ts';
+import { Hub, type HubOptions } from './versus/hub.ts';
+import { versusRoutes } from './versus/routes.ts';
+import { readSwitch } from './versus/store.ts';
+import { loadWords, type WordSource } from './versus/words.ts';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    /** Versus's live state (versus/hub.ts). */
+    hub: Hub;
+  }
+}
+
+export interface AppOptions extends FastifyServerOptions {
+  boardTtlMs?: number;
+  newPlayersPerHour?: number;
+  /** Versus words; read from the `words` table when left out. */
+  words?: WordSource;
+  /** ADMIN_TOKEN: the admin page exists only with one. */
+  adminToken?: string;
+  /** VERSUS_DISABLED: Versus stays off whatever the switch says. */
+  versusForcedOff?: boolean;
+  /** For tests: Versus's clock and dice. */
+  versus?: Pick<HubOptions, 'clock' | 'rng'>;
+}
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
 const UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
@@ -80,13 +110,15 @@ const nameQuery = {
   },
 };
 
-export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs?: number; newPlayersPerHour?: number } = {}) {
-  const { boardTtlMs, newPlayersPerHour = 20, ...fastifyOpts } = opts;
+export async function buildApp(db: Db, opts: AppOptions = {}) {
+  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, ...fastifyOpts } = opts;
   // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's.
   const app = Fastify({ trustProxy: true, bodyLimit: 256 * 1024, ...fastifyOpts });
   // The app doesn't need CORS; the web preview (npx expo start --web) does. DELETE isn't allowed by default.
-  await app.register(cors, { origin: true, methods: ['GET', 'POST', 'DELETE'] });
+  await app.register(cors, { origin: true, methods: ['GET', 'POST', 'PUT', 'DELETE'] });
   await app.register(rateLimit, { max: 120, timeWindow: '1 minute' });
+  // Messages are tiny JSON: compression would cost more CPU and memory per socket than it saves
+  await app.register(websocket, { options: { maxPayload: VERSUS_LIMITS.messageBytes, perMessageDeflate: false } });
   const leaderboard = createLeaderboard(db, boardTtlMs);
 
   app.get('/health', async () => {
@@ -122,6 +154,13 @@ export async function buildApp(db: Db, opts: FastifyServerOptions & { boardTtlMs
     { schema: { querystring: nameQuery } },
     async (req): Promise<NameAvailableResponse> => ({ available: await nameAvailable(db, req.query.name, req.query.me) }),
   );
+
+  const status = versusForcedOff ? { enabled: false, message: null } : await readSwitch(db);
+  const hub = new Hub({ db, words: words ?? (await loadWords(db)), status, log: app.log, ...versus });
+  app.decorate('hub', hub);
+  app.addHook('preClose', async () => hub.close());
+  versusRoutes(app, db, hub);
+  adminRoutes(app, db, hub, { token: adminToken, forcedOff: versusForcedOff });
 
   return app;
 }

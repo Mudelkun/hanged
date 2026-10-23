@@ -17,6 +17,7 @@ export default function TabsLayout() {
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.paper } }}
     >
       <Tabs.Screen name="index" />
+      <Tabs.Screen name="versus" />
       <Tabs.Screen name="leaderboard" />
       <Tabs.Screen name="characters" />
     </Tabs>

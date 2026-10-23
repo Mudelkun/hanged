@@ -1,7 +1,14 @@
 # Game engine — the round rules
 
 The core rules of CLAUDE.md, as pure TypeScript with no React and no storage:
-[src/game/engine.ts](../src/game/engine.ts). Tests:
+[server/src/engine.ts](../server/src/engine.ts), with its constants in
+[server/src/rules.ts](../server/src/rules.ts) and the letters in
+[server/src/languages.ts](../server/src/languages.ts). They live in `server/` (since 2026-10-23) because
+the Versus server deals and judges rounds with the same rules and Railway deploys only `server/`; the
+app imports them through [src/game/engine.ts](../src/game/engine.ts), `languages.ts` and `config.ts`,
+which re-export them. Shared files import each other with `.ts` extensions and nothing else
+([versus.md](versus.md), Traps). Versus screens get only counts, never a `Round`, so they use
+`stageFor(wrong, maxWrong)` / `goneFor` (what `sceneStage` / `balloonsGone` compute from a round). Tests:
 [src/game/__tests__/engine.test.ts](../src/game/__tests__/engine.test.ts).
 
 ## A round stores only what happened; everything else is derived

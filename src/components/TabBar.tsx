@@ -17,7 +17,7 @@ type TabId = keyof typeof tabIconXml;
 
 const TABS: { id: TabId; label: TranslationKey; href?: Href }[] = [
   { id: 'play', label: 'tabs.play', href: '/' },
-  { id: 'versus', label: 'tabs.versus' },
+  { id: 'versus', label: 'tabs.versus', href: '/versus' },
   { id: 'leaderboard', label: 'tabs.leaderboard', href: '/leaderboard' },
   { id: 'characters', label: 'tabs.characters', href: '/characters' },
 ];

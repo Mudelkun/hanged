@@ -28,6 +28,15 @@ async function account(): Promise<Account> {
   return made;
 }
 
+/**
+ * The account Versus signs in with. A player who never synced gets one from a
+ * sync first, so the server has their name and character before anyone sees
+ * them. null offline.
+ */
+export async function versusAccount(sync: () => Promise<string | null>): Promise<Account | null> {
+  return (await savedAccount()) ?? ((await sync()) ? savedAccount() : null);
+}
+
 /** The player's id on the server, if a sync ever made one (no network needed). */
 export async function savedPlayerId(): Promise<string | null> {
   return (await savedAccount())?.id ?? null;

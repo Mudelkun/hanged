@@ -5,7 +5,8 @@
  * so the player sees what they already tried), clue = butter. Easy levels
  * disable some letters that are not in the word: their key is an empty dashed
  * slot, so the QWERTY layout doesn't shift. A used key, or any key once the
- * round is over, cannot be pressed.
+ * round is over, cannot be pressed. In Versus a key just sent is `pending`
+ * (faded, not pressable) until the server says whether it's in the word.
  */
 import { memo, useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -25,8 +26,8 @@ const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string
   clue: { bg: colors.butter, border: colors.butter, shadow: colors.butterD, text: '#7a5300' },
 };
 
-const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
-  letter: Letter; state: KeyState; locked: boolean; w: number; h: number; onPress: (c: Letter) => void;
+const Key = memo(function Key({ letter, state, locked, pending, w, h, onPress }: {
+  letter: Letter; state: KeyState; locked: boolean; pending: boolean; w: number; h: number; onPress: (c: Letter) => void;
 }) {
   const t = useTranslation();
   const used = state !== 'idle';
@@ -51,11 +52,12 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
   return (
     <Pressable
       onPress={() => onPress(letter)}
-      disabled={used || locked}
+      disabled={used || locked || pending}
       accessibilityRole="button"
       accessibilityLabel={label}
-      accessibilityState={{ disabled: used || locked }}
+      accessibilityState={{ disabled: used || locked || pending, busy: pending }}
       hitSlop={2}
+      style={pending && styles.keyPending}
     >
       {({ pressed }) => (
         <Raised
@@ -74,6 +76,8 @@ const Key = memo(function Key({ letter, state, locked, w, h, onPress }: {
 interface Props {
   language?: string;
   keyState: (c: Letter) => KeyState;
+  /** Versus: sent, not judged yet. */
+  pending?: (c: Letter) => boolean;
   locked: boolean;
   onPress: (c: Letter) => void;
   available: number;
@@ -94,7 +98,7 @@ let lastHeight = 0;
  * (it is the only part that grows), so anything added to the Play screen later
  * takes the scene's spare room, then the keys', and nothing ever overflows.
  */
-export function LetterKeyboard({ keyState, locked, onPress, available, compact, language = 'en' }: Props) {
+export function LetterKeyboard({ keyState, pending, locked, onPress, available, compact, language = 'en' }: Props) {
   const [height, setHeight] = useState(lastHeight);
   const rows = KEYBOARD_ROWS[isLanguage(language) ? language : 'en'];
   const perRow = Math.max(...rows.map(row => row.length));
@@ -119,7 +123,7 @@ export function LetterKeyboard({ keyState, locked, onPress, available, compact, 
       {rows.map((row) => (
         <View key={row} style={styles.row}>
           {row.split('').map((c) => (
-            <Key key={c} letter={c} state={keyState(c)} locked={locked} w={w} h={h} onPress={onPress} />
+            <Key key={c} letter={c} state={keyState(c)} locked={locked} pending={!!pending?.(c)} w={w} h={h} onPress={onPress} />
           ))}
         </View>
       ))}
@@ -142,5 +146,6 @@ const styles = StyleSheet.create({
   keyNo: { backgroundColor: colors.keyUsed, borderColor: colors.keyUsed },
   keyOff: { borderStyle: 'dashed', borderColor: colors.line },
   keyNoText: { color: colors.muted, opacity: 0.75 },
+  keyPending: { opacity: 0.45 },
   keyText: { fontFamily: fonts.display600 },
 });

@@ -12,8 +12,8 @@
 - State: React `useReducer` + context. **No state library**: ask the owner before adding one.
 - Storage: `@react-native-async-storage/async-storage`. The device is the source of truth
   (offline first).
-- Server: [server/](../server/), its own package (Node 24, Fastify, PostgreSQL on Railway), only for the
-  leaderboard and word statistics. The app reaches it through `EXPO_PUBLIC_API_URL`. See [server.md](server.md).
+- Server: [server/](../server/), its own package (Node 24, Fastify, PostgreSQL on Railway), for the
+  leaderboard, word statistics and Versus (WebSocket via `@fastify/websocket`, [versus.md](versus.md)). The app reaches it through `EXPO_PUBLIC_API_URL`. See [server.md](server.md).
 - Drawing: `react-native-svg` (`SvgXml` for the character scripts and icons).
 - Fonts: `@expo-google-fonts/fredoka` (titles, letters) and `nunito` (body). Loaded in
   `_layout.tsx`. The splash screen stays up until the fonts **and** the saved game are loaded.
@@ -55,6 +55,9 @@ Run tests, typecheck and lint before calling a task done (in `server/` too when 
   `const [v] = useState(() => new Animated.Value(0))`. Don't read or write `ref.current`
   during render, and don't call `performance.now()` / `Math.random()` during render.
   Do it in effects or event handlers.
+- **The app imports shared server files** (`server/src/contract.ts`, `versus-contract.ts`, `names.ts`, `engine.ts`,
+  `languages.ts`, `rules.ts`). They import each other with `.ts` extensions, so the app's `tsconfig.json` sets
+  `allowImportingTsExtensions` (Metro and Jest resolve them as they are).
 - **TypeScript 6 doesn't auto-include `@types/*`.** Test globals come from
   `"types": ["jest"]` in `tsconfig.json`. Add more there if you need them.
 - **`npm install` failed with ERESOLVE on `react-dom`** until `react-dom` was pinned to

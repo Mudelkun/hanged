@@ -9,9 +9,14 @@ server only receives a **copy**, for two things:
 The game never waits for the server. Offline, a sync fails quietly and the next one sends
 everything again.
 
+The same server also runs **Versus** (online multiplayer, 2026-10-23): a WebSocket at `/v1/live`, the
+friends routes, and the admin page with Versus's on/off switch. Versus is the one thing that is online by
+nature; it has its own context file: [versus.md](versus.md). Nothing below changes for the solo game.
+
 - Code: [server/](../server/), its own package (Node 24, Fastify 5, `pg`). Railway deploys that folder.
 - API contract: [server/src/contract.ts](../server/src/contract.ts), the one place for the request and
-  response types and the limits. The app imports it (`src/net/`, `src/game/progress.ts`), so it must stay
+  response types and the limits (Versus's: [versus-contract.ts](../server/src/versus-contract.ts)).
+  Also shared with the app: `names.ts`, and the round rules `engine.ts`, `languages.ts`, `rules.ts`. The app imports it (`src/net/`, `src/game/progress.ts`), so it must stay
   plain types and constants with **no imports**.
 - App side: [src/net/api.ts](../src/net/api.ts) (the only module that calls the server) and
   [src/net/sync.ts](../src/net/sync.ts) (the sync runner).
@@ -28,6 +33,8 @@ everything again.
 | `GET /v1/leaderboard?period=week\|all&me=<id>` | Top 50 + the asking player's rank. No auth: ranks are public. |
 | `GET /v1/names/available?name=<name>&me=<id>` | `{ available }`: no one else holds the name (the asker's own counts as free). No auth: names are public on the boards. |
 | `GET /health` | `SELECT 1`, for Railway. |
+| `GET /v1/live`, `/v1/versus/status`, `/v1/friends…`, `/v1/players/search`, `/v1/blocks/:id`, `/v1/players/:id/report` | Versus: [versus.md](versus.md). |
+| `GET /admin`, `GET|PUT /admin/api/versus` | The admin page and Versus's switch. Only with `ADMIN_TOKEN` set. |
 
 Every body and query is validated by a JSON schema in [app.ts](../server/src/app.ts) before a
 handler runs. CORS (only the web preview needs it) allows GET, POST and DELETE: `@fastify/cors` allows only
@@ -109,7 +116,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 |---|---|
 | `players` | id, secret hash, name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
 | `player_weeks` | `(player_id, week)` → words guessed, highest level played, tokens earned and misses that week |
-| `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs (`npm run seed:words`), to show words in the statistics. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
+| `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs (`npm run seed:words`), to show words in the statistics, and since migration 004 with each word's description, subject, rarity and difficulty, because **Versus deals its words from it**. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
 | `word_stats` (view) | each word over all time: played, won, lost, `loss_rate`, `avg_wrong`, … |
 
@@ -145,11 +152,15 @@ Expo Go on a phone can't reach `localhost`: use the computer's LAN address, or t
 3. Settings → Networking → **Generate Domain**. Set the healthcheck path to `/health`.
 4. Migrations run on every start. To fill the `words` table, run this from your machine with the
    Postgres service's **public** URL: `cd server && DATABASE_URL=… npm run seed:words`. Run it again
-   whenever `data/words.json` changes.
+   whenever `data/words.json` changes, **and once after migration 004**: Versus needs the descriptions it adds.
+   Versus variables: `ADMIN_TOKEN` (24+ characters: the `/admin` page and its switch exist only with it),
+   `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
+   redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`).
 5. Put the domain in the app: `EXPO_PUBLIC_API_URL=https://<domain>` (an `.env` file at the repo root
    works with Expo; `.env*.local` is gitignored).
 
-Cost: one small service plus Postgres. Words are never served, a sync is one small request every
+Cost: one small service plus Postgres (Versus included: its sockets and matches live in the same process,
+see [versus.md](versus.md), Costs and scaling). Words are never served, a sync is one small request every
 few rounds, and the leaderboard's top 50 is cached for 10 s and shared by everyone. A player's rank
 is an indexed count, which is O(rank). Cache it if it ever shows up in the metrics.
 
@@ -165,6 +176,8 @@ is an indexed count, which is O(rank). Cache it if it ever shows up in the metri
 - Keep the app's checks and the server's schemas in step with `LIMITS` in `contract.ts`.
 - `POST /v1/players` allows 20 an hour per IP; the tests build the app with `newPlayersPerHour` raised,
   since they make more players than that.
+- **Shared files** (`contract.ts`, `versus-contract.ts`, `names.ts`, `engine.ts`, `languages.ts`, `rules.ts`) import
+  only each other, with `.ts` extensions (Node needs them; the app's tsconfig allows them).
 - **`names.ts` is shared like `contract.ts`**: the app imports it, so its only import is the `obscenity`
   filter, which is in **both** `package.json` files (Metro can't see `server/node_modules`, so the app
   bundles its own copy; keep the two versions the same). The server re-checks names because the app's check

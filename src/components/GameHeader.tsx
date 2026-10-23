@@ -113,12 +113,12 @@ function ProfileButton({ character }: { character: Character }) {
 /** Back to where the page was opened from (Play, if it was opened straight from a link). */
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
-/** A pushed page's header: back button, title, and the token balance when the page shows it. */
-export function BackHeader({ title, tokens }: { title: string; tokens?: number }) {
+/** A pushed page's header: back button (or `onBack`, e.g. leaving a lobby), title, and the token balance when the page shows it. */
+export function BackHeader({ title, tokens, onBack = goBack }: { title: string; tokens?: number; onBack?: () => void }) {
   const t = useTranslation();
   return (
     <View style={styles.head}>
-      <Pressable onPress={() => { sound.play('back'); goBack(); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
+      <Pressable onPress={() => { sound.play('back'); onBack(); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
         {({ pressed }) => (
           <Raised depth={3} shadowColor={colors.shadow} radius={15} pressed={pressed} style={styles.back}>
             <Icon xml={chevXml('l')} size={22} />

@@ -1,0 +1,193 @@
+# Versus: online multiplayer
+
+The Versus tab: three online modes against friends or random players, a friends system, lobbies,
+invites, matchmaking, and an admin switch that turns it all off. Built 2026-10-23 at the owner's
+request ("design and implement a complete multiplayer experience… keep infrastructure costs as low as
+realistically possible… a switch to turn multiplayer off at any moment and a screen for it").
+
+The solo game never depends on any of it (offline first, CLAUDE.md). Versus is the one part that
+needs the internet.
+
+## Decisions (and why)
+
+| Decision | Why |
+|---|---|
+| **WebSockets on the existing Railway server** (`@fastify/websocket`), no third-party realtime service | Cheapest: no per-message or per-connection fees (Pusher, Ably, Firebase bill per message/connection). One small Node instance holds tens of thousands of idle sockets; a guess is ~100 bytes judged in microseconds. |
+| **The server is the referee** (authoritative): it deals the words, judges every guess, keeps the clocks, decides the result | Fairness. A device only sends letters and **never holds a word it has to guess**, so a modified app can't read the answer, fake a score or stop a clock. |
+| **Matches live in memory**; only their outcome is written (one transaction) | A match lasts minutes. Writing every guess would cost database load for nothing. Like the solo rounds: storage grows with players, not with matches. |
+| **Same engine as solo** (`server/src/engine.ts`, shared like `contract.ts`) | One set of rules: clue letters, accents, judging. The engine moved from `src/game/` (which re-exports it) because Railway deploys only `server/`. |
+| **Ranked = matchmade only**; friend matches never move ratings | Friends can't trade wins to climb. |
+| **Versus doesn't count toward the leaderboard or pay tokens** | Still an open question for the owner (CLAUDE.md). It has its own rating instead. Changing it is a server-side decision (the reducer must still be the only place that adds score/tokens). |
+| **REST for friends, socket for live things** | Friends change rarely and want a plain answer; the socket pushes `friends` so open lists refresh without polling. |
+| **Socket open only while useful** | Cost: see "When the app is connected". |
+
+## The modes (`MODES` in [versus-contract.ts](../server/src/versus-contract.ts), PLACEHOLDER numbers)
+
+- **Word Rush** (`rush`, the owner's timed challenge, 2-4 players, 2:00). Everyone gets the **same
+  words in the same order** (and the same clue letters: the match deals each round once and shares it).
+  Each word allows 6 misses; a lost or skipped word moves on without a point. **Most words wins**; ties:
+  fewer misses, then whoever reached their score first.
+- **Balloon Battle** (`battle`, 2-4 players, 4:00 cap). Everyone floats under 10 balloons for the whole
+  match and plays the same words. A miss pops one of yours. A word guessed pops one balloon of **the
+  opponent with the most** (two if guessed without a miss), so the leader is everyone's target and matches
+  stay close. A skip costs a balloon. No balloons: you land (out). **Last one floating wins**; at the cap,
+  most balloons, then most words, then fewer misses. Landed players rank by who landed last.
+- **Word Duel** (`duel`, 1 against 1, best of 3). Each round both pick a word for the other: one of 3
+  dealt cards, or **any word typed**, as long as it's in the language's word pack (4-15 letters, not used
+  this match). Then both guess at once (8 misses, 90 s). Solving beats not solving; then fewer misses;
+  then faster (unsolved: more letters found). Two round wins ends it. This is the owner's original
+  two-player idea (CLAUDE.md), made fair: both sides pick, and typed words must be dictionary words
+  (no nonsense strings, nothing offensive outside the pack).
+
+Versus words are everyday words (rarity ≤ 20, difficulty ≤ 8, 5-10 letters: the familiarity of solo
+levels 1-15) from the `words` table, loaded once into memory by [versus/words.ts](../server/src/versus/words.ts).
+A match is played in the language of whoever started it (matchmaking queues are per mode **and**
+language). **The `words` table must be seeded** (`npm run seed:words`, now with descriptions): with an
+empty pool, starting a match answers `noWords`.
+
+## Server ([server/src/versus/](../server/src/versus/))
+
+| File | |
+|---|---|
+| [versus-contract.ts](../server/src/versus-contract.ts) | Modes, limits, every message and view type. Shared with the app, no imports. `VERSUS_PROTOCOL` bumps on breaking changes (old apps get `bye: 'version'` → "Time for an update"). |
+| [hub.ts](../server/src/versus/hub.ts) | One per process: sockets (auth, rate limit, heartbeat, one socket per player), presence, invites, routing to lobbies/matchmaker/matches, results, the switch, draining. |
+| [match.ts](../server/src/versus/match.ts) | `Match` (phases, deadlines, dedupe, away/forfeit, standings) and `RushMatch`, `BattleMatch` (both `RaceMatch`) and `DuelMatch`. Pure apart from an injected clock, so tests drive time. |
+| [lobbies.ts](../server/src/versus/lobbies.ts), [matchmaker.ts](../server/src/versus/matchmaker.ts) | Pure data: the hub sends the messages. |
+| [puzzle.ts](../server/src/versus/puzzle.ts) | A round → what its player may see (`PuzzleView`: shown letters only) and what others may see (found/to find counts). |
+| [rating.ts](../server/src/versus/rating.ts) | Elo (K 32, PLACEHOLDER), pairwise for 3-4 players with K shared. |
+| [store.ts](../server/src/versus/store.ts) | Friends, requests, blocks, reports, results, the switch. |
+| [routes.ts](../server/src/versus/routes.ts), [admin.ts](../server/src/admin.ts) | HTTP. |
+
+### The socket (`GET /v1/live`)
+
+1. The app sends `auth` (id, secret, protocol) within 5 s. Never in the URL (URLs get logged).
+2. `hello` answers with the switch, stats, and `inMatch`/`inLobby`; the match snapshot, lobby, invites and
+   any unseen result follow at once. **A reconnect resumes in one round trip.**
+3. Every client message is rate limited (burst 20, then 10/s; way over: `bye: 'abuse'`), shape-checked,
+   and at most 2 KB (`maxPayload`). Compression is off: messages are tiny and per-socket deflate costs
+   memory.
+4. The server pings every 30 s; no pong by the next ping closes the socket.
+5. **One socket per player**: a new one replaces the old (`bye: 'elsewhere'`).
+
+Match traffic is **deltas**: a full `match` snapshot only on start, phase change and reconnect; then
+`puzzle` (your word, to you only), `player` (one player's counts, to everyone), `hit`, `end`.
+
+### Fairness and abuse
+
+- Words are never sent before they're guessed; the result list shows the match's words at the end.
+- Every match message carries the client's counter `n`; the server judges each `n` once (a retry after
+  a reconnect can't double a guess). The app uses `max(last + 1, Date.now())`, so it stays increasing
+  across app restarts.
+- Every phase has a **server deadline**: a match never waits on a device (Duel picks a card for whoever
+  runs out of time).
+- Leaving is a forfeit (placed last; ranked: counted as a loss), so rage-quitting doesn't save a rating.
+- Blocks work both ways: no requests, invites, lobby joins, search results or matchmaking between the
+  two. A block is never revealed (a request to a blocker answers "sent").
+- Reports (`name`, `cheating`, `other`) go to `player_reports`; the admin page lists the most reported.
+  App Store Guideline 1.2 asks for this. **Acting on reports (removing a name, banning) is still manual**
+  (SQL on Railway).
+- Friend search needs 2+ letters, returns 20, and is rate limited; friend lists cap at 200 and pending
+  requests at 50 per player.
+- Not prevented: a bot that reads the clue and searches the dictionary. No client can stop that; the
+  rating and per-account history would show it. Detection is future work.
+
+### Disconnections
+
+| Situation | What happens |
+|---|---|
+| Socket drops mid-match | The player is `away` (others see it); the clock keeps running. Back within **45 s** (`awayForfeitMs`): full snapshot, play on. Later: forfeit. |
+| Player leaves on purpose | Forfeit at once; they're free immediately; the match ends when one player is left. |
+| Socket drops in a lobby | 20 s grace (`lobbyGraceMs`) before they leave it. |
+| Socket drops in the queue | Out of the queue (server side); the app **re-queues by itself** after reconnecting (`live.remember`). |
+| Result arrives while away | Kept 10 min; shown on reconnect. |
+| Server redeploy | `SIGTERM` → `drain(VERSUS_DRAIN_SECONDS)`: nothing new starts, running matches may finish, then the rest are cancelled (count for nothing) and sockets get `bye: 'restart'`; apps reconnect to the new server with backoff and jitter. |
+| Server restarted mid-match (crash) | The match is gone; the next `hello` says `inMatch: false` and the app shows "The match ended while you were away". |
+
+### Database ([migrations/004_versus.sql](../server/src/migrations/004_versus.sql))
+
+`friends` (two rows per friendship, so a player's list is one index range), `friend_requests`,
+`blocks`, `player_reports`, `players.versus_rating/played/won`, `versus_days` (matches per day and
+mode, for the admin page; **never a row per match**), `settings` (the switch), `words` gains
+`description`, `subject`, `rarity`, `difficulty`, and `players_name_prefix` serves the search. Deleting
+an account cascades through all of it.
+
+### REST
+
+`GET /v1/versus/status` (public), and with the player's Bearer credentials (503 while Versus is off):
+`GET /v1/friends`, `GET /v1/players/search?q=`, `POST /v1/friends/requests {playerId}`,
+`POST /v1/friends/requests/:id/accept`, `DELETE /v1/friends/requests/:id`, `DELETE /v1/friends/:id`,
+`PUT|DELETE /v1/blocks/:id`, `POST /v1/players/:id/report {reason}`.
+
+## The switch (kill switch) and the admin page
+
+- **`/admin`** on the server (set `ADMIN_TOKEN`, 24+ characters, on Railway; without it the page doesn't
+  exist). It asks for the token, then shows the switch, an optional message for players, "also stop
+  running matches now", live counts (online, in matches, queued, lobbies) and the last 7 days.
+  The token is compared in constant time; tries are rate limited (30/min).
+- **Off**: queues, lobbies and invites close at once; sockets not in a match close (`bye: 'disabled'`);
+  running matches finish, or stop at once (counting nothing) with the checkbox. Friends routes answer 503.
+  The app's Versus tab shows **"Versus is taking a break"** with the admin's message and "Check again".
+- Stored in `settings` (survives restarts). **`VERSUS_DISABLED=1`** forces it off whatever the switch says
+  (if the database itself is the problem).
+
+## The app
+
+| File | |
+|---|---|
+| [src/net/live.ts](../src/net/live.ts) | The socket: open while wanted, auth, reconnect with growing jittered delay, stop on a final `bye`, `remember` (the queue). |
+| [src/state/versus.ts](../src/state/versus.ts) | Pure reducer: server messages → state (tested). |
+| [src/state/VersusContext.tsx](../src/state/VersusContext.tsx) | Provider: when to connect, actions, `useFriends`, `useLiveWhileFocused`. |
+| [src/app/(tabs)/versus.tsx](../src/app/(tabs)/versus.tsx) | The tab: stats, a card per mode (Quick match / With friends / ?), join with a code, Friends. |
+| [src/app/match.tsx](../src/app/match.tsx) | The live room: result > match > lobby > queue, whichever exists. Opens by itself (`VersusRouter` in `_layout.tsx`) when the server puts the player in one; closes when empty. No swipe back. |
+| [src/app/friends.tsx](../src/app/friends.tsx) | Search, requests, friends with presence, invite, remove/block/report, blocked list. |
+| [src/components/versus/](../src/components/versus/) | Hub, Room (queue, lobby, invite sheet), MatchPlay, MatchResult, Friends (row, invite banner), parts. |
+
+- **Buttons send; screens change when the server answers.** The room opens on the server's `queued`,
+  `lobby` or `match`, not on the tap.
+- The match screen reuses the solo pieces (scene, tiles, description, keyboard). A pressed key is
+  **pending** (faded, `LetterKeyboard`'s `pending`) until the server judges it, typically one round trip.
+- Timers show the server's deadlines with the clock offset from `hello`/`match` (`serverNow`).
+- An invite shows as a banner over any screen except a match.
+- Versus needs an account: the first use syncs to make one (`versusAccount`), so the server has the name
+  and character before anyone sees them.
+
+### When the app is connected (cost)
+
+Open while a Versus screen shows, while in a queue/lobby/match, and, once the player has opened Versus
+once (`hanged.versus.v1`), while the app is in the foreground, so invites arrive on any screen. Closed in
+the background (iOS would freeze it anyway). Players who never open Versus never open a socket.
+
+## Costs and scaling
+
+- Database: read at sign-in (player, friends, blocks), written per friendship change and **once per
+  match**. Nothing per guess or per tick; the matchmaking timer runs only while someone waits.
+- One instance is the whole design today: presence, lobbies, invites and matches are in its memory. At
+  roughly 10k concurrent players a 1-2 GB instance is comfortable; the first limits will be the Node event
+  loop and memory, visible in Railway's metrics.
+- **The way out when one instance isn't enough** (not built): route each match to one instance and fan
+  presence/invites out with Postgres `LISTEN/NOTIFY` (no Redis needed), or run Versus as its own service.
+  Keep `hub.ts` the only owner of live state so that change stays in one file.
+- Railway's zero-downtime deploy runs old and new instances side by side for a moment: players on the old
+  one finish there (`VERSUS_DRAIN_SECONDS`, keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`).
+
+## Running and testing
+
+```bash
+cd server && npm test     # versus-match.test.ts (modes, fake clock), versus-api.test.ts (real sockets, REST, switch)
+npm test                  # app: src/state/__tests__/versus.test.ts (reducer)
+cd server && ADMIN_TOKEN=<24+ chars> npm run dev   # then http://localhost:3000/admin
+```
+
+Two players locally: two browser profiles on the web preview (each has its own AsyncStorage, so its own
+account), `EXPO_PUBLIC_API_URL=http://localhost:3000`.
+
+## Traps
+
+- **Shared files import with `.ts` extensions** (`./languages.ts`): Node needs them, and the app's
+  `tsconfig.json` has `allowImportingTsExtensions` for it. Shared files may import only other shared files.
+- `erasableSyntaxOnly` (Node runs the server's TypeScript directly): no constructor parameter properties,
+  no enums.
+- Names are unique, so two test runs that make "Bo" make "Bo" and "Bo2".
+- The React Compiler lint rules: no refs read while building the socket (the account function is stable,
+  so it's passed directly); no setState straight in an effect (the friends refresh is a short debounce).
+- The lobby's invite sheet closes itself once the lobby is full (Start is under it).
