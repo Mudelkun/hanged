@@ -47,8 +47,10 @@
     return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${s.toFixed(3)})">${inner}</g>`;
   }
   const SPARK = 'M0,-12 C1,-4 4,-1 12,0 C4,1 1,4 0,12 C-1,4 -4,1 -12,0 C-4,-1 -1,-4 0,-12 Z';
+  const SPARKLE = `<path d="${SPARK}" fill="#ffd34d" stroke="#fff" stroke-width="2"/>`;
+  /** p: 0..1 through the sparkle: it grows, turns and fades. */
   const sparkle = (x, y, p) =>
-    `<path transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(0.5 + p).toFixed(2)}) rotate(${(p * 90).toFixed(0)})" d="${SPARK}" fill="#ffd34d" stroke="#fff" stroke-width="2" opacity="${(1 - p * p).toFixed(2)}"/>`;
+    `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(0.5 + p).toFixed(2)}) rotate(${(p * 90).toFixed(0)})" opacity="${(1 - p * p).toFixed(2)}">${SPARKLE}</g>`;
   /** A string from a balloon's knot (scale bs) to a point. */
   const string = (bx, by, bs, x, y, sway) => {
     const ky = by + 33 * bs;
@@ -67,6 +69,38 @@
   // viewBoxes for a six-letter word: with its balloons (also the native splash image), and the tiles only
   const BOX = [-210, -148, 420, 250];
   const BOX_COMPACT = [-210, -48, 420, 140];
+  const SHOWN = 0.3; // a turning letter shows from here (0..1 of its turn)
+
+  /** Letter i of n at second t, in wordmark units: its tile (x, y, rot) and its balloon (bx, by). bob: 0..1 of the float; hop: px up. */
+  function letterPose(i, n, t, bob, hop) {
+    const ph = t * 1.7 + i * 0.8, dy = Math.sin(ph) * 3.5 * bob - hop;
+    const x = (i - (n - 1) / 2) * WM.pitch, y = at(WM.ty, i) + dy;
+    return {
+      x, y, rot: at(WM.rot, i) + Math.sin(ph + 0.7) * 2.5 * bob,
+      bx: x + at(WM.bx, i) + Math.sin(ph * 0.7 + 1) * 2 * bob, by: -98 + at(WM.by, i) + dy,
+    };
+  }
+  /** Where letter i's tile hangs from its balloon: the end of the string, from the balloon's centre. */
+  const drop = (i, n) => {
+    const p = letterPose(i, n, 0, 0, 0);
+    return [p.x - p.bx, p.y - TILE.h / 2 + 2 - p.by];
+  };
+  /** Letter i's balloon around its own 0, 0, with its string down to its tile. */
+  const letterBalloon = (i, n) =>
+    `<path d="${string(0, 0, WM.bs, ...drop(i, n), 0)}" fill="none" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/>` +
+    B.balloon(0, 0, BAL[at(WM.bal, i)], { scale: WM.bs }, 0);
+  /** A turning tile's size (rv: 0..1 of its turn): it swells like a balloon about to pop, then springs back as its letter. */
+  function swell(rv) {
+    const q = (rv - SHOWN) / (1 - SHOWN);
+    return rv < SHOWN ? 1 + (0.14 * rv) / SHOWN : 1 + 0.14 * Math.exp(-4 * q) * Math.cos(9 * q);
+  }
+  const pillHalf = (tagline) => Math.max(80, 15 + [...tagline].length * 6.4); // the pill fits its text
+  /** The tagline pill around its own 0, 0. */
+  const pillSvg = (tagline, fonts) => {
+    const half = pillHalf(tagline);
+    return `<rect x="${-half}" y="-17" width="${2 * half}" height="34" rx="17" fill="#fff" stroke="${OUT}" stroke-width="3"/>` +
+      `<text y="6" text-anchor="middle" ${fonts.semi} font-size="16" letter-spacing="3" fill="#2a86c8">${esc(tagline)}</text>`;
+  };
 
   /**
    * The wordmark's parts, in its own units (centred on 0, 0).
@@ -74,28 +108,17 @@
    * tagline popping in); bob: 0..1 of the float; balloons: false = the tiles only.
    */
   function wordmark({ word = 'HANGED', tagline = 'WORD GUESSING GAME', fonts = FONTS, t = 0, bob = 1, reveal = 1, hop = null, pill = 1, balloons = true } = {}) {
-    const letters = [...word], mid = (letters.length - 1) / 2;
-    let strings = '', bals = '', tiles = '';
+    const letters = [...word], n = letters.length;
+    let bals = '', tiles = '';
     letters.forEach((ch, i) => {
-      const ph = t * 1.7 + i * 0.8, dy = Math.sin(ph) * 3.5 * bob - (hop ? hop[i] : 0);
-      const x = (i - mid) * WM.pitch, y = at(WM.ty, i) + dy;
+      const p = letterPose(i, n, t, bob, hop ? hop[i] : 0);
       const rv = Array.isArray(reveal) ? reveal[i] : reveal;
-      // The hidden tile swells like a balloon about to pop, then springs back as its letter
-      const q = (rv - 0.3) / 0.7;
-      const s = rv < 0.3 ? 1 + (0.14 * rv) / 0.3 : 1 + 0.14 * Math.exp(-4 * q) * Math.cos(9 * q);
-      tiles += tile(ch, rv >= 0.3 ? at(WM.look, i) : null, x, y, at(WM.rot, i) + Math.sin(ph + 0.7) * 2.5 * bob, s, fonts);
-      if (rv >= 0.3 && rv < 1) tiles += sparkle(x + 30, y - 34, q);
-      if (!balloons) return;
-      const bx = x + at(WM.bx, i) + Math.sin(ph * 0.7 + 1) * 2 * bob, by = -98 + at(WM.by, i) + dy * 1.2;
-      strings += string(bx, by, WM.bs, x, y - TILE.h / 2 + 2, Math.sin(ph) * 4 * bob);
-      bals += B.balloon(bx, by, BAL[at(WM.bal, i)], { scale: WM.bs }, t);
+      tiles += tile(ch, rv >= SHOWN ? at(WM.look, i) : null, p.x, p.y, p.rot, swell(rv), fonts);
+      if (rv >= SHOWN && rv < 1) tiles += sparkle(p.x + 30, p.y - 34, (rv - SHOWN) / (1 - SHOWN));
+      if (balloons) bals += `<g transform="translate(${p.bx.toFixed(1)} ${p.by.toFixed(1)})">${letterBalloon(i, n)}</g>`;
     });
-    const half = Math.max(80, 15 + [...tagline].length * 6.4); // the pill fits its text
-    const p = pill <= 0 ? '' :
-      `<g transform="translate(0 ${balloons ? 76 : 70}) scale(${ease.back(pill).toFixed(3)})" opacity="${clamp(pill * 2).toFixed(2)}">` +
-      `<rect x="${-half}" y="-17" width="${2 * half}" height="34" rx="17" fill="#fff" stroke="${OUT}" stroke-width="3"/>` +
-      `<text y="6" text-anchor="middle" ${fonts.semi} font-size="16" letter-spacing="3" fill="#2a86c8">${esc(tagline)}</text></g>`;
-    return (strings ? `<path d="${strings}" fill="none" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/>` : '') + bals + tiles + p;
+    return bals + tiles + (pill <= 0 ? '' :
+      `<g transform="translate(0 ${balloons ? 76 : 70}) scale(${ease.back(pill).toFixed(3)})" opacity="${clamp(pill * 2).toFixed(2)}">${pillSvg(tagline, fonts)}</g>`);
   }
 
   // ---- the loading screen ----
@@ -116,43 +139,100 @@
 
   // Clouds [x, y as shares of the screen, scale]
   const SKY_CLOUDS = [[0.18, 0.18, 0.9], [0.82, 0.3, 0.7], [0.1, 0.66, 0.6], [0.9, 0.82, 0.8], [0.46, 0.94, 0.5]];
-  // The buddy's balloon scene, without its sky or clouds, in scene units (the camera keeps the ground out)
-  const buddyScene = (c, f) => `<g transform="translate(0 ${f.cam})">` +
-    B.scene(c, f, { sky: false, clouds: false, camera: true }).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '') + `</g>`;
+  const SUN = '<circle r="30" fill="#ffe58a" stroke="#f5c84b" stroke-width="3"/>';
+  const BUDDY = 0.9; // the buddy's scene, in points per scene unit
+  // viewBoxes around each layer's 0, 0 (a balloon's height depends on its string). The buddy's
+  // holds every character around its paw, with a margin for wider ears or props.
+  const LAYER_BOX = {
+    sun: [-32, -32, 64, 64], cloud: [-54, -26, 104, 44], sparkle: [-14, -14, 28, 28],
+    tile: [-32, -36, 64, 78], balloon: [-24, -26, 48], buddy: [-100, -226, 156, 300],
+  };
 
   /**
-   * The loading screen at second t, as an SVG filling a w × h screen. At t = 0 it's exactly the
-   * native splash: the blank wordmark centred on the sky colour. character: the player's buddy
-   * (a rig character), or null for a new player (the word plays alone). still: Reduce Motion's
-   * single frame, the word shown and centred, nothing moving.
+   * The loading screen as layers, back to front. A layer's drawing never changes, only where it is:
+   * the app draws each one once and moves it on the UI thread, so the animation stays smooth on any
+   * phone, even while the app loads underneath. splash() composes the same layers into one SVG.
+   *
+   * Each layer: svg, its drawing around its own 0, 0; box, a viewBox that holds it; unit, points per
+   * unit; zoom, the largest scale it reaches (the app draws it that sharp); and at(t), where it is at
+   * second t: x, y (its 0, 0 on screen, in points), r (degrees), s (scale) and o (opacity).
+   * character: the player's buddy, or null for a new player (the word plays alone). still: Reduce
+   * Motion's single frame, the word shown and centred, nothing moving.
    */
-  function splash(t, { w = 390, h = 844, character = null, word, tagline, fonts, still = false } = {}) {
-    const S = SPLASH, n = [...(word || 'HANGED')].length, solved = S.letterAt(n - 1) + S.flip;
-    if (still) t = solved + 0.5;
-    const reveal = Array.from({ length: n }, (_, i) => seg(t, S.letterAt(i), S.letterAt(i) + S.flip));
-    const hop = Array.from({ length: n }, (_, i) => 12 * Math.sin(Math.PI * seg(t, solved + i * 0.05, solved + i * 0.05 + 0.28)));
-    const lift = ease.in(seg(t, S.exit, S.exit + S.lift));
-    // Native splash: the wordmark box is centred on the screen. It then rises to make room, and flies off.
-    const cy = BOX[1] + BOX[3] / 2;
-    const wy = h / 2 - cy * S.scale - (still ? 0 : 100 * ease.inOut(seg(t, ...S.up))) - h * 0.97 * lift;
-    const clouds = SKY_CLOUDS.map(([x, y, sc]) => B.cloud(x * w + t * 7, y * h + h * 0.73 * lift, sc)).join('');
-    const sun = `<circle cx="${w - 72}" cy="118" r="30" fill="#ffe58a" stroke="#f5c84b" stroke-width="3"/>`;
+  function splashLayers({ w = 390, h = 844, character = null, word = 'HANGED', tagline = 'WORD GUESSING GAME', fonts = FONTS, still = false } = {}) {
+    const S = SPLASH, k = S.scale, letters = [...word], n = letters.length, solved = S.letterAt(n - 1) + S.flip;
+    const layers = [];
+    const add = (svg, box, unit, at, zoom = 1) => {
+      const m = still && at(solved + 0.5);
+      layers.push({ svg, box, unit, zoom, at: still ? () => m : at });
+    };
+    const pos = (x, y, r = 0, s = 1, o = 1) => ({ x, y, r, s, o });
+    const lift = (t) => ease.in(seg(t, S.exit, S.exit + S.lift));
+    const sky = (t) => (still ? 1 : seg(t, 0.1, 0.7));
 
-    let buddy = '';
-    const rise = seg(t, ...S.buddy);
-    if (character && rise > 0 && !still) {
-      const f = B.frame(0, 0, 1, t);
-      if (lift > 0) f.expr = 'joy';
-      const by = h / 2 + 46 + (1 - ease.back(rise)) * h * 0.62 - h * 1.16 * lift;
-      buddy = `<g transform="translate(${(w / 2 - 195 * 0.9).toFixed(1)} ${by.toFixed(1)}) scale(0.9)">${buddyScene(character, f)}</g>`;
+    add(SUN, LAYER_BOX.sun, 1, (t) => pos(w - 72, 118, 0, 1, sky(t)));
+    const cloud = B.cloud(0, 0, 1);
+    SKY_CLOUDS.forEach(([x, y, sc]) => add(cloud, LAYER_BOX.cloud, sc, (t) => pos(x * w + t * 7, y * h + h * 0.73 * lift(t), 0, 1, sky(t))));
+
+    // The buddy floats up from below, bobbing and swaying from its paw, and cheers at lift-off
+    if (character) {
+      const f = B.frame(0, 0, 1, 0, false), [px, py] = B.paw(f);
+      const drawing = (expr) => `<g transform="translate(${-px} ${f.cam - py})">` +
+        B.scene(character, { ...f, expr }, { sky: false, clouds: false, camera: true }).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '') + '</g>';
+      const buddy = (joy) => (t) => {
+        const rise = seg(t, ...S.buddy), up = lift(t);
+        const y = h / 2 + 46 + (1 - ease.back(rise)) * h * 0.62 - h * 1.16 * up;
+        return pos(w / 2 + BUDDY * (px - 195), y + BUDDY * (py + Math.sin(t * 1.8) * 3), Math.sin(t * 1.3) * 2, 1,
+          !still && rise > 0 && up > 0 === joy ? 1 : 0);
+      };
+      add(drawing(f.expr), LAYER_BOX.buddy, BUDDY, buddy(false));
+      add(drawing('joy'), LAYER_BOX.buddy, BUDDY, buddy(true));
     }
-    const mark = wordmark({ word, tagline, fonts, t, bob: still ? 0 : ease.inOut(seg(t, 0, 0.5)), reveal, hop: still ? null : hop, pill: seg(t, solved + 0.1, solved + 0.45) });
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">` +
-      `<rect width="${w}" height="${h}" fill="${S.bg}"/>` +
-      `<g opacity="${(still ? 1 : seg(t, 0.1, 0.7)).toFixed(2)}">${sun}${clouds}</g>` + buddy +
-      `<g transform="translate(${w / 2} ${wy.toFixed(1)}) scale(${S.scale})">${mark}</g>` +
-      `</svg>`;
+
+    // The word: where the native splash has it (its box centred), then it rises to make room, and flies off
+    const cy = BOX[1] + BOX[3] / 2;
+    const mark = (t, x, y) => [w / 2 + x * k, h / 2 + (y - cy) * k - (still ? 0 : 100 * ease.inOut(seg(t, ...S.up))) - h * 0.97 * lift(t)];
+    // Each letter turns in turn, and once the word is solved the tiles hop in a wave
+    const pose = (t, i) => letterPose(i, n, t, still ? 0 : ease.inOut(seg(t, 0, 0.5)),
+      still ? 0 : 12 * Math.sin(Math.PI * seg(t, solved + i * 0.05, solved + i * 0.05 + 0.28)));
+    const reveal = (t, i) => seg(t, S.letterAt(i), S.letterAt(i) + S.flip);
+    letters.forEach((_, i) => add(letterBalloon(i, n), [...LAYER_BOX.balloon, drop(i, n)[1] + 30], k, (t) => {
+      const p = pose(t, i);
+      return pos(...mark(t, p.bx, p.by));
+    }));
+    letters.forEach((ch, i) => {
+      const tileAt = (shown) => (t) => {
+        const p = pose(t, i), rv = reveal(t, i);
+        return pos(...mark(t, p.x, p.y), p.rot, swell(rv), rv >= SHOWN === shown ? 1 : 0);
+      };
+      add(tile(ch, null, 0, 0, 0, 1, fonts), LAYER_BOX.tile, k, tileAt(false), 1.14);
+      add(tile(ch, at(WM.look, i), 0, 0, 0, 1, fonts), LAYER_BOX.tile, k, tileAt(true), 1.14);
+      add(SPARKLE, LAYER_BOX.sparkle, k, (t) => {
+        const p = pose(t, i), rv = reveal(t, i), q = clamp((rv - SHOWN) / (1 - SHOWN));
+        return pos(...mark(t, p.x + 30, p.y - 34), q * 90, 0.5 + q, rv >= SHOWN && rv < 1 ? 1 - q * q : 0);
+      }, 1.5);
+    });
+    const half = pillHalf(tagline);
+    add(pillSvg(tagline, fonts), [-half - 2, -19, 2 * half + 4, 38], k, (t) => {
+      const p = seg(t, solved + 0.1, solved + 0.45);
+      return pos(...mark(t, 0, 76), 0, ease.back(p), clamp(p * 2));
+    }, 1.1);
+    return layers;
   }
 
-  global.HangedBrand = { wordmark, splash, tile, SPLASH, BOX, BOX_COMPACT, FONTS, TILE };
+  /**
+   * The loading screen at second t, as an SVG filling a w × h screen: its layers, composed (the
+   * previews). At t = 0 it's exactly the native splash: the blank wordmark centred on the sky colour.
+   */
+  function splash(t, opts = {}) {
+    const { w = 390, h = 844 } = opts;
+    const parts = splashLayers(opts).map(({ svg, unit, at }) => {
+      const { x, y, r, s, o } = at(t);
+      return o <= 0 ? '' : `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${(s * unit).toFixed(3)})"` +
+        `${o < 1 ? ` opacity="${o.toFixed(2)}"` : ''}>${svg}</g>`;
+    });
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${SPLASH.bg}"/>${parts.join('')}</svg>`;
+  }
+
+  global.HangedBrand = { wordmark, splash, splashLayers, tile, SPLASH, BOX, BOX_COMPACT, FONTS, TILE };
 })(typeof window !== 'undefined' ? window : globalThis);

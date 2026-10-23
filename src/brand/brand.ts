@@ -61,11 +61,35 @@ export interface SplashTimeline {
   letterAt(i: number): number;
 }
 
+/** Where a loading-screen layer is at a moment: its 0, 0 on screen (points), degrees, scale, opacity. */
+export interface LayerPos {
+  x: number;
+  y: number;
+  r: number;
+  s: number;
+  o: number;
+}
+
+/** One piece of the loading screen: drawn once, then only moved. */
+export interface SplashLayer {
+  /** Its drawing around its own 0, 0 (no <svg>). */
+  svg: string;
+  /** A viewBox that holds the drawing. */
+  box: [number, number, number, number];
+  /** Points per drawing unit. */
+  unit: number;
+  /** The largest scale it reaches: draw it that sharp. */
+  zoom: number;
+  at(t: number): LayerPos;
+}
+
 interface HangedBrandApi {
   /** The wordmark's parts, in its own units, centred on 0, 0 (no <svg>). */
   wordmark(opts?: WordmarkOptions): string;
   /** The loading screen at second t, as an <svg> filling a w × h screen. */
   splash(t: number, opts: SplashOptions): string;
+  /** The loading screen as layers, back to front. */
+  splashLayers(opts: SplashOptions): SplashLayer[];
   SPLASH: SplashTimeline;
   BOX: [number, number, number, number];
   BOX_COMPACT: [number, number, number, number];

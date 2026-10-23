@@ -4,12 +4,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { sound } from '../../audio';
 import { SPLASH } from '../../brand/brand';
 import { feedback } from '../../feedback';
+import { SvgXml } from 'react-native-svg';
 import { LaunchScreen } from '../LaunchScreen';
 
 jest.mock('../../audio', () => ({ sound: { play: jest.fn() } }));
 jest.mock('../../feedback', () => ({ feedback: { launch: jest.fn() } }));
 jest.mock('expo-splash-screen', () => ({ hideAsync: jest.fn(() => Promise.resolve()) }));
-jest.mock('react-native-svg', () => ({ SvgXml: () => null }));
+jest.mock('react-native-svg', () => ({ SvgXml: jest.fn(() => null) }));
 
 let view: ReactTestRenderer;
 const played = (cue: string) => (sound.play as jest.Mock).mock.calls.filter(([c]) => c === cue).length;
@@ -32,6 +33,14 @@ test('plays once: a tick per letter, a tap when solved, a rise on lift-off, then
   await advance((SPLASH.end - SPLASH.exit) * 1000 + 300);
   expect(played('level-rise')).toBe(1);
   expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('draws each layer once: the motion runs on the native driver, not by redrawing', async () => {
+  await launch(false, jest.fn());
+  const drawn = (SvgXml as unknown as jest.Mock).mock.calls.length;
+  expect(drawn).toBeGreaterThan(0);
+  await advance(2000);
+  expect((SvgXml as unknown as jest.Mock).mock.calls.length).toBe(drawn);
 });
 
 test('hides the native splash once its first frame (the same picture) is laid out', async () => {

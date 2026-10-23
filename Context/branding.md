@@ -48,9 +48,24 @@ a copy.** It needs rig.js and balloons.js loaded first.
 - A new player (onboarding not done) has no buddy yet: the word plays alone, then fades into onboarding,
   which opens with the same wordmark.
 - A tap skips to the lift-off. Reduce Motion (`AccessibilityInfo`): the word shows at once, then a fade.
-- Frames are rebuilt about 30 times a second (like the Play scene), keyed by `structureKey` so a changed
-  SVG structure remounts. The clock reads `performance.now()` itself: a frame callback's timestamp isn't on
-  that clock everywhere (Jest's isn't).
+- **Nothing is redrawn while it plays** (it was laggy when it rebuilt the whole SVG 30 times a second: it
+  plays while the app mounts underneath, the JS thread's busiest moment). `HangedBrand.splashLayers()`
+  cuts the screen into layers (sun, clouds, the buddy, each balloon, each tile hidden and shown, each
+  sparkle, the pill), each a fixed drawing around its own 0, 0 plus `at(t)`: where it is, turned, scaled
+  and faded at second t. The app parses each layer once into its own `SvgXml` and moves it with `Animated`
+  on the **native driver**: one clock (`Animated.timing`, linear, 0 → `SPLASH.end`), and every property an
+  interpolation of it, sampled from `at(t)` 60 times a second and thinned to the points a straight line
+  can't stand in for. `splash(t)` composes the same layers, so the design page shows exactly what the app
+  plays. A layer that grows (a tile's swell, the sparkle, the pill) is drawn at its largest size (`zoom`)
+  so it stays sharp.
+  - What that costs in the drawing: the buddy is one still pose (stage 0, arm up), bobbing and rocking
+    from its paw, with a second still for the cheer at lift-off; the wordmark's strings don't sway. Keep it
+    that way: anything that changes a layer's drawing per frame brings the lag back.
+  - A layer's `box` must hold its drawing. The buddy's holds all 15 characters around the paw: a new
+    character with a bigger prop or ears needs a check (getBBox in headless Chrome).
+- The sounds, the haptic and the hand-over (`onDone`) are timers on the same schedule, not the animation's
+  callback: a skip reschedules them, and Jest's Animated mock (which ends animations at once) can't fire
+  them early.
 - Feel: Play's `tile` sound as each letter turns, `level-rise` on lift-off, and **one** haptic tap
   (`feedback.launch`) when the word is solved: no buzz per letter (the owner finds per-letter vibration
   annoying). Cues a tap skipped over stay quiet. Sound follows the effects switch like everything else.
@@ -68,6 +83,6 @@ chrome --headless=new --hide-scrollbars --default-background-color=00000000 --wi
 Copy `icon.png` to `android-icon-foreground.png`. The native splash and the icon only change in a new
 native build (they're baked into the app binary), not over the air.
 
-Tests: `src/components/__tests__/LaunchScreen.test.tsx` (the cues and the hand-over, the native splash
-hiding on the first frame, tap to skip, Reduce Motion). Checked on web at 393 × 852; the native splash
+Tests: `src/components/__tests__/LaunchScreen.test.tsx` (the cues and the hand-over, each layer drawn
+once and never redrawn, the native splash hiding on the first frame, tap to skip, Reduce Motion). Checked on web at 393 × 852; the native splash
 hand-over and the buddy's frames still need a look on an iPhone.

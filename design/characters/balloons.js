@@ -298,6 +298,12 @@
     return [x - PAW * Math.sin(r), y + PAW * Math.cos(r)];
   }
 
+  /** Where the paw holding the strings is, in scene units: the bunch and the character swing around it. */
+  function paw(f) {
+    const [px, py] = pawAt(f.a.armR);
+    return [f.tx + SCALE * (px - BASE[0]), f.ty + SCALE * (py - BASE[1])];
+  }
+
   // Cut decimals to one place (and tiny values written as 1e-7 to 0): the phone parses every frame
   const trim = (svg) => svg.replace(/-?\d+(\.\d+)?e-\d+/g, '0').replace(/(\.\d)\d+/g, '$1');
 
@@ -344,5 +350,5 @@
   const DURATION = 900; // ms per stage transition, unless the stage sets `dur`
 
   // balloon, burst and cloud are also drawn by the logo, the icon and the loading screen (design/branding.html)
-  global.BalloonAnim = { STAGES, LOOPS, BALLOONS, POP_ORDER, frame, scene, balloon, burst, cloud, SCENE, CAMERA, DURATION };
+  global.BalloonAnim = { STAGES, LOOPS, BALLOONS, POP_ORDER, frame, scene, paw, balloon, burst, cloud, SCENE, CAMERA, DURATION };
 })(typeof window !== 'undefined' ? window : globalThis);
