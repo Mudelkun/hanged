@@ -1,4 +1,4 @@
-import { effects, music, voices } from '../assets';
+import { effects, loops, music, voices } from '../assets';
 import { MIX, SoundEngine } from '../engine';
 import { balloonSounds } from '../scenes';
 import type { AudioBackend, SoundAsset, SoundPlayer } from '../types';
@@ -23,7 +23,7 @@ const flush = async () => { for (let i = 0; i < 5; i++) await Promise.resolve();
 function setup() {
   const players: Player[] = [];
   const backend: AudioBackend = { configure: () => Promise.resolve(), unlock() {}, create(asset) { const p = new Player(asset); players.push(p); return p; } };
-  const engine = new SoundEngine(backend, { effects, voices, music });
+  const engine = new SoundEngine(backend, { effects, voices, music, loops });
   return { engine, players, backend, played: () => players.filter(p => p.plays).map(p => p.asset.id) };
 }
 beforeEach(() => { jest.useFakeTimers(); jest.setSystemTime(10000); });
@@ -84,6 +84,34 @@ test('music pauses independently, resumes, and advances through all three compos
   const second = players.find(p => p.asset.id === 'window')!; expect(second.plays).toBe(1);
   second.finish(); jest.advanceTimersByTime(4000); await flush(); expect(players.find(p => p.asset.id === 'updraft')?.plays).toBe(1);
   engine.dispose(); expect(players.every(p => p.removed)).toBe(true);
+});
+
+test('a match crossfades into its mode loop and hands back to the next playlist track', async () => {
+  const { engine, players } = setup(); await engine.start(true); await flush();
+  const solo = players.find(p => p.asset.id === 'detours')!;
+  jest.advanceTimersByTime(400);
+  engine.matchMusic('rush'); await flush();
+  const rush = players.find(p => p.asset.id === 'rush')!;
+  expect(rush.asset.loop).toBe(true); expect(rush.plays).toBe(1); expect(solo.removed).toBe(false); // still fading out
+  jest.advanceTimersByTime(400);
+  expect(solo.removed).toBe(true); expect(rush.volume).toBeCloseTo(MIX.music);
+  engine.matchMusic('rush'); await flush(); expect(players.filter(p => p.asset.id === 'rush')).toHaveLength(1);
+  engine.voice('mochi', 'joy'); jest.advanceTimersByTime(320); expect(rush.volume).toBeCloseTo(MIX.duckedMusic);
+  engine.matchMusic(undefined); await flush(); jest.advanceTimersByTime(400);
+  expect(rush.removed).toBe(true);
+  expect(players.find(p => p.asset.id === 'window')?.plays).toBe(1);
+  engine.dispose(); expect(players.every(p => p.removed)).toBe(true);
+});
+
+test('match loops follow the music switch and never wait out the playlist gap', async () => {
+  const { engine, players } = setup(); await engine.start(true); await flush();
+  engine.settings(true, false); engine.matchMusic('duel'); await flush();
+  const duel = players.find(p => p.asset.id === 'duel')!; expect(duel.plays).toBe(0);
+  engine.settings(true, true); await flush(); expect(duel.plays).toBe(1);
+  duel.finish(); await flush(); // only if the platform stops the loop
+  expect(players.filter(p => p.asset.id === 'duel')[1].plays).toBe(1);
+  engine.matchMusic('battle'); engine.dispose(); // disposed mid-crossfade
+  expect(players.every(p => p.removed)).toBe(true);
 });
 
 test('music that iOS paused behind the engine\'s back restarts on the next touch', async () => {

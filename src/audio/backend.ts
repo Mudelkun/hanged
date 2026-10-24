@@ -13,6 +13,8 @@ export const backend: AudioBackend = {
   unlock() {},
   create(asset): SoundPlayer {
     const player = createAudioPlayer(asset.source, { updateInterval: 500, keepAudioSessionActive: true });
+    // iOS queues the next pass of the item (AVQueuePlayer), so an AAC loop wraps without a gap.
+    if (asset.loop) player.loop = true;
     let settle: (error?: string) => void = () => {};
     const ready = new Promise<void>((resolve, reject) => {
       let poll: ReturnType<typeof setInterval> | undefined, waited = 0;

@@ -1,10 +1,10 @@
-import type { Cue, Emotion } from './assets';
+import type { Cue, Emotion, MatchMusic } from './assets';
 import type { AudioBackend, SoundAsset, SoundPlayer } from './types';
 
 export const MIX = { effects: .55, voices: .62, music: .22, duckedMusic: .09, maxLayers: 8, maxPlayers: 48 } as const;
 type EventBase = { at?: number; gain?: number };
 export type SoundEvent = EventBase & ({ cue: Cue } | { voice: Emotion; character: string });
-type Bank = { effects: Record<Cue, SoundAsset[]>; voices: Record<string, Record<Emotion, SoundAsset>>; music: SoundAsset[] };
+type Bank = { effects: Record<Cue, SoundAsset[]>; voices: Record<string, Record<Emotion, SoundAsset>>; music: SoundAsset[]; loops: Record<MatchMusic, SoundAsset> };
 type Entry = { asset: SoundAsset; player: SoundPlayer; used: number; token: number; busy: boolean; owner?: SoundScope; vocal: boolean };
 const noop = () => {};
 const safely = (action: () => void) => { try { action(); } catch { /* Audio must never block a game action. */ } };
@@ -23,6 +23,8 @@ export class SoundEngine {
   private sequences = new Set<() => void>();
   private lastCue = new Map<string, number>();
   private track = 0;
+  private theme?: MatchMusic;
+  private retiring = new Map<SoundPlayer, ReturnType<typeof setInterval>>();
   private musicPlayer?: SoundPlayer;
   private musicPlaying = false;
   private musicSent = 0;
@@ -62,6 +64,18 @@ export class SoundEngine {
     this.foreground = active;
     if (!active) { this.stopEffects(); this.pauseMusic(); }
     else this.startMusic();
+  }
+
+  /** A Versus match plays its mode's loop instead of the playlist; undefined hands back to the playlist's next track. */
+  matchMusic(theme?: MatchMusic) {
+    if (theme === this.theme) return;
+    this.theme = theme;
+    if (!theme) this.track = (this.track + 1) % this.bank.music.length;
+    clearTimeout(this.nextTrack); this.nextTrack = undefined; clearInterval(this.fadeTimer);
+    const old = this.musicPlayer;
+    this.musicPlayer = undefined; this.musicPlaying = false; this.musicSent = 0; this.musicRequest++;
+    if (old) this.retire(old);
+    this.prepareMusic(); this.startMusic();
   }
 
   routeChanged() {
@@ -175,13 +189,16 @@ export class SoundEngine {
   private prepareMusic() {
     if (!this.running || this.musicPlayer) return;
     try {
-      const player = this.backend.create(this.bank.music[this.track]); this.musicPlayer = player;
+      const asset = this.theme ? this.bank.loops[this.theme] : this.bank.music[this.track];
+      const player = this.backend.create(asset); this.musicPlayer = player;
       player.volume = 0;
       // A failed load drops the player; the next touch or foregrounding builds a fresh one.
       void player.ready.catch(() => { if (this.musicPlayer === player) { this.musicPlaying = false; this.musicSent = 0; this.musicPlayer = undefined; safely(() => player.remove()); } });
       player.onEnd(() => {
         if (this.musicPlayer !== player) return;
         this.musicPlayer = undefined; this.musicPlaying = false; this.musicSent = 0; safely(() => player.remove());
+        // A loop only ends if the platform stops it: pick it straight back up, a match never goes quiet.
+        if (asset.loop) { this.prepareMusic(); this.startMusic(); return; }
         this.track = (this.track + 1) % this.bank.music.length;
         // Breathing room between complete compositions, never a repeating beat loop.
         this.nextTrack = setTimeout(() => { this.nextTrack = undefined; this.prepareMusic(); this.startMusic(); }, 4000);
@@ -219,6 +236,16 @@ export class SoundEngine {
       if (step >= 8) clearInterval(this.fadeTimer);
     }, 40);
   }
+  /** Fades a replaced music player out alongside the new one fading in, then frees it. */
+  private retire(player: SoundPlayer) {
+    let from = 0, step = 0;
+    try { from = player.volume; } catch { /* Already gone: it just stops. */ }
+    const timer = setInterval(() => {
+      step++; safely(() => { player.volume = from * (1 - step / 8); });
+      if (step >= 8) { clearInterval(timer); this.retiring.delete(player); safely(() => player.remove()); }
+    }, 40);
+    this.retiring.set(player, timer);
+  }
   private duck(seconds: number) {
     this.duckUntil = Math.max(this.duckUntil, Date.now() + seconds * 1000 + 150);
     this.fadeMusic(MIX.duckedMusic); clearTimeout(this.duckTimer);
@@ -228,6 +255,8 @@ export class SoundEngine {
     this.running = false; this.generation++; this.stopEffects(); this.pauseMusic();
     for (const entry of this.entries.values()) safely(() => entry.player.remove());
     this.entries.clear(); safely(() => this.musicPlayer?.remove()); this.musicPlayer = undefined;
+    for (const [player, timer] of this.retiring) { clearInterval(timer); safely(() => player.remove()); }
+    this.retiring.clear();
   }
 }
 

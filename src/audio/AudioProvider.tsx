@@ -2,13 +2,19 @@ import { useFocusEffect, usePathname } from 'expo-router';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { AppState, Platform, View } from 'react-native';
 import { useGame } from '../state/GameContext';
-import { sound } from './index';
+import { MatchMusic, sound } from './index';
 
 /** A scope follows navigation focus even when the hidden tab stays mounted/frozen. */
 export function useSoundScope() {
   const [scope] = useState(() => sound.scope());
   useFocusEffect(useCallback(() => { scope.activate(); return scope.deactivate; }, [scope]));
   return scope;
+}
+
+/** While mounted, a match's loop replaces the solo playlist; undefined hands back to it. */
+export function useMatchMusic(theme?: MatchMusic) {
+  useEffect(() => sound.matchMusic(theme), [theme]);
+  useEffect(() => () => sound.matchMusic(undefined), []);
 }
 
 export function AudioProvider({ children }: { children: ReactNode }) {

@@ -10,6 +10,7 @@ import { ReactNode, useEffect } from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useMatchMusic } from '../audio/AudioProvider';
 import { characterById } from '../characters/rig';
 import { BackHeader } from '../components/GameHeader';
 import { PaperBackground } from '../components/PaperBackground';
@@ -34,6 +35,8 @@ export default function MatchScreen() {
   const available = width - 32;
   const character = characterById(game.characterId);
   useLiveWhileFocused();
+  // The match plays its mode's loop from the countdown; lobby, queue and result keep the solo playlist.
+  useMatchMusic(focused && state.match && !state.result ? state.match.mode : undefined);
 
   const empty = !inRoom(state);
   useEffect(() => {

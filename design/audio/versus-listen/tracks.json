@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Photo Finish",
+    "file": "05-photo-finish.m4a",
+    "loop_seconds": 115.2,
+    "bpm": 150,
+    "bars": 72,
+    "notes": 4535,
+    "seconds": 115.2,
+    "pre_master_measurement": {
+      "input_i": "-23.46",
+      "input_tp": "-7.58",
+      "input_lra": "4.30",
+      "input_thresh": "-33.53",
+      "output_i": "-18.48",
+      "output_tp": "-2.00",
+      "output_lra": "3.70",
+      "output_thresh": "-28.51",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.52"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\versus-listen-masters\\05-photo-finish.wav"
+  },
+  {
+    "title": "Pop Rivals",
+    "file": "06-pop-rivals.m4a",
+    "loop_seconds": 116.3636,
+    "bpm": 132,
+    "bars": 64,
+    "notes": 2796,
+    "seconds": 116.36,
+    "pre_master_measurement": {
+      "input_i": "-25.45",
+      "input_tp": "-8.16",
+      "input_lra": "4.00",
+      "input_thresh": "-35.51",
+      "output_i": "-18.38",
+      "output_tp": "-2.00",
+      "output_lra": "3.50",
+      "output_thresh": "-28.45",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.62"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\versus-listen-masters\\06-pop-rivals.wav"
+  },
+  {
+    "title": "Your Move",
+    "file": "07-your-move.m4a",
+    "loop_seconds": 120.0,
+    "bpm": 112,
+    "bars": 56,
+    "notes": 2270,
+    "seconds": 120.0,
+    "pre_master_measurement": {
+      "input_i": "-26.37",
+      "input_tp": "-9.21",
+      "input_lra": "6.90",
+      "input_thresh": "-36.38",
+      "output_i": "-17.64",
+      "output_tp": "-2.00",
+      "output_lra": "5.90",
+      "output_thresh": "-27.64",
+      "normalization_type": "dynamic",
+      "target_offset": "-1.36"
+    },
+    "wav_master": "C:\\Users\\peril\\AppData\\Local\\Temp\\hanged-audio-tools\\versus-listen-masters\\07-your-move.wav"
+  }
+]

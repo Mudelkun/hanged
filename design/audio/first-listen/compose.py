@@ -247,29 +247,38 @@ def render_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def synthesize(args: argparse.Namespace, midi: Path, raw: Path):
+    run([str(args.fluidsynth), "-ni", "-g", "0.65", "-r", "48000", "-F", str(raw), "-T", "wav", "-O", "float", "-o", "synth.reverb.room-size=0.38", "-o", "synth.reverb.damp=0.55", "-o", "synth.reverb.width=65", "-o", "synth.reverb.level=0.26", "-o", "synth.chorus.active=0", str(args.soundfont), str(midi)])
+
+
+def master(sketch: Sketch, raw: Path, graph: str, wav: Path, album: str, ext: str = "mp3") -> dict:
+    """Shapes the raw render with `graph` (an FFmpeg filter graph ending in one stream),
+    normalizes it to the audition target in two passes, writes the WAV master and an
+    MP3 (or an AAC .m4a, which iOS loops without the MP3 encoder's padding gap)."""
+    # Quiet audition masters: transparent normalization, never a pumping beat.
+    measure = run(["ffmpeg", "-hide_banner", "-i", str(raw), "-filter_complex", f"[0:a]{graph},loudnorm=I=-19:TP=-2:LRA=14:print_format=json", "-f", "null", "-"])
+    stats, _ = json.JSONDecoder().raw_decode(measure.stderr[measure.stderr.rfind("{"):])
+    normal = ("loudnorm=I=-19:TP=-2:LRA=14:linear=true:"
+              f"measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}:"
+              f"measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}")
+    out = sketch.out / f"{sketch.slug}.{ext}"
+    codec = ["-codec:a", "aac", "-b:a", "160k", "-movflags", "+faststart"] if ext == "m4a" else ["-codec:a", "libmp3lame", "-b:a", "192k"]
+    run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(raw), "-filter_complex", f"[0:a]{graph},{normal}", "-ar", "48000", "-c:a", "pcm_s24le", str(wav)])
+    run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav), *codec, "-metadata", "title=" + sketch.title, "-metadata", "album=" + album, "-metadata", "comment=Original instrumental audition sketch. Not approved or integrated.", str(out)])
+    probe = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(out)])
+    return {"seconds": round(float(probe.stdout), 2), "pre_master_measurement": stats, "wav_master": str(wav)}
+
+
 def render(sketch: Sketch, args: argparse.Namespace, album: str = "Hanged - first listen") -> dict:
     """Writes the sketch's MIDI and score; with the tools given, also its WAV master and MP3."""
     midi, duration = sketch.write()
     entry = {"title": sketch.title, "file": sketch.slug + ".mp3", "seconds": round(duration, 2), "notes": len(sketch.score)}
     if args.fluidsynth and args.soundfont and args.renders:
-        mp3 = sketch.out / entry["file"]
         args.renders.mkdir(parents=True, exist_ok=True)
         raw = args.renders / (sketch.slug + "-raw.wav")
-        master = args.renders / (sketch.slug + ".wav")
-        run([str(args.fluidsynth), "-ni", "-g", "0.65", "-r", "48000", "-F", str(raw), "-T", "wav", "-O", "float", "-o", "synth.reverb.room-size=0.38", "-o", "synth.reverb.damp=0.55", "-o", "synth.reverb.width=65", "-o", "synth.reverb.level=0.26", "-o", "synth.chorus.active=0", str(args.soundfont), str(midi)])
-        # Quiet audition masters: transparent normalization, never a pumping beat.
+        synthesize(args, midi, raw)
         base = f"atrim=0:{duration:.3f},afade=t=in:d=0.025,afade=t=out:st={duration-1.3:.3f}:d=1.3,highpass=f=38,lowpass=f=13000"
-        measure = run(["ffmpeg", "-hide_banner", "-i", str(raw), "-af", base + ",loudnorm=I=-19:TP=-2:LRA=14:print_format=json", "-f", "null", "-"])
-        stats, _ = json.JSONDecoder().raw_decode(measure.stderr[measure.stderr.rfind("{"):])
-        normal = ("loudnorm=I=-19:TP=-2:LRA=14:linear=true:"
-                  f"measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}:"
-                  f"measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}")
-        run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(raw), "-af", base + "," + normal, "-ar", "48000", "-c:a", "pcm_s24le", str(master)])
-        run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(master), "-codec:a", "libmp3lame", "-b:a", "192k", "-metadata", "title=" + sketch.title, "-metadata", "album=" + album, "-metadata", "comment=Original instrumental audition sketch. Not approved or integrated.", str(mp3)])
-        probe = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3)])
-        entry["seconds"] = round(float(probe.stdout), 2)
-        entry["pre_master_measurement"] = stats
-        entry["wav_master"] = str(master)
+        entry.update(master(sketch, raw, base, args.renders / (sketch.slug + ".wav"), album))
     print(json.dumps(entry), flush=True)
     return entry
 

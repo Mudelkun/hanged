@@ -147,6 +147,7 @@ an account cascades through all of it.
   `lobby` or `match`, not on the tap.
 - The match screen reuses the solo pieces (scene, tiles, description, keyboard). A pressed key is
   **pending** (faded, `LetterKeyboard`'s `pending`) until the server judges it, typically one round trip.
+- Music: a match plays its mode's seamless loop instead of the solo playlist (`useMatchMusic` in `match.tsx`; [audio-design.md](audio-design.md)).
 - Timers show the server's deadlines with the clock offset from `hello`/`match` (`serverNow`).
 - An invite shows as a banner over any screen except a match.
 - Versus needs an account: the first use syncs to make one (`versusAccount`), so the server has the name

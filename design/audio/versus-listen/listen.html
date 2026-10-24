@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanged — versus listen</title>
+<style>
+  :root { color-scheme: light; font-family: ui-rounded, "Segoe UI", system-ui, sans-serif; color: #39312d; background: #faf5ec; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 48px 24px; }
+  main { max-width: 760px; margin: auto; }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #8d6e58; }
+  h1 { font-size: clamp(32px, 6vw, 48px); letter-spacing: -.04em; margin: 12px 0; line-height: 1.1; }
+  .intro { max-width: 600px; color: #72645c; font-size: 17px; line-height: 1.6; }
+  .constraints { font-size: 13px; line-height: 1.7; color: #80634d; background: #f2e8d8; border-radius: 12px; padding: 12px 16px; margin: 24px 0; }
+  article { background: #fffdf9; border: 1px solid #e6dacb; border-radius: 20px; padding: 25px; margin: 18px 0; box-shadow: 0 4px 0 #e9dfd2; }
+  .heading { display: flex; align-items: center; gap: 16px; }
+  .letter { display: grid; place-items: center; flex: 0 0 44px; height: 44px; font-weight: 800; font-size: 20px; border-radius: 14px; background: var(--tint); }
+  h2 { font-size: 23px; margin: 0; letter-spacing: -.025em; }
+  .meta { font-size: 12px; color: #88776b; margin: 4px 0 0; }
+  article p { line-height: 1.65; margin: 16px 0; color: #716259; }
+  .player { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 14px 0 8px; }
+  button { font: inherit; font-size: 14px; font-weight: 700; border: 0; border-radius: 12px; padding: 10px 16px; cursor: pointer; background: #39312d; color: #fffdf9; }
+  button.quiet { background: #f2e8d8; color: #6b4f3c; }
+  .time { font-variant-numeric: tabular-nums; font-size: 13px; color: #88776b; margin-left: auto; }
+  .bar { position: relative; height: 34px; border-radius: 10px; overflow: hidden; display: flex; cursor: pointer; background: #f2e8d8; }
+  .bar span { flex: var(--bars) 0 0; min-width: 0; border-right: 2px solid #fffdf9; font-size: 11px; font-weight: 700; color: #7b6352; padding: 10px 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar span.on { background: var(--tint); color: #39312d; }
+  .bar i { position: absolute; top: 0; bottom: 0; width: 2px; background: #39312d; left: 0; pointer-events: none; }
+  .instruments { font-size: 12px; color: #88776b; }
+  a { color: #955746; text-underline-offset: 3px; }
+  .download { font-size: 12px; }
+  aside { margin: 36px 0 24px; padding: 0 4px; color: #716259; line-height: 1.7; }
+  aside h2 { font-size: 19px; color: #39312d; }
+  footer { border-top: 1px solid #e6dacb; padding-top: 20px; color: #8d7c70; font-size: 12px; line-height: 1.7; }
+  @media (max-width: 440px) { body { padding: 28px 16px; } article { padding: 19px; } h2 { font-size: 21px; } .time { margin-left: 0; width: 100%; } }
+</style>
+<main>
+  <div class="eyebrow">Hanged · sound direction · versus round</div>
+  <h1>Game on.</h1>
+  <p class="intro">Three original competitive loops, one for each Versus mode. Each one loops without a seam, so a match never stops on a final chord or drops into silence. Pick the ones that make you want to win.</p>
+  <div class="constraints">Steady tempo, no endings, no ukulele, whistles or claps. The drums are written bar by bar with fills and breaks, never one beat on repeat. Each draft gets louder and calmer in sections so a two-minute match has a shape.</div>
+  <div id="tracks"></div>
+  <aside>
+    <h2>What to listen for</h2>
+    <p>Players still have to <b>think</b> while this plays: is it exciting without getting in the way of finding a word? Does it still feel good on the third match in a row? Does the right one fit each mode, or would you swap them? Use “Hear the loop point” to check that the wrap is smooth.</p>
+    <p>A section name (click the strip) or a timestamp and a few words are enough: “Chase is too busy”, “keep the clock ticks”, “brass too bright at 1:30”.</p>
+  </aside>
+  <footer>
+    In the game since 2026-10-24: each Versus match plays its mode’s loop · nothing plays automatically here.<br>
+    Sampled-instrument demos, mastered to the same −19 LUFS as the solo tracks. <a href="README.md">Composition notes</a>
+  </footer>
+</main>
+<script>
+  // Sections as [name, first bar]; times come from the tempo, so they match the scores.
+  const TRACKS = [
+    { letter: 'E', tint: '#f9d8ce', file: '05-photo-finish.m4a', title: 'Photo Finish', mode: 'Word Rush', bpm: 150, bars: 72, key: 'E minor',
+      text: 'A race against the clock. Muted guitar and pizzicato set the pace, brass punches out the riff, then the theme. Halfway through, a tick-tock woodblock clock and a snare build wind everyone up for the last lap: the theme on brass and trumpet together.',
+      instruments: 'Brass section, trumpet, muted electric guitar, pizzicato and tremolo strings, picked bass, French horns, timpani, drums',
+      sections: [['Intro', 0], ['Riff', 4], ['Theme', 20], ['The clock', 36], ['Riff again', 44], ['Last lap', 52], ['Turn', 68]] },
+    { letter: 'F', tint: '#dcebdc', file: '06-pop-rivals.m4a', title: 'Pop Rivals', mode: 'Balloon Battle', bpm: 132, bars: 64, key: 'F major',
+      text: 'Two rivals trading phrases: the muted trumpet on the left, the clarinet on the right. They answer each other, pull in opposite directions, chase bar by bar in D minor, then sneak around while brass hits pop the balloons. Cheeky, bouncy, still a fight.',
+      instruments: 'Muted trumpet, clarinet, clavinet, finger bass, xylophone, pizzicato strings, brass section, drums with tambourine',
+      sections: [['Intro', 0], ['Trading', 4], ['Tug of war', 20], ['Chase', 28], ['Sneak · pop!', 36], ['Swapped', 44], ['Unison', 60]] },
+    { letter: 'G', tint: '#dce9f1', file: '07-your-move.m4a', title: 'Your Move', mode: 'Word Duel', bpm: 112, bars: 56, key: 'C minor',
+      text: 'A game of nerves, best of three. A 3+3+2 piano-and-pizzicato figure ticks like a clock you can’t ignore; the cello states the theme, the horns press the point, everything drops to a near-silent thinking pause with celesta ticks, then the theme returns in full.',
+      instruments: 'Cello, French horns, piano, pizzicato, tremolo and full strings, contrabass, celesta, timpani, drums and toms',
+      sections: [['Intro', 0], ['Theme', 4], ['Horns', 20], ['Thinking', 28], ['Full theme', 36], ['Turn', 52]] },
+  ];
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  let context, current;
+
+  // Web Audio loops sample-accurately; a page opened from the file system can't fetch,
+  // so it falls back to the audio element, whose MP3 wrap may have a tiny gap.
+  async function source(track) {
+    if (track.buffer || track.element) return;
+    try {
+      context ||= new (window.AudioContext || window.webkitAudioContext)();
+      const data = await (await fetch(track.file)).arrayBuffer();
+      track.buffer = await context.decodeAudioData(data);
+    } catch {
+      track.element = Object.assign(new Audio(track.file), { loop: true, preload: 'auto' });
+    }
+  }
+  function position(track) {
+    if (track.element) return track.element.currentTime % track.length;
+    return track.node ? (context.currentTime - track.started) % track.length : track.offset || 0;
+  }
+  function stop(track) {
+    track.offset = position(track);
+    if (track.node) { track.node.stop(); track.node = null; }
+    if (track.element) track.element.pause();
+    track.playing = false; track.button.textContent = 'Play';
+    if (current === track) current = null;
+  }
+  async function play(track, at) {
+    if (current && current !== track) stop(current);
+    await source(track);
+    const offset = ((at ?? track.offset ?? 0) % track.length + track.length) % track.length;
+    if (track.node) { track.node.stop(); track.node = null; }
+    if (track.element) { track.element.currentTime = offset; await track.element.play(); }
+    else {
+      await context.resume();
+      const node = Object.assign(context.createBufferSource(), { buffer: track.buffer, loop: true, loopStart: 0, loopEnd: track.length });
+      node.connect(context.destination); node.start(0, offset);
+      track.node = node; track.started = context.currentTime - offset;
+    }
+    current = track; track.playing = true; track.button.textContent = 'Pause';
+  }
+
+  const root = document.getElementById('tracks');
+  for (const t of TRACKS) {
+    t.length = t.bars * 240 / t.bpm;
+    const card = document.createElement('article');
+    card.style.setProperty('--tint', t.tint);
+    const spans = t.sections.map(([name, bar], i) => {
+      const next = t.sections[i + 1]?.[1] ?? t.bars;
+      return `<span style="--bars:${next - bar}" data-at="${bar * 240 / t.bpm}" title="${name} · ${fmt(bar * 240 / t.bpm)}">${name}</span>`;
+    }).join('');
+    card.innerHTML = `
+      <div class="heading"><div class="letter">${t.letter}</div><div><h2>${t.title}</h2>
+        <div class="meta">${t.mode} · ${t.bpm} BPM · ${t.key} · ${fmt(t.length)} seamless loop</div></div></div>
+      <p>${t.text}</p>
+      <div class="player"><button class="play">Play</button><button class="quiet wrap">Hear the loop point</button><span class="time">0:00 / ${fmt(t.length)}</span></div>
+      <div class="bar" aria-label="Sections of ${t.title}">${spans}<i></i></div>
+      <p class="instruments">${t.instruments}</p>
+      <a class="download" href="${t.file}" download>Download ${t.letter}</a>`;
+    root.append(card);
+    t.button = card.querySelector('.play');
+    t.button.onclick = () => t.playing ? stop(t) : play(t);
+    card.querySelector('.wrap').onclick = () => play(t, t.length - 8);
+    card.querySelectorAll('.bar span').forEach(s => s.onclick = () => play(t, Number(s.dataset.at)));
+    t.time = card.querySelector('.time'); t.marker = card.querySelector('.bar i'); t.spans = [...card.querySelectorAll('.bar span')];
+  }
+  (function tick() {
+    for (const t of TRACKS) {
+      const at = position(t);
+      t.time.textContent = `${fmt(at)} / ${fmt(t.length)}`;
+      t.marker.style.left = `${at / t.length * 100}%`;
+      const bar = at * t.bpm / 240;
+      t.spans.forEach((s, i) => s.classList.toggle('on', t.sections[i][1] <= bar && bar < (t.sections[i + 1]?.[1] ?? t.bars)));
+    }
+    requestAnimationFrame(tick);
+  })();
+</script>
+</html>

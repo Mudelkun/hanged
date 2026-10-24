@@ -32,7 +32,8 @@ export const backend: AudioBackend = {
     void ready.catch(() => {});
     const pause = () => {
       if (!source) return;
-      offset = Math.min(buffer?.duration ?? 0, offset + ctx.currentTime - started);
+      const at = offset + ctx.currentTime - started;
+      offset = asset.loop ? at % asset.duration : Math.min(buffer?.duration ?? 0, at);
       source.onended = null; source.stop(); source.disconnect(); source = undefined;
     };
     return {
@@ -44,6 +45,8 @@ export const backend: AudioBackend = {
       play() {
         if (!buffer || removed || source) return;
         source = ctx.createBufferSource(); source.buffer = buffer; source.connect(gain);
+        // Sample-accurate wrap at the loop's exact length, past any encoder padding.
+        if (asset.loop) Object.assign(source, { loop: true, loopStart: 0, loopEnd: asset.duration });
         source.onended = () => { source?.disconnect(); source = undefined; offset = 0; ends.forEach(callback => callback()); };
         started = ctx.currentTime; source.start(0, offset);
       },

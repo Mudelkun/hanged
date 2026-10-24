@@ -92,3 +92,9 @@ export const music: SoundAsset[] = [
   { id: 'updraft', source: require('../../design/audio/first-listen/03-updraft.mp3'), duration: 54.98 },
   { id: 'balloon', source: require('../../design/audio/second-listen/04-last-balloon.mp3'), duration: 131.1 },
 ];
+export const loops = {
+  rush: { id: 'rush', source: require('../../design/audio/versus-listen/05-photo-finish.m4a'), duration: 115.2, loop: true },
+  battle: { id: 'battle', source: require('../../design/audio/versus-listen/06-pop-rivals.m4a'), duration: 116.3636, loop: true },
+  duel: { id: 'duel', source: require('../../design/audio/versus-listen/07-your-move.m4a'), duration: 120, loop: true },
+} satisfies Record<string, SoundAsset>;
+export type MatchMusic = keyof typeof loops;

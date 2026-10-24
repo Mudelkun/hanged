@@ -1,4 +1,5 @@
-export interface SoundAsset { id: string; source: number; duration: number }
+/** A looping asset repeats seamlessly and never ends; its duration is the exact loop length. */
+export interface SoundAsset { id: string; source: number; duration: number; loop?: boolean }
 export interface SoundPlayer {
   ready: Promise<void>;
   volume: number;
