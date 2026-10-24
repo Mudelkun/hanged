@@ -27,6 +27,8 @@
 - Notifications: `expo-notifications`, **local only** (the daily reminder, [retention.md](retention.md)); its config plugin
   sets `enableRemoteNotifications: false`, so no push entitlement. Local notifications work in SDK 58 Expo Go;
   existing development builds need rebuilding.
+- Store reviews: `expo-store-review`, the OS's own in-app review prompt ([retention.md](retention.md)). In SDK 58
+  Expo Go; existing development builds need rebuilding.
 
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
 with Expo Go. No dev build is needed yet.

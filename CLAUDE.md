@@ -46,7 +46,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Onboarding: buddy selection, name and consent, lift-off, existing saves and the first-word welcome | [Context/onboarding.md](Context/onboarding.md) |
 | The app icon, the wordmark, the native splash and the loading screen, regenerating their assets | [Context/branding.md](Context/branding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
-| The daily streak and the daily reminder (local notifications): what counts a day, the reminder plan, asking for permission | [Context/retention.md](Context/retention.md) |
+| The daily streak and the daily reminder (local notifications): what counts a day, the reminder plan, asking for permission; the store review prompt (when it asks, once ever) | [Context/retention.md](Context/retention.md) |
 | Versus (online multiplayer): the modes, the live socket, friends, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 

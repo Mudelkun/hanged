@@ -6,8 +6,9 @@
  * When the round ends, the play layout stays a moment so the last
  * animation (the fall, or the last tile popping) can be seen first. A win
  * that makes a streak plays the streak takeover over it, which dissolves
- * onto the result. The round that counts the day says so on its result, and
- * the first won round asks once about the daily reminder.
+ * onto the result. The round that counts the day says so on its result, the
+ * first won round asks once about the daily reminder, and a later win on a
+ * roll asks the OS once for a store review (retention.md).
  */
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -35,10 +36,11 @@ import { LETTER_BUY_COST } from '../../game/config';
 import { dailyDays, dailyStatus } from '../../game/daily';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
 import { guessLetter } from '../../game/languages';
-import { lettersForSale } from '../../game/progress';
+import { lettersForSale, reviewWanted } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { useTranslation } from '../../i18n';
 import { remindersSupported } from '../../notify/reminders';
+import { askForReview } from '../../review/storeReview';
 import { useGame } from '../../state/GameContext';
 import { useToday } from '../../state/useDaily';
 import { colors, fonts, levelColor } from '../../theme';
@@ -47,6 +49,8 @@ import { colors, fonts, levelColor } from '../../theme';
 const RESULT_DELAY = { lost: 2600, won: 700 };
 /** The reminder question waits for the stamp to land and the result to be read. */
 const ASK_DELAY = 1400;
+/** The store review waits longer: the player has read the result and is choosing to go on. */
+const REVIEW_DELAY = 2200;
 
 export default function PlayScreen() {
   const t = useTranslation();
@@ -94,11 +98,13 @@ export default function PlayScreen() {
   const openMap = useCallback(() => setMapOpen(true), []);
   const closeMap = useCallback(() => setMapOpen(false), []);
 
-  // The first won round asks about the daily reminder, once nothing else is playing over its result.
+  // A just-won result with nothing playing over it: the only moment the game asks the player anything.
+  const resultSettled = showResult && status === 'won' && round.id !== restoredId && !levelChanging &&
+    (!streakShown || streakGone === round.id) && !mapOpen;
+  // The first won round asks about the daily reminder.
   const [askFor, setAskFor] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
-  const askDue = remindersSupported && state.reminders === null && !answered && showResult && status === 'won' &&
-    round.id !== restoredId && !levelChanging && (!streakShown || streakGone === round.id);
+  const askDue = remindersSupported && state.reminders === null && !answered && resultSettled;
   useEffect(() => {
     if (!askDue) return;
     const id = setTimeout(() => setAskFor(round.id), ASK_DELAY);
@@ -109,6 +115,15 @@ export default function PlayScreen() {
     setAnswered(true);
     void setReminders(yes);
   }, [setReminders]);
+
+  // A later win on a roll asks the OS once for a review, never on the round that asked about reminders.
+  // "Next word" before the delay skips it: a later win tries again.
+  const reviewDue = resultSettled && !askDue && askFor !== round.id && reviewWanted(state);
+  useEffect(() => {
+    if (!reviewDue) return;
+    const id = setTimeout(() => void askForReview(() => dispatch({ type: 'reviewAsked', at: Date.now() })), REVIEW_DELAY);
+    return () => clearTimeout(id);
+  }, [reviewDue, round.id, dispatch]);
 
   const streak = state.streak;
   useEffect(() => {

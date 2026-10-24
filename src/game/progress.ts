@@ -13,6 +13,8 @@ import {
   DEFAULT_LANGUAGE,
   LETTER_BUY_COST,
   LETTER_BUY_COUNT,
+  REVIEW_AFTER_STREAK,
+  REVIEW_AFTER_WORDS,
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
@@ -60,6 +62,11 @@ export interface GameState {
   dailyCountedBy: string | null;
   /** The daily reminder: null until the player is asked, then their answer (they change it on Profile). */
   reminders: boolean | null;
+  /**
+   * When the store's review prompt was asked for (epoch ms), null before. Asked
+   * once ever: the OS never says whether the player rated or dismissed it.
+   */
+  reviewAskedAt: number | null;
   /** The level and the counts that move it up or down (levels.afterRound). */
   levelProgress: LevelProgress;
   /** The highest level ever reached. The level path shows every stop up to it; the rest is in the fog. */
@@ -96,6 +103,7 @@ export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => 
   daily: NO_DAILY_STREAK,
   dailyCountedBy: null,
   reminders: null,
+  reviewAskedAt: null,
   levelProgress: START_LEVEL,
   bestLevel: START_LEVEL.level,
   seenWordIds: [],
@@ -111,6 +119,8 @@ export type GameAction =
   | { type: 'audioSetting'; setting: 'soundEnabled' | 'musicEnabled'; enabled: boolean }
   /** The player's answer about the daily reminder (the OS permission is asked before: useReminders). */
   | { type: 'reminders'; enabled: boolean }
+  /** The OS's review prompt was asked for at `at` (epoch ms): it is never asked again. */
+  | { type: 'reviewAsked'; at: number }
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
   /** `at`: now, in epoch ms (the reducer stays pure). */
@@ -202,6 +212,15 @@ export const canBuyCharacter = (s: GameState, id: string) => {
 export const lettersForSale = (s: GameState) =>
   !!s.round && levelByNumber(s.round.level).sellsLetters && canBuyLetters(s.round, LETTER_BUY_COUNT);
 
+/**
+ * Whether the round just won may ask for a store review: never asked before,
+ * past the first few words, and on a win that makes a run (a happy moment).
+ * Play adds the timing: on the result, once nothing else plays over it.
+ */
+export const reviewWanted = (s: GameState) =>
+  s.onboardingCompleted && s.reviewAskedAt === null && !!s.round && roundStatus(s.round) === 'won' &&
+  s.wordsGuessed >= REVIEW_AFTER_WORDS && s.streak >= REVIEW_AFTER_STREAK;
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'language': {
@@ -222,6 +241,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return state[action.setting] === action.enabled ? state : { ...state, [action.setting]: action.enabled };
     case 'reminders':
       return state.reminders === action.enabled ? state : { ...state, reminders: action.enabled };
+    case 'reviewAsked':
+      return state.reviewAskedAt !== null || !Number.isFinite(action.at) ? state : { ...state, reviewAskedAt: action.at };
     case 'hydrate': {
       let s = action.state;
       // Existing players keep their identity and round; they only need the new consent step.
@@ -249,6 +270,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           !Number.isFinite(s.legalAcceptance.acceptedAt) || s.legalAcceptance.acceptedAt <= 0)) {
         s = { ...s, legalAcceptance: null };
       }
+      if (s.reviewAskedAt !== null && !Number.isFinite(s.reviewAskedAt)) s = { ...s, reviewAskedAt: null };
       if (typeof s.daily?.days !== 'number' || typeof s.daily.best !== 'number') s = { ...s, daily: NO_DAILY_STREAK };
       if (typeof s.soundEnabled !== 'boolean' || typeof s.musicEnabled !== 'boolean')
         s = { ...s, soundEnabled: typeof s.soundEnabled === 'boolean' ? s.soundEnabled : true,

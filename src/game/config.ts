@@ -83,5 +83,13 @@ export const REMINDER_HOUR = 18;
 /** PLACEHOLDER: days after the last one played that still get a reminder. Past it the app goes quiet. */
 export const REMINDER_DAYS = 7;
 
+/**
+ * PLACEHOLDER: the store review prompt waits for this many words guessed (past
+ * the first won round, which asks about the daily reminder) and for a win that
+ * makes REVIEW_AFTER_STREAK in a row: a player on a roll (progress.reviewWanted).
+ */
+export const REVIEW_AFTER_WORDS = 3;
+export const REVIEW_AFTER_STREAK = 2;
+
 /** Fallback when none of the device's preferred languages is supported. */
 export const DEFAULT_LANGUAGE = 'en';

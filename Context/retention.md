@@ -1,4 +1,4 @@
-# Retention: the daily streak and the daily reminder
+# Retention: the daily streak, the daily reminder and the review prompt
 
 Owner's request (2026-10-24): give players a reason to open the app every day, with a **daily streak**
 and **one notification a day** that encourages without annoying.
@@ -73,6 +73,32 @@ Where it shows:
 - The web preview has no local notifications: `remindersSupported` is false there, the switch is
   hidden and nothing is asked.
 - `reset` (account deleted) clears everything, so the reminders are cancelled with it.
+
+## The store review prompt
+
+Owner's request (2026-10-24): encourage genuine reviews after onboarding without hurting play.
+Rule: `reviewWanted` in [progress.ts](../src/game/progress.ts) (tested in
+[review.test.ts](../src/game/__tests__/review.test.ts)). The only code that talks to the OS:
+[src/review/storeReview.ts](../src/review/storeReview.ts) (`expo-store-review`). Tuning: `REVIEW_AFTER_WORDS`
+(3) and `REVIEW_AFTER_STREAK` (2) in [config.ts](../src/game/config.ts), both PLACEHOLDER.
+
+- **Only the OS's own prompt** (iOS `SKStoreReviewController`, Google Play In-App Review). No
+  "Enjoying Hanged?" screen of ours first: Apple allows only its API for in-app review requests, and
+  asking first so only happy players get sent to the store ("review gating") breaks Google Play's policy.
+  It's also why there's no fallback link to the store page, which would leave the game.
+- **When**: on the result of a **won** round, once the player has guessed `REVIEW_AFTER_WORDS` words and
+  this win makes `REVIEW_AFTER_STREAK` in a row (a player on a roll, never right after a loss). It
+  waits until nothing plays over the result (the streak takeover, the level-up card, the level map) and
+  then 2.2 s more. It never asks on the round that asked about reminders, which is the first win. Never
+  during a round: tapping "Next word" before the delay skips it, and a later win tries again. A finished
+  round restored on launch never asks.
+- **Once ever**: saved `reviewAskedAt` (epoch ms, `null` before), set just before the prompt opens. The
+  OS never says whether the player rated or dismissed it, so the app can't tell a dismissal apart and
+  doesn't ask again. iOS also caps the prompt at 3 a year and may show nothing. Where the store has no
+  in-app prompt (web, TestFlight, no Play Store), nothing is saved and a later win may try again.
+- `reset` (account deleted) clears it, like everything else.
+- Testing: iOS shows the prompt every time in development (Expo Go), never in TestFlight. Android shows it
+  only for an app installed from the Play Store (internal testing track).
 
 ## Ideas not built (for the owner)
 
