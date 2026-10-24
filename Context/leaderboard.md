@@ -64,6 +64,23 @@ The bottom tabs are an Expo Router `Tabs` group, [src/app/(tabs)/_layout.tsx](..
 - The navigator draws **no tab bar** (`tabBar={() => null}`). Each screen draws the mockup's
   [TabBar](../src/components/TabBar.tsx) itself, so a full-screen overlay (the level path) can still
   cover it.
+- **The lens** (owner's request, 2026-10-24, modelled on the iOS 26 tab bar): the selected tab sits under a
+  coral pill. A press lifts it into a bigger white glass bubble that follows the finger across the tabs;
+  letting go drops it on the nearest tab and opens it. A plain tap opens the tapped tab.
+  - Two gesture-handler gestures **compete** on the row: a pan (activates after 6 pt of movement) and a tap
+    (no time limit, so a long still press counts too). **A pan alone can't do taps**: on a tap it never
+    activates, it fails, and `onFinalize` reports a failure as `canceled`, the same as a real cancel. A
+    single pan with `minDistance: 0` broke tapping on the iPhone (it worked in the web preview). The lens is a clipped window onto a second, coloured copy of the tabs, counter-translated,
+  so a tab turns coral exactly where the lens covers it.
+  - **The drag and the lens run on the UI thread** (Reanimated worklets); only opening the screen and the
+    sound go back to JS (`scheduleOnRN`). The first version used `PanResponder` + `Animated`, and on the
+    phone the drag lagged behind the Play scene, which keeps the JS thread busy redrawing.
+  - Because each screen draws its own bar, the lens's shared values are **module-level (`makeMutable`),
+    shared by every bar**: the screen that opens shows the same slide still going. A bar that gains focus
+    some other way (a button, a link) slides the lens to its tab.
+  - Screen readers: each tab is an accessible `tab` with an `activate` action (no `Pressable`: the row owns
+    the touches).
+  - No haptic tick while dragging across tabs: the owner finds frequent buzzing annoying (`src/feedback.ts`).
 - A `TabBar` entry with an `href` navigates; an entry without one is drawn disabled ("Coming soon").
   All four navigate (Versus since 2026-10-23, [versus.md](versus.md)).
   **Never a 5th tab** (CLAUDE.md).
@@ -73,5 +90,7 @@ The bottom tabs are an Expo Router `Tabs` group, [src/app/(tabs)/_layout.tsx](..
   replacement `activityEnabled` is deliberately off, because it re-runs mount effects when a tab comes
   back (the streak takeover, token flight and level card would replay their sounds). A hidden tab
   still re-renders when the game state changes (a purchase, the language), which is cheap.
-- On web, a hidden tab stays in the DOM. A test that clicks a tab by its label must pick the
-  visible one (`offsetParent !== null`).
+- On web, a hidden tab stays in the DOM. A test that finds a tab by its label must pick the
+  visible one (`offsetParent !== null`). A DOM `.click()` on a tab does nothing (the row's pan gesture
+  owns the touches): send a touch over CDP (`Input.dispatchTouchEvent` with touch emulation on), or
+  `router.navigate`.

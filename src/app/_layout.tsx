@@ -4,6 +4,7 @@ import { router, Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LaunchScreen } from '../components/LaunchScreen';
@@ -88,19 +89,21 @@ export default function RootLayout() {
   });
 
   return (
-    <SafeAreaProvider>
-      <GameProvider>
-        <Gate fontsDone={loaded || !!error}>
-          <AudioProvider>
-            <VersusProvider>
-              <TokenFlightProvider>
-                <StatusBar style="dark" />
-                <Routes />
-              </TokenFlightProvider>
-            </VersusProvider>
-          </AudioProvider>
-        </Gate>
-      </GameProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <GameProvider>
+          <Gate fontsDone={loaded || !!error}>
+            <AudioProvider>
+              <VersusProvider>
+                <TokenFlightProvider>
+                  <StatusBar style="dark" />
+                  <Routes />
+                </TokenFlightProvider>
+              </VersusProvider>
+            </AudioProvider>
+          </Gate>
+        </GameProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -18,6 +18,11 @@
 - Fonts: `@expo-google-fonts/fredoka` (titles, letters) and `nunito` (body). Loaded in
   `_layout.tsx`. The splash screen stays up until the fonts **and** the saved game are loaded.
 - Haptics: `expo-haptics`.
+- Gestures and UI-thread animation: `react-native-gesture-handler` 3 + `react-native-reanimated` 4
+  (+ `react-native-worklets`), added 2026-10-24 for the tab bar's drag, which stuttered on the JS thread
+  behind the Play scene ([leaderboard.md](leaderboard.md)). The root layout wraps the app in
+  `GestureHandlerRootView`. `babel-preset-expo` adds the worklets plugin by itself. Everything else
+  still animates with React Native's `Animated`.
 - Audio: `expo-audio` for native playback, `expo-asset` for bundled sources; the browser uses Web Audio. See [audio-design.md](audio-design.md). Both Expo modules are included in SDK 58 Expo Go. Existing development builds need rebuilding to add the native audio module/config; there is no microphone permission or background audio service.
 
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
@@ -76,6 +81,11 @@ Run tests, typecheck and lint before calling a task done (in `server/` too when 
   component tests import it, and jest-expo 58 no longer brings it in.
 - **`freezeOnBlur` does nothing since SDK 58**, and `activityEnabled` is off on purpose: see
   [leaderboard.md](leaderboard.md).
+- **Reanimated 4's `withSpring` defaults to a mass of 4.** A config with only `stiffness`/`damping`
+  tuned for mass 1 rings far past its target (the tab lens overshot a whole tab). Always pass `mass: 1`.
+- **A JS-thread drag stutters on the phone while Play is on screen**: the scene redraws its SVG ~30
+  times a second on the JS thread. Gestures that move something under the finger belong on the UI
+  thread (gesture-handler + Reanimated worklets), not `PanResponder`.
 - On **web**, an `<Svg>` sized only by `style={StyleSheet.absoluteFill}` falls back to
   300×150. Always also pass `width="100%" height="100%"`.
 
