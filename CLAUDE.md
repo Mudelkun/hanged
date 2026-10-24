@@ -16,7 +16,7 @@ An iOS mobile game built with **Expo (React Native)**. It's a cute, animated tak
 - `Hangman app_ gameplay, leaderboard, and characters.png` — the first mockup. It's outdated (it still shows hearts and gems), so keep it for reference only.
 - Prior art: the owner already built a desktop version in C# WinForms, called "Pendu" (French for hangman): https://github.com/Mudelkun/Pendu. Use it as a reference for the core loop, but **do not port its bugs** (listed below).
 
-**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), the **Profile** page (name, stats, info and legal pages, account deletion), and **Versus** (online multiplayer: Word Rush, Balloon Battle, Word Duel; friends, lobbies, invites, matchmaking, and an admin on/off switch), played over a WebSocket on the same server ([Context/versus.md](Context/versus.md)).
+**Built so far:** the solo game. That's the Play screen with its round result, the rules engine, the word database (a JSON file in the app), tokens and levels, all saved on the device. Also the **Leaderboard** tab and the small **server** behind it (players, leaderboard, word statistics), ready to deploy on Railway, the **Characters** tab (buy characters with tokens and pick one, all on the device), the **Profile** page (name, stats, info and legal pages, account deletion), and **Versus** (online multiplayer: Word Rush, Balloon Battle, Word Duel; friends, lobbies, invites, matchmaking, and an admin on/off switch), played over a WebSocket on the same server ([Context/versus.md](Context/versus.md)). Also the **daily streak** and its **daily reminder** (local notifications, [Context/retention.md](Context/retention.md)).
 
 **Stack:** Expo SDK 58 + Expo Router (TypeScript), `react-native-svg`, AsyncStorage. A Node + PostgreSQL server in `server/` (Railway) for the leaderboard, word statistics and Versus (its WebSocket referee; chosen 2026-10-23 for cost: no third-party realtime service). **No state library**: ask the owner before adding one, or before the game depends on the server for anything else (see Offline first). Details: [Context/dev-setup.md](Context/dev-setup.md), [Context/server.md](Context/server.md).
 
@@ -46,6 +46,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Onboarding: buddy selection, name and consent, lift-off, existing saves and the first-word welcome | [Context/onboarding.md](Context/onboarding.md) |
 | The app icon, the wordmark, the native splash and the loading screen, regenerating their assets | [Context/branding.md](Context/branding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
+| The daily streak and the daily reminder (local notifications): what counts a day, the reminder plan, asking for permission | [Context/retention.md](Context/retention.md) |
 | Versus (online multiplayer): the modes, the live socket, friends, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
@@ -54,8 +55,9 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 ```
 src/app/            routes (Expo Router): _layout.tsx (fonts, splash, provider), (tabs)/index.tsx (Play), (tabs)/leaderboard.tsx, (tabs)/characters.tsx, profile.tsx, info/[page].tsx
 src/game/           pure rules, no React: engine.ts, progress.ts (reducer), levels.ts, words.ts, config.ts
-src/state/          GameContext: the reducer + AsyncStorage + server sync; useLeaderboard; VersusContext + versus.ts (Versus state)
+src/state/          GameContext: the reducer + AsyncStorage + server sync; useDaily (today, reminders); useLeaderboard; VersusContext + versus.ts (Versus state)
 src/net/            the only code that talks to the server: api.ts, sync.ts, live.ts (the Versus socket)
+src/notify/         the only code that talks to the OS about notifications: reminders.ts (+ .web.ts, a no-op)
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/world/          world.ts: imports design/world/world.js (the level path's world), parses it in bands
 src/brand/          brand.ts: imports design/brand/brand.js (the wordmark and the loading screen's frames)
@@ -133,6 +135,11 @@ A level's difficulty is set by:
 - The player needs the internet for only two things: **seeing the leaderboard**, and **sending their stats** so they're ranked in the right place. Stats wait on the device until a connection comes back, and play never waits for them. Two-player mode is online by nature and is the exception.
 - **No server serves words.** They ship inside the app. The server also collects word statistics (which words are guessed or lost most), but the game never depends on them.
 
+### Daily streak and reminder (owner's request, 2026-10-24)
+- **Daily streak**: the number of days in a row on which the player finished at least one solo round (won or lost). Missing a day starts it again at 1. It's not the words-in-a-row streak that pays the token bonus.
+- **Daily reminder**: at most **one notification a day**, only on a day the player hasn't played yet, reminding them to keep the streak alive. It must encourage, never nag: it stops after a few days without play, the player turns it off on the Profile page, and the app asks before the OS prompt.
+- Both are on the device (offline first): local notifications, no push server ([Context/retention.md](Context/retention.md)).
+
 ### Tokens (the only currency)
 - The player has a **token** balance. "Token" is a placeholder name until the owner picks a symbol and a name.
 - **Earning**: every word guessed correctly pays tokens. **Harder levels pay more per word** (the owner chose this so easy words, which are easy to guess in a row, can't out-earn hard ones). **Words guessed in a row add a small bonus** on top: +1 token from 3 in a row, +2 from 6, +3 from 10. Losing a round resets the streak, so the next win pays no bonus.
@@ -176,6 +183,7 @@ This is the player's own page. It holds personal customization, app settings, an
 - **Stats**: words guessed, tokens and current level.
 - **Settings**
   - App **language**. The MVP lists English only.
+  - A **Daily reminder** on/off switch ([Context/retention.md](Context/retention.md)).
   - Separate saved **Sound effects & voices** and **Music** on/off switches. Audio is integrated at the owner's request (2026-10-22); both default on, respect the iOS silent switch, and pause in the background.
 - **Info & legal**
   - **Game rules**: an in-app sheet that explains the rules in player-friendly words. It must match the rules in this file.
@@ -228,4 +236,5 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
 - **App language**: does it change only the UI text, or the word list too?
 - **Legal pages**: who writes the privacy policy and terms, and where are they hosted?
+- **Daily streak**: should it pay anything (tokens on milestones), and should a missed day be forgivable (a "streak freeze", which would be a third thing to spend tokens on)? At what time should the reminder come, and for how many days after the last play? (Placeholders: no reward, no freeze, 6 pm, 7 days.)
 - **Online two-player**: do words guessed there count toward the leaderboard and toward earning tokens? (For now they don't: Versus has its own rating. Finding each other is decided: friends and matchmaking.)

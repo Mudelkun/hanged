@@ -24,6 +24,9 @@
   `GestureHandlerRootView`. `babel-preset-expo` adds the worklets plugin by itself. Everything else
   still animates with React Native's `Animated`.
 - Audio: `expo-audio` for native playback, `expo-asset` for bundled sources; the browser uses Web Audio. See [audio-design.md](audio-design.md). Both Expo modules are included in SDK 58 Expo Go. Existing development builds need rebuilding to add the native audio module/config; there is no microphone permission or background audio service.
+- Notifications: `expo-notifications`, **local only** (the daily reminder, [retention.md](retention.md)); its config plugin
+  sets `enableRemoteNotifications: false`, so no push entitlement. Local notifications work in SDK 58 Expo Go;
+  existing development builds need rebuilding.
 
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
 with Expo Go. No dev build is needed yet.

@@ -44,6 +44,12 @@
           "enableBackgroundRecording": false
         }
       ],
+      [
+        "expo-notifications",
+        {
+          "enableRemoteNotifications": false
+        }
+      ],
       "expo-asset",
       [
         "expo-localization",

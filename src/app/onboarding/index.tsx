@@ -1,7 +1,8 @@
 import { Redirect, router } from 'expo-router';
 import { ScrollView, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LanguagePicker, languageStyles } from '../../components/LanguagePicker';
+import { LanguagePicker } from '../../components/LanguagePicker';
+import { sheetText } from '../../components/Sheet';
 import { PaperBackground } from '../../components/PaperBackground';
 import { BigButton } from '../../components/RoundParts';
 import { Wordmark } from '../../components/Wordmark';
@@ -19,11 +20,11 @@ export default function OnboardingScreen() {
     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24,
       paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}>
       <View style={{ alignItems: 'center', marginBottom: 18 }} accessible accessibilityLabel={t('app.name')}><Wordmark width={250} /></View>
-      <Text style={languageStyles.title} accessibilityRole="header">{t('language.title')}</Text>
-      <Text style={languageStyles.help}>{t('language.help')}</Text>
+      <Text style={sheetText.title} accessibilityRole="header">{t('language.title')}</Text>
+      <Text style={sheetText.help}>{t('language.help')}</Text>
       <LanguagePicker />
       <BigButton label={t('language.continue')} onPress={() => router.push('/onboarding/buddy')} />
-      <Text style={languageStyles.help}>{t('onboarding.step', { step: 1, total: 3 })}</Text>
+      <Text style={sheetText.help}>{t('onboarding.step', { step: 1, total: 3 })}</Text>
     </ScrollView>
   </View>;
 }

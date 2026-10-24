@@ -6,11 +6,12 @@
  * When the round ends, the play layout stays a moment so the last
  * animation (the fall, or the last tile popping) can be seen first. A win
  * that makes a streak plays the streak takeover over it, which dissolves
- * onto the result.
+ * onto the result. The round that counts the day says so on its result, and
+ * the first won round asks once about the daily reminder.
  */
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../../characters/rig';
@@ -21,28 +22,37 @@ import { GameScene, Stamp } from '../../components/GameScene';
 import { LetterKeyboard } from '../../components/LetterKeyboard';
 import { LevelChange } from '../../components/LevelChange';
 import { LevelMap } from '../../components/LevelMap';
+import { flameXml, Icon } from '../../components/icons';
+import { popFrom } from '../../components/motion';
 import { PaperBackground } from '../../components/PaperBackground';
+import { ReminderSheet } from '../../components/ReminderSheet';
 import { BigButton, DescriptionCard, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
 import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
 import { TabBar } from '../../components/TabBar';
 import { useTokenOrigin } from '../../components/TokenFlight';
 import { WelcomeToast } from '../../components/WelcomeToast';
 import { LETTER_BUY_COST } from '../../game/config';
+import { dailyDays, dailyStatus } from '../../game/daily';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
 import { guessLetter } from '../../game/languages';
 import { lettersForSale } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { useTranslation } from '../../i18n';
+import { remindersSupported } from '../../notify/reminders';
 import { useGame } from '../../state/GameContext';
+import { useToday } from '../../state/useDaily';
 import { colors, fonts, levelColor } from '../../theme';
 
 // Lost waits for the last balloon to pop and the character to hit the ground (stage 10 is 2200 ms)
 const RESULT_DELAY = { lost: 2600, won: 700 };
+/** The reminder question waits for the stamp to land and the result to be read. */
+const ASK_DELAY = 1400;
 
 export default function PlayScreen() {
   const t = useTranslation();
   const audio = useSoundScope();
-  const { state, dispatch, startNextRound, welcomePending, dismissWelcome } = useGame();
+  const { state, dispatch, startNextRound, setReminders, welcomePending, dismissWelcome } = useGame();
+  const today = useToday();
   const round = state.round!;
   const status = roundStatus(round);
   const insets = useSafeAreaInsets();
@@ -83,6 +93,22 @@ export default function PlayScreen() {
   const [mapOpen, setMapOpen] = useState(false);
   const openMap = useCallback(() => setMapOpen(true), []);
   const closeMap = useCallback(() => setMapOpen(false), []);
+
+  // The first won round asks about the daily reminder, once nothing else is playing over its result.
+  const [askFor, setAskFor] = useState<string | null>(null);
+  const [answered, setAnswered] = useState(false);
+  const askDue = remindersSupported && state.reminders === null && !answered && showResult && status === 'won' &&
+    round.id !== restoredId && !levelChanging && (!streakShown || streakGone === round.id);
+  useEffect(() => {
+    if (!askDue) return;
+    const id = setTimeout(() => setAskFor(round.id), ASK_DELAY);
+    return () => clearTimeout(id);
+  }, [askDue, round.id]);
+  const onReminderAnswer = useCallback((yes: boolean) => {
+    // Hidden at once: the OS prompt (yes) comes over the result, not over this sheet.
+    setAnswered(true);
+    void setReminders(yes);
+  }, [setReminders]);
 
   const streak = state.streak;
   useEffect(() => {
@@ -128,6 +154,8 @@ export default function PlayScreen() {
         wordsGuessed={state.wordsGuessed}
         level={levelMoved && landedFor !== round.id ? round.level : level}
         tokens={state.tokens}
+        dailyDays={dailyDays(state.daily, today)}
+        dailyDone={dailyStatus(state.daily, today) === 'done'}
         onLevelPress={levelChanging ? undefined : openMap}
       />
       <View style={styles.body}>
@@ -140,6 +168,7 @@ export default function PlayScreen() {
             tokensEarned={state.lastTokensEarned}
             rewardFlown={streakShown}
             streak={streak}
+            dailyDays={state.dailyCountedBy === round.id ? state.daily.days : 0}
             level={level}
             available={available}
             compact={compact}
@@ -207,12 +236,13 @@ export default function PlayScreen() {
           onClose={onLevelGone}
         />
       )}
+      {askDue && askFor === round.id && <ReminderSheet character={character} onAnswer={onReminderAnswer} />}
       {mapOpen && <LevelMap progress={state.levelProgress} best={state.bestLevel} character={character} onClose={closeMap} />}
     </View>
   );
 }
 
-function ResultView({ round, status, character, characterName, tokensEarned, rewardFlown, streak, level, available, compact, onNext }: {
+function ResultView({ round, status, character, characterName, tokensEarned, rewardFlown, streak, dailyDays, level, available, compact, onNext }: {
   round: Round;
   status: 'won' | 'lost';
   character: ReturnType<typeof characterById>;
@@ -221,6 +251,8 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
   /** The streak takeover already flew the reward into the counter. */
   rewardFlown: boolean;
   streak: number;
+  /** The daily streak this round brought (0: today had already counted). */
+  dailyDays: number;
   /** The player's level now: not the round's level when this round moved it. */
   level: number;
   available: number;
@@ -281,6 +313,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
           {t(level > round.level ? 'result.levelUp' : 'result.levelDown', { level })}
         </Text>
       )}
+      {dailyDays > 0 && <DailyLine days={dailyDays} />}
       <WordTiles letters={letters} available={available} compact={compact} />
       <DescriptionCard text={round.description} subject={round.subject} compact={compact} />
       <View style={styles.actions}>
@@ -288,6 +321,19 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />
       </View>
     </>
+  );
+}
+
+/** "N days in a row!" under the result's lines, on the round that counted the day. It pops in, as the header's flame lights. */
+function DailyLine({ days }: { days: number }) {
+  const t = useTranslation();
+  const [pop] = useState(() => new Animated.Value(1));
+  useEffect(() => popFrom(pop, 1.3), [pop]);
+  return (
+    <Animated.View style={[styles.dailyLine, { transform: [{ scale: pop }] }]}>
+      <Icon xml={flameXml(true)} size={17} />
+      <Text style={styles.dailyText}>{days === 1 ? t('result.daily.first') : t('result.daily.more', { count: days })}</Text>
+    </Animated.View>
   );
 }
 
@@ -301,5 +347,7 @@ const styles = StyleSheet.create({
   earned: { backgroundColor: colors.butterL, borderColor: '#ffe39a', borderWidth: 2, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 1 },
   earnedText: { fontFamily: fonts.display600, fontSize: 13, color: colors.butterT },
   levelLine: { marginTop: 6, fontFamily: fonts.display600, fontSize: 14, textAlign: 'center' },
+  dailyLine: { marginTop: 6, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 4 },
+  dailyText: { fontFamily: fonts.display600, fontSize: 14, color: colors.flameT, flexShrink: 1, textAlign: 'center' },
   actions: { marginTop: 'auto', paddingTop: 8 },
 });

@@ -3,7 +3,8 @@
  * the top-left of Play, Leaderboard and Characters. The player's name (the
  * only thing they edit here), their character, stats, settings, the info and
  * legal pages, and account deletion (App Store Guideline 5.1.1(v)).
- * The avatar is the character. Music and effects now have separate saved switches.
+ * The avatar is the character. Music and effects now have separate saved switches,
+ * and the daily reminder its own (useDaily.ts).
  */
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -18,10 +19,13 @@ import { profileIconXml } from '../components/icons';
 import { INFO_PAGES, InfoPage } from '../components/InfoPages';
 import { PaperBackground } from '../components/PaperBackground';
 import { LanguageSheet } from '../components/LanguagePicker';
+import { dailyDays, dailyStatus } from '../game/daily';
 import { LANGUAGES } from '../game/languages';
-import { DeleteSheet, ListGroup, ListItem, NameCard, ProfileFooter, StatTiles } from '../components/Profile';
+import { DailyCard, DeleteSheet, ListGroup, ListItem, NameCard, ProfileFooter, StatTiles } from '../components/Profile';
+import { remindersSupported } from '../notify/reminders';
 import { Translator, useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
+import { useToday } from '../state/useDaily';
 import { colors } from '../theme';
 
 /** The info & legal rows, in the mockup's order. */
@@ -36,7 +40,8 @@ const infoItems = (t: Translator): ListItem[] =>
 
 export default function ProfileScreen() {
   const t = useTranslation();
-  const { state, dispatch, deleteAccount, nameIsFree } = useGame();
+  const { state, dispatch, deleteAccount, nameIsFree, setReminders } = useGame();
+  const today = useToday();
   const insets = useSafeAreaInsets();
   const [deleting, setDeleting] = useState(false);
   const [choosingLanguage, setChoosingLanguage] = useState(false);
@@ -51,6 +56,8 @@ export default function ProfileScreen() {
   const settings: ListItem[] = [
     { key: 'sound', icon: profileIconXml.sound, color: colors.coral, label: t('profile.sound'), toggle: { value: state.soundEnabled, onChange: value => setAudio('soundEnabled', value) } },
     { key: 'music', icon: profileIconXml.music, color: colors.mintD, label: t('profile.music'), toggle: { value: state.musicEnabled, onChange: value => setAudio('musicEnabled', value) } },
+    ...(remindersSupported ? [{ key: 'reminders', icon: profileIconXml.reminders, color: colors.flame, label: t('profile.reminders'),
+      toggle: { value: state.reminders === true, onChange: (value: boolean) => { sound.play('tap'); void setReminders(value); } } }] : []),
     { key: 'language', icon: profileIconXml.language, color: colors.sky, label: t('profile.language'),
       value: LANGUAGES.find(l => l.id === state.language)?.name, onPress: () => setChoosingLanguage(true) },
   ];
@@ -84,6 +91,7 @@ export default function ProfileScreen() {
           onChangeCharacter={() => { sound.play('tab'); router.dismissTo('/characters'); }}
         />
         <StatTiles words={state.wordsGuessed} tokens={state.tokens} level={state.levelProgress.level} />
+        <DailyCard days={dailyDays(state.daily, today)} best={state.daily.best} status={dailyStatus(state.daily, today)} />
         <ListGroup title={t('profile.settings')} items={settings} />
         <ListGroup title={t('profile.info')} items={infoItems(t)} />
         <ProfileFooter version={appConfig.expo.version} onDelete={() => { sound.play('delete-open'); setDeleting(true); }} />

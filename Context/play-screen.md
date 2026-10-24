@@ -21,7 +21,8 @@ after a restart. This uses the normal first round and economy. See [onboarding.m
   .ttf · "10 / 10 misses · the word was" · full word · description
   (always unlocked) · **Next word** · **Change character** · tab bar. A round that moved the level adds a line under the
   misses line, in the new level's colour: "Level up! Welcome to level N." or "Back to level N. You've
-  got this!" (encouraging, never a penalty message).
+  got this!" (encouraging, never a penalty message). The round that counted the day adds "N days in a row! See you
+  tomorrow." in flame orange ([retention.md](retention.md)).
 - There is **no "Next token" bar**: words guessed in a row pay more tokens
   ([progression-and-tokens.md](progression-and-tokens.md)), so the win line's badge carries the
   reward: "+N tokens" (`lastTokensEarned`), plus "· N in a row" once the streak is 2 or more (the streak
@@ -177,11 +178,13 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 
 | File | What |
 |---|---|
-| `GameHeader.tsx` | Avatar button (opens Profile), **player name** (never the app name; a new player's is random, e.g. "SunnyOtter"; at most 15 characters, sized to fit the room beside the pills (27 down to 14), cut with "…" if it still doesn't fit), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. |
+| `GameHeader.tsx` | Avatar button (opens Profile), **player name** (never the app name; a new player's is random, e.g. "SunnyOtter"; at most 15 characters, sized to fit the room beside the pills (27 down to 14), cut with "…" if it still doesn't fit), words guessed, `Lv N` in the level's colour (pops when it changes; tapping it opens the level map), token pill. The **daily streak** sits on the avatar's corner (flame + days, grey until today counts: [retention.md](retention.md)). |
 | `LevelPath.tsx` | The shared level path: `pathLayout()` (stops up to the best level), `PathWorld` (the world, from [design/world/world.js](../design/world/world.js)), `LevelStop`, `PathFog`. Use it for any new view of the levels. The world's palette is in world.js; the fog and sign colours are `worldColors` in [src/theme](../src/theme/index.ts). |
 | `LevelChange.tsx` | The level path card (see Level change above). |
 | `LevelMap.tsx` | The full-screen level map (see The level map above). |
 | `StreakTakeover.tsx` | The streak meter takeover (see Words in a row above). |
+| `ReminderSheet.tsx` | "Keep your streak going?", asked once over the first won round's result, before the OS's notification prompt ([retention.md](retention.md)). |
+| `Sheet.tsx` | The bottom sheet over a dimmed screen (`Sheet`, `sheetText`): the language picker's and the reminder's. Use it for any new sheet. |
 | `Confetti.tsx` | A party-popper burst driven by one value, native driver only. `seed` and `aim` per popper. Reuse it for any big celebration. Pieces flutter with a flat `scaleY`, **never `rotateX`** (see the 3D trap in [dev-setup.md](dev-setup.md)). |
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
 | `TokenPill.tsx` | The header's token counter, live on Play and Characters (where tokens move). Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. **Several live pills**: flights land on the focused screen's pill (it sets the hub's target on focus), and a pill shows a change as is when its screen isn't focused or another pill already showed it (`claim` / `isClaimed`), so coming back to Play after buying a character doesn't count the spend again. |

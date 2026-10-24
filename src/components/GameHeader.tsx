@@ -1,13 +1,14 @@
 /*
  * The headers. In game (Play and Round lost): the player's avatar and name
- * (never the app name), words guessed, level and token balance. On the other
+ * (never the app name), words guessed, the daily streak, level and token balance. On the other
  * tabs (TitleHeader): avatar, the screen's title, token balance (`live` on a
  * screen where tokens are spent, so the spend flies into it). On a pushed
  * page (BackHeader): back button, title, token balance.
  * The avatar opens the Profile page; the level pill opens the level map (LevelMap).
+ * In game, the daily streak sits on the avatar's corner (it takes no room from the name).
  */
 import { router } from 'expo-router';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
@@ -16,7 +17,7 @@ import { LEVELS } from '../game/levels';
 import { useTranslation } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
 import { sound } from '../audio';
-import { chevXml, crownXml, Icon, starXml } from './icons';
+import { chevXml, crownXml, flameXml, Icon, starXml } from './icons';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { StillTokenPill, TokenPill } from './TokenPill';
@@ -27,6 +28,10 @@ interface Props {
   wordsGuessed: number;
   level: number;
   tokens: number;
+  /** The daily streak the player sees today (daily.dailyDays). Hidden at 0. */
+  dailyDays: number;
+  /** Today already counts: the flame is lit. */
+  dailyDone: boolean;
   /** Opens the level map. Left out while the level is changing (the level-up card is showing it). */
   onLevelPress?: () => void;
 }
@@ -95,7 +100,28 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
   );
 });
 
-function ProfileButton({ character }: { character: Character }) {
+/** The daily streak on the avatar's corner: unlit while today still has to be played, popping when it lights. */
+const DailyBadge = memo(function DailyBadge({ days, done }: { days: number; done: boolean }) {
+  const t = useTranslation();
+  const [pop] = useState(() => new Animated.Value(1));
+  const wasDone = useRef(done);
+  useEffect(() => {
+    if (done && !wasDone.current) popFrom(pop, 1.5);
+    wasDone.current = done;
+  }, [done, pop]);
+  return (
+    <Animated.View
+      style={[styles.daily, { transform: [{ scale: pop }] }]}
+      accessible
+      accessibilityLabel={t(done ? 'header.a11y.daily' : 'header.a11y.dailyDue', { count: days })}
+    >
+      <Icon xml={flameXml(done)} size={12} />
+      <Text style={[styles.dailyText, !done && styles.dailyDue]}>{days}</Text>
+    </Animated.View>
+  );
+});
+
+function ProfileButton({ character, badge }: { character: Character; badge?: ReactNode }) {
   const t = useTranslation();
   return (
     <Pressable
@@ -106,6 +132,7 @@ function ProfileButton({ character }: { character: Character }) {
       style={({ pressed }) => pressed && styles.levelPressed}
     >
       <Avatar character={character} size={46} />
+      {badge}
     </Pressable>
   );
 }
@@ -156,14 +183,14 @@ const LETTER_WIDTH = 0.62;
 const nameSize = (name: string, width: number) =>
   Math.max(14, Math.min(27, Math.floor(width / ([...name].length * LETTER_WIDTH))));
 
-export function GameHeader({ name, character, wordsGuessed, level, tokens, onLevelPress }: Props) {
+export function GameHeader({ name, character, wordsGuessed, level, tokens, dailyDays, dailyDone, onLevelPress }: Props) {
   const t = useTranslation();
   // The name's room, measured: it changes with the phone and with the pills' widths
   const [nameWidth, setNameWidth] = useState(0);
   return (
     <View style={styles.head}>
       <View style={[styles.side, styles.grow]}>
-        <ProfileButton character={character} />
+        <ProfileButton character={character} badge={dailyDays > 0 && <DailyBadge days={dailyDays} done={dailyDone} />} />
         <View style={styles.nameBlock} onLayout={(e) => setNameWidth(e.nativeEvent.layout.width)}>
           <Text style={[styles.name, nameWidth > 0 && { fontSize: nameSize(name, nameWidth) }]} numberOfLines={1}>
             {name}
@@ -224,6 +251,23 @@ const styles = StyleSheet.create({
   backTitle: { flex: 1, textAlign: 'center', marginHorizontal: 8 },
   backSpacer: { width: 44 },
   sub: { fontFamily: fonts.body800, fontSize: 11.5, color: colors.muted, marginTop: 1, letterSpacing: 0.2 },
+  daily: {
+    position: 'absolute',
+    right: -7,
+    bottom: -5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 1,
+    height: 19,
+    paddingLeft: 3,
+    paddingRight: 5,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: colors.line,
+    backgroundColor: '#fff',
+  },
+  dailyText: { fontFamily: fonts.display700, fontSize: 12, lineHeight: 15, color: colors.flameT },
+  dailyDue: { color: colors.muted },
   level: {
     flexDirection: 'row',
     alignItems: 'center',

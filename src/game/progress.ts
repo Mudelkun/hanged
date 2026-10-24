@@ -17,6 +17,7 @@ import {
   STREAK_BONUS_AT,
 } from './config';
 import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, wrongCount } from './engine';
+import { dayNumber, DailyStreak, NO_DAILY_STREAK, playedOn } from './daily';
 import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
 import { checkName, keptName } from './names';
 import { LEGAL_VERSION, LegalAcceptance, STARTER_CHARACTERS } from './onboarding';
@@ -53,6 +54,12 @@ export interface GameState {
   tokens: number;
   /** Words guessed in a row. A lost round resets it to 0. */
   streak: number;
+  /** Days in a row with a finished round (daily.ts). Moved only by the step that finishes a round. */
+  daily: DailyStreak;
+  /** The round that counted `daily.lastDay`: its result says so. */
+  dailyCountedBy: string | null;
+  /** The daily reminder: null until the player is asked, then their answer (they change it on Profile). */
+  reminders: boolean | null;
   /** The level and the counts that move it up or down (levels.afterRound). */
   levelProgress: LevelProgress;
   /** The highest level ever reached. The level path shows every stop up to it; the rest is in the fog. */
@@ -86,6 +93,9 @@ export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => 
   wordsGuessed: 0,
   tokens: STARTING_TOKENS,
   streak: 0,
+  daily: NO_DAILY_STREAK,
+  dailyCountedBy: null,
+  reminders: null,
   levelProgress: START_LEVEL,
   bestLevel: START_LEVEL.level,
   seenWordIds: [],
@@ -99,6 +109,8 @@ export type GameAction =
   | { type: 'language'; language: string; roundId: string; rng?: () => number }
   | { type: 'completeOnboarding'; name: string; characterId: string; accepted: boolean; at: number }
   | { type: 'audioSetting'; setting: 'soundEnabled' | 'musicEnabled'; enabled: boolean }
+  /** The player's answer about the daily reminder (the OS permission is asked before: useReminders). */
+  | { type: 'reminders'; enabled: boolean }
   | { type: 'hydrate'; state: GameState }
   | { type: 'newRound'; word: WordEntry; roundId: string; rng?: () => number }
   /** `at`: now, in epoch ms (the reducer stays pure). */
@@ -208,6 +220,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'audioSetting':
       return state[action.setting] === action.enabled ? state : { ...state, [action.setting]: action.enabled };
+    case 'reminders':
+      return state.reminders === action.enabled ? state : { ...state, reminders: action.enabled };
     case 'hydrate': {
       let s = action.state;
       // Existing players keep their identity and round; they only need the new consent step.
@@ -235,6 +249,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           !Number.isFinite(s.legalAcceptance.acceptedAt) || s.legalAcceptance.acceptedAt <= 0)) {
         s = { ...s, legalAcceptance: null };
       }
+      if (typeof s.daily?.days !== 'number' || typeof s.daily.best !== 'number') s = { ...s, daily: NO_DAILY_STREAK };
       if (typeof s.soundEnabled !== 'boolean' || typeof s.musicEnabled !== 'boolean')
         s = { ...s, soundEnabled: typeof s.soundEnabled === 'boolean' ? s.soundEnabled : true,
           musicEnabled: typeof s.musicEnabled === 'boolean' ? s.musicEnabled : true };
@@ -294,9 +309,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const streak = won ? state.streak + 1 : 0;
       // The round's own level pays, not the level this win may move the player up to.
       const earned = won ? tokenReward(round.level, streak) : 0;
+      // Won or lost, a finished round counts the day: the daily streak rewards showing up.
+      const daily = playedOn(state.daily, dayNumber(action.at));
       const ended = {
         ...state,
         round,
+        daily,
+        dailyCountedBy: daily === state.daily ? state.dailyCountedBy : round.id,
         levelProgress,
         bestLevel: Math.max(state.bestLevel, levelProgress.level),
         ...queueReport(state, round, won, earned, action.at),

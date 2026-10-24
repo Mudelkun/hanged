@@ -53,6 +53,7 @@ const RULES: { key: string; color: string; params?: () => Record<string, number>
   { key: 'tokens', color: colors.butterD, params: () => ({ streak: STREAK_BONUS_AT[0] }) },
   { key: 'levels', color: colors.coral, params: () => ({ levels: LEVELS.length, drop: LOSSES_TO_DROP }) },
   { key: 'board', color: '#e45a92' },
+  { key: 'daily', color: '#ff8a3d' },
   { key: 'versus', color: '#a98bf5' },
 ];
 

@@ -218,6 +218,9 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   (`levelFromScore`: same level as before, the words past that level's start as `wins`). Same key, no bump.
 - A save from before the level path has no `bestLevel`. `hydrate` sets it to the current level
   (before `withDefaults`, which would say 1). Same key, no bump.
+- The daily streak (`daily`, `dailyCountedBy`) and the reminder answer (`reminders`) are saved here too, and
+  the `guess` step that finishes a round counts the day: [retention.md](retention.md). Old saves get them from
+  `initialState()`. Same key, no bump.
 - **`hydrate` gets the save exactly as stored** and fills missing fields from `initialState()` itself
   (`withDefaults`). `GameContext` must not merge first, or `hydrate` can't tell an old save from a new one.
 - The **round in progress is saved too**. Killing the app does not deal a new word,

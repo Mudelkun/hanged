@@ -25,6 +25,11 @@ export const colors = {
   butterL: '#fff3cc',
   butterT: '#9a6a00',
 
+  // The daily streak (flameXml): not in the mockup.
+  flame: '#ff8a3d',
+  flameL: '#ffeadb',
+  flameT: '#c85a12',
+
   sky: '#6cc4ff',
   skyL: '#e0f3ff',
   skyT: '#2a86c8',

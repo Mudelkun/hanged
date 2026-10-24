@@ -1,6 +1,6 @@
 /*
  * The Profile page's pieces (mockup: Profile): the name card with the
- * character's face and the name editor, the three stat tiles, the settings
+ * character's face and the name editor, the three stat tiles, the daily streak card, the settings
  * and info lists, the footer, and the delete-account sheet. The name rules
  * are game rules (src/game/names.ts): the editor only shows what they say.
  * No photo upload (owner's call, 2026-10-22): the avatar is the character.
@@ -13,12 +13,13 @@ import { Character, faceXml } from '../characters/rig';
 import { feedback } from '../feedback';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
+import { DailyStatus } from '../game/daily';
 import { checkName, randomName } from '../game/names';
 import { useTranslation } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
 import { speciesOf } from './CharacterShop';
 import { Avatar } from './GameHeader';
-import { checkXml, chevXml, closeXml, coinXml, diceXml, Icon, penXml, starXml, tabIconXml } from './icons';
+import { checkXml, chevXml, closeXml, coinXml, diceXml, flameXml, Icon, penXml, starXml, tabIconXml } from './icons';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { BigButton } from './RoundParts';
@@ -228,6 +229,23 @@ function Stat({ value, label, bg, color, icon }: { value: number; label: string;
     </Raised>
   );
 }
+
+/** The daily streak (daily.ts) under the stats: the flame, today's count, the best run, and what today needs. */
+export const DailyCard = memo(function DailyCard({ days, best, status }: { days: number; best: number; status: DailyStatus }) {
+  const t = useTranslation();
+  const lit = status === 'done';
+  return (
+    <Raised depth={3} shadowColor={colors.shadow} radius={18} outerStyle={styles.dailyOuter} style={[styles.daily, lit && styles.dailyLit]}>
+      <View style={styles.dailyRow} accessible accessibilityLabel={t('profile.daily.a11y', { count: days, best })}>
+        <Icon xml={flameXml(lit)} size={30} />
+        <Text style={[styles.statNumber, styles.dailyNumber, !lit && { color: colors.muted }]}>{days}</Text>
+        <Text style={styles.dailyTitle} numberOfLines={1}>{t('profile.daily.title')}</Text>
+        {best > 0 && <Text style={styles.dailyBest}>{t('profile.daily.best', { count: best })}</Text>}
+      </View>
+      <Text style={styles.dailyNote}>{t(`profile.daily.${status}`)}</Text>
+    </Raised>
+  );
+});
 
 // ---- lists ----
 
@@ -484,6 +502,14 @@ const styles = StyleSheet.create({
   statValue: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 6 },
   statNumber: { ...display('700', 22), lineHeight: 26, flexShrink: 1 },
   statLabel: display('500', 12, colors.muted),
+  dailyOuter: { marginTop: -4, marginBottom: 14 },
+  daily: { borderWidth: 2, borderColor: '#fff', backgroundColor: '#fff', paddingHorizontal: 14, paddingVertical: 10 },
+  dailyLit: { backgroundColor: colors.flameL },
+  dailyRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dailyNumber: { color: colors.flameT, fontSize: 26, lineHeight: 30 },
+  dailyTitle: { ...display('500', 15, colors.muted), flex: 1 },
+  dailyBest: display('500', 13, colors.muted),
+  dailyNote: { ...display('500', 13, colors.muted), marginTop: 2 },
 
   groupTitle: { ...display('600', 12.5, colors.muted), letterSpacing: 1, marginHorizontal: 8, marginBottom: 5 },
   groupOuter: { marginBottom: 14 },

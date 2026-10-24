@@ -12,14 +12,14 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
   **"Change character"** (opens the Characters tab), and the camera badge on the face is a little cat.
 - **The name is the only thing the player edits here.** It's filtered. Onboarding offers a random name
   and the same `PlayerNameInput` and validation messages; see [onboarding.md](onboarding.md).
-- Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md). The switches are our own `Toggle` (in `Profile.tsx`), not React Native's `Switch`: on iOS 26 the native switch is wider than the frame React Native gives it and draws off-centre in the row.
+- Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md). A **Daily reminder** switch sits between them and the language (native only; [retention.md](retention.md)). The switches are our own `Toggle` (in `Profile.tsx`), not React Native's `Switch`: on iOS 26 the native switch is wider than the frame React Native gives it and draws off-centre in the row.
 - **Privacy policy and terms of use** share onboarding's explicit draft placeholder (`LegalDocument`).
   **Contact & support** still says "Coming soon". The actual legal texts and privacy policy URL remain to be supplied before release.
 
 ## The page (mockup: Profile)
 
-`BackHeader` (back, title, still token pill) · name card · stat tiles · SETTINGS · INFO & LEGAL · footer.
-It scrolls; it fits without scrolling at 393×852 and 375×667. **No tab bar**: it's a pushed page over the
+`BackHeader` (back, title, still token pill) · name card · stat tiles · daily streak card · SETTINGS · INFO & LEGAL · footer.
+It scrolls; since the daily streak card and the reminder switch (2026-10-24), a 375×667 phone has to scroll to the info list. **No tab bar**: it's a pushed page over the
 tabs (the mockup draws one; a pushed page covering it is the iOS way and leaves more room).
 
 - **Avatar**: `Avatar` from GameHeader at 78. Tapping the face, or the "Change character" pill, does

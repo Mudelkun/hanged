@@ -15,6 +15,7 @@ import { Language, languageForLocales } from '../game/languages';
 import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
 import { createSync, nameIsFree } from '../net/sync';
+import { useReminders } from './useDaily';
 
 const STORAGE_KEY = 'hanged.game.v1';
 /** Finished rounds wait this long for more before a sync, so a run of quick words is one request. */
@@ -36,6 +37,8 @@ interface GameContextValue {
   /** Names are unique: false only when the server says someone else has it (offline: true, the sync settles it). */
   nameIsFree: (name: string) => Promise<boolean>;
   completeOnboarding: (name: string, characterId: string) => void;
+  /** The daily reminder on or off. On asks the OS first; resolves to what was saved. */
+  setReminders: (enabled: boolean) => Promise<boolean>;
   welcomePending: boolean;
   dismissWelcome: () => void;
 }
@@ -74,6 +77,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const changeLanguage = useCallback((language: Language) => {
     dispatch({ type: 'language', language, roundId: newRoundId() });
   }, []);
+
+  const setReminders = useReminders(state, ready, dispatch);
 
   // The sync reads the latest state when it runs, never the one it was scheduled with.
   const [sync] = useState(() => createSync(dispatch));
@@ -120,8 +125,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [sync]);
 
   const value = useMemo(
-    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, nameIsFree, completeOnboarding, welcomePending, dismissWelcome }),
-    [state, ready, startNextRound, changeLanguage, sync, deleteAccount, completeOnboarding, welcomePending, dismissWelcome],
+    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, nameIsFree, completeOnboarding, setReminders, welcomePending, dismissWelcome }),
+    [state, ready, startNextRound, changeLanguage, sync, deleteAccount, completeOnboarding, setReminders, welcomePending, dismissWelcome],
   );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

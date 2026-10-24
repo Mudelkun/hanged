@@ -68,6 +68,8 @@ export const closeXml = (c = '#4b3a35') =>
 export const profileIconXml = {
   sound: svg('0 0 24 24', '<path d="M3 9h4l6-5v16l-6-5H3z" fill="#fff"/><path d="M16 8q5 4 0 8M19 5q7 7 0 14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'),
   music: svg('0 0 24 24', '<path d="M9 17V5l11-2v12M9 8l11-2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="6" cy="18" rx="4" ry="3" fill="#fff"/><ellipse cx="17" cy="16" rx="4" ry="3" fill="#fff"/>'),
+  // Not in the mockup: the daily reminder's bell.
+  reminders: svg('0 0 24 24', '<path d="M12 3a6 6 0 0 0-6 6v4.2L4 16.5h16l-2-3.3V9a6 6 0 0 0-6-6z" fill="#fff"/><path d="M9.8 19a2.3 2.3 0 0 0 4.4 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>'),
   language: svg(
     '0 0 24 24',
     '<g fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></g>',
@@ -91,6 +93,16 @@ export const profileIconXml = {
     '<path d="M8 13l-2.5 8.5 3.5-1.6 2 3 1-9.9M16 13l2.5 8.5-3.5-1.6-2 3-1-9.9" fill="#fff"/><circle cx="12" cy="9" r="6.5" fill="#fff"/><circle cx="12" cy="9" r="3.2" fill="#ffc23d"/>',
   ),
 };
+/**
+ * Not in the mockup: the daily streak's flame. Lit once today counts; unlit
+ * (the same shape in a pale grey) while today still has to be played.
+ */
+export const flameXml = (lit: boolean) => svg(
+  '0 0 24 24',
+  `<path d="M12 2.5c.6 3 4.2 5.2 5.6 8.6 1.6 3.9-.6 9.4-5.6 9.4s-7.4-4.4-6-8.4c.6-1.8 1.8-2.9 2.8-3.6-.1 1.9.7 3.2 1.8 3.7-.6-3.4.2-7 1.4-9.7z" fill="${lit ? '#ff8a3d' : '#dccdbf'}"/>` +
+  `<path d="M12 12.5c1.6 1.4 2.8 2.9 2.4 4.9-.3 1.6-1.4 2.6-2.4 2.6s-2.3-1-2.4-2.6c-.1-1.7.9-3.2 2.4-4.9z" fill="${lit ? '#ffd667' : '#efe5da'}"/>`,
+);
+
 export const penXml = svg(
   '0 0 24 24',
   '<path d="M4 20l1-4.5L15.5 5l3.5 3.5L8.5 19z" fill="#ffe5df" stroke="#e85c4d" stroke-width="2.4" stroke-linejoin="round"/>',

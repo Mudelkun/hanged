@@ -74,5 +74,14 @@ export const LOSSES_TO_DROP = 3;
 /** PLACEHOLDER: the first rounds on a new level never count toward a drop. */
 export const LEVEL_GRACE_ROUNDS = 3;
 
+/**
+ * PLACEHOLDER: the daily reminder's local hour (18 = 6 pm). It only comes on a
+ * day the player hasn't finished a round yet (daily.reminderPlan).
+ */
+export const REMINDER_HOUR = 18;
+
+/** PLACEHOLDER: days after the last one played that still get a reminder. Past it the app goes quiet. */
+export const REMINDER_DAYS = 7;
+
 /** Fallback when none of the device's preferred languages is supported. */
 export const DEFAULT_LANGUAGE = 'en';
