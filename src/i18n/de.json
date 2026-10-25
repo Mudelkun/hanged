@@ -211,8 +211,6 @@
   "delete.working": "Wird gelöscht …",
   "delete.offline": "Zum Löschen brauchst du Internet. Versuche es erneut, sobald du wieder online bist.",
   "support.intro": "Eine Frage, ein Fehler oder eine Idee für das Spiel? Wir freuen uns, von dir zu hören.",
-  "support.developer.title": "Entwickler",
-  "support.developer.body": "Hanged wird von {developer} entworfen und entwickelt.",
   "support.email.title": "Hilfe per E-Mail",
   "support.email.body": "Schreib uns, wir antworten so schnell wie möglich. Geht es um dein Konto, nenne uns deinen Spielernamen.",
   "support.email.subject": "Hanged Hilfe",

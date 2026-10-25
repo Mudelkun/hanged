@@ -2,8 +2,8 @@
  * The info & legal pages opened from Profile (route: src/app/info/[page].tsx).
  * Game rules explain CLAUDE.md's rules in player words, with the numbers read
  * from the game's config so they never drift from the real rules. Credits are
- * required by the word lists' licences (data/CREDITS.md). Support names the
- * developer and opens an email. Privacy policy and terms of use are still to be
+ * required by the word lists' licences (data/CREDITS.md). Support opens an
+ * email. Privacy policy and terms of use are still to be
  * written (owner's call) and share onboarding's explicit draft placeholder.
  */
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -57,7 +57,7 @@ const RULES: { key: string; color: string; params?: () => Record<string, number>
 ];
 
 /** Who players reach from Contact & support (owner, 2026-10-25). */
-export const SUPPORT = { developer: 'Rodarly', email: 'mudelkun56@gmail.com' } as const;
+export const SUPPORT_EMAIL = 'mudelkun56@gmail.com';
 
 const CREDITS: { key: string; links: string[] }[] = [
   { key: 'original', links: [] },
@@ -111,9 +111,7 @@ export function InfoContent({ page }: { page: InfoPage }) {
         <>
           <Text style={styles.intro}>{t('support.intro')}</Text>
           <InfoCard color={INFO_PAGES.support.color} title={t('support.email.title')} body={t('support.email.body')}
-            links={[`mailto:${SUPPORT.email}?subject=${encodeURIComponent(t('support.email.subject'))}`]} />
-          <InfoCard color={INFO_PAGES.support.color} title={t('support.developer.title')}
-            body={t('support.developer.body', { developer: SUPPORT.developer })} />
+            links={[`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(t('support.email.subject'))}`]} />
         </>
       );
   }

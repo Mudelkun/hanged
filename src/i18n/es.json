@@ -211,8 +211,6 @@
   "delete.working": "Eliminando…",
   "delete.offline": "Para eliminar la cuenta necesitas Internet. Inténtalo cuando vuelvas a tener conexión.",
   "support.intro": "¿Una pregunta, un error o una idea para el juego? Nos encantará leerte.",
-  "support.developer.title": "Desarrollador",
-  "support.developer.body": "Hanged está diseñado y desarrollado por {developer}.",
   "support.email.title": "Ayuda por correo",
   "support.email.body": "Escríbenos y te responderemos lo antes posible. Si es sobre tu cuenta, dinos tu nombre de jugador.",
   "support.email.subject": "Ayuda de Hanged",

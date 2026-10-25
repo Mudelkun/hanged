@@ -202,8 +202,6 @@
   "delete.working": "Deleting…",
   "delete.offline": "Deleting your account needs the internet. Try again when you're back online.",
   "support.intro": "A question, a bug, or an idea for the game? We'd love to hear from you.",
-  "support.developer.title": "Developer",
-  "support.developer.body": "Hanged is designed and built by {developer}.",
   "support.email.title": "Email support",
   "support.email.body": "Write to us and we'll answer as soon as we can. If it's about your account, tell us your player name.",
   "support.email.subject": "Hanged support",
