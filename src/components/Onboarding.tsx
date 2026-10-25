@@ -55,7 +55,7 @@ function FloatingChoice({ id, selected, scale, onPress }: { id: string; selected
       <OnboardingBalloon id={id} active={selected} />
     </Pressable>
     {selected && <View style={[styles.bubble, left ? { left: 4, minWidth: 160 } : { right: -4, minWidth: 105 }]} pointerEvents="none">
-      <Text style={styles.bubbleText} numberOfLines={1}>{t(id === 'coco' ? 'onboarding.coco.says' : 'onboarding.bun.says')}</Text>
+      <Text style={styles.bubbleText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{t(id === 'coco' ? 'onboarding.coco.says' : 'onboarding.bun.says')}</Text>
       <View style={[styles.bubbleTail, left ? { left: 16 } : { right: 16 }]} />
     </View>}
   </Animated.View>;

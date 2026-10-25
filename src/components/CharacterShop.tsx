@@ -203,7 +203,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
             pointerEvents="none"
             style={[styles.bubble, { opacity: fx.ribbon.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ scale: fx.say }] }]}
           >
-            <Text style={styles.bubbleText} numberOfLines={1}>{quote}</Text>
+            <Text style={styles.bubbleText} numberOfLines={2}>{quote}</Text>
             <Svg style={styles.bubbleTail} width={16} height={11} viewBox="0 0 16 11">
               <Path d="M0,0 L16,0 L8,11 Z" fill="#fff" />
               <Path d="M0,0 L8,11 L16,0" fill="none" stroke={colors.line} strokeWidth={2} />
@@ -260,7 +260,7 @@ export function CharacterInfo({ character, ownership, price, note }: {
     <View style={styles.info}>
       <View style={styles.infoText}>
         <Text style={styles.name} numberOfLines={1}>{character.name}</Text>
-        <Text style={[styles.species, note ? styles.note : null]} numberOfLines={1}>
+        <Text style={[styles.species, note ? styles.note : null]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
           {note ?? t(`chars.${ownership}`, { species })}
         </Text>
       </View>
@@ -328,7 +328,7 @@ const Card = memo(function Card({ character, ownership, viewed, width, height, o
             <Text style={styles.priceText}>{price}</Text>
           </View>
         ) : (
-          <Text style={styles.owned}>{t(ownership === 'playing' ? 'chars.card.playing' : 'chars.card.owned')}</Text>
+          <Text style={styles.owned} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{t(ownership === 'playing' ? 'chars.card.playing' : 'chars.card.owned')}</Text>
         )}
         {locked && (
           <View style={styles.lock}>
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     transformOrigin: 'center bottom',
   },
-  bubbleText: { fontFamily: fonts.display500, fontSize: 13, lineHeight: 17, color: colors.ink },
+  bubbleText: { fontFamily: fonts.display500, fontSize: 13, lineHeight: 17, color: colors.ink, textAlign: 'center' },
   bubbleTail: { position: 'absolute', bottom: -9, left: '50%', marginLeft: -8 },
   arrow: { position: 'absolute', top: '50%', marginTop: -24 },
   arrowFace: { width: 42, height: 42, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
   cardName: { fontFamily: fonts.display600, fontSize: 13, color: colors.ink },
   price: { flexDirection: 'row', alignItems: 'center', gap: 2, marginTop: 1 },
   priceText: { fontFamily: fonts.display700, fontSize: 12.5, color: colors.butterT },
-  owned: { fontFamily: fonts.display600, fontSize: 11.5, color: colors.mintT, marginTop: 1 },
+  owned: { fontFamily: fonts.display600, fontSize: 11.5, color: colors.mintT, marginTop: 1, paddingHorizontal: 3 },
   lock: {
     position: 'absolute',
     top: 5,

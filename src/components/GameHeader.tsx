@@ -195,7 +195,7 @@ export function GameHeader({ name, character, wordsGuessed, level, tokens, daily
           <Text style={[styles.name, nameWidth > 0 && { fontSize: nameSize(name, nameWidth) }]} numberOfLines={1}>
             {name}
           </Text>
-          <Text style={styles.sub}>
+          <Text style={styles.sub} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
             {wordsGuessed === 1 ? t('header.wordGuessed') : t('header.wordsGuessed', { count: wordsGuessed })}
           </Text>
         </View>

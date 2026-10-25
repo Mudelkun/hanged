@@ -261,3 +261,15 @@ Every string is in [src/i18n/en.json](../src/i18n/en.json), read with `t(key, pa
 ([src/i18n/index.ts](../src/i18n/index.ts)). Never hard-code UI text in a component.
 Accessibility labels are translated too. A new language = a new JSON file with
 the same keys, registered in `TRANSLATIONS`.
+
+**Layouts must fit every language** (fr, de and es run up to twice as long as en:
+"rating" → "classement", "Owned" → "Freigeschaltet"). Size for the longest one, never English:
+- A label in a fixed-width slot (tab, stat, chip, card) gets `numberOfLines={1} adjustsFontSizeToFit
+  minimumFontScale={0.75–0.8}` and `minWidth: 0` on its flex parent, so it shrinks and is never cut off.
+- Don't put a number and its label side by side in a narrow cell: stack the label under it
+  (the Versus stats strip, the Profile stats).
+- A label that can take two lines (buttons: `PillButton`, lobby mode chips, the character's
+  quote bubble) gets `numberOfLines={2}` and is centred.
+- When a translation is still too long once shrunk, shorten the translation (de `chars.card.owned`: "Deins").
+- `adjustsFontSizeToFit` does nothing on web: the web preview shows the worst case, so check
+  long languages there at 375 px wide.

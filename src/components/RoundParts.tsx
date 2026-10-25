@@ -128,7 +128,7 @@ export function LetterShopPill({ canAfford, onBuy, compact }: {
       style={[styles.pill, compact && { height: 36 }]}
     >
       <Text style={[styles.pillChip, styles.shopChip]}>{t('letters.label')}</Text>
-      <Text style={[styles.pillText, refused && { color: colors.coralD }]} numberOfLines={1}>
+      <Text style={[styles.pillText, refused && { color: colors.coralD }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
         {refused ? t('tokens.notEnough') : t('letters.offer', params)}
       </Text>
       <PayButton

@@ -80,7 +80,7 @@ export function LobbyRoom({ lobby }: { lobby: LobbyView }) {
               style={[styles.mode, on && { backgroundColor: MODE_LOOK[mode].light, borderColor: MODE_LOOK[mode].main }, !on && (!host || !fits) && styles.modeOff]}
             >
               <ModeIcon mode={mode} size={22} />
-              <Text style={[styles.modeText, on && { color: MODE_LOOK[mode].dark }]} numberOfLines={1}>{modeName(t, mode)}</Text>
+              <Text style={[styles.modeText, on && { color: MODE_LOOK[mode].dark }]} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>{modeName(t, mode)}</Text>
             </Pressable>
           );
         })}
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   modes: { flexDirection: 'row', gap: 8 },
   mode: { flex: 1, alignItems: 'center', gap: 3, backgroundColor: '#fff', borderRadius: 16, borderWidth: 2, borderColor: colors.line, paddingVertical: 8, paddingHorizontal: 4 },
   modeOff: { opacity: 0.55 },
-  modeText: display('600', 13),
+  modeText: { ...display('600', 13), textAlign: 'center' },
 
   members: { gap: 8 },
   member: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#fff', borderRadius: 18, borderWidth: 2, borderColor: colors.line, paddingVertical: 7, paddingHorizontal: 10 },

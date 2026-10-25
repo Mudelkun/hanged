@@ -129,7 +129,7 @@
   "chars.locked": "{species} · gesperrt",
   "chars.owned": "{species} · freigeschaltet",
   "chars.playing": "{species} · im Spiel",
-  "chars.card.owned": "Freigeschaltet",
+  "chars.card.owned": "Deins",
   "chars.card.playing": "Im Spiel",
   "chars.unlock": "{name} freischalten · {price}",
   "chars.choose": "{name} wählen",

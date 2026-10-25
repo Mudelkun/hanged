@@ -65,10 +65,13 @@ export function StatsStrip({ stats }: { stats: VersusStats }) {
   return (
     <View style={styles.stats}>
       {items.map((item, i) => (
-        <View key={item.label} style={[styles.stat, i === 0 && styles.statFirst]}>
-          {i === 0 && <Icon xml={starXml(colors.butterD)} size={16} />}
-          <Text style={[styles.statValue, { color: item.color }]}>{item.value}</Text>
-          <Text style={styles.statLabel}>{item.label}</Text>
+        // The label sits under the number so a long translation ("classement") never squeezes it.
+        <View key={item.label} style={[styles.stat, i === 0 && styles.statFirst]} accessible accessibilityLabel={`${item.value} ${item.label}`}>
+          <View style={styles.statTop}>
+            {i === 0 && <Icon xml={starXml(colors.butterD)} size={16} />}
+            <Text style={[styles.statValue, { color: item.color }]} numberOfLines={1} adjustsFontSizeToFit>{item.value}</Text>
+          </View>
+          <Text style={styles.statLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{item.label}</Text>
         </View>
       ))}
     </View>
@@ -173,10 +176,11 @@ const styles = StyleSheet.create({
   rules: { fontSize: 15, lineHeight: 22, color: '#6d5a52', marginBottom: 8 },
 
   stats: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 20, borderWidth: 2, borderColor: colors.line, marginBottom: 14, paddingVertical: 8 },
-  stat: { flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 4, borderLeftWidth: 1.5, borderLeftColor: colors.line },
+  stat: { flex: 1, minWidth: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 6, borderLeftWidth: 1.5, borderLeftColor: colors.line },
   statFirst: { borderLeftWidth: 0 },
+  statTop: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   statValue: display('700', 20),
-  statLabel: { fontFamily: fonts.body800, fontSize: 12, color: colors.muted },
+  statLabel: { fontFamily: fonts.body800, fontSize: 12, color: colors.muted, marginTop: -1 },
 
   social: { flexDirection: 'row', gap: 10, marginBottom: 6 },
   badge: { position: 'absolute', top: -6, right: -4, minWidth: 22, height: 22, borderRadius: 11, backgroundColor: colors.coral, borderWidth: 2, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },

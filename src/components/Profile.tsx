@@ -144,7 +144,7 @@ export function NameCard({ name, takenName, character, onRename, isNameFree, onC
               {nameHelp(problem, t)}
             </Text>
           ) : saved ? (
-            <Text style={[styles.note, styles.noteGood]} numberOfLines={1} accessibilityLiveRegion="polite">
+            <Text style={[styles.note, styles.noteGood]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} accessibilityLiveRegion="polite">
               {t('profile.name.saved', { name })}
             </Text>
           ) : (
@@ -225,7 +225,7 @@ function Stat({ value, label, bg, color, icon }: { value: number; label: string;
           {value}
         </Text>
       </View>
-      <Text style={styles.statLabel} numberOfLines={1}>
+      <Text style={styles.statLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
         {label}
       </Text>
     </Raised>
@@ -319,7 +319,7 @@ export function ListGroup({ title, items }: { title: string; items: ListItem[] }
             <View style={[styles.rowIcon, { backgroundColor: item.color }]}>
               <Icon xml={item.icon} size={17} />
             </View>
-            <Text style={styles.rowLabel} numberOfLines={1}>
+            <Text style={styles.rowLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
               {item.label}
             </Text>
             {item.value && <Text style={styles.rowValue}>{item.value}</Text>}
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   stat: { borderWidth: 2, borderColor: '#fff', paddingTop: 7, paddingBottom: 6, alignItems: 'center' },
   statValue: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 6 },
   statNumber: { ...display('700', 22), lineHeight: 26, flexShrink: 1 },
-  statLabel: display('500', 12, colors.muted),
+  statLabel: { ...display('500', 12, colors.muted), paddingHorizontal: 5 },
   dailyOuter: { marginTop: -4, marginBottom: 14 },
   daily: { borderWidth: 2, borderColor: '#fff', backgroundColor: '#fff', paddingHorizontal: 14, paddingVertical: 10 },
   dailyLit: { backgroundColor: colors.flameL },

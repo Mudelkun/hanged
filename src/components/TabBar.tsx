@@ -196,7 +196,7 @@ export function TabBar({ active, compact }: { active: TabId; compact: boolean })
         })}
       >
         <Icon xml={tabIconXml[tab.id](on ? colors.coral : colors.tabIdle)} size={28} height={24} />
-        <Text style={[styles.label, on && { color: colors.coralD }]}>{t(tab.label)}</Text>
+        <Text style={[styles.label, on && { color: colors.coralD }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{t(tab.label)}</Text>
       </View>
     ));
 
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
   },
   row: { flex: 1, flexDirection: 'row' },
-  tab: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 2 },
+  tab: { flex: 1, minWidth: 0, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 3 },
   label: { fontFamily: fonts.display600, fontSize: 12, color: colors.tabLabel },
   lens: { position: 'absolute', left: INSET, top: INSET },
   glass: {
