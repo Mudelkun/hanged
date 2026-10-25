@@ -1,7 +1,7 @@
 import type { GameState } from './progress';
 
-/** The bundled legal pages are still drafts. Replace this version when their real text ships. */
-export const LEGAL_VERSION = '2026-10-22-draft';
+/** The date the bundled legal texts took effect (shown as "Last updated"). Any change to them needs a new date: players accept again. */
+export const LEGAL_VERSION = '2026-10-25';
 export const STARTER_CHARACTERS = ['coco', 'bun'] as const;
 export const LIFT_OFF_MS = 1500;
 export const WELCOME_MS = 2400;

@@ -6,6 +6,7 @@ import { LanguagePicker } from '../LanguagePicker';
 import { BigButton, MissesBar } from '../RoundParts';
 import { LetterKeyboard } from '../LetterKeyboard';
 import { DeleteSheet } from '../Profile';
+import { InfoContent } from '../InfoPages';
 import { characterById } from '../../characters/rig';
 import OnboardingScreen from '../../app/onboarding';
 import { router } from 'expo-router';
@@ -67,4 +68,16 @@ test.each(['fr', 'es', 'de'])('%s account deletion requires the displayed transl
   expect(button().props.disabled).toBe(false);
   await act(async () => button().props.onPress());
   expect(confirm).toHaveBeenCalledTimes(1);
+});
+
+test.each(['en', 'fr', 'es', 'de'])('%s legal pages show every section, the date and the support email', async language => {
+  setLanguage(language);
+  for (const page of ['privacy', 'terms'] as const) {
+    await act(async () => { view?.unmount(); view = create(<InfoContent page={page} />); });
+    const texts = view.root.findAllByType(Text).map(node => [node.props.children].flat().join(''));
+    expect(texts.filter(text => /^legal\.|\{\w+\}/.test(text))).toEqual([]);
+    expect(texts.some(text => text.includes('2026'))).toBe(true);
+    expect(texts).toContain('mudelkun56@gmail.com');
+    expect(texts).toContain('github.com/basecamp/policies');
+  }
 });

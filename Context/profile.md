@@ -13,8 +13,9 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
 - **The name is the only thing the player edits here.** It's filtered. Onboarding offers a random name
   and the same `PlayerNameInput` and validation messages; see [onboarding.md](onboarding.md).
 - Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md). A **Daily reminder** switch sits between them and the language (native only; [retention.md](retention.md)). The switches are our own `Toggle` (in `Profile.tsx`), not React Native's `Switch`: on iOS 26 the native switch is wider than the frame React Native gives it and draws off-centre in the row.
-- **Privacy policy and terms of use** share onboarding's explicit draft placeholder (`LegalDocument`).
-  The actual legal texts and privacy policy URL remain to be supplied before release.
+- **Privacy policy and terms of use** (2026-10-25): real texts, bundled in the four languages, also shown in
+  onboarding's consent sheet. Built on reputable templates, not from scratch (owner's request): see
+  [The legal texts](#the-legal-texts) below. The public privacy policy URL for App Store Connect is still to do.
 - **Contact & support** (owner, 2026-10-25): the support email is **mudelkun56@gmail.com**
   (`SUPPORT_EMAIL` in `InfoPages.tsx`, the one place to change it). **No developer name** on the page
   (owner's call, 2026-10-25).
@@ -138,7 +139,53 @@ redirects to Profile.
 - **Credits**: [data/CREDITS.md](../data/CREDITS.md) in player words: Open English WordNet (CC BY 4.0, with
   the list of changes), SCOWL (its full permission notice, which its licence requires), Princeton WordNet. Links
   open in the browser. **If the word sources or CREDITS.md change, change `credits.*` in `en.json` too.**
-- **Privacy and terms**: the bundled `LegalDocument` draft, also shown in onboarding's tabbed sheet.
+- **Privacy and terms**: a summary line, "Last updated" (from `LEGAL_VERSION`), one card per section
+  (`LEGAL` in `InfoPages.tsx`), and the CC BY credit. Also shown in onboarding's tabbed sheet. See below.
 - **Support**: an intro line, an "Email support" card whose link opens a `mailto:` with a translated
   subject (`support.email.subject`; the link shows the bare address). The address isn't translated, so it
   lives in `SUPPORT_EMAIL`, not in the JSON.
+
+## The legal texts
+
+Owner's request (2026-10-25): professional texts built on legitimate, widely used templates, not written from
+scratch. Strings: `legal.privacy.*` and `legal.terms.*` in the four `src/i18n/*.json` (a summary, then
+`<section>.title` / `.body`); section order: `LEGAL` in [InfoPages.tsx](../src/components/InfoPages.tsx). A body
+line starting with `• ` renders as a bullet (`Body`, shared by every info card). The contact sections link
+`SUPPORT_EMAIL`.
+
+**Sources** (why each part says what it says):
+- **Structure and clauses: the [Basecamp open-source policies](https://github.com/basecamp/policies)**, CC BY 4.0.
+  The privacy policy follows its outline (what we collect and why, when we share, your rights, security,
+  deletion, retention, data location and EU transfers, changes); the terms take its account, acceptable use,
+  "as is", termination and changes clauses. **CC BY needs the credit**: `legal.credit` and its two links stay at
+  the bottom of both pages.
+- **[Apple's Standard EULA](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/)**: the license
+  scope, warranty disclaimer, liability cap (US$50) and export clause, reworded. The game uses the Standard EULA
+  (no custom EULA in App Store Connect), so the terms say it applies and prevails, and section 13 carries
+  Apple's [minimum terms](https://www.apple.com/legal/internet-services/itunes/dev/minterms/) anyway (Apple not a
+  party, support and claims are ours, Apple as third-party beneficiary, embargo).
+- **What a privacy policy must contain**: App Store Guideline 5.1.1(i) (all data and uses, third parties give
+  equal protection, retention, deletion and revoking consent) and GDPR Article 13 (controller, legal bases,
+  recipients, transfers, retention, rights, complaint).
+- **Railway** (our host): its [DPA](https://railway.com/legal/dpa) makes it our processor and includes the EU
+  SCCs and UK/Swiss versions, which section 14 relies on.
+
+**The privacy policy describes this code.** Every claim maps to something real: anonymous account and hashed
+secret ([server.md](server.md)), the sync snapshot and round reports, `word_days` with no player id, Versus tables
+and presence ([versus.md](versus.md)), Fastify's request log (IP) on Railway, local notifications only
+([retention.md](retention.md)), the clipboard Paste button and Android install referrer (Invite links), the one-time
+store review prompt, no ads/analytics/tracking SDKs, deletion cascades. **A change that collects, keeps,
+shows or shares data differently must update the policy in all four languages and set a new `LEGAL_VERSION`**
+(the effective date; players then accept again in onboarding). The same goes for new terms (e.g. in-app purchases
+would need the tokens section rewritten). Translations use the app's register (tu, tú, du) and its own names
+(Duel, Face-à-face, jetons, fichas, Marken).
+
+**Still the owner's to decide** (the texts use neutral defaults until then):
+- **Minimum age 13**, no age gate. A cute, cartoon game can be judged "directed to children" under COPPA whatever
+  the policy says. Options: an age screen at onboarding, or a kids' mode without public names and Versus.
+  Must match the App Store age rating.
+- **Who "we" is**: "an independent developer, shown as the seller" (the owner wants no name on Contact). GDPR
+  expects the controller's identity and address: the seller name on the store listing must be a real one.
+- **Governing law**: "the country where we are established", with local consumer law kept. Name the country.
+- **Public URL** for App Store Connect / Google Play (Apple requires one): e.g. pages served by the server.
+- A lawyer's review before release: these are adapted templates, not legal advice.

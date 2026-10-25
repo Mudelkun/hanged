@@ -24,11 +24,11 @@ UI: `src/components/Onboarding.tsx`; artwork and transition: `OnboardingArt.tsx`
   focus the field; missing consent wiggles the checkbox and shows “Tick the box to start playing”.
   The keyboard’s Done key only dismisses the keyboard. The name screen scrolls above the keyboard.
 - Terms and Privacy open a bottom sheet with tabs. Closing it preserves both the name and checkbox.
-  `InfoContent`/`LegalDocument` are also used by Profile, and need no network.
-- **Legal text is still a draft placeholder**, exactly as in the design, not an authored policy. Replace
-  its headings/placeholder lines with approved bundled text and change `LEGAL_VERSION` before release.
-  The current version is explicitly `2026-10-22-draft`, so accepting this preview never counts as accepting
-  the eventual release text.
+  `InfoContent` is also used by Profile, and needs no network.
+- **The legal texts are real since 2026-10-25** (bundled, four languages; sources and rules in
+  [profile.md](profile.md), The legal texts). `LEGAL_VERSION` is their effective date (`2026-10-25`, shown as
+  "Last updated"). Accepting the earlier `2026-10-22-draft` placeholder doesn't count: those players see the
+  consent screen again. Any change to the texts needs a new date.
 - A successful new-player submission runs the 1,500 ms lift-off, then completes onboarding in one reducer
   action. The picked buddy descends into the real Play scene; the existing “Nice to meet you” message
   shows for 2,400 ms. This welcome is transient context state, so restarting does not replay it.

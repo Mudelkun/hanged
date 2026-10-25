@@ -192,7 +192,7 @@ This is the player's own page. It holds personal customization, app settings, an
   - **Game rules**: an in-app sheet that explains the rules in player-friendly words. It must match the rules in this file.
   - **Privacy policy**: required by the App Store. Apple also needs a public URL for it in App Store Connect.
   - **Terms of use**
-  - These two pages show a draft placeholder until their texts are written (owner's call, 2026-10-22).
+  - Both texts ship inside the app (2026-10-25), adapted from reputable templates (Basecamp's open-source policies, Apple's standard EULA). They must describe what the app really collects: [Context/profile.md](Context/profile.md).
   - **Contact / support**: the support email **mudelkun56@gmail.com**, and no developer name (owner, 2026-10-25).
   - **Credits**: the dictionary the descriptions come from ([data/CREDITS.md](data/CREDITS.md)). Its licence requires it.
   - The app name ("Hanged: word guessing game") and the version.
@@ -238,6 +238,6 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 - **Accents** in languages other than English: strip them to A–Z, add accented keys, or leave those words out?
 - **Accounts**: how do players sign in (Sign in with Apple, email, or an anonymous guest who upgrades later)? (For now: an anonymous id made on the first sync, [Context/server.md](Context/server.md).) The leaderboard, profile, tokens and online play all depend on this.
 - **App language**: does it change only the UI text, or the word list too?
-- **Legal pages**: who writes the privacy policy and terms, and where are they hosted?
+- **Legal pages**: (Written 2026-10-25, from templates.) Where is the public privacy policy URL hosted? And the defaults in the texts: minimum age 13 with no age gate, "an independent developer" as who "we" is, the governing law's country ([Context/profile.md](Context/profile.md)). A lawyer's review before release?
 - **Daily streak**: should it pay anything (tokens on milestones), and should a missed day be forgivable (a "streak freeze", which would be a third thing to spend tokens on)? At what time should the reminder come, and for how many days after the last play? (Placeholders: no reward, no freeze, 6 pm, 7 days.)
 - **Online two-player**: do words guessed there count toward the leaderboard and toward earning tokens? (For now they don't: Versus has its own rating. Finding each other is decided: friends and matchmaking.)

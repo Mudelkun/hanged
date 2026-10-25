@@ -77,7 +77,7 @@ test('legal tabs preserve draft and consent; completion waits for lift-off', asy
   await act(async () => link.props.onPress());
   const privacy = view.root.findAll(node => node.props.accessibilityRole === 'tab' && node.findAllByType(Text).some(t => t.props.children === 'Privacy policy'))[0];
   await act(async () => privacy.props.onPress());
-  expect(shows('1. Your game data')).toBe(true);
+  expect(shows('1. Who we are')).toBe(true);
   await act(async () => button('Got it').props.onPress());
   expect(view.root.findByType(TextInput).props.value).toBe('BraveOtter');
   expect(checkbox().props.accessibilityState.checked).toBe(true);
