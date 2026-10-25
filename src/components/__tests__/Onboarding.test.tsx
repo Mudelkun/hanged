@@ -97,3 +97,12 @@ test('existing players only consent and return to their game without lift-off or
   expect(mockGame.completeOnboarding).toHaveBeenCalledWith('SunnyOtter', 'ember');
   expect(view.root.findAllByType(LiftOff)).toHaveLength(0);
 });
+
+test('a returning player whose saved name the filter refuses (a staff "Admin") can still consent', async () => {
+  mockGame.state = { ...mockGame.state, onboardingCompleted: true, playerName: 'Admin', characterId: 'ember' };
+  await act(async () => { view = create(<OnboardingProvider><NameScreen /></OnboardingProvider>); });
+  await act(async () => checkbox().props.onPress());
+  expect(button('Let’s play!').props.muted).toBe(false);
+  await act(async () => button('Let’s play!').props.onPress());
+  expect(mockGame.completeOnboarding).toHaveBeenCalledWith('Admin', 'ember');
+});

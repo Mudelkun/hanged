@@ -47,7 +47,9 @@ UI: `src/components/Onboarding.tsx`; artwork and transition: `OnboardingArt.tsx`
   player: retain their character, name, round, balances, level, purchases and reports; show only consent.
   Explicit `false` stays false, including a fresh installation closed halfway through onboarding.
 - Existing players and players whose accepted legal version is outdated go directly to the consent screen.
-  They cannot change identity there, and resume without lift-off or a new word.
+  They cannot change identity there, and resume without lift-off or a new word. **Their name is never checked
+  there** (screen or reducer): a staff account's reserved "Admin", or a name a newer filter blocks, once locked
+  the player out of their game behind a muted Play button (fixed 2026-10-25).
 - Root `Stack.Protected` gates the tabs, Profile and info routes. A deep link cannot skip onboarding.
   Completion switches to Play automatically and removes the onboarding history. Deletion resets the save
   and returns to the buddy picker; Profile no longer issues a conflicting navigation after the reset.

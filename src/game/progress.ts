@@ -422,15 +422,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'completeOnboarding': {
-      const check = checkName(action.name, nameRules(state));
+      // A returning player only consents and keeps their name, so only a new player's name is checked.
+      const check = state.onboardingCompleted ? null : checkName(action.name, nameRules(state));
       const allowedCharacter = state.onboardingCompleted
         ? action.characterId === state.characterId
         : STARTER_CHARACTERS.some(id => id === action.characterId);
-      if (!action.accepted || !check.ok || !allowedCharacter || !ownsCharacter(state, action.characterId) ||
+      if (!action.accepted || (check && !check.ok) || !allowedCharacter || !ownsCharacter(state, action.characterId) ||
           !Number.isFinite(action.at) || action.at <= 0) return state;
       return {
         ...state,
-        playerName: state.onboardingCompleted ? state.playerName : check.name,
+        playerName: check?.ok ? check.name : state.playerName,
         characterId: action.characterId,
         onboardingCompleted: true,
         legalAcceptance: { version: LEGAL_VERSION, acceptedAt: action.at },

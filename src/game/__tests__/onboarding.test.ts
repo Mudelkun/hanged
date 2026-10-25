@@ -58,3 +58,13 @@ test('unfinished new saves remain new, changed legal versions ask again, and del
   expect(needsOnboarding({ ...done, legalAcceptance: { version: 'older', acceptedAt: 1 } })).toBe(true);
   expect(gameReducer(done, { type: 'reset' })).toEqual(initialState());
 });
+
+test('a returning player consents with a name the filter refuses, such as a staff "Admin", and keeps it', () => {
+  const done = gameReducer(initialState(), complete);
+  const outdated = { ...done, playerName: 'Admin', legalAcceptance: { version: 'older', acceptedAt: 1 } };
+  const accepted = gameReducer(outdated, { ...complete, name: 'Admin', characterId: outdated.characterId });
+  expect(needsOnboarding(accepted)).toBe(false);
+  expect(accepted.playerName).toBe('Admin');
+  // A new player still can't pick it.
+  expect(gameReducer(initialState(), { ...complete, name: 'Admin' }).onboardingCompleted).toBe(false);
+});

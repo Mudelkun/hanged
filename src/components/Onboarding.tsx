@@ -9,6 +9,7 @@ import { characterById } from '../characters/rig';
 import { feedback } from '../feedback';
 import { checkName, NAME_MAX, randomName } from '../game/names';
 import { STARTER_CHARACTERS } from '../game/onboarding';
+import { nameRules } from '../game/progress';
 import { useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { useOnboarding } from '../state/OnboardingContext';
@@ -164,10 +165,13 @@ export function NameScreen() {
   const [lifting, setLifting] = useState(false);
   const [choosingLanguage, setChoosingLanguage] = useState(false);
   const [shake] = useState(() => new Animated.Value(0));
-  const check = checkName(draft.name);
+  const check = checkName(draft.name, nameRules(state));
   const availability = useNameAvailability(nameIsFree);
-  const problem = nameProblem(check, tried, availability.taken);
-  const able = check.ok && problem !== 'taken' && draft.accepted;
+  // Returning players only consent: they keep their name, so it's never judged here (a staff "Admin", or a
+  // name a newer filter blocks, must not lock them out of their game).
+  const nameOk = returning || (check.ok && availability.taken !== check.name);
+  const problem = returning ? null : nameProblem(check, tried, availability.taken);
+  const able = nameOk && draft.accepted;
   const finish = useCallback(() => completeOnboarding(draft.name, draft.characterId), [completeOnboarding, draft.name, draft.characterId]);
   useEffect(() => {
     if (!lifting) return;
@@ -178,7 +182,7 @@ export function NameScreen() {
   const play = async () => {
     if (lifting || availability.checking) return;
     setTried(true);
-    if (!check.ok || problem === 'taken') return refuseName();
+    if (!nameOk) return refuseName();
     if (!draft.accepted) {
       setNudged(true); audio.play('name-invalid'); feedback.refused();
       shake.setValue(0);
@@ -186,7 +190,7 @@ export function NameScreen() {
       return;
     }
     // Returning players keep the name they have (no field here).
-    if (!returning && !(await availability.isFree(check.name))) return refuseName();
+    if (!returning && check.ok && !(await availability.isFree(check.name))) return refuseName();
     Keyboard.dismiss();
     audio.play('primary');
     if (returning) { finish(); return; }
