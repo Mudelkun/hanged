@@ -192,8 +192,8 @@ This is the player's own page. It holds personal customization, app settings, an
   - **Game rules**: an in-app sheet that explains the rules in player-friendly words. It must match the rules in this file.
   - **Privacy policy**: required by the App Store. Apple also needs a public URL for it in App Store Connect.
   - **Terms of use**
-  - **Contact / support**
-  - These three pages exist but stay blank ("Coming soon") until their texts are written (owner's call, 2026-10-22).
+  - These two pages show a draft placeholder until their texts are written (owner's call, 2026-10-22).
+  - **Contact / support**: the developer is **Rodarly**, support email **mudelkun56@gmail.com** (owner, 2026-10-25).
   - **Credits**: the dictionary the descriptions come from ([data/CREDITS.md](data/CREDITS.md)). Its licence requires it.
   - The app name ("Hanged: word guessing game") and the version.
 - **Delete account**: Apple requires in-app account deletion for any app that lets players create an account (App Store Review Guideline 5.1.1(v)).

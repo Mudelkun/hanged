@@ -2,9 +2,9 @@
  * The info & legal pages opened from Profile (route: src/app/info/[page].tsx).
  * Game rules explain CLAUDE.md's rules in player words, with the numbers read
  * from the game's config so they never drift from the real rules. Credits are
- * required by the word lists' licences (data/CREDITS.md). Privacy policy,
- * terms of use and support are still to be written (owner's call). Terms and
- * privacy share onboarding's explicit draft placeholder; support says "Coming soon".
+ * required by the word lists' licences (data/CREDITS.md). Support names the
+ * developer and opens an email. Privacy policy and terms of use are still to be
+ * written (owner's call) and share onboarding's explicit draft placeholder.
  */
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -14,7 +14,6 @@ import { TranslationKey, useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { profileIconXml } from './icons';
-import { BoardNote } from './Leaderboard';
 import { Raised } from './Raised';
 import { LegalDocument } from './LegalDocument';
 import en from '../i18n/en.json';
@@ -57,6 +56,9 @@ const RULES: { key: string; color: string; params?: () => Record<string, number>
   { key: 'versus', color: '#a98bf5' },
 ];
 
+/** Who players reach from Contact & support (owner, 2026-10-25). */
+export const SUPPORT = { developer: 'Rodarly', email: 'mudelkun56@gmail.com' } as const;
+
 const CREDITS: { key: string; links: string[] }[] = [
   { key: 'original', links: [] },
   { key: 'wordnet', links: ['https://en-word.net', 'https://creativecommons.org/licenses/by/4.0/'] },
@@ -76,7 +78,7 @@ function InfoCard({ title, body, color, links }: { title: string; body: string; 
       <Text style={styles.cardBody}>{body}</Text>
       {links?.map((url) => (
         <Pressable key={url} onPress={() => { sound.play('link'); Linking.openURL(url).catch(() => {}); }} accessibilityRole="link" hitSlop={4}>
-          <Text style={styles.link}>{url.replace(/^https?:\/\//, '')}</Text>
+          <Text style={styles.link}>{url.replace(/^(https?:\/\/|mailto:)/, '').replace(/\?.*$/, '')}</Text>
         </Pressable>
       ))}
     </Raised>
@@ -104,8 +106,16 @@ export function InfoContent({ page }: { page: InfoPage }) {
           <InfoCard color={colors.butterD} title={t('credits.license')} body={en['credits.scowl.body']} />
         </>
       );
-    default:
-      return <BoardNote title={t('info.soon.title')} body={t('info.soon.body')} />;
+    case 'support':
+      return (
+        <>
+          <Text style={styles.intro}>{t('support.intro')}</Text>
+          <InfoCard color={INFO_PAGES.support.color} title={t('support.email.title')} body={t('support.email.body')}
+            links={[`mailto:${SUPPORT.email}?subject=${encodeURIComponent(t('support.email.subject'))}`]} />
+          <InfoCard color={INFO_PAGES.support.color} title={t('support.developer.title')}
+            body={t('support.developer.body', { developer: SUPPORT.developer })} />
+        </>
+      );
   }
 }
 

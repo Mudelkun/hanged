@@ -14,7 +14,9 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
   and the same `PlayerNameInput` and validation messages; see [onboarding.md](onboarding.md).
 - Sound is now integrated (owner, 2026-10-22). Settings has separate **Sound effects & voices** and **Music** switches, saved on the device and defaulting on. Language remains English and not pressable. See [audio-design.md](audio-design.md). A **Daily reminder** switch sits between them and the language (native only; [retention.md](retention.md)). The switches are our own `Toggle` (in `Profile.tsx`), not React Native's `Switch`: on iOS 26 the native switch is wider than the frame React Native gives it and draws off-centre in the row.
 - **Privacy policy and terms of use** share onboarding's explicit draft placeholder (`LegalDocument`).
-  **Contact & support** still says "Coming soon". The actual legal texts and privacy policy URL remain to be supplied before release.
+  The actual legal texts and privacy policy URL remain to be supplied before release.
+- **Contact & support** (owner, 2026-10-25): the developer is **Rodarly**, the support email
+  **mudelkun56@gmail.com** (`SUPPORT` in `InfoPages.tsx`, the one place to change them).
 
 ## The page (mockup: Profile)
 
@@ -136,4 +138,6 @@ redirects to Profile.
   the list of changes), SCOWL (its full permission notice, which its licence requires), Princeton WordNet. Links
   open in the browser. **If the word sources or CREDITS.md change, change `credits.*` in `en.json` too.**
 - **Privacy and terms**: the bundled `LegalDocument` draft, also shown in onboarding's tabbed sheet.
-- **Support**: "Coming soon" (`BoardNote`).
+- **Support**: an intro line, an "Email support" card whose link opens a `mailto:` with a translated
+  subject (`support.email.subject`; the link shows the bare address), and a "Developer" card naming
+  `SUPPORT.developer`. The name and address aren't translated, so they live in `SUPPORT`, not in the JSON.
