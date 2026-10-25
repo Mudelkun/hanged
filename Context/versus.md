@@ -71,6 +71,10 @@ language). The server fills the `words` table itself at start from its own copy 
    memory.
 4. The server pings every 30 s; no pong by the next ping closes the socket.
 5. **One socket per player**: a new one replaces the old (`bye: 'elsewhere'`).
+6. A socket that closes **while it signs in** (between the database reads) is never registered: `signIn`
+   checks it's still open after its last read. Otherwise it would stay "online" forever, with no close left to come.
+7. **A deleted account** (`DELETE /v1/players/me`) loses its socket at once (`hub.forget`, `bye: 'auth'`); its
+   match, lobby and queue let go of it as on any close.
 
 Match traffic is **deltas**: a full `match` snapshot only on start, phase change and reconnect; then
 `puzzle` (your word, to you only), `player` (one player's counts, to everyone), `hit`, `end`.
@@ -165,7 +169,9 @@ their friend, **with no request to answer**: sharing the link was the invitation
 
 Server settings (Railway variables, all optional; without them the page says "coming soon" and phones open
 the page instead of the app): `APPLE_APP_ID` (`<team id>.<bundle id>`), `APP_STORE_ID` (the number in the
-App Store URL), `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256` (comma separated, from Play Console's App signing).
+App Store URL), `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256` (comma separated, from Play Console's App signing),
+`PUBLIC_URL` (`https://<domain>`: the page's link, the one iOS copies, is built from it; without it the
+request's Host is used, which a caller can forge, so the page is only ever cached `private`).
 A build also needs `ios.bundleIdentifier` and `android.package` in `app.json` (not chosen yet).
 
 ## The switch (kill switch) and the admin page

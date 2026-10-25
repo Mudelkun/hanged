@@ -14,7 +14,7 @@
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import websocket from '@fastify/websocket';
-import Fastify, { type FastifyServerOptions } from 'fastify';
+import Fastify, { type FastifyError, type FastifyServerOptions } from 'fastify';
 
 import { adminRoutes } from './admin.ts';
 
@@ -22,7 +22,7 @@ import { LIMITS, type NameAvailableResponse, type Period, type SyncRequest } fro
 import type { Db } from './db.ts';
 import { createLeaderboard } from './leaderboard.ts';
 import { NAME_SENT_MAX } from './names.ts';
-import { credentials, deletePlayer, nameAvailable, register, sync } from './players.ts';
+import { credentials, deletePlayer, nameAvailable, register, signedIn, sync } from './players.ts';
 import { VERSUS_LIMITS } from './versus-contract.ts';
 import { Hub, type HubOptions } from './versus/hub.ts';
 import { linkRoutes, type LinkOptions } from './versus/links.ts';
@@ -50,6 +50,8 @@ export interface AppOptions extends FastifyServerOptions {
   versus?: Pick<HubOptions, 'clock' | 'rng'>;
   /** Invite links: the stores and the app ids the phone checks before opening the app. */
   links?: LinkOptions;
+  /** TRUST_PROXY_HOPS: proxies in front of the server (Railway: 1, its edge). */
+  proxyHops?: number;
 }
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
@@ -115,15 +117,30 @@ const nameQuery = {
 };
 
 export async function buildApp(db: Db, opts: AppOptions = {}) {
-  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, links = {}, ...fastifyOpts } = opts;
-  // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's.
-  const app = Fastify({ trustProxy: true, bodyLimit: 256 * 1024, ...fastifyOpts });
+  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, links = {}, proxyHops = 1, ...fastifyOpts } = opts;
+  // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's. Trust
+  // exactly `proxyHops` hops, so req.ip is the address our own proxy wrote: `true` would take the
+  // leftmost X-Forwarded-For, which the caller writes, and let anyone dodge every per-IP limit with
+  // a made-up header. (A plain number trusts nothing in Fastify 5: everyone would share one limit.)
+  const app = Fastify({ trustProxy: (_addr, hop) => hop < proxyHops, bodyLimit: 256 * 1024, ...fastifyOpts });
+  // A 5xx says nothing of what failed (SQL, stack): that goes to the log only.
+  app.setErrorHandler((err: FastifyError, req, reply) => {
+    const status = err.statusCode && err.statusCode >= 400 ? err.statusCode : 500;
+    if (status >= 500) req.log.error({ err }, 'request failed');
+    return reply.code(status).send({ error: status >= 500 ? 'server' : err.message });
+  });
+  app.addHook('onSend', async (_req, reply) => {
+    reply.header('x-content-type-options', 'nosniff');
+  });
   // The app doesn't need CORS; the web preview (npx expo start --web) does. DELETE isn't allowed by default.
   await app.register(cors, { origin: true, methods: ['GET', 'POST', 'PUT', 'DELETE'] });
   await app.register(rateLimit, { max: 120, timeWindow: '1 minute' });
   // Messages are tiny JSON: compression would cost more CPU and memory per socket than it saves
   await app.register(websocket, { options: { maxPayload: VERSUS_LIMITS.messageBytes, perMessageDeflate: false } });
   const leaderboard = createLeaderboard(db, boardTtlMs);
+  const status = versusForcedOff ? { enabled: false, message: null } : await readSwitch(db);
+  const hub = new Hub({ db, words: words ?? (await loadWords(db)), status, log: app.log, ...versus });
+  app.decorate('hub', hub);
 
   app.get('/health', async () => {
     await db.query('SELECT 1');
@@ -143,7 +160,9 @@ export async function buildApp(db: Db, opts: AppOptions = {}) {
   app.delete('/v1/players/me', async (req, reply) => {
     const who = credentials(req.headers.authorization);
     const done = who && (await deletePlayer(db, who));
-    return done ? reply.code(204).send() : reply.code(401).send({ error: 'unknown player' });
+    if (!done) return reply.code(401).send({ error: 'unknown player' });
+    hub.forget(who.id);
+    return reply.code(204).send();
   });
 
   app.get<{ Querystring: { period: Period; me?: string } }>(
@@ -152,16 +171,15 @@ export async function buildApp(db: Db, opts: AppOptions = {}) {
     async (req) => leaderboard(req.query.period, req.query.me),
   );
 
-  // Names are public on the boards, so saying one is taken gives nothing away.
+  // Names are public on the boards, so saying one is taken gives nothing away. A reserved name
+  // ("Admin") is checked for the signed-in player only (Authorization, optional), never a bare `me`.
   app.get<{ Querystring: { name: string; me?: string } }>(
     '/v1/names/available',
     { schema: { querystring: nameQuery } },
-    async (req): Promise<NameAvailableResponse> => ({ available: await nameAvailable(db, req.query.name, req.query.me) }),
+    async (req): Promise<NameAvailableResponse> => ({
+      available: await nameAvailable(db, req.query.name, req.query.me, (await signedIn(db, req.headers.authorization)) ?? undefined),
+    }),
   );
-
-  const status = versusForcedOff ? { enabled: false, message: null } : await readSwitch(db);
-  const hub = new Hub({ db, words: words ?? (await loadWords(db)), status, log: app.log, ...versus });
-  app.decorate('hub', hub);
   app.addHook('preClose', async () => hub.close());
   versusRoutes(app, db, hub);
   linkRoutes(app, db, links);

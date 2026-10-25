@@ -39,8 +39,13 @@ const sync = async (p: RegisterResponse, player: PlayerSnapshot, reports: RoundR
     .json<SyncResponse>();
 const board = async (period: 'week' | 'all', me?: string) =>
   (await app.inject({ url: `/v1/leaderboard?period=${period}${me ? `&me=${me}` : ''}` })).json<LeaderboardResponse>();
-const available = async (name: string, me?: string) =>
-  (await app.inject({ url: `/v1/names/available?name=${encodeURIComponent(name)}${me ? `&me=${me}` : ''}` })).json<{ available: boolean }>().available;
+const available = async (name: string, me?: RegisterResponse) =>
+  (
+    await app.inject({
+      url: `/v1/names/available?name=${encodeURIComponent(name)}`,
+      headers: me ? { authorization: `Bearer ${me.id}:${me.secret}` } : {},
+    })
+  ).json<{ available: boolean }>().available;
 
 const admin = (method: 'GET' | 'PUT', url: string, payload?: object, token = ADMIN) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, ...(payload && { payload }) });
@@ -96,13 +101,16 @@ describe('a developer account', () => {
     // Before the role, and for everyone else, it's a name the filter refuses
     assert.equal(checkName('Admin').ok, false);
     assert.equal((await sync(dev, snapshot({ name: 'Admin' }))).name, null);
-    assert.equal(await available('Admin', dev.id), false);
+    assert.equal(await available('Admin', dev), false);
     await setRole(dev.id, 'admin');
-    assert.equal(await available('aDmIn', dev.id), true);
+    assert.equal(await available('aDmIn', dev), true);
+    // A bare id (public on the boards) proves nothing: it must not tell anyone this account is staff
+    assert.equal((await app.inject({ url: `/v1/names/available?name=Admin&me=${dev.id}` })).json<{ available: boolean }>().available, false);
+    assert.equal(await available('Admin', { ...dev, secret: 'x'.repeat(43) }), false);
     assert.equal((await sync(dev, snapshot({ name: 'aDmIn' }))).name, 'aDmIn');
     assert.equal((await sync(other, snapshot({ name: 'ADMIN' }))).name, null);
     assert.equal((await sync(other, snapshot({ name: 'A.d.m.i.n' }))).name, null);
-    assert.equal(await available('Admin', other.id), false);
+    assert.equal(await available('Admin', other), false);
     // Only the exact name is reserved: what contains it stays blocked even for the developer
     assert.equal((await sync(dev, snapshot({ name: 'AdminRoda' }))).name, null);
     // The role taken away, the name goes with it

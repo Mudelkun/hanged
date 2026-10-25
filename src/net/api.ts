@@ -52,9 +52,9 @@ export const api = {
   deletePlayer: (account: Account) => call<void>('/v1/players/me', { method: 'DELETE', account }),
   leaderboard: (period: Period, me?: string) =>
     call<LeaderboardResponse>(`/v1/leaderboard?period=${period}${me ? `&me=${me}` : ''}`),
-  /** Short timeout: the player is waiting on Save, and offline the sync settles it later. */
-  nameAvailable: (name: string, me?: string | null) =>
-    call<NameAvailableResponse>(`/v1/names/available?name=${encodeURIComponent(name)}${me ? `&me=${me}` : ''}`, { timeoutMs: 3_000 }),
+  /** Short timeout: the player is waiting on Save, and offline the sync settles it later. Signed in, a staff role's reserved name can pass. */
+  nameAvailable: (name: string, account?: Account | null) =>
+    call<NameAvailableResponse>(`/v1/names/available?name=${encodeURIComponent(name)}`, { timeoutMs: 3_000, account: account ?? undefined }),
 
   // Versus: the switch, and the friends system (server/src/versus/routes.ts)
   versusStatus: () => call<VersusStatus>('/v1/versus/status', { timeoutMs: 5_000 }),

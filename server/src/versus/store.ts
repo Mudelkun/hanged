@@ -335,9 +335,3 @@ export async function adminTotals(db: Sql) {
   );
   return { days: days.rows, reported: reported.rows };
 }
-
-/** The credentials are a player's own (a REST call's sign-in: one indexed read). */
-export async function authorized(db: Sql, who: Credentials): Promise<boolean> {
-  const { rows } = await db.query<{ secret_hash: string }>('SELECT secret_hash FROM players WHERE id = $1', [who.id]);
-  return owns(rows[0], who);
-}

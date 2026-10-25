@@ -70,8 +70,9 @@ a second copy of the game's logic.
 - **The name**: "Admin" is in the filter's `EXTRA_WORDS`, so it's blocked for everyone; `checkName(name,
   { reserved: true })` lets the exact reserved names through (`nameKey`: "ADMIN", "a.d.m.i.n"), and
   never what contains them ("AdminRoda"). Names are unique, so one account holds it. The server checks
-  with the role **it** holds (sync, `GET /v1/names/available` with `me`); the app checks with its saved
-  role so Profile's field accepts it.
+  with the role **it** holds (sync, and `GET /v1/names/available` **signed in**: the app sends its
+  `Authorization`. A bare `me=<id>` never unlocks it, because ids are public on the boards and the answer
+  would tell anyone which accounts are staff); the app checks with its saved role so Profile's field accepts it.
 
 ## What a modified app can and can't do
 

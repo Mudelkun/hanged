@@ -15,6 +15,8 @@ const seeded = await syncWords(db);
 
 const app = await buildApp(db, {
   logger: true,
+  // Proxies in front of the server (Railway: its edge). The log's remoteAddress shows whether it's right.
+  proxyHops: Number(process.env.TRUST_PROXY_HOPS ?? 1),
   adminToken: process.env.ADMIN_TOKEN,
   versusForcedOff: process.env.VERSUS_DISABLED === '1',
   links: {
@@ -22,6 +24,7 @@ const app = await buildApp(db, {
     appStoreId: process.env.APP_STORE_ID,
     androidPackage: process.env.ANDROID_PACKAGE,
     androidCerts: process.env.ANDROID_CERT_SHA256?.split(',').map((s) => s.trim()).filter(Boolean),
+    publicUrl: process.env.PUBLIC_URL,
   },
 });
 if (applied.length) app.log.info({ applied }, 'migrations applied');

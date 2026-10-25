@@ -15,7 +15,8 @@ every player is a row, and the player's own row is the one that stands out.
      Tokens earned only grow, and reward winning on harder levels and keeping streaks,
   3. **fewer wrong guesses** (all rounds, won and lost),
   4. **whoever got there first** (`score_at`), then the id, so the order never flips between loads.
-- **All time**: `players`: `words_guessed`, the **current** level, and all-time totals.
+- **All time**: `players`: `words_guessed` (grown only by reported wins within the server's win budget, never
+  the device's own count: [server.md](server.md), sync steps 2–3), the **current** level, and all-time totals.
   **This week**: `player_weeks`: wins reported since Monday 00:00 UTC, the **highest level played that
   week**, and that week's tokens earned and misses. A lost round adds a week row too (its misses), so the
   board skips rows with no word.

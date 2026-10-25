@@ -172,6 +172,8 @@ export class Hub {
     if (!player) return this.bye(ws, 'auth');
     if (ws.readyState !== ws.OPEN) return null;
     const [friends, blocks] = await Promise.all([friendIds(this.db, player.id), blockIds(this.db, player.id)]);
+    // Closed while we read: its close already ran (with no conn), so registering it now would leave a ghost
+    if (ws.readyState !== ws.OPEN) return null;
     const id = player.id;
 
     // One socket per player: the newest wins
@@ -671,6 +673,12 @@ export class Hub {
     clearInterval(this.heartbeat);
     if (this.ticking) clearInterval(this.ticking);
     this.ticking = null;
+  }
+
+  /** The account was deleted: its socket closes (its match, lobby and queue let go of it as on any close). */
+  forget(id: string) {
+    const conn = this.conns.get(id);
+    if (conn) this.bye(conn.ws, 'auth');
   }
 
   /** The admin page changed a role (staff.ts): a connected player's next match knows at once. */

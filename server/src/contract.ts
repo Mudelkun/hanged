@@ -94,5 +94,7 @@ export interface LeaderboardResponse {
 
 export const LIMITS = {
   reportsPerSync: 200,
+  /** Reports a device keeps while offline (the app's REPORTS_KEPT); also the server's full win budget. */
+  reportsKept: 2000,
   boardSize: 50,
 } as const;

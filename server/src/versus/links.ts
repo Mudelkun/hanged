@@ -31,6 +31,11 @@ export interface LinkOptions {
   androidPackage?: string;
   /** ANDROID_CERT_SHA256: the signing certificates' SHA-256 fingerprints (Play Console, App signing). */
   androidCerts?: string[];
+  /**
+   * PUBLIC_URL: "https://<domain>", the links' origin. Without it the page builds the link from the
+   * request's Host, which the caller writes (a forged one would end up in the copied link).
+   */
+  publicUrl?: string;
 }
 
 /** app.json's `scheme`: opens the app from the page ("Already have it?"). */
@@ -41,6 +46,7 @@ const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt
 
 export function linkRoutes(app: FastifyInstance, db: Db, opts: LinkOptions) {
   const { appleAppId, appStoreId, androidPackage, androidCerts = [] } = opts;
+  const origin = opts.publicUrl?.replace(/\/+$/, '');
   const limit = { config: { rateLimit: { max: 60, timeWindow: '1 minute' } } };
 
   if (appleAppId) {
@@ -62,11 +68,12 @@ export function linkRoutes(app: FastifyInstance, db: Db, opts: LinkOptions) {
   app.get<{ Params: { code: string } }>(`${INVITE_PATH}:code`, limit, async (req, reply) => {
     const code = req.params.code.toUpperCase();
     const host = CODE.test(code) ? await inviter(db, code) : null;
-    const link = `${req.protocol}://${req.host}${INVITE_PATH}${code}`;
+    const link = `${origin ?? `${req.protocol}://${req.host}`}${INVITE_PATH}${code}`;
     return reply
       .code(host ? 200 : 404)
       .header('content-type', 'text/html; charset=utf-8')
-      .header('cache-control', host ? 'public, max-age=300' : 'no-store')
+      // private: without PUBLIC_URL the page holds the caller's Host, so no shared cache may keep it
+      .header('cache-control', host ? 'private, max-age=300' : 'no-store')
       .header('x-frame-options', 'DENY')
       .header(
         'content-security-policy',

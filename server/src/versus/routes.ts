@@ -21,13 +21,12 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import type { Db } from '../db.ts';
-import { credentials } from '../players.ts';
+import { signedIn } from '../players.ts';
 import { type InviteAcceptResponse, type InviteResponse, LOBBY_CODE_ALPHABET, type ReportReason, type RequestResponse, VERSUS_LIMITS } from '../versus-contract.ts';
 import type { Hub } from './hub.ts';
 import {
   acceptInvite,
   acceptRequest,
-  authorized,
   block,
   deleteRequest,
   friendsOf,
@@ -59,8 +58,8 @@ export function versusRoutes(app: FastifyInstance, db: Db, hub: Hub) {
       reply.code(503).send({ error: 'disabled' });
       return null;
     }
-    const who = credentials(req.headers.authorization);
-    if (who && (await authorized(db, who))) return who.id;
+    const id = await signedIn(db, req.headers.authorization);
+    if (id) return id;
     reply.code(401).send({ error: 'unknown player' });
     return null;
   }

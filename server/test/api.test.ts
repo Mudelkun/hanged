@@ -6,7 +6,7 @@ import type { LeaderboardResponse, PlayerSnapshot, RegisterResponse, RoundReport
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
 import { nameVariants } from '../src/names.ts';
-import { nextScore } from '../src/players.ts';
+import { nextScore, WIN_REFILL_MS, winBudget, withinBudget } from '../src/players.ts';
 import { seedWords } from '../src/words.ts';
 
 let db: Db;
@@ -86,13 +86,36 @@ describe('sync', () => {
     }
   });
 
-  it('takes the first snapshot as it is, then grows only with reported wins', async () => {
+  it("never takes the device's own count, not even on the first sync: only reported wins", async () => {
     const p = await newPlayer();
-    // played 40 words before syncing existed
-    assert.equal((await sync(p, snapshot({ wordsGuessed: 40 }))).json<SyncResponse>().wordsGuessed, 40);
+    // a new account claiming 10 million words
+    assert.equal((await sync(p, snapshot({ wordsGuessed: 10_000_000 }))).json<SyncResponse>().wordsGuessed, 0);
     // claims 1000 with one reported win: only the win counts
     const res = (await sync(p, snapshot({ wordsGuessed: 1000 }), [report(1)])).json<SyncResponse>();
-    assert.deepEqual(res, { acked: 1, wordsGuessed: 41, name: 'Roda', role: null });
+    assert.deepEqual(res, { acked: 1, wordsGuessed: 1, name: 'Roda', role: null });
+  });
+
+  it('takes every round a new account played offline before its first sync', async () => {
+    const p = await newPlayer();
+    const offline = Array.from({ length: 600 }, (_, i) => report(i + 1));
+    let res: SyncResponse | undefined;
+    for (let from = 0; from < offline.length; from += 200)
+      res = (await sync(p, snapshot({ wordsGuessed: 600 }), offline.slice(from, from + 200))).json<SyncResponse>();
+    assert.deepEqual(res, { acked: 600, wordsGuessed: 600, name: 'Roda', role: null });
+  });
+
+  it('drops wins reported faster than anyone plays, but keeps the losses and acks them all', async () => {
+    const p = await newPlayer();
+    // the budget is spent: a modified app sent thousands of wins just now
+    await db.query('UPDATE players SET wins_tat = $2 WHERE id = $1', [p.id, Date.now()]);
+    const res = (await sync(p, snapshot({ wordsGuessed: 3 }), [report(1), report(2, { won: false }), report(3)])).json<SyncResponse>();
+    assert.deepEqual(res, { acked: 3, wordsGuessed: 0, name: 'Roda', role: null });
+    const { rows } = await db.query<{ played: number; won: number }>(`SELECT played, won FROM word_stats WHERE word_id = 'en-castle'`);
+    assert.deepEqual(rows, [{ played: 1, won: 0 }]);
+    // time refills it: two wins' worth later, two count
+    await db.query('UPDATE players SET wins_tat = $2 WHERE id = $1', [p.id, Date.now() - 2 * WIN_REFILL_MS]);
+    const later = (await sync(p, snapshot({ wordsGuessed: 3 }), [report(4), report(5), report(6)])).json<SyncResponse>();
+    assert.equal(later.wordsGuessed, 2);
   });
 
   it('counts a report once, even when sent again', async () => {
@@ -133,9 +156,9 @@ describe('leaderboard', () => {
 
   it('ranks by words guessed, then level, and gives my rank', async () => {
     const [a, b, c] = [await newPlayer(), await newPlayer(), await newPlayer()];
-    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 10, level: 2 }));
-    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 30 }));
-    await sync(c, snapshot({ name: 'Cal', wordsGuessed: 10, level: 3 }));
+    await sync(a, snapshot({ name: 'Ann', wordsGuessed: 10, level: 2 }), winsAt(1, 10));
+    await sync(b, snapshot({ name: 'Bea', wordsGuessed: 30 }), winsAt(1, 30));
+    await sync(c, snapshot({ name: 'Cal', wordsGuessed: 10, level: 3 }), winsAt(1, 10));
     const res = await board('all', a.id);
     assert.deepEqual(
       res.entries.map((e) => [e.rank, e.name, e.words]),
@@ -224,9 +247,13 @@ describe('names', () => {
 });
 
 describe('unique names', () => {
-  const available = async (name: string, me?: string) =>
-    (await app.inject({ url: `/v1/names/available?name=${encodeURIComponent(name)}${me ? `&me=${me}` : ''}` })).json<{ available: boolean }>()
-      .available;
+  const available = async (name: string, me?: RegisterResponse) =>
+    (
+      await app.inject({
+        url: `/v1/names/available?name=${encodeURIComponent(name)}`,
+        headers: me ? { authorization: `Bearer ${me.id}:${me.secret}` } : {},
+      })
+    ).json<{ available: boolean }>().available;
 
   it('gives a taken name the first free variant, however it is spelled', async () => {
     const [a, b, c] = [await newPlayer(), await newPlayer(), await newPlayer()];
@@ -244,7 +271,9 @@ describe('unique names', () => {
     const p = await newPlayer();
     await sync(p, snapshot({ name: 'Sunny Otter' }));
     assert.equal(await available('sunnyotter'), false);
-    assert.equal(await available('SunnyOtter', p.id), true);
+    assert.equal(await available('SunnyOtter', p), true);
+    // older apps send a bare id: it still counts as their own
+    assert.equal((await app.inject({ url: `/v1/names/available?name=SunnyOtter&me=${p.id}` })).json<{ available: boolean }>().available, true);
     assert.equal(await available('Sunny Owl'), true);
     // A name the rules refuse is never available
     assert.equal(await available('x'), false);
@@ -284,9 +313,26 @@ describe('delete account', () => {
 
 describe('rules', () => {
   it('nextScore', () => {
-    assert.equal(nextScore(5, true, 3, 0), 3);
-    assert.equal(nextScore(5, false, 3, 0), 5);
-    assert.equal(nextScore(5, false, 9, 2), 7);
-    assert.equal(nextScore(5, false, 6, 2), 6);
+    assert.equal(nextScore(0, 3, 0), 0);
+    assert.equal(nextScore(5, 3, 0), 5);
+    assert.equal(nextScore(5, 9, 2), 7);
+    assert.equal(nextScore(5, 6, 2), 6);
+  });
+
+  it('winBudget: full when never spent, empty once spent, refilled by time, never past the cap', () => {
+    const now = 1_000_000_000;
+    assert.equal(winBudget(null, now, 10, 50).allowed, 50);
+    const spent = winBudget(null, now, 10, 50).spend(50);
+    assert.equal(winBudget(spent, now, 10, 50).allowed, 0);
+    assert.equal(winBudget(spent, now + 35, 10, 50).allowed, 3);
+    assert.equal(winBudget(spent, now + 10_000, 10, 50).allowed, 50);
+    // a tat in the future (spent past now) allows nothing
+    assert.equal(winBudget(now + 100, now, 10, 50).allowed, 0);
+  });
+
+  it('withinBudget keeps every loss and the first wins', () => {
+    const rs = [report(1), report(2, { won: false }), report(3), report(4)];
+    assert.deepEqual(withinBudget(rs, 1).map((r) => r.seq), [1, 2]);
+    assert.deepEqual(withinBudget(rs, 0).map((r) => r.seq), [2]);
   });
 });

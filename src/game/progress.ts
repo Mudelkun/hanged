@@ -6,7 +6,7 @@
  * round is counted exactly once. A round already over ignores further guesses.
  * The same step queues the round's report for the server (src/net/sync.ts).
  */
-import type { RoundReport } from '../../server/src/contract';
+import { LIMITS, type RoundReport } from '../../server/src/contract';
 import { isRole, type Permission, type Role, roleCan } from '../../server/src/roles';
 import {
   CHARACTER_PRICES,
@@ -90,7 +90,7 @@ export interface GameState {
 }
 
 /** Reports kept while offline (~90 bytes each). Past it the oldest go: only statistics lose them. */
-export const REPORTS_KEPT = 2000;
+export const REPORTS_KEPT = LIMITS.reportsKept;
 
 export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => ({
   version: 1,

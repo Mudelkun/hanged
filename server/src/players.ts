@@ -8,7 +8,7 @@
  */
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 
-import type { RegisterResponse, RoundReport, SyncRequest, SyncResponse } from './contract.ts';
+import { LIMITS, type RegisterResponse, type RoundReport, type SyncRequest, type SyncResponse } from './contract.ts';
 import type { Db, Sql } from './db.ts';
 import { checkName, isReservedName, nameKey, type NameRules, nameVariants } from './names.ts';
 import { isRole, type Role, roleCan } from './roles.ts';
@@ -42,17 +42,50 @@ export function freshReports(reports: RoundReport[], lastSeq: number): RoundRepo
 }
 
 /**
- * The score to keep. The first sync takes the device's count as it is (a
- * player who played before syncing existed). After that it can only grow by
- * the wins reported in the same sync, so a bare edited number doesn't count.
+ * The score to keep: it only grows by the wins reported in the same sync, so a
+ * bare edited number doesn't count, not even on the first sync (a new account
+ * claiming millions). Every win since install is in the device's reports.
  */
-export function nextScore(held: number, firstSync: boolean, reported: number, wins: number): number {
-  return firstSync ? reported : Math.max(held, Math.min(reported, held + wins));
+export function nextScore(held: number, reported: number, wins: number): number {
+  return Math.max(held, Math.min(reported, held + wins));
+}
+
+/** One reported win refills the budget this often: no person wins a round every 5 s for hours. */
+export const WIN_REFILL_MS = 5_000;
+
+/**
+ * Anti-cheat: reported wins spend a budget that refills one win every
+ * WIN_REFILL_MS, up to LIMITS.reportsKept (all a device can hold unsynced), so
+ * a new account, or one back from weeks offline, always has room for every
+ * real round. GCRA: `tat` (players.wins_tat) is when the budget is empty; null
+ * = full. `allowed` wins fit now; `spend(n)` is the tat to keep after n.
+ */
+export function winBudget(tat: number | null, now: number, refillMs = WIN_REFILL_MS, cap: number = LIMITS.reportsKept) {
+  const start = Math.max(tat ?? -Infinity, now - cap * refillMs);
+  return { allowed: Math.max(0, Math.floor((now - start) / refillMs)), spend: (n: number) => start + n * refillMs };
+}
+
+/** The reports to count: every loss, and wins until `allowed`. The wins past it are faster than anyone plays. */
+export function withinBudget(reports: RoundReport[], allowed: number): RoundReport[] {
+  let wins = 0;
+  return reports.filter((r) => !r.won || wins++ < allowed);
 }
 
 /** The row exists and the secret is its own. */
 export const owns = (row: { secret_hash: string } | undefined, who: Credentials): boolean =>
   !!row && timingSafeEqual(Buffer.from(row.secret_hash), Buffer.from(hash(who.secret)));
+
+/** The credentials are a player's own (a REST call's sign-in: one indexed read). */
+async function authorized(db: Sql, who: Credentials): Promise<boolean> {
+  const { rows } = await db.query<{ secret_hash: string }>('SELECT secret_hash FROM players WHERE id = $1', [who.id]);
+  return owns(rows[0], who);
+}
+
+/** The signed-in player's id, or null: no `Authorization`, or not a player's own credentials. */
+export async function signedIn(db: Sql, header: string | undefined): Promise<string | null> {
+  const who = credentials(header);
+  return who && (await authorized(db, who)) ? who.id : null;
+}
 
 /** The name to keep: one the filter refuses (a modified app) is dropped, and the app shows its default. */
 const allowedName = (name: string | null, rules: NameRules) => {
@@ -98,10 +131,13 @@ async function freeName(sql: Sql, playerId: string, wanted: string, rules: NameR
 
 /**
  * No one else holds the name (the player's own counts as free), and it passes
- * checkName. A reserved name passes only for `me` holding the role for it.
+ * checkName. A reserved name passes only for a `signedIn` player (credentials
+ * checked) holding the role for it: player ids are public on the boards, so a
+ * bare `me` would tell anyone which accounts are staff.
  */
-export async function nameAvailable(db: Db, raw: string, me?: string): Promise<boolean> {
-  const check = checkName(raw, me && isReservedName(raw) ? nameRules(await roleOf(db, me)) : {});
+export async function nameAvailable(db: Db, raw: string, me?: string, signedIn?: string): Promise<boolean> {
+  me = signedIn ?? me;
+  const check = checkName(raw, signedIn && isReservedName(raw) ? nameRules(await roleOf(db, signedIn)) : {});
   if (!check.ok) return false;
   const { rows } = await db.query('SELECT 1 FROM players WHERE name_key = $1 AND id IS DISTINCT FROM $2::uuid', [
     nameKey(check.name),
@@ -115,7 +151,7 @@ interface PlayerRow {
   last_seq: number;
   words_guessed: number;
   name_key: string | null;
-  synced_at: Date | null;
+  wins_tat: number | null;
   role: string | null;
 }
 
@@ -123,7 +159,7 @@ interface PlayerRow {
 export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest): Promise<SyncResponse | null> {
   return db.tx(async (sql) => {
     const { rows } = await sql.query<PlayerRow>(
-      'SELECT secret_hash, last_seq, words_guessed, name_key, synced_at, role FROM players WHERE id = $1 FOR UPDATE',
+      'SELECT secret_hash, last_seq, words_guessed, name_key, wins_tat, role FROM players WHERE id = $1 FOR UPDATE',
       [who.id],
     );
     const held = rows[0];
@@ -135,9 +171,11 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
     // An unranked account (a developer's) has its rounds acked but never counted: no score, no
     // weekly row, no word statistics. Its rounds were played with powers nobody else has.
     const unranked = roleCan(role, 'unranked');
-    const counted = unranked ? [] : fresh;
+    // Wins faster than the budget allows are acked and dropped (a modified app), like an unranked account's
+    const budget = winBudget(held.wins_tat, Date.now());
+    const counted = unranked ? [] : withinBudget(fresh, budget.allowed);
     const wins = counted.filter((r) => r.won).length;
-    const words = unranked ? held.words_guessed : nextScore(held.words_guessed, held.synced_at === null, player.wordsGuessed, wins);
+    const words = unranked ? held.words_guessed : nextScore(held.words_guessed, player.wordsGuessed, wins);
     const rules = nameRules(role);
     const wanted = allowedName(player.name, rules);
     // Every sync sends the name: only look it up when it isn't already the player's own.
@@ -149,11 +187,11 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
          words_guessed = $8,
          rounds_played = rounds_played + $9, rounds_won = rounds_won + $10,
          tokens_earned = tokens_earned + $11, misses = misses + $12,
-         last_seq = $13, synced_at = now()
+         last_seq = $13, synced_at = now(), wins_tat = $14
        WHERE id = $1`,
       [
         who.id, name, name && nameKey(name), player.characterId, player.language, player.level, player.tokens, words,
-        counted.length, wins, sum(counted, earned), sum(counted, (r) => r.wrong), acked,
+        counted.length, wins, sum(counted, earned), sum(counted, (r) => r.wrong), acked, wins ? budget.spend(wins) : held.wins_tat,
       ],
     );
     if (counted.length) await addRounds(sql, who.id, counted);

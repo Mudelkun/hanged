@@ -49,7 +49,7 @@ export async function savedPlayerId(): Promise<string | null> {
  */
 export async function nameIsFree(name: string): Promise<boolean> {
   try {
-    return (await api.nameAvailable(name, await savedPlayerId())).available;
+    return (await api.nameAvailable(name, await savedAccount())).available;
   } catch {
     return true;
   }
