@@ -11,7 +11,7 @@ import { HangedWorld } from '../world/world';
 const svg = (viewBox: string, body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${body}</svg>`;
 
-// "Token" is a placeholder: a star coin, never a heart (hearts suggest lives).
+// The token's symbol (owner's call): a star coin, never a heart (hearts suggest lives).
 export const coinXml = svg(
   '0 0 24 24',
   '<circle cx="12" cy="12.6" r="10.4" fill="#f0b43a"/><circle cx="12" cy="11.4" r="10.4" fill="#ffd667"/><circle cx="12" cy="11.4" r="7.4" fill="#ffe593"/><path d="M12 6.4l1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.6l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#fff" stroke="#f0b43a" stroke-width="1" stroke-linejoin="round"/>',
