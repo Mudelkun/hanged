@@ -62,8 +62,8 @@ export const CHARACTER_PRICES: Readonly<Record<string, number>> = {
   ribbit: 1100,
 };
 
-/** PLACEHOLDER: tokens a brand-new player starts with. */
-export const STARTING_TOKENS = 3;
+/** Tokens a brand-new player starts with (owner's call, 2026-10-25). */
+export const STARTING_TOKENS = 5;
 
 /** PLACEHOLDER: words guessed on a level that move the player up one. */
 export const WORDS_PER_LEVEL = 10;

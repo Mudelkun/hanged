@@ -151,10 +151,10 @@ over fewer misses (10 balloons stay; fewer misses only make the end come sooner)
 Tune the table against this test, not by feel, and once real players play, check it against
 the real win rates the server records for every round.
 
-**Every number in `LEVELS`, `WORDS_PER_LEVEL`, `LOSSES_TO_DROP`, `LEVEL_GRACE_ROUNDS` and
-`STARTING_TOKENS` (3) is a PLACEHOLDER.** The owner hasn't answered the clue-formula, progression and
-starting-token questions in CLAUDE.md. Change them only in those two files,
-and update this doc when you do.
+**Every number in `LEVELS`, `WORDS_PER_LEVEL`, `LOSSES_TO_DROP`, and
+`LEVEL_GRACE_ROUNDS` is a PLACEHOLDER.** The owner hasn't answered the clue-formula and progression
+questions in CLAUDE.md. Change them only in those two files, and update this doc when you do.
+`STARTING_TOKENS` is decided: a new player starts with **5 tokens** (owner's call, 2026-10-25).
 
 A round snapshots its `level`, `maxWrong`, clue and disabled letters and its `subject` (only on a
 level that shows it) when it starts, so a level-up never changes a round in progress.

@@ -77,7 +77,7 @@ server/             the API (its own package, deployed on Railway). Shared with 
 - **Score only in the reducer, in the step that wins the round**, never in a screen or an effect ([Context/progression-and-tokens.md](Context/progression-and-tokens.md)).
 - **Never fork the characters into `src/`.** Edit `design/characters/*.js`; the app and the mockup both read it.
 - **Every UI string goes in `src/i18n/en.json`.**
-- Placeholder answers to the open questions (starting tokens, levels, letters to find) live only in `src/game/config.ts` and `src/game/levels.ts` (the round constants the engine needs: `server/src/rules.ts`, re-exported by config.ts; Versus modes: `MODES` in `server/src/versus-contract.ts`), and are marked PLACEHOLDER.
+- Placeholder answers to the open questions (levels, letters to find) live only in `src/game/config.ts` and `src/game/levels.ts` (the round constants the engine needs: `server/src/rules.ts`, re-exported by config.ts; Versus modes: `MODES` in `server/src/versus-contract.ts`), and are marked PLACEHOLDER.
 
 ---
 
@@ -231,7 +231,7 @@ How the original works (`Pendu/Form1.cs`): one player types the word, and the wo
 
 ## Open questions (ask the owner, don't guess)
 
-- **Tokens**: does a new player start with any? (The name "token" and the star-coin symbol are decided.) Character prices use the steady pace chosen on 2026-10-22: 3 free characters (Mochi, Bun, Coco: Coco made free for onboarding on 2026-10-22), then 50 to 1,100 tokens, targeting the first paid unlock in 20-30 rounds and the full collection in 1,500-2,000 for a regular player (tuning and model: [Context/characters-shop.md](Context/characters-shop.md).)
+- **Tokens**: (Decided: the name "token", the star-coin symbol, and 5 tokens for a new player, owner's call 2026-10-25.) Character prices use the steady pace chosen on 2026-10-22: 3 free characters (Mochi, Bun, Coco: Coco made free for onboarding on 2026-10-22), then 50 to 1,100 tokens, targeting the first paid unlock in 20-30 rounds and the full collection in 1,500-2,000 for a regular player (tuning and model: [Context/characters-shop.md](Context/characters-shop.md).)
 - **Token amounts**: how many tokens should each level pay, and at which streak lengths should the bonus grow? Placeholders for now: 1 to 4 tokens per level, +1 at 3, 6 and 10 in a row.
 - **Clue formula**: exactly how many letters are revealed for each word length and difficulty level? (Decided: each level sets how many letters are left to find, never fewer than 3 in a long word from level 3; clues are a long word's first or last two letters, then the word's rarest letters. The numbers per level and how long counts as long (8 letters) are placeholders.)
 - **Progression**: what moves the player up a level (a number of words won, a streak)? (Decided: 20 levels, and dropping down after 3 losses in a row. The exact numbers are placeholders.)
