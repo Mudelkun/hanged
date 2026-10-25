@@ -14,7 +14,7 @@ import type { Period } from '../../../server/src/contract';
 import { characterById } from '../../characters/rig';
 import { TitleHeader } from '../../components/GameHeader';
 import { sound } from '../../audio';
-import { BoardNote, FindMe, PeriodSwitch, Ranked, RankRow, rowSpan } from '../../components/Leaderboard';
+import { BoardNote, CROWN_RISE, FindMe, PeriodSwitch, Ranked, RankRow, rowSpan } from '../../components/Leaderboard';
 import { PaperBackground } from '../../components/PaperBackground';
 import { TabBar } from '../../components/TabBar';
 import { GameState } from '../../game/progress';
@@ -23,7 +23,8 @@ import { useGame } from '../../state/GameContext';
 import { Board, useLeaderboard } from '../../state/useLeaderboard';
 import { colors } from '../../theme';
 
-const LIST_TOP = 4;
+// Room above the first row for its crown
+const LIST_TOP = 4 + CROWN_RISE;
 const VIEWABILITY = { itemVisiblePercentThreshold: 60 };
 
 function rank(board: Board, s: GameState, t: Translator) {

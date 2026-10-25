@@ -13,7 +13,7 @@ import { useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
 import { Avatar } from './GameHeader';
-import { arrowXml, cloudXml, Icon, sparkXml } from './icons';
+import { arrowXml, cloudXml, crownXml, Icon, medalXml, sparkXml } from './icons';
 import { Raised } from './Raised';
 
 /** A board entry ready to draw: the player's own entry already shows their local name and character. */
@@ -76,29 +76,36 @@ function You() {
   );
 }
 
-/** Medal colours for the top 3: gold, silver, bronze. */
+/**
+ * The top 3: gold, silver, bronze. Each tints its whole row (`card`, `edge`,
+ * `depth`) and wears a ribbon medal (`xml`) with the rank in `text`.
+ */
 const MEDALS = [
-  { fill: '#ffd667', edge: '#f0b43a', text: '#9a6a00' },
-  { fill: '#e6eef6', edge: '#bccddd', text: '#5a7d9c' },
-  { fill: '#ffd8bf', edge: '#f2b08a', text: '#c0663a' },
-];
+  { ring: '#ffc93c', ringD: '#e0a020', face: '#ffe58a', ribbon: '#ff5d5d', ribbonD: '#c93b3b', text: '#b07800', card: '#fff2bd', edge: '#ffcf4a', depth: '#f0b43a', spark: '#ffc93c' },
+  { ring: '#b9cde0', ringD: '#8fa9c2', face: '#e9f1f9', ribbon: '#4aa3f0', ribbonD: '#2a7cc4', text: '#5a7d9c', card: '#e2f1ff', edge: '#8ec8f6', depth: '#6cb0ea', spark: '#8ec8f6' },
+  { ring: '#f2a36e', ringD: '#d47f45', face: '#ffd6b8', ribbon: '#ff6f5a', ribbonD: '#cf4c3a', text: '#b0582a', card: '#ffe4d4', edge: '#f7a87e', depth: '#e98d5f', spark: '#ffa36b' },
+].map((m) => ({ ...m, xml: medalXml(m), sparkXml: sparkXml(m.spark) }));
 
 /** Fixed row heights, so the list can jump straight to any row (`getItemLayout`). */
-const ROW = { height: 58, depth: 3 };
-const ME_ROW = { height: 72, depth: 4 };
-const ROW_GAP = 8;
+const ROW = { height: 60, depth: 3 };
+const ME_ROW = { height: 68, depth: 4 };
+const TOP_ROW = { height: 76, depth: 4 };
+const ROW_GAP = 10;
 /** The dotted break above the player's own row when it's pinned under the top. */
 const PIN_GAP = 30;
+/** How far the first row's crown rises above it: the list starts this much lower. */
+export const CROWN_RISE = 12;
+
+const sizeOf = (e: Ranked) => (e.rank <= MEDALS.length ? TOP_ROW : e.me ? ME_ROW : ROW);
 
 /** The height a row takes in the list, gaps included. */
 export const rowSpan = (e: Ranked) => {
-  const r = e.me ? ME_ROW : ROW;
+  const r = sizeOf(e);
   return r.height + r.depth + ROW_GAP + (e.pinned ? PIN_GAP : 0);
 };
 
 function RankChip({ rank, me }: { rank: number; me: boolean }) {
-  const medal = MEDALS[rank - 1];
-  if (!medal && !me) {
+  if (!me) {
     return (
       <Text style={styles.rank} numberOfLines={1} adjustsFontSizeToFit>
         {rank}
@@ -106,10 +113,36 @@ function RankChip({ rank, me }: { rank: number; me: boolean }) {
     );
   }
   return (
-    <View style={[styles.medal, medal ? { backgroundColor: medal.fill, borderColor: medal.edge } : styles.medalMe]}>
-      <Text style={[styles.medalText, { color: medal ? medal.text : colors.coralD }]} numberOfLines={1}>
+    <View style={styles.chipMe}>
+      <Text style={styles.chipMeText} numberOfLines={1}>
         {rank}
       </Text>
+    </View>
+  );
+}
+
+const MEDAL_W = 68;
+const MEDAL_SCALE = MEDAL_W / 64;
+const CROWN = crownXml();
+
+/** The top 3's ribbon medal, centred on the row's height, the crown on #1. Drawn over the row, unclipped. */
+function Medal({ rank, rowHeight }: { rank: number; rowHeight: number }) {
+  const m = MEDALS[rank - 1];
+  return (
+    <View pointerEvents="none" style={[styles.medalBox, { top: rowHeight / 2 - 31 * MEDAL_SCALE }]}>
+      {rank === 1 && (
+        <View style={styles.crown}>
+          <Icon xml={CROWN} size={32} height={25} />
+        </View>
+      )}
+      <Icon xml={m.xml} size={MEDAL_W} height={74 * MEDAL_SCALE} />
+      <Text style={[styles.medalNum, { color: m.text }]}>{rank}</Text>
+      <View style={[styles.deco, { left: MEDAL_W - 6, top: 0 }]}>
+        <Icon xml={m.sparkXml} size={15} />
+      </View>
+      <View style={[styles.deco, { left: MEDAL_W - 8, top: 50 }]}>
+        <Icon xml={m.sparkXml} size={11} />
+      </View>
     </View>
   );
 }
@@ -135,7 +168,8 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
     ]).start();
   }, [flash, scale]);
   const { me } = entry;
-  const r = me ? ME_ROW : ROW;
+  const r = sizeOf(entry);
+  const medal = MEDALS[entry.rank - 1];
   return (
     <View style={{ height: rowSpan(entry) }}>
       {entry.pinned && (
@@ -150,22 +184,32 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
       >
         <Raised
           depth={r.depth}
-          shadowColor={me ? colors.coralD : colors.shadow}
-          radius={me ? 24 : 20}
-          style={[styles.row, { height: r.height }, me && styles.rowMe]}
+          shadowColor={me ? colors.coralD : medal ? medal.depth : colors.shadow}
+          radius={me || medal ? 24 : 20}
+          style={[
+            styles.row,
+            { height: r.height },
+            medal && [styles.rowTop, { backgroundColor: medal.card, borderColor: medal.edge }],
+            me && styles.rowMe,
+          ]}
         >
-          {me && (
-            <>
-              <View style={[styles.deco, { left: 92, top: 6 }]}>
-                <Icon xml={SPARK} size={13} />
-              </View>
-              <View style={[styles.deco, { right: 10, top: 5 }]}>
-                <Icon xml={SPARK_PINK} size={10} />
-              </View>
-            </>
+          {me && !medal && (
+            <View style={[styles.deco, { left: 98, top: 4 }]}>
+              <Icon xml={SPARK} size={14} />
+            </View>
           )}
-          <RankChip rank={entry.rank} me={me} />
-          <Avatar character={entry.character} size={me ? 50 : 42} plain={!me} />
+          {(me || medal) && (
+            <View style={[styles.deco, { right: 12, top: 6 }]}>
+              <Icon xml={me ? SPARK_PINK : medal.sparkXml} size={12} />
+            </View>
+          )}
+          {medal && !me && entry.rank === 1 && (
+            <View style={[styles.deco, { right: 34, bottom: 6 }]}>
+              <Icon xml={medal.sparkXml} size={11} />
+            </View>
+          )}
+          {!medal && <RankChip rank={entry.rank} me={me} />}
+          <Avatar character={entry.character} size={me ? 52 : medal ? 48 : 44} plain={!me} />
           <View style={styles.rowName}>
             <Text style={[styles.rowNameText, me && styles.rowNameMe]} numberOfLines={1}>
               {entry.name}
@@ -174,6 +218,7 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
           </View>
           <Score words={entry.words} me={me} />
         </Raised>
+        {medal && <Medal rank={entry.rank} rowHeight={r.height} />}
       </Animated.View>
     </View>
   );
@@ -258,12 +303,25 @@ const styles = StyleSheet.create({
 
   deco: { position: 'absolute' },
   // Grows into a pill for a long rank (the player's own row can be far down)
-  medal: { minWidth: 32, height: 32, borderRadius: 16, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 },
-  medalMe: { backgroundColor: '#fff', borderColor: '#fff' },
-  medalText: display('700', 16),
+  chipMe: { minWidth: 34, height: 34, borderRadius: 17, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 },
+  chipMeText: display('700', 17, colors.coralD),
+  medalBox: { position: 'absolute', left: 6, width: MEDAL_W },
+  crown: { position: 'absolute', top: -CROWN_RISE - 4, left: (MEDAL_W - 32) / 2 },
+  medalNum: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 31 * MEDAL_SCALE - 19,
+    lineHeight: 38,
+    textAlign: 'center',
+    ...display('700', 30),
+    textShadowColor: '#fff',
+    textShadowOffset: { width: 0, height: 1.5 },
+    textShadowRadius: 0,
+  },
 
-  you: { backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 6, paddingVertical: 1 },
-  youText: { ...display('700', 10.5, colors.coralD), letterSpacing: 0.4 },
+  you: { borderWidth: 1.5, borderColor: '#fff', backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: 9, paddingHorizontal: 7, paddingVertical: 1 },
+  youText: { ...display('700', 11, '#fff'), letterSpacing: 0.5 },
 
   row: {
     flexDirection: 'row',
@@ -275,14 +333,16 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.line,
   },
-  rowMe: { backgroundColor: colors.coral, borderWidth: 3, borderColor: '#fff', paddingLeft: 9, gap: 10 },
-  rank: { width: 32, textAlign: 'center', ...display('700', 17, '#c4ad9b') },
-  rowName: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
-  rowNameText: { ...display('600', 17), flexShrink: 1 },
-  rowNameMe: display('700', 18, '#fff'),
-  rowScore: display('700', 21),
-  rowScoreMe: { color: '#fff', fontSize: 23 },
-  rowUnit: display('600', 12, colors.muted),
+  // Room on the left for the medal, drawn over the row
+  rowTop: { borderWidth: 2.5, paddingLeft: MEDAL_W + 12 },
+  rowMe: { backgroundColor: colors.coral, borderWidth: 3, borderColor: '#fff', gap: 10 },
+  rank: { width: 32, textAlign: 'center', ...display('700', 18, '#c4ad9b') },
+  rowName: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7 },
+  rowNameText: { ...display('700', 17.5), flexShrink: 1 },
+  rowNameMe: display('700', 19, '#fff'),
+  rowScore: display('700', 25),
+  rowScoreMe: { color: '#fff', fontSize: 27 },
+  rowUnit: display('600', 13, colors.muted),
   rowUnitMe: { color: 'rgba(255,255,255,0.85)' },
 
   pinGap: { height: PIN_GAP, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingBottom: 4 },

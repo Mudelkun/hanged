@@ -42,6 +42,19 @@ export const arrowXml = (dir: 'up' | 'down', c = '#4b3a35') =>
     '0 0 24 24',
     `<path d="${dir === 'up' ? 'M12 19V5M6 11l6-6 6 6' : 'M12 5v14M6 13l6 6 6-6'}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`,
   );
+/**
+ * Not in the mockup: the leaderboard's top-3 medal, a disc on two ribbon tails
+ * (64 × 74 box, the disc's centre at 32, 31). The rank is drawn over it as text.
+ */
+export const medalXml = (m: { ring: string; ringD: string; face: string; ribbon: string; ribbonD: string }) =>
+  svg(
+    '0 0 64 74',
+    `<g stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M18 44l12 8-7 20-5.5-5.5L10 70z" fill="${m.ribbon}"/><path d="M46 44l-12 8 7 20 5.5-5.5L54 70z" fill="${m.ribbon}"/></g>` +
+      `<path d="M24 48l5 3.4-5.6 16zM40 48l-5 3.4 5.6 16z" fill="${m.ribbonD}" opacity=".55"/>` +
+      `<circle cx="32" cy="31" r="29" fill="#fff"/><circle cx="32" cy="31" r="26.5" fill="${m.ring}"/>` +
+      `<circle cx="32" cy="31" r="20" fill="${m.face}" stroke="${m.ringD}" stroke-width="1.6"/>` +
+      `<path d="M13.5 24.5A19.5 19.5 0 0 1 28 8.6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>`,
+  );
 export const checkXml = svg(
   '0 0 24 24',
   '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>',

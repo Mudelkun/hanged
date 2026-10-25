@@ -35,9 +35,15 @@ every player is a row, and the player's own row is the one that stands out.
     has a live `TokenPill`; flights land on the focused one ([play-screen.md](play-screen.md), TokenPill).
 - `PeriodSwitch`: This week (the default) / All time.
 - **No podium** (owner's call, 2026-10-23). `RankRow` for everyone in the top 50: rank, face, name and
-  score. The top 3 wear a gold, silver or bronze **medal** chip in place of the plain number.
+  score. The look follows the owner's reference (2026-10-24): the **top 3 are tinted, taller cards**
+  (gold, blue, peach), each with a big **ribbon medal** (`medalXml` in icons.tsx, the rank drawn over it
+  as text) in place of the number, a **crown** on #1 and sparkles in the medal's colour.
+  - The medal and its sparkles are drawn **over** the row (a sibling after `Raised`, which clips), so the
+    ribbons hang past the card's bottom and the crown rises above #1. The list starts `CROWN_RISE` lower
+    so the scroll view doesn't clip the crown.
 - The player's own row is the **star**: coral fill, white border, taller, a bigger face, sparkles, the
-  **YOU** badge (white), and its rank in a white chip (a pill for a long rank). It shows the **local** name
+  outlined **YOU** badge, and its rank in a white chip (a pill for a long rank). In the top 3 it keeps the
+  coral and wears the medal too. It shows the **local** name
   and character, which may be newer than the server's copy. If the player is ranked but outside the top
   50, their row is **pinned** at the end of the list, after a dotted break (`pinned`, keyed `me`).
 - **Find me** (`FindMe`): a floating coral pill ("You · #12", with an arrow up or down) that shows while
@@ -45,7 +51,7 @@ every player is a row, and the player's own row is the one that stands out.
   middle, and the row pops. The screen knows which rows are on screen from `onViewableItemsChanged`.
   - **Rows have fixed heights** (`rowSpan`, pinned break included), so `getItemLayout` lets
     `scrollToIndex` reach any row, even one not rendered yet. Changing a row's height means changing
-    `ROW` / `ME_ROW` / `PIN_GAP`, never letting content size it. The list has **no header** for the same
+    `ROW` / `ME_ROW` / `TOP_ROW` / `PIN_GAP`, never letting content size it. The list has **no header** for the same
     reason (an empty board is the `ListEmptyComponent`).
 - The screen can also show:
   - **Offline** (no connection, server down, or no `EXPO_PUBLIC_API_URL`): "You're offline", which also
