@@ -105,6 +105,14 @@ export const profileIconXml = {
     '0 0 24 24',
     '<path d="M8 13l-2.5 8.5 3.5-1.6 2 3 1-9.9M16 13l2.5 8.5-3.5-1.6-2 3-1-9.9" fill="#fff"/><circle cx="12" cy="9" r="6.5" fill="#fff"/><circle cx="12" cy="9" r="3.2" fill="#ffc23d"/>',
   ),
+  // Not in the mockup: the developer tools (dev-accounts.md). Stairs, a fresh word, won, lost.
+  devLevel: svg('0 0 24 24', '<path d="M3 20h5v-5h5v-5h5V5h3v15z" fill="#fff"/>'),
+  devWord: svg(
+    '0 0 24 24',
+    '<path d="M19 12a7 7 0 1 1-2.1-5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M20 3v6h-6z" fill="#fff"/>',
+  ),
+  devWin: svg('0 0 24 24', '<path d="M4.5 12.5l5 5L19.5 6.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'),
+  devLose: svg('0 0 24 24', '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>'),
 };
 /**
  * Not in the mockup: the daily streak's flame. Lit once today counts; unlit

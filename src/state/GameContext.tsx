@@ -12,7 +12,7 @@ import { AppState } from 'react-native';
 import { randomName } from '../game/names';
 import { needsOnboarding } from '../game/onboarding';
 import { Language, languageForLocales } from '../game/languages';
-import { GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
+import { finishingGuesses, GameAction, gameReducer, GameState, initialState, nextWord } from '../game/progress';
 import { setLanguage } from '../i18n';
 import { createSync, nameIsFree } from '../net/sync';
 import { useReminders } from './useDaily';
@@ -27,6 +27,10 @@ interface GameContextValue {
   dispatch: (action: GameAction) => void;
   startNextRound: () => void;
   changeLanguage: (language: Language) => void;
+  /** Developer (`anyLevel`): play at `level`, from a new word there. Ignored without the role. */
+  jumpToLevel: (level: number) => void;
+  /** Developer (`devTools`): ends the round won or lost with ordinary guesses. Ignored without the role. */
+  finishRound: (won: boolean) => void;
   /** Syncs with the server now. Resolves to the player's server id, or null offline. */
   syncNow: () => Promise<string | null>;
   /**
@@ -102,6 +106,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'newRound', word: nextWord(state), roundId: newRoundId() });
   }, [state]);
 
+  const jumpToLevel = useCallback((level: number) => dispatch({ type: 'jumpToLevel', level, roundId: newRoundId() }), []);
+  const finishRound = useCallback((won: boolean) => {
+    const at = Date.now();
+    for (const letter of finishingGuesses(state, won)) dispatch({ type: 'guess', letter, at });
+  }, [state]);
+
   // First launch (or a save from before rounds existed): deal a word.
   useEffect(() => {
     if (ready && !state.round) startNextRound();
@@ -125,8 +135,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [sync]);
 
   const value = useMemo(
-    () => ({ state, ready, dispatch, startNextRound, changeLanguage, syncNow: sync.run, deleteAccount, nameIsFree, completeOnboarding, setReminders, welcomePending, dismissWelcome }),
-    [state, ready, startNextRound, changeLanguage, sync, deleteAccount, completeOnboarding, setReminders, welcomePending, dismissWelcome],
+    () => ({ state, ready, dispatch, startNextRound, changeLanguage, jumpToLevel, finishRound, syncNow: sync.run, deleteAccount, nameIsFree, completeOnboarding, setReminders, welcomePending, dismissWelcome }),
+    [state, ready, startNextRound, changeLanguage, jumpToLevel, finishRound, sync, deleteAccount, completeOnboarding, setReminders, welcomePending, dismissWelcome],
   );
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

@@ -18,7 +18,8 @@ Name rules: [server/src/names.ts](../server/src/names.ts) (shared), [src/game/na
 
 ## The page (mockup: Profile)
 
-`BackHeader` (back, title, still token pill) · name card · stat tiles · daily streak card · SETTINGS · INFO & LEGAL · footer.
+`BackHeader` (back, title, still token pill) · name card · stat tiles · daily streak card · SETTINGS · (DEVELOPER, only for a
+developer account: [dev-accounts.md](dev-accounts.md)) · INFO & LEGAL · footer.
 It scrolls; since the daily streak card and the reminder switch (2026-10-24), a 375×667 phone has to scroll to the info list. **No tab bar**: it's a pushed page over the
 tabs (the mockup draws one; a pushed page covering it is the iOS way and leaves more room).
 
@@ -65,6 +66,9 @@ null, and boards show the default name.
     whole word only (Nazir passes), `nazi[s]` an optional letter. **The library reads a double letter as one,
     except b e o l s g**, so write "official" as `oficial`. That's also why "kkk" can't be blocked (it reads
     as a single "k").
+  - **Reserved names** (`RESERVED_NAMES`: "Admin"): blocked by `EXTRA_WORDS` for everyone, and let through by
+    `checkName(name, { reserved: true })` only for an account whose server role allows it
+    ([dev-accounts.md](dev-accounts.md)). The reducer's name actions and the Profile field pass `nameRules(state)`.
   - `ALLOWED_NAMES`: real names its list blocks (Analise, because of "anal").
   - `UNEXCEPTED`: English-list exceptions that would hide one of our words. Its exceptions apply to every
     pattern, and it excuses "fick" (German abuse), so that one is dropped and only "fickle" is excused.

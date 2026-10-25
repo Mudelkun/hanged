@@ -17,6 +17,7 @@ needs the internet.
 | **Matches live in memory**; only their outcome is written (one transaction) | A match lasts minutes. Writing every guess would cost database load for nothing. Like the solo rounds: storage grows with players, not with matches. |
 | **Same engine as solo** (`server/src/engine.ts`, shared like `contract.ts`) | One set of rules: clue letters, accents, judging. The engine moved from `src/game/` (which re-exports it) because Railway deploys only `server/`. |
 | **Ranked = matchmade only**; friend matches never move ratings | Friends can't trade wins to climb. |
+| **A matchmade match with a developer account is unrated** for everyone in it | A developer can test matchmaking without moving anyone's rating ([dev-accounts.md](dev-accounts.md)). |
 | **Versus doesn't count toward the leaderboard or pay tokens** | Still an open question for the owner (CLAUDE.md). It has its own rating instead. Changing it is a server-side decision (the reducer must still be the only place that adds score/tokens). |
 | **REST for friends, socket for live things** | Friends change rarely and want a plain answer; the socket pushes `friends` so open lists refresh without polling. |
 | **Socket open only while useful** | Cost: see "When the app is connected". |

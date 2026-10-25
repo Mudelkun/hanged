@@ -17,7 +17,9 @@ game save (`unlockedCharacterIds`, `characterId`), like tokens. The server only 
 - **Prices** live in `CHARACTER_PRICES` (0 = free), cheapest first. That order is the page's order
   (`SHOP`). Every character in `design/characters/rig.js` needs a row; a test checks that, and that the
   prices never go down the list. A character without a row isn't sold or shown.
-- **Owned** = price 0, or in `unlockedCharacterIds` (bought). Free characters are never stored, so making
+- **Owned** = price 0, or in `unlockedCharacterIds` (bought), or every shop character for a developer account
+  (`allCharacters`, never written to the save: [dev-accounts.md](dev-accounts.md)). Affordability is `canAfford`
+  (a developer spends for free). Free characters are never stored, so making
   one free later gives it to everyone.
 - **`buyCharacter`** pays the price, adds the character to `unlockedCharacterIds` and **plays with it at
   once** (the player bought it to use it). It's refused when the character is owned, unknown, or

@@ -82,7 +82,7 @@ export function SocialRow({ requests, onCode, onFriends }: { requests: number; o
     <View style={styles.social}>
       <PillButton label={t('versus.joinCode')} onPress={onCode} ghost cue="panel-open" style={styles.flex} />
       <View style={styles.flex}>
-        <PillButton label={t('versus.friends')} onPress={onFriends} ghost cue="panel-open" />
+        <PillButton label={t('versus.friends')} onPress={onFriends} ghost cue="panel-open" style={styles.flex} />
         {requests > 0 && (
           <View style={styles.badge} accessibilityLabel={t('versus.a11y.requests', { count: requests })}>
             <Text style={styles.badgeText}>{requests}</Text>

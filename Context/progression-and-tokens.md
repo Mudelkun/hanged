@@ -223,6 +223,9 @@ migrate, never silently reuse it. An unreadable save starts a fresh player.
   `initialState()`. Same key, no bump.
 - **`hydrate` gets the save exactly as stored** and fills missing fields from `initialState()` itself
   (`withDefaults`). `GameContext` must not merge first, or `hydrate` can't tell an old save from a new one.
+- `role` (the account's staff role, null for regular players) is saved here, and set only from the sync's
+  answer; a developer's powers are checks inside the existing rules ([dev-accounts.md](dev-accounts.md)). Old
+  saves get null. Same key, no bump.
 - The **round in progress is saved too**. Killing the app does not deal a new word,
   so a player can't skip a hard word by restarting. A round restored already
   finished opens straight on its result screen.

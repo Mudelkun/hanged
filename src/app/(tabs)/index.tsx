@@ -36,7 +36,7 @@ import { LETTER_BUY_COST } from '../../game/config';
 import { dailyDays, dailyStatus } from '../../game/daily';
 import { balloonsGone, balloonsLeft, sceneStage, keyState, Letter, Round, roundStatus, tileState, usedLetters, wrongCount, guess } from '../../game/engine';
 import { guessLetter } from '../../game/languages';
-import { lettersForSale, reviewWanted } from '../../game/progress';
+import { canAfford, lettersForSale, reviewWanted } from '../../game/progress';
 import { feedback } from '../../feedback';
 import { useTranslation } from '../../i18n';
 import { remindersSupported } from '../../notify/reminders';
@@ -209,7 +209,7 @@ export default function PlayScreen() {
             />
             {lettersForSale(state) && (
               <LetterShopPill
-                canAfford={state.tokens >= LETTER_BUY_COST}
+                canAfford={canAfford(state, LETTER_BUY_COST)}
                 onBuy={onBuyLetters}
                 compact={compact}
               />

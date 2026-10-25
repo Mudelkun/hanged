@@ -40,6 +40,7 @@ import { type LobbyError, type Lobby, Lobbies } from './lobbies.ts';
 import { type Clock, createMatch, type Match, type MatchHost, type Seat } from './match.ts';
 import { Matchmaker } from './matchmaker.ts';
 import { blockIds, friendIds, saveResult, stats, type VersusPlayer, versusPlayer } from './store.ts';
+import { type Role, roleCan } from '../roles.ts';
 import type { WordSource } from './words.ts';
 
 const AUTH_MS = 5_000;
@@ -382,7 +383,9 @@ export class Hub {
         for (const c of conns) if (c) this.queue.join(group.mode, group.language, { id: c.player.id, rating: c.player.rating, since: this.clock.now() });
         continue;
       }
-      this.startMatch(group.mode, group.language, conns.map((c) => this.seat(c!)), true);
+      // A developer account (unranked role) is matched like anyone, but nobody's rating moves.
+      const ranked = !conns.some((c) => roleCan(c!.player.role, 'unranked'));
+      this.startMatch(group.mode, group.language, conns.map((c) => this.seat(c!)), ranked);
     }
     this.ensureTicking();
   }
@@ -668,6 +671,12 @@ export class Hub {
     clearInterval(this.heartbeat);
     if (this.ticking) clearInterval(this.ticking);
     this.ticking = null;
+  }
+
+  /** The admin page changed a role (staff.ts): a connected player's next match knows at once. */
+  roleChanged(id: string, role: Role | null) {
+    const conn = this.conns.get(id);
+    if (conn) conn.player = { ...conn.player, role };
   }
 
   counts() {

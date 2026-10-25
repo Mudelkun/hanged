@@ -7,13 +7,19 @@
  *   GET /admin               the page
  *   GET /admin/api/versus    switch, live counts, last 7 days, most reported players
  *   PUT /admin/api/versus    { enabled, message, endMatches } → the same
+ *   GET /admin/api/staff?q=  accounts holding a role, the roles, and players matching q (name or id)
+ *   PUT /admin/api/staff/:id { role } (null takes it away) → the same
  * VERSUS_DISABLED=1 forces Versus off whatever the switch says (the page shows it).
+ * Roles (developer accounts, roles.ts) are given only here: this token is the
+ * one thing that can, never a name or anything a device sends.
  */
 import { createHash, timingSafeEqual } from 'node:crypto';
 
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 
 import type { Db } from './db.ts';
+import { type Role, ROLES } from './roles.ts';
+import { findPlayers, setRole, staffList } from './staff.ts';
 import type { VersusStatus } from './versus-contract.ts';
 import type { Hub } from './versus/hub.ts';
 import { adminTotals, writeSwitch } from './versus/store.ts';
@@ -66,7 +72,39 @@ export function adminRoutes(app: FastifyInstance, db: Db, hub: Hub, opts: { toke
       return state();
     },
   );
+
+  const staff = async (q?: string) => ({ roles: ROLES, staff: await staffList(db), found: q ? await findPlayers(db, q) : [] });
+
+  app.get<{ Querystring: { q?: string } }>(
+    '/admin/api/staff',
+    { ...limit, schema: { querystring: { type: 'object', additionalProperties: false, properties: { q: { type: 'string', maxLength: 64 } } } } },
+    async (req, reply) => (allowed(req) ? staff(req.query.q) : reply.code(401).send({ error: 'token' })),
+  );
+
+  app.put<{ Params: { id: string }; Body: { role: Role | null } }>(
+    '/admin/api/staff/:id',
+    {
+      ...limit,
+      schema: {
+        params: { type: 'object', required: ['id'], properties: { id: { type: 'string', pattern: UUID } } },
+        body: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['role'],
+          properties: { role: { anyOf: [{ type: 'string', enum: ROLES }, { type: 'null' }] } },
+        },
+      },
+    },
+    async (req, reply) => {
+      if (!allowed(req)) return reply.code(401).send({ error: 'token' });
+      if (!(await setRole(db, req.params.id, req.body.role))) return reply.code(404).send({ error: 'player' });
+      hub.roleChanged(req.params.id, req.body.role);
+      return staff();
+    },
+  );
 }
+
+const UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
 
 const PAGE = `<!doctype html>
 <html lang="en">
@@ -133,6 +171,15 @@ const PAGE = `<!doctype html>
 
     <h2>Most reported players</h2>
     <table><thead><tr><th>Name</th><th>Id</th><th>Reports</th></tr></thead><tbody id="reported"></tbody></table>
+
+    <h2>Developer accounts</h2>
+    <p class="note">A role unlocks every character, any level, free spending and the developer tools on that phone, and allows the name "Admin". Its rounds never count: it's off the leaderboards, the word statistics and Versus ratings. The phone picks it up on its next sync (open the app, or its Leaderboard).</p>
+    <table><thead><tr><th>Name</th><th>Id</th><th>Role</th><th>Words</th><th></th></tr></thead><tbody id="staff"></tbody></table>
+    <div class="card" style="margin-top:10px">
+      <label for="find">Find a player by name (as it shows on their Profile) or id:</label>
+      <div class="row" style="margin-top:6px"><input id="find" type="text" maxlength="64" style="flex:1"><button id="findGo" class="go">Find</button></div>
+      <table style="margin-top:10px"><thead><tr><th>Name</th><th>Id</th><th>Role</th><th>Words</th><th>Last sync</th><th></th></tr></thead><tbody id="found"></tbody></table>
+    </div>
   </section>
 </main>
 <script>
@@ -141,8 +188,8 @@ const PAGE = `<!doctype html>
   let token = sessionStorage.getItem('adminToken') || '';
   let current = null;
 
-  async function api(method, body) {
-    const res = await fetch('/admin/api/versus', {
+  async function api(method, body, path = '/admin/api/versus') {
+    const res = await fetch(path, {
       method,
       headers: { authorization: 'Bearer ' + token, ...(body && { 'content-type': 'application/json' }) },
       body: body && JSON.stringify(body),
@@ -178,6 +225,7 @@ const PAGE = `<!doctype html>
     try {
       render(await api('GET'));
       $('login').hidden = true; $('panel').hidden = false; $('loginError').hidden = true;
+      findPlayers();
     } catch (e) {
       $('login').hidden = false; $('panel').hidden = true; $('loginError').hidden = !token;
     }
@@ -190,6 +238,37 @@ const PAGE = `<!doctype html>
     catch (e) { alert('Not saved: ' + e.message); }
     finally { $('toggle').disabled = $('save').disabled = false; }
   }
+
+  // ---- developer accounts ----
+  let roles = [];
+  function roleButton(player) {
+    const td = document.createElement('td');
+    const b = document.createElement('button');
+    const next = player.role ? null : roles[0];
+    b.textContent = player.role ? 'Take role away' : 'Make ' + next;
+    b.className = player.role ? '' : 'go';
+    b.onclick = async () => {
+      if (!confirm((player.role ? 'Take the role away from ' : 'Make this account ' + next + ': ') + (player.name || player.id) + '?')) return;
+      try { renderStaff(await api('PUT', { role: next }, '/admin/api/staff/' + player.id)); findPlayers(); }
+      catch (e) { alert('Not saved: ' + e.message); }
+    };
+    td.appendChild(b);
+    return td;
+  }
+  function staffRows(tbody, players, cols) {
+    tbody.replaceChildren(...players.map((p) => { const tr = document.createElement('tr'); cols.forEach((c) => cell(tr, p[c] ?? '—')); tr.appendChild(roleButton(p)); return tr; }));
+  }
+  function renderStaff(s) {
+    roles = s.roles;
+    staffRows($('staff'), s.staff, ['name', 'id', 'role', 'words']);
+    if (s.found.length || $('find').value.trim()) staffRows($('found'), s.found, ['name', 'id', 'role', 'words', 'syncedAt']);
+  }
+  async function findPlayers() {
+    const q = $('find').value.trim();
+    try { renderStaff(await api('GET', undefined, '/admin/api/staff' + (q ? '?q=' + encodeURIComponent(q) : ''))); } catch (e) {}
+  }
+  $('findGo').onclick = findPlayers;
+  $('find').onkeydown = (e) => { if (e.key === 'Enter') findPlayers(); };
 
   $('enter').onclick = () => { token = $('token').value.trim(); sessionStorage.setItem('adminToken', token); load(); };
   $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click(); };

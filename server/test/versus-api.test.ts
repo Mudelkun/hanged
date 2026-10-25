@@ -336,6 +336,24 @@ describe('the switch', () => {
   });
 });
 
+describe('developer accounts', () => {
+  it("a matchmade match with a developer moves nobody's rating, even when the role came while connected", async () => {
+    const [a, b] = [await newPlayer('Ada'), await newPlayer('Bo')];
+    const [la, lb] = [await live(a), await live(b)];
+    await la.next('hello');
+    await lb.next('hello');
+    const grant = await app.inject({ method: 'PUT', url: `/admin/api/staff/${a.id}`, headers: { authorization: `Bearer ${ADMIN}` }, payload: { role: 'admin' } });
+    assert.equal(grant.statusCode, 200);
+    la.send({ t: 'queue', mode: 'rush', language: 'en' });
+    lb.send({ t: 'queue', mode: 'rush', language: 'en' });
+    await la.next('queued');
+    await lb.next('queued');
+    clock.advance(FILL_WAIT_MS);
+    app.hub.tick();
+    assert.equal((await lb.next('match')).match.ranked, false);
+  });
+});
+
 describe('words', () => {
   it('ships an up-to-date copy of data/ (run npm run build:server-words at the repo root after changing the packs)', async () => {
     const packs = ['words.json', 'words/fr.json', 'words/es.json', 'words/de.json'];

@@ -8,11 +8,18 @@
  *   - week: player_weeks: since Monday 00:00 UTC, the highest level played that week
  * The top is the same for everyone, so it's cached for a few seconds; a
  * player's own rank is one indexed count.
+ * Unranked staff accounts (roles.ts, a developer's) are on neither board, and
+ * get no rank. Their rounds never add a weekly row (players.ts sync), and
+ * granting the role drops the ones they had (staff.ts), so a weekly count
+ * needs no filter.
  */
 import { LIMITS, type LeaderboardEntry, type LeaderboardResponse, type Period } from './contract.ts';
 import type { Db } from './db.ts';
+import { UNRANKED_ROLES } from './roles.ts';
 
 const THIS_WEEK = `date_trunc('week', now() AT TIME ZONE 'UTC')::date`;
+/** The player is ranked: no unranked role ($2). Staff rows are few, so it costs a filter on rows the index already found. */
+const RANKED = (t: string) => `coalesce(${t}.role, '') <> ALL($2::text[])`;
 
 /**
  * Each board's order as one row that sorts ascending, best first (the
@@ -26,11 +33,11 @@ const ORDER: Record<Period, (t: string) => string> = {
 
 const TOP: Record<Period, string> = {
   all: `SELECT p.id AS "playerId", p.name, p.character_id AS "characterId", p.words_guessed AS words
-        FROM players p WHERE p.words_guessed > 0
+        FROM players p WHERE p.words_guessed > 0 AND ${RANKED('p')}
         ORDER BY ${ORDER.all('p')} LIMIT $1`,
   week: `SELECT p.id AS "playerId", p.name, p.character_id AS "characterId", w.words
          FROM player_weeks w JOIN players p ON p.id = w.player_id
-         WHERE w.week = ${THIS_WEEK} AND w.words > 0
+         WHERE w.week = ${THIS_WEEK} AND w.words > 0 AND ${RANKED('p')}
          ORDER BY ${ORDER.week('w')} LIMIT $1`,
 };
 
@@ -38,14 +45,15 @@ const TOP: Record<Period, string> = {
 const ME: Record<Period, string> = {
   all: `SELECT p.words_guessed AS words, 1 + (
           SELECT count(*)::int FROM players o
-          WHERE o.words_guessed > 0 AND (${ORDER.all('o')}) < (${ORDER.all('p')})
+          WHERE o.words_guessed > 0 AND ${RANKED('o')} AND (${ORDER.all('o')}) < (${ORDER.all('p')})
         ) AS rank
-        FROM players p WHERE p.id = $1 AND p.words_guessed > 0`,
+        FROM players p WHERE p.id = $1 AND p.words_guessed > 0 AND ${RANKED('p')}`,
   week: `SELECT w.words, 1 + (
            SELECT count(*)::int FROM player_weeks o
            WHERE o.week = w.week AND o.words > 0 AND (${ORDER.week('o')}) < (${ORDER.week('w')})
          ) AS rank
-         FROM player_weeks w WHERE w.player_id = $1 AND w.week = ${THIS_WEEK} AND w.words > 0`,
+         FROM player_weeks w JOIN players p ON p.id = w.player_id
+         WHERE w.player_id = $1 AND w.week = ${THIS_WEEK} AND w.words > 0 AND ${RANKED('p')}`,
 };
 
 export function createLeaderboard(db: Db, ttlMs = 10_000) {
@@ -55,7 +63,7 @@ export function createLeaderboard(db: Db, ttlMs = 10_000) {
     const hit = cache.get(period);
     if (hit && hit.until > Date.now()) return hit.entries;
     const entries = db
-      .query<Omit<LeaderboardEntry, 'rank'>>(TOP[period], [LIMITS.boardSize])
+      .query<Omit<LeaderboardEntry, 'rank'>>(TOP[period], [LIMITS.boardSize, UNRANKED_ROLES])
       .then(({ rows }) => rows.map((r, i) => ({ rank: i + 1, ...r })));
     // Concurrent requests share one query; a failed one isn't kept.
     cache.set(period, { until: Date.now() + ttlMs, entries });
@@ -66,7 +74,7 @@ export function createLeaderboard(db: Db, ttlMs = 10_000) {
   return async function leaderboard(period: Period, me?: string): Promise<LeaderboardResponse> {
     const [entries, mine] = await Promise.all([
       top(period),
-      me ? db.query<{ words: number; rank: number }>(ME[period], [me]) : null,
+      me ? db.query<{ words: number; rank: number }>(ME[period], [me, UNRANKED_ROLES]) : null,
     ]);
     return { period, entries, me: mine?.rows[0] ?? null };
   };

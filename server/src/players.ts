@@ -10,7 +10,8 @@ import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypt
 
 import type { RegisterResponse, RoundReport, SyncRequest, SyncResponse } from './contract.ts';
 import type { Db, Sql } from './db.ts';
-import { checkName, nameKey, nameVariants } from './names.ts';
+import { checkName, isReservedName, nameKey, type NameRules, nameVariants } from './names.ts';
+import { isRole, type Role, roleCan } from './roles.ts';
 
 const hash = (secret: string) => createHash('sha256').update(secret).digest('hex');
 
@@ -54,10 +55,20 @@ export const owns = (row: { secret_hash: string } | undefined, who: Credentials)
   !!row && timingSafeEqual(Buffer.from(row.secret_hash), Buffer.from(hash(who.secret)));
 
 /** The name to keep: one the filter refuses (a modified app) is dropped, and the app shows its default. */
-const allowedName = (name: string | null) => {
-  const check = checkName(name);
+const allowedName = (name: string | null, rules: NameRules) => {
+  const check = checkName(name, rules);
   return check.ok ? check.name : null;
 };
+
+/** What a role allows in a name: only the server's role, never the device's word for it. */
+const nameRules = (role: Role | null): NameRules => ({ reserved: roleCan(role, 'reservedNames') });
+
+/** The player's staff role, or null (a regular player, or unknown). */
+export async function roleOf(db: Sql, id: string): Promise<Role | null> {
+  const { rows } = await db.query<{ role: string | null }>('SELECT role FROM players WHERE id = $1', [id]);
+  const role = rows[0]?.role;
+  return isRole(role) ? role : null;
+}
 
 /** Tried in turn when the name is taken: "Roda2"…"Roda99", then up to four digits. */
 const VARIANT_RANGES = [[2, 99], [100, 9_999]] as const;
@@ -69,10 +80,10 @@ const VARIANT_RANGES = [[2, 99], [100, 9_999]] as const;
  * unique index has the last word: a player taking the same name at the same
  * moment fails this sync, and the retry picks the next variant.
  */
-async function freeName(sql: Sql, playerId: string, wanted: string): Promise<string | null> {
+async function freeName(sql: Sql, playerId: string, wanted: string, rules: NameRules): Promise<string | null> {
   let candidates = [wanted];
   for (const [from, to] of VARIANT_RANGES) {
-    candidates = [...candidates, ...nameVariants(wanted, from, to)].filter((n) => checkName(n).ok);
+    candidates = [...candidates, ...nameVariants(wanted, from, to)].filter((n) => checkName(n, rules).ok);
     const { rows } = await sql.query<{ name_key: string }>(
       'SELECT name_key FROM players WHERE name_key = ANY($1) AND id <> $2',
       [candidates.map(nameKey), playerId],
@@ -85,9 +96,12 @@ async function freeName(sql: Sql, playerId: string, wanted: string): Promise<str
   return null;
 }
 
-/** No one else holds the name (the player's own counts as free), and it passes checkName. */
+/**
+ * No one else holds the name (the player's own counts as free), and it passes
+ * checkName. A reserved name passes only for `me` holding the role for it.
+ */
 export async function nameAvailable(db: Db, raw: string, me?: string): Promise<boolean> {
-  const check = checkName(raw);
+  const check = checkName(raw, me && isReservedName(raw) ? nameRules(await roleOf(db, me)) : {});
   if (!check.ok) return false;
   const { rows } = await db.query('SELECT 1 FROM players WHERE name_key = $1 AND id IS DISTINCT FROM $2::uuid', [
     nameKey(check.name),
@@ -102,25 +116,32 @@ interface PlayerRow {
   words_guessed: number;
   name_key: string | null;
   synced_at: Date | null;
+  role: string | null;
 }
 
 /** null: unknown player or wrong secret. */
 export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest): Promise<SyncResponse | null> {
   return db.tx(async (sql) => {
     const { rows } = await sql.query<PlayerRow>(
-      'SELECT secret_hash, last_seq, words_guessed, name_key, synced_at FROM players WHERE id = $1 FOR UPDATE',
+      'SELECT secret_hash, last_seq, words_guessed, name_key, synced_at, role FROM players WHERE id = $1 FOR UPDATE',
       [who.id],
     );
     const held = rows[0];
     if (!owns(held, who)) return null;
+    const role = isRole(held.role) ? held.role : null;
 
     const fresh = freshReports(reports, held.last_seq);
-    const wins = fresh.filter((r) => r.won).length;
-    const words = nextScore(held.words_guessed, held.synced_at === null, player.wordsGuessed, wins);
     const acked = fresh.length ? fresh[fresh.length - 1].seq : held.last_seq;
-    const wanted = allowedName(player.name);
+    // An unranked account (a developer's) has its rounds acked but never counted: no score, no
+    // weekly row, no word statistics. Its rounds were played with powers nobody else has.
+    const unranked = roleCan(role, 'unranked');
+    const counted = unranked ? [] : fresh;
+    const wins = counted.filter((r) => r.won).length;
+    const words = unranked ? held.words_guessed : nextScore(held.words_guessed, held.synced_at === null, player.wordsGuessed, wins);
+    const rules = nameRules(role);
+    const wanted = allowedName(player.name, rules);
     // Every sync sends the name: only look it up when it isn't already the player's own.
-    const name = wanted && (nameKey(wanted) === held.name_key ? wanted : await freeName(sql, who.id, wanted));
+    const name = wanted && (nameKey(wanted) === held.name_key ? wanted : await freeName(sql, who.id, wanted, rules));
     await sql.query(
       `UPDATE players SET
          name = $2, name_key = $3, character_id = $4, language = $5, level = $6, tokens = $7,
@@ -132,11 +153,11 @@ export function sync(db: Db, who: Credentials, { player, reports }: SyncRequest)
        WHERE id = $1`,
       [
         who.id, name, name && nameKey(name), player.characterId, player.language, player.level, player.tokens, words,
-        fresh.length, wins, sum(fresh, earned), sum(fresh, (r) => r.wrong), acked,
+        counted.length, wins, sum(counted, earned), sum(counted, (r) => r.wrong), acked,
       ],
     );
-    if (fresh.length) await addRounds(sql, who.id, fresh);
-    return { acked, wordsGuessed: words, name };
+    if (counted.length) await addRounds(sql, who.id, counted);
+    return { acked, wordsGuessed: words, name, role };
   });
 }
 

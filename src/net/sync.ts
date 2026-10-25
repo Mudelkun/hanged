@@ -89,6 +89,8 @@ export function createSync(dispatch: (a: GameAction) => void) {
         const res = await api.sync(me, { player, reports });
         acked = res.acked;
         if (player.name && res.name && res.name !== player.name) dispatch({ type: 'nameTaken', sent: player.name, name: res.name });
+        // The role is the server's alone (the admin page): the device only mirrors it. An older server sends none.
+        if ((res.role ?? null) !== s.role) dispatch({ type: 'role', role: res.role ?? null });
       } catch (e) {
         // The server doesn't know this player (e.g. its database was reset): start over next time.
         if (e instanceof ApiError && e.status === 401) await AsyncStorage.removeItem(ACCOUNT_KEY);

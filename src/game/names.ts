@@ -3,9 +3,9 @@
  * (server/src/names.ts), which checks every name again on sync. A new player
  * gets a random friendly name; the Profile page lets them change it.
  */
-import { checkName, NAME_MAX } from '../../server/src/names';
+import { checkName, NAME_MAX, NameRules } from '../../server/src/names';
 
-export { checkName, NAME_MAX, NAME_MIN, type NameCheck, type NameProblem } from '../../server/src/names';
+export { checkName, NAME_MAX, NAME_MIN, type NameCheck, type NameProblem, type NameRules } from '../../server/src/names';
 
 // Words that are never a character's name (Mochi, Bun…), so a name never reads as the character.
 const ADJECTIVES = [
@@ -42,14 +42,14 @@ export const randomName = (rng: () => number = Math.random, language = 'en') => 
 };
 
 /**
- * A saved name the rules no longer take (the limit went from 20 to 15): its
- * first word if that one passes ("Roda The Goat" → "Roda"), else null, and
- * the player gets a random name.
+ * A saved name the rules no longer take (the limit went from 20 to 15, or a
+ * reserved name whose role was taken away): its first word if that one passes
+ * ("Roda The Goat" → "Roda"), else null, and the player gets a random name.
  */
-export function keptName(name: string | null): string | null {
+export function keptName(name: string | null, rules: NameRules = {}): string | null {
   if (name === null) return null;
-  const whole = checkName(name);
+  const whole = checkName(name, rules);
   if (whole.ok) return whole.name;
-  const first = checkName(name.trim().split(/\s+/)[0]);
+  const first = checkName(name.trim().split(/\s+/)[0], rules);
   return first.ok ? first.name : null;
 }

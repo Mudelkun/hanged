@@ -7,6 +7,7 @@
  * The same step queues the round's report for the server (src/net/sync.ts).
  */
 import type { RoundReport } from '../../server/src/contract';
+import { isRole, type Permission, type Role, roleCan } from '../../server/src/roles';
 import {
   CHARACTER_PRICES,
   DEFAULT_CHARACTER,
@@ -18,10 +19,10 @@ import {
   STARTING_TOKENS,
   STREAK_BONUS_AT,
 } from './config';
-import { buyLetters, canBuyLetters, createRound, guess, Round, roundStatus, wrongCount } from './engine';
+import { buyLetters, canBuyLetters, createRound, decoyLetters, guess, hiddenLetters, keyState, Letter, Round, roundStatus, wrongCount } from './engine';
 import { dayNumber, DailyStreak, NO_DAILY_STREAK, playedOn } from './daily';
-import { afterRound, levelByNumber, levelFromScore, LevelProgress, START_LEVEL } from './levels';
-import { checkName, keptName } from './names';
+import { afterRound, levelByNumber, levelFromScore, LevelProgress, LEVELS, onLevel, START_LEVEL } from './levels';
+import { checkName, keptName, NameRules } from './names';
 import { LEGAL_VERSION, LegalAcceptance, STARTER_CHARACTERS } from './onboarding';
 import { isLanguage, Language } from './languages';
 import { pickWord, seenWord, wordById, WordEntry } from './words';
@@ -80,6 +81,12 @@ export interface GameState {
   reports: RoundReport[];
   /** The seq the next report gets: 1, 2, 3… never reused on this device. */
   nextReportSeq: number;
+  /**
+   * The account's staff role (server/src/roles.ts), as the last sync said:
+   * null for every regular player. Only the `role` action sets it. Its powers
+   * bypass a rule where the rule is checked (`can`), never with a second copy of it.
+   */
+  role: Role | null;
 }
 
 /** Reports kept while offline (~90 bytes each). Past it the oldest go: only statistics lose them. */
@@ -111,6 +118,7 @@ export const initialState = (language: string = DEFAULT_LANGUAGE): GameState => 
   lastTokensEarned: 0,
   reports: [],
   nextReportSeq: 1,
+  role: null,
 });
 
 export type GameAction =
@@ -137,7 +145,11 @@ export type GameAction =
   /** The server holds `name` because `sent` was someone else's. Ignored if the player renamed meanwhile. */
   | { type: 'nameTaken'; sent: string; name: string }
   /** The account was deleted: everything starts over, as on a new phone. */
-  | { type: 'reset' };
+  | { type: 'reset' }
+  /** The sync's word on the account's staff role (null: none). */
+  | { type: 'role'; role: Role | null }
+  /** Developer (`anyLevel`): play at this level from now on, starting with a new word there. */
+  | { type: 'jumpToLevel'; level: number; roundId: string; rng?: () => number };
 
 /**
  * Tokens paid by a win at `level` that brings the streak to `streak`: the
@@ -198,19 +210,48 @@ function queueReport(s: GameState, round: Round, won: boolean, tokens: number, a
   return { reports: [...s.reports, report].slice(-REPORTS_KEPT), nextReportSeq: s.nextReportSeq + 1 };
 }
 
+/** The account's role grants `permission` (a developer account: server/src/roles.ts). */
+export const can = (s: GameState, permission: Permission) => roleCan(s.role, permission);
+
+/** What names the player may take: a reserved one ("Admin") only with the role for it. */
+export const nameRules = (s: GameState): NameRules => ({ reserved: can(s, 'reservedNames') });
+
+/** The balance covers `cost`, or spending is free (`unlimitedTokens`). */
+export const canAfford = (s: GameState, cost: number) => can(s, 'unlimitedTokens') || s.tokens >= cost;
+
+/** The balance once `cost` is paid: unchanged when spending is free, so taking the role away leaves a true balance. */
+const afterPaying = (s: GameState, cost: number) => (can(s, 'unlimitedTokens') ? s.tokens : s.tokens - cost);
+
 /** A character's price in tokens (0 = free), or null if it isn't in the shop. */
 export const characterPrice = (id: string): number | null => CHARACTER_PRICES[id] ?? null;
 
-export const ownsCharacter = (s: GameState, id: string) => characterPrice(id) === 0 || s.unlockedCharacterIds.includes(id);
+/** Free, bought, or every character in the shop for a developer (`allCharacters`, new ones included: nothing is saved). */
+export const ownsCharacter = (s: GameState, id: string) => {
+  const price = characterPrice(id);
+  return price === 0 || s.unlockedCharacterIds.includes(id) || (price !== null && can(s, 'allCharacters'));
+};
 
 export const canBuyCharacter = (s: GameState, id: string) => {
   const price = characterPrice(id);
-  return price !== null && !ownsCharacter(s, id) && s.tokens >= price;
+  return price !== null && !ownsCharacter(s, id) && canAfford(s, price);
 };
 
 /** The round's level sells letters and the round can still take them (affordable or not). */
 export const lettersForSale = (s: GameState) =>
   !!s.round && levelByNumber(s.round.level).sellsLetters && canBuyLetters(s.round, LETTER_BUY_COUNT);
+
+/**
+ * Developer (`devTools`): the guesses that end the round won (every hidden
+ * letter) or lost (wrong letters still on the keyboard), for the player to
+ * send as ordinary `guess` actions, so the round ends, scores and moves the
+ * level exactly as a played one. [] without the power or once it's over.
+ */
+export function finishingGuesses(s: GameState, won: boolean): Letter[] {
+  const r = s.round;
+  if (!r || !can(s, 'devTools') || roundStatus(r) !== 'playing') return [];
+  if (won) return hiddenLetters(r);
+  return decoyLetters(r.word, r.language).filter((c) => keyState(r, c) === 'idle').slice(0, r.maxWrong - wrongCount(r));
+}
 
 /**
  * Whether the round just won may ask for a store review: never asked before,
@@ -257,6 +298,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         s = { ...rest, seenWordIds: [...recentWordIds].reverse() };
       }
       s = withDefaults(s);
+      if (s.role !== null && !isRole(s.role)) s = { ...s, role: null };
       if (!isLanguage(s.language)) s = { ...s, language: DEFAULT_LANGUAGE, round: null };
       if (s.round && s.round.language !== s.language) s = { ...s, round: null };
       const paused = Object.entries(s.pausedRounds ?? {});
@@ -292,7 +334,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (characterPrice(s.characterId) === null) s = { ...s, characterId: DEFAULT_CHARACTER };
       else if (!ownsCharacter(s, s.characterId)) s = { ...s, unlockedCharacterIds: [...s.unlockedCharacterIds, s.characterId] };
       // A name the rules no longer take (longer than the limit): keep its first word, or drop it for a random one.
-      const playerName = keptName(s.playerName);
+      const playerName = keptName(s.playerName, nameRules(s));
       if (playerName !== s.playerName) s = { ...s, playerName };
       // Words removed from the database can never be dealt again: forget them.
       const seenWordIds = s.seenWordIds.filter((id) => wordById(id));
@@ -354,16 +396,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'buyLetters': {
       // Buying leaves a letter hidden, so it never wins the round: scoring stays in `guess`.
-      if (!lettersForSale(state) || state.tokens < LETTER_BUY_COST) return state;
+      if (!lettersForSale(state) || !canAfford(state, LETTER_BUY_COST)) return state;
       const round = buyLetters(state.round!, LETTER_BUY_COUNT, action.rng);
-      return { ...state, round, tokens: state.tokens - LETTER_BUY_COST };
+      return { ...state, round, tokens: afterPaying(state, LETTER_BUY_COST) };
     }
 
     case 'buyCharacter': {
       if (!canBuyCharacter(state, action.id)) return state;
       return {
         ...state,
-        tokens: state.tokens - characterPrice(action.id)!,
+        tokens: afterPaying(state, characterPrice(action.id)!),
         unlockedCharacterIds: [...state.unlockedCharacterIds, action.id],
         characterId: action.id,
       };
@@ -380,7 +422,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'completeOnboarding': {
-      const check = checkName(action.name);
+      const check = checkName(action.name, nameRules(state));
       const allowedCharacter = state.onboardingCompleted
         ? action.characterId === state.characterId
         : STARTER_CHARACTERS.some(id => id === action.characterId);
@@ -396,18 +438,39 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'rename': {
-      const check = checkName(action.name);
+      const check = checkName(action.name, nameRules(state));
       return check.ok && check.name !== state.playerName ? { ...state, playerName: check.name, takenName: null } : state;
     }
 
     case 'nameTaken': {
-      const check = checkName(action.name);
+      const check = checkName(action.name, nameRules(state));
       if (!check.ok || state.playerName !== action.sent || check.name === action.sent) return state;
       return { ...state, playerName: check.name, takenName: action.sent };
     }
 
     case 'reset':
       return initialState();
+
+    case 'role': {
+      const role = isRole(action.role) ? action.role : null;
+      if (role === state.role) return state;
+      const s = { ...state, role };
+      // A role taken away takes its powers with it and leaves nothing behind: a character only
+      // it owned goes back to the default (never into unlockedCharacterIds), and a reserved name
+      // goes (the provider gives a random one). Bought characters and the balance stay as they were.
+      const characterId = ownsCharacter(s, s.characterId) ? s.characterId : DEFAULT_CHARACTER;
+      const playerName = keptName(s.playerName, nameRules(s));
+      if (characterId === s.characterId && playerName === s.playerName) return s;
+      return { ...s, characterId, playerName, takenName: playerName === s.playerName ? s.takenName : null };
+    }
+
+    case 'jumpToLevel': {
+      // The round in progress is dropped, not lost: no report, no streak or daily change. The
+      // level moves the way a level change does (onLevel), so the save stays one the game could reach.
+      if (!can(state, 'anyLevel') || !Number.isInteger(action.level) || action.level < 1 || action.level > LEVELS.length) return state;
+      const moved = { ...state, levelProgress: onLevel(action.level), bestLevel: Math.max(state.bestLevel, action.level) };
+      return gameReducer(moved, { type: 'newRound', word: nextWord(moved, action.rng), roundId: action.roundId, rng: action.rng });
+    }
   }
 }
 

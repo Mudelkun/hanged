@@ -19,7 +19,7 @@ import { PayButton, useRefusal } from '../../components/PayButton';
 import { BigButton } from '../../components/RoundParts';
 import { TabBar } from '../../components/TabBar';
 import { feedback } from '../../feedback';
-import { canBuyCharacter, characterPrice, ownsCharacter } from '../../game/progress';
+import { canAfford, canBuyCharacter, characterPrice, ownsCharacter } from '../../game/progress';
 import { useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { colors } from '../../theme';
@@ -107,7 +107,7 @@ export default function CharactersScreen() {
               big
               label={t('chars.unlock', { name: viewed.name, price })}
               a11yLabel={t('chars.a11y.unlock', { name: viewed.name, price })}
-              canAfford={state.tokens >= price}
+              canAfford={canAfford(state, price)}
               onPay={onBuy}
               onRefuse={onRefuse}
             />

@@ -25,6 +25,11 @@ export const NAME_SENT_MAX = 64;
 export type NameProblem = 'short' | 'long' | 'characters' | 'blocked' | 'taken';
 export type NameCheck = { ok: true; name: string } | { ok: false; problem: NameProblem };
 
+export interface NameRules {
+  /** The account may take a reserved name (roles.ts `reservedNames`: only the server grants it). */
+  reserved?: boolean;
+}
+
 /** Trimmed, single-spaced, no control or invisible characters; empty → null. */
 export function cleanName(name: string | null): string | null {
   const clean = name?.replace(/\p{C}/gu, '').replace(/\s+/g, ' ').trim();
@@ -93,6 +98,16 @@ export function isBlocked(name: string): boolean {
  */
 export const nameKey = (name: string) => plain(name).toLowerCase().replace(/[\s_.'’-]+/g, '');
 
+/**
+ * Names only a staff account may take (roles.ts `reservedNames`), however
+ * they're spelled (nameKey): "ADMIN" and "a.d.m.i.n" are "Admin". The filter
+ * blocks them for everyone else (EXTRA_WORDS), and names are unique, so one
+ * account holds each.
+ */
+export const RESERVED_NAMES = ['Admin'] as const;
+const RESERVED_KEYS = new Set<string>(RESERVED_NAMES.map(nameKey));
+export const isReservedName = (name: string) => RESERVED_KEYS.has(nameKey(name));
+
 /** "Roda2", "Roda3"… for numbers from..to, the name cut so each fits NAME_MAX: what a taken name falls back to. */
 export function nameVariants(name: string, from: number, to: number): string[] {
   const letters = [...name];
@@ -103,12 +118,12 @@ export function nameVariants(name: string, from: number, to: number): string[] {
 }
 
 /** The name as it will be saved, or why it can't be. */
-export function checkName(raw: string | null): NameCheck {
+export function checkName(raw: string | null, rules: NameRules = {}): NameCheck {
   const name = cleanName(raw);
   const length = name ? [...name].length : 0;
   if (!name || length < NAME_MIN) return { ok: false, problem: 'short' };
   if (length > NAME_MAX) return { ok: false, problem: 'long' };
   if (!ALLOWED.test(name) || !A_LETTER.test(name)) return { ok: false, problem: 'characters' };
-  if (isBlocked(name)) return { ok: false, problem: 'blocked' };
+  if (isBlocked(name) && !(rules.reserved && isReservedName(name))) return { ok: false, problem: 'blocked' };
   return { ok: true, name };
 }

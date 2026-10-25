@@ -14,7 +14,7 @@ import { feedback } from '../feedback';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
 import { DailyStatus } from '../game/daily';
-import { checkName, randomName } from '../game/names';
+import { checkName, NameRules, randomName } from '../game/names';
 import { useTranslation } from '../i18n';
 import { characterTint, colors, fonts, levelColor } from '../theme';
 import { speciesOf } from './CharacterShop';
@@ -38,6 +38,8 @@ interface NameCardProps {
   /** GameContext's nameIsFree: names are unique. */
   isNameFree: (name: string) => Promise<boolean>;
   onChangeCharacter: () => void;
+  /** progress.nameRules: a developer account may take a reserved name. */
+  rules?: NameRules;
 }
 
 /**
@@ -46,7 +48,7 @@ interface NameCardProps {
  * random name, Cancel and Save. A problem shows as the player types, except
  * "too short", which waits for Save (every name is too short at first).
  */
-export function NameCard({ name, takenName, character, onRename, isNameFree, onChangeCharacter }: NameCardProps) {
+export function NameCard({ name, takenName, character, onRename, isNameFree, onChangeCharacter, rules }: NameCardProps) {
   const t = useTranslation();
   const [draft, setDraft] = useState<string | null>(null);
   const [triedSave, setTriedSave] = useState(false);
@@ -62,7 +64,7 @@ export function NameCard({ name, takenName, character, onRename, isNameFree, onC
   }, [saved]);
 
   const editing = draft !== null;
-  const check = editing ? checkName(draft) : null;
+  const check = editing ? checkName(draft, rules) : null;
   const problem = check && nameProblem(check, triedSave, availability.taken);
 
   const startEdit = () => {

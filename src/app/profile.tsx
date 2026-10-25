@@ -4,7 +4,8 @@
  * only thing they edit here), their character, stats, settings, the info and
  * legal pages, and account deletion (App Store Guideline 5.1.1(v)).
  * The avatar is the character. Music and effects now have separate saved switches,
- * and the daily reminder its own (useDaily.ts).
+ * and the daily reminder its own (useDaily.ts). A developer account also gets the
+ * Developer group (DevTools.tsx, dev-accounts.md).
  */
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -14,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import appConfig from '../../app.json';
 import { characterById } from '../characters/rig';
 import { sound } from '../audio';
+import { DevToolsGroup } from '../components/DevTools';
 import { BackHeader } from '../components/GameHeader';
 import { profileIconXml } from '../components/icons';
 import { INFO_PAGES, InfoPage } from '../components/InfoPages';
@@ -21,6 +23,7 @@ import { PaperBackground } from '../components/PaperBackground';
 import { LanguageSheet } from '../components/LanguagePicker';
 import { dailyDays, dailyStatus } from '../game/daily';
 import { LANGUAGES } from '../game/languages';
+import { can, nameRules } from '../game/progress';
 import { DailyCard, DeleteSheet, ListGroup, ListItem, NameCard, ProfileFooter, StatTiles } from '../components/Profile';
 import { remindersSupported } from '../notify/reminders';
 import { Translator, useTranslation } from '../i18n';
@@ -88,11 +91,13 @@ export default function ProfileScreen() {
           character={character}
           onRename={(name) => dispatch({ type: 'rename', name })}
           isNameFree={nameIsFree}
+          rules={nameRules(state)}
           onChangeCharacter={() => { sound.play('tab'); router.dismissTo('/characters'); }}
         />
         <StatTiles words={state.wordsGuessed} tokens={state.tokens} level={state.levelProgress.level} />
         <DailyCard days={dailyDays(state.daily, today)} best={state.daily.best} status={dailyStatus(state.daily, today)} />
         <ListGroup title={t('profile.settings')} items={settings} />
+        {can(state, 'devTools') && <DevToolsGroup />}
         <ListGroup title={t('profile.info')} items={infoItems(t)} />
         <ProfileFooter version={appConfig.expo.version} onDelete={() => { sound.play('delete-open'); setDeleting(true); }} />
       </ScrollView>

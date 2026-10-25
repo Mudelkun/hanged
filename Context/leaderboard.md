@@ -24,6 +24,8 @@ every player is a row, and the player's own row is the one that stands out.
   count: it's only a tiebreak. Reports queued by an app from before 2026-10-23 have no `tokens` and count 0.
 - Each order is one ascending row (`ORDER` in [leaderboard.ts](../server/src/leaderboard.ts), descending
   columns negated) that migration 003 indexes as is, so the top 50 and a player's rank both read the index.
+- **Developer accounts** (unranked roles) are on neither board and have no rank; their Leaderboard says so
+  ([dev-accounts.md](dev-accounts.md)).
 - The **server** ranks; the device only sends its data. A player shows up once they have one word in the
   period.
 

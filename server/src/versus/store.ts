@@ -9,6 +9,7 @@ import { randomBytes } from 'node:crypto';
 import type { Db, Sql } from '../db.ts';
 import { nameKey } from '../names.ts';
 import { type Credentials, owns } from '../players.ts';
+import { isRole, type Role } from '../roles.ts';
 import {
   type FriendsResponse,
   LOBBY_CODE_ALPHABET,
@@ -23,19 +24,22 @@ import {
   type VersusStatus,
 } from '../versus-contract.ts';
 
-export interface VersusPlayer extends PlayerCard, VersusStats {}
+export interface VersusPlayer extends PlayerCard, VersusStats {
+  /** Staff role (roles.ts): an unranked one makes a matchmade match unrated for everyone in it. */
+  role: Role | null;
+}
 
 /** The player behind the credentials, or null (unknown, wrong secret). */
 export async function versusPlayer(db: Sql, who: Credentials): Promise<VersusPlayer | null> {
-  const { rows } = await db.query<VersusPlayer & { secret_hash: string }>(
+  const { rows } = await db.query<Omit<VersusPlayer, 'role'> & { secret_hash: string; role: string | null }>(
     `SELECT secret_hash, id, name, character_id AS "characterId",
-            versus_rating AS rating, versus_played AS played, versus_won AS won
+            versus_rating AS rating, versus_played AS played, versus_won AS won, role
      FROM players WHERE id = $1`,
     [who.id],
   );
   if (!owns(rows[0], who)) return null;
-  const { secret_hash: _, ...player } = rows[0];
-  return player;
+  const { secret_hash: _, role, ...player } = rows[0];
+  return { ...player, role: isRole(role) ? role : null };
 }
 
 export async function stats(db: Sql, id: string): Promise<VersusStats> {
@@ -85,7 +89,7 @@ export async function friendsOf(db: Sql, id: string, presence: (id: string) => P
   };
 }
 
-const likeEscape = (s: string) => s.replace(/[\\%_]/g, '\\$&');
+export const likeEscape = (s: string) => s.replace(/[\\%_]/g, '\\$&');
 
 /** Players whose name starts with `q` (case, accents and punctuation aside), not blocked either way. */
 export async function search(db: Sql, me: string, q: string): Promise<SearchResponse> {

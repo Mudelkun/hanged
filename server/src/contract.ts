@@ -1,8 +1,10 @@
 /*
  * The API between the app and the server, in one place. Plain types and
- * constants, no imports: the app imports this file too (src/net/), so keep
- * it free of server code. The routes' JSON schemas (app.ts) enforce it.
+ * constants; its only import is a type from roles.ts (shared too): the app
+ * imports this file (src/net/), so keep it free of server code. The routes'
+ * JSON schemas (app.ts) enforce it.
  */
+import type { Role } from './roles.ts';
 
 export type Period = 'week' | 'all';
 
@@ -63,6 +65,11 @@ export interface SyncResponse {
    * filter refused it (the app keeps its own and boards show the default).
    */
   name: string | null;
+  /**
+   * The account's staff role (roles.ts), set only from the admin page; null
+   * for every regular player. The app turns its developer powers on from it.
+   */
+  role: Role | null;
 }
 
 /** GET /v1/names/available: nobody else holds this name (nameKey), and it passes checkName. */

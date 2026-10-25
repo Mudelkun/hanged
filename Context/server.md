@@ -16,7 +16,7 @@ nature; it has its own context file: [versus.md](versus.md). Nothing below chang
 - Code: [server/](../server/), its own package (Node 24, Fastify 5, `pg`). Railway deploys that folder.
 - API contract: [server/src/contract.ts](../server/src/contract.ts), the one place for the request and
   response types and the limits (Versus's: [versus-contract.ts](../server/src/versus-contract.ts)).
-  Also shared with the app: `names.ts`, and the round rules `engine.ts`, `languages.ts`, `rules.ts`. The app imports it (`src/net/`, `src/game/progress.ts`), so it must stay
+  Also shared with the app: `names.ts`, `roles.ts`, and the round rules `engine.ts`, `languages.ts`, `rules.ts`. The app imports it (`src/net/`, `src/game/progress.ts`), so it must stay
   plain types and constants with **no imports**.
 - App side: [src/net/api.ts](../src/net/api.ts) (the only module that calls the server) and
   [src/net/sync.ts](../src/net/sync.ts) (the sync runner).
@@ -28,7 +28,7 @@ nature; it has its own context file: [versus.md](versus.md). Nothing below chang
 | | |
 |---|---|
 | `POST /v1/players` | New anonymous player → `{ id, secret }`. Rate limit: 20 per hour per IP. |
-| `POST /v1/sync` | `Authorization: Bearer <id>:<secret>`. Body: the player snapshot + up to 200 round reports. → `{ acked, wordsGuessed, name }` |
+| `POST /v1/sync` | `Authorization: Bearer <id>:<secret>`. Body: the player snapshot + up to 200 round reports. → `{ acked, wordsGuessed, name, role }` |
 | `DELETE /v1/players/me` | Same auth. Deletes the player (App Store Guideline 5.1.1(v)) → `204`, or `401` if unknown. |
 | `GET /v1/leaderboard?period=week\|all&me=<id>` | Top 50 + the asking player's rank. No auth: ranks are public. |
 | `GET /v1/names/available?name=<name>&me=<id>` | `{ available }`: no one else holds the name (the asker's own counts as free). No auth: names are public on the boards. |
@@ -36,6 +36,7 @@ nature; it has its own context file: [versus.md](versus.md). Nothing below chang
 | `GET /v1/live`, `/v1/versus/status`, `/v1/friends…`, `/v1/players/search`, `/v1/blocks/:id`, `/v1/players/:id/report`, `/v1/invites…` | Versus: [versus.md](versus.md). |
 | `GET /i/:code`, `/.well-known/apple-app-site-association`, `/.well-known/assetlinks.json` | Friend invite links: the page, and the files that let phones open the app ([versus.md](versus.md), Invite links). |
 | `GET /admin`, `GET|PUT /admin/api/versus` | The admin page and Versus's switch. Only with `ADMIN_TOKEN` set. |
+| `GET /admin/api/staff?q=`, `PUT /admin/api/staff/:id` | Developer accounts: find a player, give or take a role ([dev-accounts.md](dev-accounts.md)). Same token. |
 
 Every body and query is validated by a JSON schema in [app.ts](../server/src/app.ts) before a
 handler runs. CORS (only the web preview needs it) allows GET, POST and DELETE: `@fastify/cors` allows only
@@ -104,6 +105,10 @@ The server, in **one transaction** that locks the player's row (`FOR UPDATE`):
 5. Adds every report to `word_days`. Rows are written in key order so two syncs can't deadlock on the
    same words.
 
+An **unranked** account (a developer's, [dev-accounts.md](dev-accounts.md)) skips steps 2, 4 and 5 and the
+counters of step 3: its reports are acked and dropped. The response's `role` is the account's role, which
+only the admin page sets; the app mirrors it (the reducer's `role` action).
+
 The outbox keeps at most `REPORTS_KEPT` (2000) reports and drops the oldest. A player that far behind
 loses those rounds from the statistics, and also their wins from the score cap above. That needs
 2000 rounds without a single sync.
@@ -115,7 +120,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 
 | Table | |
 |---|---|
-| `players` | id, secret hash, name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
+| `players` | id, secret hash, `role` (null, or a staff role: [dev-accounts.md](dev-accounts.md)), name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
 | `player_weeks` | `(player_id, week)` → words guessed, highest level played, tokens earned and misses that week |
 | `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs, filled by the server itself (below), to show words in the statistics, and since migration 004 with each word's description, subject, rarity and difficulty, because **Versus deals its words from it**. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
@@ -182,7 +187,7 @@ is an indexed count, which is O(rank). Cache it if it ever shows up in the metri
 - Keep the app's checks and the server's schemas in step with `LIMITS` in `contract.ts`.
 - `POST /v1/players` allows 20 an hour per IP; the tests build the app with `newPlayersPerHour` raised,
   since they make more players than that.
-- **Shared files** (`contract.ts`, `versus-contract.ts`, `names.ts`, `engine.ts`, `languages.ts`, `rules.ts`) import
+- **Shared files** (`contract.ts`, `versus-contract.ts`, `names.ts`, `roles.ts`, `engine.ts`, `languages.ts`, `rules.ts`) import
   only each other, with `.ts` extensions (Node needs them; the app's tsconfig allows them).
 - **`names.ts` is shared like `contract.ts`**: the app imports it, so its only import is the `obscenity`
   filter, which is in **both** `package.json` files (Metro can't see `server/node_modules`, so the app

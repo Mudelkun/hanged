@@ -126,9 +126,16 @@ export function PillButton({ label, onPress, color = colors.coral, shadow = colo
           pressed={pressed}
           shadowColor={ghost ? colors.shadow : shadow}
           radius={small ? 13 : 16}
+          outerStyle={styles.pillFill}
           style={[styles.pill, small && styles.pillSmall, ghost ? styles.pillGhost : { backgroundColor: color }]}
         >
-          <Text style={[styles.pillText, small && styles.pillTextSmall, ghost && { color: shadow === colors.coralD ? colors.coralD : shadow }]} numberOfLines={1}>
+          {/* Labels run longer in other languages: wrap to a second line, then shrink, never cut off. */}
+          <Text
+            style={[styles.pillText, small && styles.pillTextSmall, ghost && { color: shadow === colors.coralD ? colors.coralD : shadow }]}
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}
+          >
             {label}
           </Text>
         </Raised>
@@ -242,10 +249,12 @@ const styles = StyleSheet.create({
   chip: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'center', borderRadius: 12, paddingVertical: 3, paddingLeft: 6, paddingRight: 10 },
   chipText: display('600', 13.5),
   disabled: { opacity: 0.45 },
-  pill: { minHeight: 46, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center' },
-  pillSmall: { minHeight: 34, paddingHorizontal: 11 },
+  // flexGrow: buttons side by side in a row keep one height when one label wraps.
+  pillFill: { flexGrow: 1 },
+  pill: { flexGrow: 1, minHeight: 46, paddingHorizontal: 14, paddingVertical: 5, alignItems: 'center', justifyContent: 'center' },
+  pillSmall: { minHeight: 34, paddingHorizontal: 11, paddingVertical: 3 },
   pillGhost: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line },
-  pillText: display('600', 16.5, '#fff'),
+  pillText: { ...display('600', 16.5, '#fff'), textAlign: 'center' },
   pillTextSmall: { fontSize: 14 },
 
   backdrop: { flex: 1, backgroundColor: 'rgba(75,58,53,0.45)', alignItems: 'center', justifyContent: 'center', padding: 20 },

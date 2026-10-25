@@ -17,7 +17,7 @@ import { sound } from '../../audio';
 import { BoardNote, CROWN_RISE, FindMe, PeriodSwitch, Ranked, RankRow, rowSpan } from '../../components/Leaderboard';
 import { PaperBackground } from '../../components/PaperBackground';
 import { TabBar } from '../../components/TabBar';
-import { GameState } from '../../game/progress';
+import { can, GameState } from '../../game/progress';
 import { Translator, useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { Board, useLeaderboard } from '../../state/useLeaderboard';
@@ -57,6 +57,8 @@ const keyOf = (e: Ranked) => (e.pinned ? 'me' : String(e.rank));
 export default function LeaderboardScreen() {
   const t = useTranslation();
   const { state } = useGame();
+  // A developer account is on no board (dev-accounts.md): its notes say so instead.
+  const unranked = can(state, 'unranked');
   const insets = useSafeAreaInsets();
   const compact = useWindowDimensions().height < 760;
   const [period, setPeriod] = useState<Period>('week');
@@ -112,8 +114,9 @@ export default function LeaderboardScreen() {
               getItemLayout={getItemLayout}
               onViewableItemsChanged={onViewable}
               viewabilityConfig={VIEWABILITY}
-              ListEmptyComponent={<BoardNote body={t(period === 'week' ? 'board.empty.week' : 'board.empty.all')} />}
-              ListFooterComponent={!board?.me && ranked.rows.length ? <BoardNote body={t('board.notRanked')} /> : undefined}
+              ListEmptyComponent={<BoardNote body={t(unranked ? 'board.unranked' : period === 'week' ? 'board.empty.week' : 'board.empty.all')} />}
+              ListFooterComponent={!ranked.rows.length ? undefined : unranked ? <BoardNote body={t('board.unranked')} />
+                : !board?.me ? <BoardNote body={t('board.notRanked')} /> : undefined}
               contentContainerStyle={styles.list}
               showsVerticalScrollIndicator={false}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.coral} />}

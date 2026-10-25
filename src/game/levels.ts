@@ -86,7 +86,8 @@ export interface LevelProgress {
   losses: number;
 }
 
-const onLevel = (level: number): LevelProgress => ({ level, wins: 0, rounds: 0, losses: 0 });
+/** A fresh start on `level`: every count at 0, as after a level change. */
+export const onLevel = (level: number): LevelProgress => ({ level, wins: 0, rounds: 0, losses: 0 });
 
 export const START_LEVEL: LevelProgress = onLevel(1);
 

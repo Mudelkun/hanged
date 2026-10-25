@@ -76,7 +76,7 @@ describe('sync', () => {
     for (let i = 0; i < 2; i++) {
       const res = await sync(p, snapshot({ language: 'de', wordsGuessed: 4 }), reports);
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.json<SyncResponse>(), { acked: 4, wordsGuessed: 4, name: 'Roda' });
+      assert.deepEqual(res.json<SyncResponse>(), { acked: 4, wordsGuessed: 4, name: 'Roda', role: null });
     }
     const { rows } = await db.query<{ word_id: string; played: number }>('SELECT word_id, played FROM word_days ORDER BY word_id');
     assert.equal(rows.length, 4);
@@ -92,7 +92,7 @@ describe('sync', () => {
     assert.equal((await sync(p, snapshot({ wordsGuessed: 40 }))).json<SyncResponse>().wordsGuessed, 40);
     // claims 1000 with one reported win: only the win counts
     const res = (await sync(p, snapshot({ wordsGuessed: 1000 }), [report(1)])).json<SyncResponse>();
-    assert.deepEqual(res, { acked: 1, wordsGuessed: 41, name: 'Roda' });
+    assert.deepEqual(res, { acked: 1, wordsGuessed: 41, name: 'Roda', role: null });
   });
 
   it('counts a report once, even when sent again', async () => {
@@ -100,7 +100,7 @@ describe('sync', () => {
     await sync(p, snapshot());
     await sync(p, snapshot({ wordsGuessed: 2 }), [report(1), report(2, { won: false })]);
     const again = (await sync(p, snapshot({ wordsGuessed: 2 }), [report(1), report(2, { won: false }), report(3)])).json<SyncResponse>();
-    assert.deepEqual(again, { acked: 3, wordsGuessed: 2, name: 'Roda' });
+    assert.deepEqual(again, { acked: 3, wordsGuessed: 2, name: 'Roda', role: null });
     const { rows } = await db.query<{ played: number; won: number }>(`SELECT played, won FROM word_stats WHERE word_id = 'en-castle'`);
     assert.deepEqual(rows, [{ played: 3, won: 2 }]);
   });

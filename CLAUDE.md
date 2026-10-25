@@ -48,6 +48,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
 | The daily streak and the daily reminder (local notifications): what counts a day, the reminder plan, asking for permission; the store review prompt (when it asks, once ever) | [Context/retention.md](Context/retention.md) |
 | Versus (online multiplayer): the modes, the live socket, friends and **invite links**, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
+| Developer accounts: staff roles and their permissions (all characters, any level, free spending, dev tools, the reserved name "Admin"), granting them from the admin page, keeping them off the boards and Versus ratings | [Context/dev-accounts.md](Context/dev-accounts.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
@@ -66,7 +67,7 @@ src/components/     UI pieces of the screens
 src/i18n/           all UI text (en.json)
 src/theme/          palette and fonts from the mockup
 data/words.json     the word database (built by scripts/check-words.js: hand-written words + generated from the dictionaries)
-server/             the API (its own package, deployed on Railway). Shared with the app: src/contract.ts, versus-contract.ts, names.ts,
+server/             the API (its own package, deployed on Railway). Shared with the app: src/contract.ts, versus-contract.ts, names.ts, roles.ts,
                     and the round rules engine.ts, languages.ts, rules.ts (src/game/engine.ts and languages.ts re-export them)
 ```
 
