@@ -14,18 +14,39 @@
  *   DELETE /v1/friends/:id
  *   PUT    /v1/blocks/:id   DELETE /v1/blocks/:id
  *   POST   /v1/players/:id/report    {reason}
+ *   POST   /v1/invites                           my invite link's code (links.ts serves the link itself)
+ *   GET    /v1/invites/:code                     whose link it is (public: names are public)
+ *   POST   /v1/invites/:code/accept              friends at once with the link's owner
  */
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import type { Db } from '../db.ts';
 import { credentials } from '../players.ts';
-import type { ReportReason, RequestResponse } from '../versus-contract.ts';
+import { type InviteAcceptResponse, type InviteResponse, LOBBY_CODE_ALPHABET, type ReportReason, type RequestResponse, VERSUS_LIMITS } from '../versus-contract.ts';
 import type { Hub } from './hub.ts';
-import { acceptRequest, authorized, block, deleteRequest, friendsOf, removeFriend, report, search, sendRequest, unblock } from './store.ts';
+import {
+  acceptInvite,
+  acceptRequest,
+  authorized,
+  block,
+  deleteRequest,
+  friendsOf,
+  inviteCode,
+  inviter,
+  removeFriend,
+  report,
+  search,
+  sendRequest,
+  unblock,
+} from './store.ts';
 
 const UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
 const idParams = { type: 'object', required: ['id'], properties: { id: { type: 'string', pattern: UUID } } };
 type IdParams = { Params: { id: string } };
+/** An invite code, as the app sends it (upper case). */
+export const INVITE_CODE = `^[${LOBBY_CODE_ALPHABET}]{${VERSUS_LIMITS.inviteCodeLength}}$`;
+const codeParams = { type: 'object', required: ['code'], properties: { code: { type: 'string', pattern: INVITE_CODE } } };
+type CodeParams = { Params: { code: string } };
 
 export function versusRoutes(app: FastifyInstance, db: Db, hub: Hub) {
   app.get('/v1/live', { websocket: true }, (socket) => hub.attach(socket));
@@ -135,6 +156,37 @@ export function versusRoutes(app: FastifyInstance, db: Db, hub: Hub) {
       if (!id) return;
       if (req.params.id === id) return reply.code(400).send({ error: 'self' });
       return (await report(db, id, req.params.id, req.body.reason)) ? reply.code(204).send() : reply.code(404).send({ error: 'unknown player' });
+    },
+  );
+
+  app.post('/v1/invites', async (req, reply) => {
+    const id = await me(req, reply);
+    if (!id) return;
+    const code = await inviteCode(db, id);
+    return code ? ({ code } satisfies InviteResponse) : reply.code(401).send({ error: 'unknown player' });
+  });
+
+  app.get<CodeParams>(
+    '/v1/invites/:code',
+    { config: { rateLimit: { max: 30, timeWindow: '1 minute' } }, schema: { params: codeParams } },
+    async (req, reply) => (await inviter(db, req.params.code)) ?? reply.code(404).send({ error: 'unknown invite' }),
+  );
+
+  app.post<CodeParams>(
+    '/v1/invites/:code/accept',
+    { config: { rateLimit: { max: 30, timeWindow: '1 minute' } }, schema: { params: codeParams } },
+    async (req, reply) => {
+      const id = await me(req, reply);
+      if (!id) return;
+      const outcome = await acceptInvite(db, id, req.params.code);
+      if (outcome === 'notFound') return reply.code(404).send({ error: 'unknown invite' });
+      if (outcome === 'self') return reply.code(400).send({ error: 'self' });
+      if (outcome === 'limit') return reply.code(409).send({ error: 'limit' });
+      if (outcome.added) {
+        hub.friendsChanged(id, outcome.host.id, true);
+        hub.send(outcome.host.id, { t: 'friendAdded', by: outcome.guest });
+      }
+      return { status: outcome.status, player: outcome.host } satisfies InviteAcceptResponse;
     },
   );
 }

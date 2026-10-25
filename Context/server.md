@@ -33,7 +33,8 @@ nature; it has its own context file: [versus.md](versus.md). Nothing below chang
 | `GET /v1/leaderboard?period=week\|all&me=<id>` | Top 50 + the asking player's rank. No auth: ranks are public. |
 | `GET /v1/names/available?name=<name>&me=<id>` | `{ available }`: no one else holds the name (the asker's own counts as free). No auth: names are public on the boards. |
 | `GET /health` | `SELECT 1`, for Railway. |
-| `GET /v1/live`, `/v1/versus/status`, `/v1/friends…`, `/v1/players/search`, `/v1/blocks/:id`, `/v1/players/:id/report` | Versus: [versus.md](versus.md). |
+| `GET /v1/live`, `/v1/versus/status`, `/v1/friends…`, `/v1/players/search`, `/v1/blocks/:id`, `/v1/players/:id/report`, `/v1/invites…` | Versus: [versus.md](versus.md). |
+| `GET /i/:code`, `/.well-known/apple-app-site-association`, `/.well-known/assetlinks.json` | Friend invite links: the page, and the files that let phones open the app ([versus.md](versus.md), Invite links). |
 | `GET /admin`, `GET|PUT /admin/api/versus` | The admin page and Versus's switch. Only with `ADMIN_TOKEN` set. |
 
 Every body and query is validated by a JSON schema in [app.ts](../server/src/app.ts) before a
@@ -158,7 +159,9 @@ Expo Go on a phone can't reach `localhost`: use the computer's LAN address, or t
    it after migration 004 left Versus with no words: "isn't ready in this language". The script still exists.)
    Versus variables: `ADMIN_TOKEN` (24+ characters: the `/admin` page and its switch exist only with it),
    `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
-   redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`).
+   redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`). Invite links: `APPLE_APP_ID`, `APP_STORE_ID`,
+   `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256` ([versus.md](versus.md), Invite links). The links use this domain,
+   so moving to a custom domain later needs a new app build (`app.config.ts` reads it from `EXPO_PUBLIC_API_URL`).
 5. Put the domain in the app: `EXPO_PUBLIC_API_URL=https://<domain>` (an `.env` file at the repo root
    works with Expo; `.env*.local` is gitignored).
 

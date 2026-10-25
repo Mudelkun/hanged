@@ -1,14 +1,17 @@
 /*
- * What Versus keeps in the database: friends, friend requests, blocks,
- * reports, each player's rating and match counts, matches per day, and the
+ * What Versus keeps in the database: friends, friend requests, invite
+ * codes, blocks, reports, each player's rating and match counts, matches per day, and the
  * on/off switch. A match itself is never written while it's played: its
  * outcome is one transaction when it ends (saveResult).
  */
+import { randomBytes } from 'node:crypto';
+
 import type { Db, Sql } from '../db.ts';
 import { nameKey } from '../names.ts';
 import { type Credentials, owns } from '../players.ts';
 import {
   type FriendsResponse,
+  LOBBY_CODE_ALPHABET,
   type MatchResult,
   type PlayerCard,
   type Presence,
@@ -114,6 +117,20 @@ const blockedEitherWay = async (sql: Sql, a: string, b: string) =>
 
 const count = async (sql: Sql, text: string, id: string) => (await sql.query<{ n: number }>(text, [id])).rows[0].n;
 const friendCount = (sql: Sql, id: string) => count(sql, 'SELECT count(*)::int AS n FROM friends WHERE player_id = $1', id);
+/** Either friends list is at its cap. */
+const full = async (sql: Sql, a: string, b: string) =>
+  (await friendCount(sql, a)) >= VERSUS_LIMITS.friendsMax || (await friendCount(sql, b)) >= VERSUS_LIMITS.friendsMax;
+const areFriends = async (sql: Sql, a: string, b: string) =>
+  (await sql.query('SELECT 1 FROM friends WHERE player_id = $1 AND friend_id = $2', [a, b])).rows.length > 0;
+
+/** Locks both players' rows, in id order so two players acting on each other at once can't deadlock. Their cards, the ones that exist. */
+async function lockPair(sql: Sql, a: string, b: string): Promise<PlayerCard[]> {
+  const { rows } = await sql.query<PlayerCard>(
+    `SELECT id, name, character_id AS "characterId" FROM players WHERE id = ANY($1) ORDER BY id FOR UPDATE`,
+    [[a, b]],
+  );
+  return rows;
+}
 
 async function befriend(sql: Sql, a: string, b: string) {
   await sql.query(
@@ -128,19 +145,15 @@ export type RequestOutcome = 'sent' | 'friends' | 'notFound' | 'limit';
 /**
  * Asks `to` to be friends. If they had already asked, it's mutual: friends now.
  * A block (either way) answers 'sent' and does nothing, so a block isn't revealed.
- * Rows are locked in id order, so two players asking each other at once can't deadlock.
  */
 export function sendRequest(db: Db, from: string, to: string): Promise<RequestOutcome> {
   return db.tx(async (sql) => {
-    const { rows } = await sql.query<{ id: string }>('SELECT id FROM players WHERE id = ANY($1) ORDER BY id FOR UPDATE', [[from, to]]);
-    if (rows.length < 2) return 'notFound';
+    if ((await lockPair(sql, from, to)).length < 2) return 'notFound';
     if (await blockedEitherWay(sql, from, to)) return 'sent';
-    const already = await sql.query('SELECT 1 FROM friends WHERE player_id = $1 AND friend_id = $2', [from, to]);
-    if (already.rows.length) return 'friends';
+    if (await areFriends(sql, from, to)) return 'friends';
     const theyAsked = await sql.query('SELECT 1 FROM friend_requests WHERE from_id = $1 AND to_id = $2', [to, from]);
-    const full = async () => (await friendCount(sql, from)) >= VERSUS_LIMITS.friendsMax || (await friendCount(sql, to)) >= VERSUS_LIMITS.friendsMax;
     if (theyAsked.rows.length) {
-      if (await full()) return 'limit';
+      if (await full(sql, from, to)) return 'limit';
       await befriend(sql, from, to);
       return 'friends';
     }
@@ -154,10 +167,9 @@ export function sendRequest(db: Db, from: string, to: string): Promise<RequestOu
 /** `from` asked `me`: now they're friends. false: no such request, or a friends list is full. */
 export function acceptRequest(db: Db, me: string, from: string): Promise<boolean> {
   return db.tx(async (sql) => {
-    await sql.query('SELECT id FROM players WHERE id = ANY($1) ORDER BY id FOR UPDATE', [[me, from]]);
+    await lockPair(sql, me, from);
     const asked = await sql.query('SELECT 1 FROM friend_requests WHERE from_id = $1 AND to_id = $2', [from, me]);
-    if (!asked.rows.length) return false;
-    if ((await friendCount(sql, me)) >= VERSUS_LIMITS.friendsMax || (await friendCount(sql, from)) >= VERSUS_LIMITS.friendsMax) return false;
+    if (!asked.rows.length || (await full(sql, me, from))) return false;
     await befriend(sql, me, from);
     return true;
   });
@@ -193,6 +205,62 @@ export function block(db: Db, me: string, other: string): Promise<boolean> {
 export async function unblock(db: Sql, me: string, other: string): Promise<boolean> {
   const { rows } = await db.query('DELETE FROM blocks WHERE player_id = $1 AND blocked_id = $2 RETURNING 1', [me, other]);
   return rows.length > 0;
+}
+
+// ---- friend invite links (versus/links.ts) ----
+
+/** A new invite code: 8 of the lobby codes' 32 letters (40 bits), from the crypto source. */
+export const newInviteCode = (bytes = randomBytes(VERSUS_LIMITS.inviteCodeLength)) =>
+  Array.from(bytes, (b) => LOBBY_CODE_ALPHABET[b % LOBBY_CODE_ALPHABET.length]).join('');
+
+/** The player's invite code, made on the first ask and then kept, so every link they ever shared still works. */
+export async function inviteCode(db: Sql, id: string): Promise<string | null> {
+  // Two players drawing the same code (1 in 10^12) fails the unique index: draw again
+  for (let tries = 1; ; tries++) {
+    try {
+      const { rows } = await db.query<{ code: string }>(
+        'UPDATE players SET invite_code = coalesce(invite_code, $2) WHERE id = $1 RETURNING invite_code AS code',
+        [id, newInviteCode()],
+      );
+      return rows[0]?.code ?? null;
+    } catch (e) {
+      if (tries >= 3) throw e;
+    }
+  }
+}
+
+/** Whose invite code it is; null when no one's. */
+export async function inviter(db: Sql, code: string): Promise<PlayerCard | null> {
+  const { rows } = await db.query<PlayerCard>('SELECT id, name, character_id AS "characterId" FROM players WHERE invite_code = $1', [code]);
+  return rows[0] ?? null;
+}
+
+export type InviteOutcome =
+  | { status: 'sent' | 'friends'; host: PlayerCard; guest: PlayerCard; added: boolean }
+  | 'notFound'
+  | 'self'
+  | 'limit';
+
+/**
+ * `me` followed the invite link of `code`: friends at once, no request to
+ * answer (sharing the link was the invitation). Already friends: nothing to do.
+ * A block (either way) answers 'sent' and does nothing, as a request would.
+ */
+export function acceptInvite(db: Db, me: string, code: string): Promise<InviteOutcome> {
+  return db.tx(async (sql) => {
+    const found = await inviter(sql, code);
+    if (!found) return 'notFound';
+    if (found.id === me) return 'self';
+    const cards = await lockPair(sql, me, found.id);
+    const host = cards.find((c) => c.id === found.id);
+    const guest = cards.find((c) => c.id === me);
+    if (!host || !guest) return 'notFound';
+    if (await blockedEitherWay(sql, me, host.id)) return { status: 'sent', host, guest, added: false };
+    if (await areFriends(sql, me, host.id)) return { status: 'friends', host, guest, added: false };
+    if (await full(sql, me, host.id)) return 'limit';
+    await befriend(sql, me, host.id);
+    return { status: 'friends', host, guest, added: true };
+  });
 }
 
 /** One report per pair: reporting again replaces the reason. */

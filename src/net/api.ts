@@ -4,11 +4,14 @@
  * EXPO_PUBLIC_API_URL or without a connection every call just fails.
  */
 import type { LeaderboardResponse, NameAvailableResponse, Period, RegisterResponse, SyncRequest, SyncResponse } from '../../server/src/contract';
-import type { FriendsResponse, ReportReason, RequestResponse, SearchResponse, VersusStatus } from '../../server/src/versus-contract';
+import type { FriendsResponse, InviteAcceptResponse, InviteResponse, PlayerCard, ReportReason, RequestResponse, SearchResponse, VersusStatus } from '../../server/src/versus-contract';
+import { INVITE_PATH } from '../../server/src/versus-contract';
 
 const BASE = (process.env.EXPO_PUBLIC_API_URL ?? '').replace(/\/+$/, '');
 /** Versus's live socket (src/net/live.ts): the same server, over ws(s). Empty without a server. */
 export const LIVE_URL = BASE && `${BASE.replace(/^http/, 'ws')}/v1/live`;
+/** A friend invite link (server/src/versus/links.ts); the app opens these itself once installed. Empty without a server. */
+export const inviteLink = (code: string) => BASE && `${BASE}${INVITE_PATH}${code}`;
 const TIMEOUT_MS = 10_000;
 
 export type Account = RegisterResponse;
@@ -67,4 +70,7 @@ export const api = {
   unblock: (account: Account, id: string) => call<void>(`/v1/blocks/${id}`, { method: 'DELETE', account }),
   report: (account: Account, id: string, reason: ReportReason) =>
     call<void>(`/v1/players/${id}/report`, { method: 'POST', body: { reason }, account }),
+  myInvite: (account: Account) => call<InviteResponse>('/v1/invites', { method: 'POST', account }),
+  inviter: (code: string) => call<PlayerCard>(`/v1/invites/${code}`, { timeoutMs: 5_000 }),
+  acceptInvite: (account: Account, code: string) => call<InviteAcceptResponse>(`/v1/invites/${code}/accept`, { method: 'POST', account }),
 };

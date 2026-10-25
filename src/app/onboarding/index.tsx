@@ -2,6 +2,7 @@ import { Redirect, router } from 'expo-router';
 import { ScrollView, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LanguagePicker } from '../../components/LanguagePicker';
+import { OnboardingInvite } from '../../components/versus/InviteLink';
 import { sheetText } from '../../components/Sheet';
 import { PaperBackground } from '../../components/PaperBackground';
 import { BigButton } from '../../components/RoundParts';
@@ -20,6 +21,7 @@ export default function OnboardingScreen() {
     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24,
       paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}>
       <View style={{ alignItems: 'center', marginBottom: 18 }} accessible accessibilityLabel={t('app.name')}><Wordmark width={250} /></View>
+      <OnboardingInvite />
       <Text style={sheetText.title} accessibilityRole="header">{t('language.title')}</Text>
       <Text style={sheetText.help}>{t('language.help')}</Text>
       <LanguagePicker />

@@ -8,7 +8,7 @@ import { buildApp } from '../src/app.ts';
 import type { RegisterResponse } from '../src/contract.ts';
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
-import { type FriendsResponse, MODES, type SearchResponse, type ServerMessage, VERSUS_LIMITS, VERSUS_PROTOCOL } from '../src/versus-contract.ts';
+import { type FriendsResponse, type InviteAcceptResponse, type InviteResponse, MODES, type SearchResponse, type ServerMessage, VERSUS_LIMITS, VERSUS_PROTOCOL } from '../src/versus-contract.ts';
 import { FILL_WAIT_MS } from '../src/versus/matchmaker.ts';
 import { loadWords } from '../src/versus/words.ts';
 import { readFile } from 'node:fs/promises';
@@ -27,7 +27,13 @@ before(async () => {
   db = await embedded();
   await migrate(db);
   clock = new FakeClock();
-  app = await buildApp(db, { newPlayersPerHour: 1_000, words: fakeWords(['castle']), adminToken: ADMIN, versus: { clock, rng: seeded() } });
+  app = await buildApp(db, {
+    newPlayersPerHour: 1_000,
+    words: fakeWords(['castle']),
+    adminToken: ADMIN,
+    versus: { clock, rng: seeded() },
+    links: { appleAppId: 'TEAM123456.com.example.hanged', appStoreId: '123456789', androidPackage: 'com.example.hanged', androidCerts: ['AB:CD'] },
+  });
   await app.listen({ host: '127.0.0.1', port: 0 });
   const { port } = app.server.address() as { port: number };
   base = `127.0.0.1:${port}`;
@@ -188,6 +194,73 @@ describe('friends', () => {
 
   it('needs a signed-in player', async () => {
     assert.equal((await app.inject({ url: '/v1/friends' })).statusCode, 401);
+  });
+});
+
+describe('friend invite links', () => {
+  it('makes one lasting code per player; following it makes friends at once and tells the inviter', async () => {
+    const [a, b] = [await newPlayer('Roda'), await newPlayer('Bo')];
+    const { code } = (await http(a, 'POST', '/v1/invites')).json<InviteResponse>();
+    assert.match(code, /^[A-HJ-NP-Z2-9]{8}$/);
+    assert.equal((await http(a, 'POST', '/v1/invites')).json<InviteResponse>().code, code, 'every link shared keeps working');
+    assert.equal((await app.inject({ url: `/v1/invites/${code}` })).json().name, 'Roda');
+
+    const la = await live(a);
+    await la.next('hello');
+    const accepted = await http(b, 'POST', `/v1/invites/${code}/accept`);
+    assert.deepEqual(accepted.json<InviteAcceptResponse>(), { status: 'friends', player: { id: a.id, name: 'Roda', characterId: 'mochi' } });
+    assert.equal((await la.next('friendAdded')).by.name, 'Bo');
+    await la.next('friends');
+    assert.deepEqual((await http(b, 'GET', '/v1/friends')).json<FriendsResponse>().friends.map((f) => f.name), ['Roda']);
+    // Following it again changes nothing
+    assert.equal((await http(b, 'POST', `/v1/invites/${code}/accept`)).json().status, 'friends');
+  });
+
+  it("refuses your own link and unknown codes, doesn't reveal a block, and clears a pending request", async () => {
+    const [a, b, c] = [await newPlayer('Roda'), await newPlayer('Bo'), await newPlayer('Cy')];
+    const { code } = (await http(a, 'POST', '/v1/invites')).json<InviteResponse>();
+    assert.equal((await http(a, 'POST', `/v1/invites/${code}/accept`)).statusCode, 400);
+    assert.equal((await http(b, 'POST', '/v1/invites/ZZZZZZZZ/accept')).statusCode, 404);
+    assert.equal((await http(b, 'POST', '/v1/invites/nope/accept')).statusCode, 400);
+    assert.equal((await app.inject({ url: '/v1/invites/ZZZZZZZZ' })).statusCode, 404);
+
+    await http(a, 'PUT', `/v1/blocks/${b.id}`);
+    assert.equal((await http(b, 'POST', `/v1/invites/${code}/accept`)).json().status, 'sent', "a block isn't revealed");
+    assert.deepEqual((await http(b, 'GET', '/v1/friends')).json<FriendsResponse>().friends, []);
+
+    await http(c, 'POST', '/v1/friends/requests', { playerId: a.id });
+    assert.equal((await http(c, 'POST', `/v1/invites/${code}/accept`)).json().status, 'friends');
+    assert.deepEqual((await http(a, 'GET', '/v1/friends')).json<FriendsResponse>().incoming, []);
+  });
+
+  it('needs Versus on to accept, but the page and the lookup always work', async () => {
+    const [a, b] = [await newPlayer('Roda'), await newPlayer('Bo')];
+    const { code } = (await http(a, 'POST', '/v1/invites')).json<InviteResponse>();
+    app.hub.setStatus({ enabled: false, message: null });
+    assert.equal((await http(b, 'POST', `/v1/invites/${code}/accept`)).statusCode, 503);
+    assert.equal((await app.inject({ url: `/v1/invites/${code}` })).statusCode, 200);
+    assert.equal((await app.inject({ url: `/i/${code.toLowerCase()}` })).statusCode, 200);
+  });
+
+  it("serves the page with the inviter's name (escaped), the stores with the code, and the app link files", async () => {
+    const a = await newPlayer('Bo');
+    await db.query("UPDATE players SET name = 'Bo<b>' WHERE id = $1", [a.id]); // past the name filter, as if it missed something
+    const { code } = (await http(a, 'POST', '/v1/invites')).json<InviteResponse>();
+    const page = await app.inject({ url: `/i/${code}`, headers: { host: 'hanged.example' } });
+    assert.equal(page.statusCode, 200);
+    assert.match(page.headers['content-type'] as string, /text\/html/);
+    assert.ok(!page.body.includes('Bo<b>') && page.body.includes('Bo&#60;b&#62; invited you!'));
+    assert.ok(page.body.includes(`referrer=${encodeURIComponent(`invite=${code}`)}`), 'Play keeps the code for the first launch');
+    assert.ok(page.body.includes('https://apps.apple.com/app/id123456789'));
+    assert.ok(page.body.includes(`data-link="http://hanged.example/i/${code}"`), 'the link iOS copies');
+    assert.equal((await app.inject({ url: '/i/ZZZZZZZZ' })).statusCode, 404);
+    assert.equal((await app.inject({ url: '/i/<script>' })).statusCode, 404);
+
+    const aasa = (await app.inject({ url: '/.well-known/apple-app-site-association' })).json();
+    assert.deepEqual(aasa.applinks.details[0].appIDs, ['TEAM123456.com.example.hanged']);
+    assert.deepEqual(aasa.applinks.details[0].components, [{ '/': '/i/*' }]);
+    const assets = (await app.inject({ url: '/.well-known/assetlinks.json' })).json();
+    assert.equal(assets[0].target.package_name, 'com.example.hanged');
   });
 });
 

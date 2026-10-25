@@ -3,13 +3,14 @@ import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, Nunito_900Blac
 import { router, Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LaunchScreen } from '../components/LaunchScreen';
 import { TokenFlightProvider } from '../components/TokenFlight';
 import { InviteBanner } from '../components/versus/Friends';
+import { InviteLinks } from '../components/versus/InviteLink';
 import { AudioProvider } from '../audio/AudioProvider';
 import { GameProvider, useGame } from '../state/GameContext';
 import { inRoom } from '../state/versus';
@@ -18,6 +19,9 @@ import { colors } from '../theme';
 import { needsOnboarding } from '../game/onboarding';
 
 SplashScreen.preventAutoHideAsync();
+
+/** The loading screen is gone: what pops up by itself (an invite link's sheet) waits for it. */
+const Launched = createContext(false);
 
 /**
  * Keeps the splash screen up until the fonts and the saved game are loaded, then mounts the app
@@ -30,7 +34,7 @@ function Gate({ fontsDone, children }: { fontsDone: boolean; children: ReactNode
   const launched = useCallback(() => setLaunching(false), []);
   if (!done) return null;
   return <>
-    {children}
+    <Launched.Provider value={!launching}>{children}</Launched.Provider>
     {launching && <LaunchScreen characterId={needsOnboarding(state) ? null : state.characterId} onDone={launched} />}
   </>;
 }
@@ -57,6 +61,7 @@ function VersusRouter({ enabled }: { enabled: boolean }) {
 function Routes() {
   const { state } = useGame();
   const onboarding = needsOnboarding(state);
+  const launched = useContext(Launched);
   return (
     <>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
@@ -73,6 +78,7 @@ function Routes() {
       </Stack>
       <VersusRouter enabled={!onboarding} />
       {!onboarding && <InviteBanner />}
+      {!onboarding && launched && <InviteLinks />}
     </>
   );
 }

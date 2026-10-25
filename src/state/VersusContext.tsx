@@ -22,10 +22,11 @@ import { Account, api } from '../net/api';
 import { createLive, LiveConn } from '../net/live';
 import { versusAccount } from '../net/sync';
 import { useGame } from './GameContext';
-import { initialVersus, inRoom, versusReducer, VersusState } from './versus';
+import { FriendNote, initialVersus, inRoom, versusReducer, VersusState } from './versus';
 
 const SEEN_KEY = 'hanged.versus.v1';
 const NOTICE_MS = 3_500;
+const FRIEND_NOTE_MS = 4_500;
 const FRIENDS_REFRESH_MS = 150;
 
 export interface VersusActions {
@@ -45,6 +46,8 @@ export interface VersusActions {
   pick: (choice: { card: number } | { word: string }) => void;
   forfeit: () => void;
   dismissResult: () => void;
+  /** Shows how an invite link went (src/state/useInviteLink.ts). */
+  friendNote: (note: FriendNote) => void;
 }
 
 interface VersusContextValue {
@@ -112,6 +115,12 @@ export function VersusProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(id);
   }, [state.notice]);
 
+  useEffect(() => {
+    if (!state.friendNote) return;
+    const id = setTimeout(() => dispatch({ type: 'friendNote', note: null, at: Date.now() }), FRIEND_NOTE_MS);
+    return () => clearTimeout(id);
+  }, [state.friendNote]);
+
   const hold = useCallback(() => {
     setHolders((h) => h + 1);
     if (!seen) {
@@ -178,6 +187,7 @@ export function VersusProvider({ children }: { children: ReactNode }) {
         send({ t: 'dismiss' });
         dispatch({ type: 'dismissResult' });
       },
+      friendNote: (note) => dispatch({ type: 'friendNote', note, at: Date.now() }),
     };
   }, [live, language]);
 

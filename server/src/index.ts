@@ -17,6 +17,12 @@ const app = await buildApp(db, {
   logger: true,
   adminToken: process.env.ADMIN_TOKEN,
   versusForcedOff: process.env.VERSUS_DISABLED === '1',
+  links: {
+    appleAppId: process.env.APPLE_APP_ID,
+    appStoreId: process.env.APP_STORE_ID,
+    androidPackage: process.env.ANDROID_PACKAGE,
+    androidCerts: process.env.ANDROID_CERT_SHA256?.split(',').map((s) => s.trim()).filter(Boolean),
+  },
 });
 if (applied.length) app.log.info({ applied }, 'migrations applied');
 if (seeded !== null) app.log.info({ words: seeded }, 'word list updated');

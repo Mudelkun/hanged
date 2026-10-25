@@ -46,6 +46,8 @@ export const VERSUS_LIMITS = {
   searchResults: 20,
   /** Lobby codes: no 0/O or 1/I, so they read aloud. */
   codeLength: 6,
+  /** Friend invite link codes (same alphabet): long enough that no one guesses one. */
+  inviteCodeLength: 8,
   /** Messages a socket may send: a burst of `burst`, then `perSecond`. */
   burst: 20,
   perSecond: 10,
@@ -105,6 +107,24 @@ export interface RequestResponse {
 }
 
 export type ReportReason = 'name' | 'cheating' | 'other';
+
+// ---- friend invite links: https://<server>/i/<code> (versus/links.ts) ----
+
+/** The path of an invite link, before its code. The app's deep links use the same path (hanged://i/<code>). */
+export const INVITE_PATH = '/i/';
+
+/** POST /v1/invites: the player's own invite code (one per player, made on the first ask). */
+export interface InviteResponse {
+  code: string;
+}
+
+/**
+ * POST /v1/invites/:code/accept. 'friends': friends now (or already were);
+ * 'sent' only when a block stands between the two, which isn't revealed.
+ */
+export interface InviteAcceptResponse extends RequestResponse {
+  player: PlayerCard;
+}
 
 // ---- lobbies and invites ----
 
@@ -294,6 +314,8 @@ export type ServerMessage =
   | { t: 'presence'; id: string; presence: Presence }
   /** The friends list or requests changed: fetch them again. */
   | { t: 'friends' }
+  /** `by` followed this player's invite link: friends now. */
+  | { t: 'friendAdded'; by: PlayerCard }
   | { t: 'invite'; invite: InviteView }
   | { t: 'inviteGone'; lobbyId: string }
   | { t: 'declined'; by: PlayerCard }

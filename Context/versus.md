@@ -58,6 +58,7 @@ language). The server fills the `words` table itself at start from its own copy 
 | [rating.ts](../server/src/versus/rating.ts) | Elo (K 32, PLACEHOLDER), pairwise for 3-4 players with K shared. |
 | [store.ts](../server/src/versus/store.ts) | Friends, requests, blocks, reports, results, the switch. |
 | [routes.ts](../server/src/versus/routes.ts), [admin.ts](../server/src/admin.ts) | HTTP. |
+| [links.ts](../server/src/versus/links.ts) | Friend invite links on the web: the `/i/<code>` page and the `.well-known` files (below, Invite links). |
 
 ### The socket (`GET /v1/live`)
 
@@ -117,7 +118,54 @@ an account cascades through all of it.
 `GET /v1/versus/status` (public), and with the player's Bearer credentials (503 while Versus is off):
 `GET /v1/friends`, `GET /v1/players/search?q=`, `POST /v1/friends/requests {playerId}`,
 `POST /v1/friends/requests/:id/accept`, `DELETE /v1/friends/requests/:id`, `DELETE /v1/friends/:id`,
-`PUT|DELETE /v1/blocks/:id`, `POST /v1/players/:id/report {reason}`.
+`PUT|DELETE /v1/blocks/:id`, `POST /v1/players/:id/report {reason}`, `POST /v1/invites` (my code),
+`POST /v1/invites/:code/accept`. Public: `GET /v1/invites/:code` (whose link it is), `GET /i/:code` (the page).
+
+## Invite links (owner's request, 2026-10-24)
+
+"Allow players to invite people who haven't downloaded the app yet… as simple and seamless as
+possible." A player shares a link (Friends screen, "Share my invite link"); whoever follows it becomes
+their friend, **with no request to answer**: sharing the link was the invitation.
+
+- **The link**: `https://<server>/i/<code>`, on the server's own domain (no link service: Firebase Dynamic
+  Links is gone, Branch/AppsFlyer cost money and add a tracking SDK). **One code per player**, 8 letters of
+  the lobby alphabet (40 bits, unguessable), made on the first share (`players.invite_code`, migration 005)
+  and then kept, so every link ever shared keeps working. Not revocable yet; a "new link" button would just
+  overwrite the column.
+- **App installed**: the phone opens the app from the link (iOS Universal Links, Android App Links; the
+  domain comes from `EXPO_PUBLIC_API_URL` in [app.config.ts](../app.config.ts), and the server serves
+  `/.well-known/apple-app-site-association` and `assetlinks.json`). `hanged://i/<code>` works too.
+  [src/app/+native-intent.tsx](../src/app/+native-intent.tsx) takes the code and keeps the app where it is
+  (an invite isn't a screen).
+- **App not installed**: the link opens the server's page (the inviter's name, "Get Hanged"), which sends
+  the player to their store. Getting the code across the install:
+  - **Android: automatic.** The page redirects at once to Google Play with `referrer=invite=<code>`; the app
+    reads the install referrer on its first launch (`expo-application`). Nothing to tap.
+  - **iOS: one tap.** Apple passes nothing through the App Store and forbids fingerprinting (matching an IP
+    or device to the page visit), so the page's "Get Hanged" copies the link before opening the App Store,
+    and onboarding's first screen offers the system **Paste** button (`expo-clipboard`'s
+    `ClipboardPasteButton`: no "Allow paste" prompt; it shows only when the clipboard holds a URL, which
+    `hasUrlAsync` tells without reading it). Missed it? Tapping the link again opens the app.
+- **The code waits on the device** ([src/invite/pending.ts](../src/invite/pending.ts), `hanged.invite.v1`)
+  until the server answers for good, so an invite that comes offline, during onboarding or before the player
+  has an account still goes through. [useInviteLink](../src/state/useInviteLink.ts) sends it once
+  onboarding is done, and again on every return to the foreground while it fails (offline, or Versus off: 503).
+- **New player** (the invite came before onboarding finished; `acceptsByItself`: consent's `acceptedAt` is
+  later than the invite): friends at once after onboarding. **Existing player**: a sheet asks first
+  ("{name} invited you": Be friends / Not now), as the owner asked.
+- **The result** shows as a banner over any screen but a match (`friendNote` in the Versus state): "You and
+  Roda are friends now!" on both sides (the inviter's comes as the socket message `friendAdded`), or why the
+  link didn't work (their own link, gone, a friends list full). A block either way answers `sent` and does
+  nothing, as a friend request would, so it isn't revealed.
+- The page and the lookup work while Versus is off; accepting doesn't (friends are Versus), so the invite
+  waits. The page is English only, like the MVP, and escapes the name (the server filters names too).
+- **Expo Go can't test the store part**: it can't claim a domain, and its install referrer is its own.
+  `exp://<lan>:8081/--/i/<code>` opens an invite in Expo Go; the full flow needs a build.
+
+Server settings (Railway variables, all optional; without them the page says "coming soon" and phones open
+the page instead of the app): `APPLE_APP_ID` (`<team id>.<bundle id>`), `APP_STORE_ID` (the number in the
+App Store URL), `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256` (comma separated, from Play Console's App signing).
+A build also needs `ios.bundleIdentifier` and `android.package` in `app.json` (not chosen yet).
 
 ## The switch (kill switch) and the admin page
 
@@ -140,7 +188,8 @@ an account cascades through all of it.
 | [src/state/VersusContext.tsx](../src/state/VersusContext.tsx) | Provider: when to connect, actions, `useFriends`, `useLiveWhileFocused`. |
 | [src/app/(tabs)/versus.tsx](../src/app/(tabs)/versus.tsx) | The tab: stats, a card per mode (Quick match / With friends / ?), join with a code, Friends. |
 | [src/app/match.tsx](../src/app/match.tsx) | The live room: result > match > lobby > queue, whichever exists. Opens by itself (`VersusRouter` in `_layout.tsx`) when the server puts the player in one; closes when empty. No swipe back. |
-| [src/app/friends.tsx](../src/app/friends.tsx) | Search, requests, friends with presence, invite, remove/block/report, blocked list. |
+| [src/app/friends.tsx](../src/app/friends.tsx) | Share my invite link, search, requests, friends with presence, invite, remove/block/report, blocked list. |
+| [src/invite/](../src/invite/), [src/state/useInviteLink.ts](../src/state/useInviteLink.ts), [InviteLink.tsx](../src/components/versus/InviteLink.tsx) | Invite links: codes out of links and referrers, the waiting invite, accepting and sharing, the sheet, banner and onboarding card. |
 | [src/components/versus/](../src/components/versus/) | Hub, Room (queue, lobby, invite sheet), MatchPlay, MatchResult, Friends (row, invite banner), parts. |
 
 - **Buttons send; screens change when the server answers.** The room opens on the server's `queued`,
@@ -175,8 +224,8 @@ the background (iOS would freeze it anyway). Players who never open Versus never
 ## Running and testing
 
 ```bash
-cd server && npm test     # versus-match.test.ts (modes, fake clock), versus-api.test.ts (real sockets, REST, switch)
-npm test                  # app: src/state/__tests__/versus.test.ts (reducer)
+cd server && npm test     # versus-match.test.ts (modes, fake clock), versus-api.test.ts (real sockets, REST, switch, invite links)
+npm test                  # app: src/state/__tests__/versus.test.ts (reducer), src/invite/__tests__/link.test.ts
 cd server && ADMIN_TOKEN=<24+ chars> npm run dev   # then http://localhost:3000/admin
 ```
 
@@ -193,3 +242,8 @@ account), `EXPO_PUBLIC_API_URL=http://localhost:3000`.
 - The React Compiler lint rules: no refs read while building the socket (the account function is stable,
   so it's passed directly); no setState straight in an effect (the friends refresh is a short debounce).
 - The lobby's invite sheet closes itself once the lobby is full (Start is under it).
+- **The app's Versus reducer ignores messages it doesn't know** (`default`). Before 2026-10-24 an unknown
+  message returned `undefined` and wiped the state. A new message type no longer needs `VERSUS_PROTOCOL`
+  bumped, as long as older apps can do without it.
+- A component test that renders onboarding's first screen must mock `OnboardingInvite` (it reads
+  AsyncStorage), as `src/components/__tests__/localization.test.tsx` does.

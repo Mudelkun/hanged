@@ -17,6 +17,7 @@ jest.mock('../../audio/AudioProvider', () => ({ useSoundScope: () => mockAudio }
 jest.mock('../../audio', () => ({ sound: { play: jest.fn(), unlock: jest.fn() } }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0 }) }));
+jest.mock('../versus/InviteLink', () => ({ OnboardingInvite: () => null }));
 
 let view: ReactTestRenderer;
 // Matched by props: on RN 0.86 the rendered node is not the exported Pressable, so findAllByType misses it.

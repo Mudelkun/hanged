@@ -8,6 +8,7 @@
  *   GET  /v1/names/available ?name=<name>[&me=<player id>] → { available }
  *   GET  /health          for Railway
  * Versus (online multiplayer): its socket and friends routes (versus/routes.ts),
+ * friend invite links (versus/links.ts: /i/<code> and the .well-known files),
  * and the admin page with its on/off switch (admin.ts).
  */
 import cors from '@fastify/cors';
@@ -24,6 +25,7 @@ import { NAME_SENT_MAX } from './names.ts';
 import { credentials, deletePlayer, nameAvailable, register, sync } from './players.ts';
 import { VERSUS_LIMITS } from './versus-contract.ts';
 import { Hub, type HubOptions } from './versus/hub.ts';
+import { linkRoutes, type LinkOptions } from './versus/links.ts';
 import { versusRoutes } from './versus/routes.ts';
 import { readSwitch } from './versus/store.ts';
 import { loadWords, type WordSource } from './versus/words.ts';
@@ -46,6 +48,8 @@ export interface AppOptions extends FastifyServerOptions {
   versusForcedOff?: boolean;
   /** For tests: Versus's clock and dice. */
   versus?: Pick<HubOptions, 'clock' | 'rng'>;
+  /** Invite links: the stores and the app ids the phone checks before opening the app. */
+  links?: LinkOptions;
 }
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
@@ -111,7 +115,7 @@ const nameQuery = {
 };
 
 export async function buildApp(db: Db, opts: AppOptions = {}) {
-  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, ...fastifyOpts } = opts;
+  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, links = {}, ...fastifyOpts } = opts;
   // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's.
   const app = Fastify({ trustProxy: true, bodyLimit: 256 * 1024, ...fastifyOpts });
   // The app doesn't need CORS; the web preview (npx expo start --web) does. DELETE isn't allowed by default.
@@ -160,6 +164,7 @@ export async function buildApp(db: Db, opts: AppOptions = {}) {
   app.decorate('hub', hub);
   app.addHook('preClose', async () => hub.close());
   versusRoutes(app, db, hub);
+  linkRoutes(app, db, links);
   adminRoutes(app, db, hub, { token: adminToken, forcedOff: versusForcedOff });
 
   return app;

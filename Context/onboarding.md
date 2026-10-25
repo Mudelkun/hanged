@@ -11,6 +11,10 @@ UI: `src/components/Onboarding.tsx`; artwork and transition: `OnboardingArt.tsx`
   balloons. Tapping either the figure or its card brings it forward, cheers, changes its speech bubble,
   and changes “Let’s go, …!”. No price or gender labels. The logo (here and on the language page) is the
   brand's compact wordmark, `Wordmark` ([branding.md](branding.md)), so it carries over from the loading screen.
+- **Friend invites** (2026-10-24, [versus.md](versus.md), Invite links): the first screen (language) shows
+  `OnboardingInvite` under the wordmark: "Roda invited you! You'll be friends as soon as you start playing"
+  when an invite waits, or on iOS, when the clipboard holds a URL, "Got an invite link from a friend?" with
+  the system Paste button. The invite is accepted by itself once onboarding completes; nothing else changes.
 - The second screen starts with the same friendly random name supplied by `GameProvider`. The name,
   dice, 15-character limit, and messages reuse `PlayerNameInput`, `nameHelp`, `checkName` and `randomName`
   with Profile. The wooden sign follows the draft; an invalid name tilts it and worries the character.

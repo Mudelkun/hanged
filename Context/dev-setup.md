@@ -30,8 +30,13 @@
 - Store reviews: `expo-store-review`, the OS's own in-app review prompt ([retention.md](retention.md)). In SDK 58
   Expo Go; existing development builds need rebuilding.
 
+- Friend invite links: `expo-clipboard` (the iOS Paste button) and `expo-application` (Android's install
+  referrer), both in Expo Go. **`app.config.ts`** extends `app.json` with the link domain (from
+  `EXPO_PUBLIC_API_URL`): iOS `associatedDomains`, Android `intentFilters`. Those only matter in a build;
+  Expo Go opens invites as `exp://<lan>:8081/--/i/<code>` ([versus.md](versus.md), Invite links).
+
 Every native module used is included in **Expo Go**, so the app runs on an iPhone
-with Expo Go. No dev build is needed yet.
+with Expo Go. No dev build is needed yet (except to test invite links end to end).
 
 ## Commands
 
@@ -121,6 +126,6 @@ events). Add tagged logs, ask the owner to reload (`r`) and play, then read that
 
 ## App identity
 
-`app.json`: name **"Hanged: word guessing game"**, iOS home-screen label
+`app.json` (extended by `app.config.ts`, above): name **"Hanged: word guessing game"**, iOS home-screen label
 (`CFBundleDisplayName`) **"Hanged"**, slug/scheme `hanged`, portrait only, no
 tablet layout yet. Never "Hangman".

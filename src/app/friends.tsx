@@ -1,7 +1,7 @@
 /*
- * Friends (Versus): find players by name, send and answer friend requests,
- * see who's online, invite them to your lobby, and remove, block or report
- * someone. Pushed from the Versus tab and from a lobby's invite sheet.
+ * Friends (Versus): share your invite link with people who don't play yet,
+ * find players by name, send and answer friend requests, see who's online,
+ * invite them to your lobby, and remove, block or report someone. Pushed from the Versus tab and from a lobby's invite sheet.
  * Every change goes to the server (REST) and the lists come back fresh; the
  * server pushes `friends` when someone else changes them.
  */
@@ -15,6 +15,7 @@ import { BackHeader } from '../components/GameHeader';
 import { BoardNote } from '../components/Leaderboard';
 import { PaperBackground } from '../components/PaperBackground';
 import { FriendRow } from '../components/versus/Friends';
+import { InviteShareCard } from '../components/versus/InviteLink';
 import { Label, PillButton, Sheet, VersusToast, versusStyles } from '../components/versus/parts';
 import { useTranslation } from '../i18n';
 import { useFriends, useLiveWhileFocused, useVersus } from '../state/VersusContext';
@@ -84,6 +85,7 @@ export default function FriendsScreen() {
       <View style={{ height: insets.top }} />
       <BackHeader title={t('friends.title')} />
       <ScrollView contentContainerStyle={[styles.body, { paddingBottom: insets.bottom + 24 }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        {!searching && <InviteShareCard onResult={setMessage} />}
         <TextInput
           value={query}
           onChangeText={setQuery}

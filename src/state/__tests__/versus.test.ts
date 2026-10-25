@@ -117,3 +117,11 @@ test('a refused pick says why, and a new pick phase starts clean', () => {
   s = run(s, { t: 'match', match: match({ mode: 'duel', phase: 'play' }), now: 10_000 });
   expect(s.pick).toEqual({ sending: false, error: null });
 });
+
+test("someone following my invite link shows who; a newer server's unknown message changes nothing", () => {
+  const by = { id: 'bo', name: 'Bo', characterId: 'bun' };
+  const s = run(initialVersus, hello(), { t: 'friendAdded', by });
+  expect(s.friendNote).toEqual({ kind: 'friends', player: by, at: 4_000 });
+  expect(versusReducer(s, { type: 'friendNote', note: null, at: 5_000 }).friendNote).toBeNull();
+  expect(run(s, { t: 'somethingNew' } as unknown as ServerMessage)).toBe(s);
+});

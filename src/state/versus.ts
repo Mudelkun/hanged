@@ -13,6 +13,7 @@ import type {
   MatchResult,
   MatchView,
   ModeId,
+  PlayerCard,
   Presence,
   ServerMessage,
   VersusStats,
@@ -28,6 +29,13 @@ export type Notice =
   | { kind: 'lobbyGone'; reason: LobbyGone }
   /** The match ended (or the server restarted) while this device was away. */
   | { kind: 'matchLost' };
+
+/**
+ * How a friend invite link went (a banner over any screen): friends with
+ * `player`, either way (I followed their link, or they followed mine), or why
+ * the link didn't work: it's my own, it's gone, or a friends list is full.
+ */
+export type FriendNote = { kind: 'friends'; player: PlayerCard } | { kind: 'own' | 'gone' | 'full' };
 
 export interface VersusState {
   conn: LiveConn | 'idle';
@@ -55,6 +63,7 @@ export interface VersusState {
   /** Bumped when the server says the friends lists changed: they're fetched again. */
   friendsVersion: number;
   notice: (Notice & { at: number }) | null;
+  friendNote: (FriendNote & { at: number }) | null;
 }
 
 export const initialVersus: VersusState = {
@@ -76,6 +85,7 @@ export const initialVersus: VersusState = {
   presence: {},
   friendsVersion: 0,
   notice: null,
+  friendNote: null,
 };
 
 export type VersusAction =
@@ -89,6 +99,7 @@ export type VersusAction =
   | { type: 'forfeited' }
   | { type: 'dismissResult' }
   | { type: 'clearNotice' }
+  | { type: 'friendNote'; note: FriendNote | null; at: number }
   | { type: 'reset' };
 
 const withPlayer = (match: MatchView | null, player: MatchView['players'][number]): MatchView | null =>
@@ -121,6 +132,8 @@ function receive(s: VersusState, msg: ServerMessage, at: number): VersusState {
       return { ...s, presence: { ...s.presence, [msg.id]: msg.presence } };
     case 'friends':
       return { ...s, friendsVersion: s.friendsVersion + 1 };
+    case 'friendAdded':
+      return { ...s, friendNote: { kind: 'friends', player: msg.by, at } };
     case 'invite':
       return { ...s, invites: [...s.invites.filter((i) => i.lobbyId !== msg.invite.lobbyId), msg.invite] };
     case 'inviteGone':
@@ -169,6 +182,9 @@ function receive(s: VersusState, msg: ServerMessage, at: number): VersusState {
       return { ...s, notice: notice({ kind: 'error', code: msg.code }), pick: s.pick.sending ? { sending: false, error: msg.code } : s.pick };
     case 'bye':
       return msg.reason === 'restart' ? s : { ...s, closed: msg.reason, queue: null };
+    default:
+      // A newer server's message this app doesn't know yet
+      return s;
   }
 }
 
@@ -190,6 +206,8 @@ export function versusReducer(s: VersusState, a: VersusAction): VersusState {
       return { ...s, result: null };
     case 'clearNotice':
       return { ...s, notice: null };
+    case 'friendNote':
+      return { ...s, friendNote: a.note && { ...a.note, at: a.at } };
     case 'reset':
       return initialVersus;
   }

@@ -47,7 +47,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | The app icon, the wordmark, the native splash and the loading screen, regenerating their assets | [Context/branding.md](Context/branding.md) |
 | Music, sound effects, character voices, playback lifecycle, volume, and listening previews | [Context/audio-design.md](Context/audio-design.md) |
 | The daily streak and the daily reminder (local notifications): what counts a day, the reminder plan, asking for permission; the store review prompt (when it asks, once ever) | [Context/retention.md](Context/retention.md) |
-| Versus (online multiplayer): the modes, the live socket, friends, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
+| Versus (online multiplayer): the modes, the live socket, friends and **invite links**, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
 | Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
@@ -58,6 +58,7 @@ src/game/           pure rules, no React: engine.ts, progress.ts (reducer), leve
 src/state/          GameContext: the reducer + AsyncStorage + server sync; useDaily (today, reminders); useLeaderboard; VersusContext + versus.ts (Versus state)
 src/net/            the only code that talks to the server: api.ts, sync.ts, live.ts (the Versus socket)
 src/notify/         the only code that talks to the OS about notifications: reminders.ts (+ .web.ts, a no-op)
+src/invite/         friend invite links: link.ts (codes out of links and referrers), pending.ts (the waiting invite; deep links, install referrer)
 src/characters/     rig.ts: imports design/characters/rig.js + balloons.js (one source for both app and previews)
 src/world/          world.ts: imports design/world/world.js (the level path's world), parses it in bands
 src/brand/          brand.ts: imports design/brand/brand.js (the wordmark and the loading screen's frames)
@@ -161,6 +162,7 @@ A level's difficulty is set by:
 ### Two-player mode (online)
 - Two-player mode is **online**: the players are on separate devices. It's the **Versus** tab (built 2026-10-23, owner's request): a WebSocket on the existing server, which deals the words, judges every guess and keeps the clocks, so the guesser's device never holds the word ([Context/versus.md](Context/versus.md)).
 - Players find each other both ways (owner, 2026-10-23): **friends** (search by name, requests, invites, a lobby code) and **matchmaking** with random players of a close rating.
+- **Invite links** (owner, 2026-10-24): a player shares a link with anyone, even someone without the app. It opens the app if it's installed (an existing player accepts), or else the App Store / Google Play; once the new player has an account, the two are friends automatically ([Context/versus.md](Context/versus.md), Invite links).
 - Three modes: **Word Rush** (the owner's timed challenge: the same words for everyone, most words in 2:00 wins), **Balloon Battle** (misses pop your balloons, words pop the leader's, last one floating wins) and **Word Duel** (the original two-player idea: each picks a word for the other, then both guess; best of 3).
 - In Word Duel a typed word must pass the same word constraints (letters only, at most 15) and be a word of the language's pack. The server checks it and never shows it to the guesser.
 - An admin switch (the server's `/admin` page) turns Versus off at any moment; players then see "Versus is taking a break".
