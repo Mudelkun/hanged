@@ -7,7 +7,7 @@ import { advanceCrowd, CROWD, fillCrowd, persona, play } from '../src/crowd.ts';
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
 import { checkName } from '../src/names.ts';
-import { report, search, sendRequest } from '../src/versus/store.ts';
+import { friendsOf, report, search, sendRequest } from '../src/versus/store.ts';
 import { BOT_CHARACTERS } from '../src/versus/bots.ts';
 import { seeded } from './versus-helpers.ts';
 
@@ -107,7 +107,7 @@ describe('leaderboard bots', () => {
     assert.ok(me && me.rank > scores.filter((w) => w > 1).length && me.rank <= 1 + scores.filter((w) => w >= 1).length);
   });
 
-  it("can't sign in, be found, befriended or reported", async () => {
+  it("can't sign in", async () => {
     await fillCrowd(db, 5, NOW, seeded(10));
     const [bot] = await bots();
     const sync = await app.inject({
@@ -117,10 +117,22 @@ describe('leaderboard bots', () => {
       payload: { player: { name: 'X', characterId: 'mochi', language: 'en', wordsGuessed: 0, level: 1, tokens: 0 }, reports: [] },
     });
     assert.equal(sync.statusCode, 401);
+  });
+
+  it('can be found and asked to be friends, and never answers', async () => {
+    await fillCrowd(db, 5, NOW, seeded(14));
+    const [bot] = await bots();
     const me = await newPlayer();
-    assert.deepEqual((await search(db, me.id, bot.name)).players, []);
-    assert.equal(await sendRequest(db, me.id, bot.id), 'notFound');
-    assert.equal(await report(db, me.id, bot.id, 'name'), false);
+    assert.deepEqual((await search(db, me.id, bot.name)).players.map((p) => [p.id, p.relation]), [[bot.id, 'none']]);
+    assert.equal(await sendRequest(db, me.id, bot.id), 'sent');
+    assert.equal(await report(db, me.id, bot.id, 'name'), true);
+    await advanceCrowd(db, NOW + 24 * HOUR, seeded(15));
+    const lists = await friendsOf(db, me.id, () => 'offline');
+    assert.deepEqual(lists.outgoing.map((c) => c.id), [bot.id], 'still waiting');
+    assert.deepEqual(lists.friends, []);
+    // A bot that leaves the crowd takes the request with it.
+    await fillCrowd(db, 0, NOW);
+    assert.deepEqual((await friendsOf(db, me.id, () => 'offline')).outgoing, []);
   });
 
   it('starts with the server (LEADERBOARD_BOTS) and stops with it', async () => {

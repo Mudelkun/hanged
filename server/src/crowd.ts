@@ -5,9 +5,10 @@
  * They are ordinary `players` rows marked `bot` (migration 009), so the boards,
  * their index and every player's rank need nothing new: a bot ranks, ties and
  * fills a week exactly like a person, and the app gets nothing that says "bot".
- * They can't sign in (their secret hash matches no secret), friends search,
- * requests and reports skip them (versus/store.ts), and they never touch the
- * word statistics or Versus.
+ * They can't sign in (their secret hash matches no secret), so they never touch
+ * the word statistics or Versus. Players can find them and ask them to be
+ * friends (owner's call, 2026-10-26: it feels alive); they never answer, so the
+ * request waits like one to a player who doesn't open the app.
  *
  * How they play: each has a persona drawn from its id (time zone, words won on
  * a day it plays, how many days it plays, win rate, the highest level it

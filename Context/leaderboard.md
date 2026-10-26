@@ -56,9 +56,13 @@ The owner also had the test accounts SunnyOtter4–8 (42 words each from 0 round
 - **Timer**: started by `buildApp` when the server is ready, every 5 min (`CROWD.tickMs`), stopped on close.
   `LEADERBOARD_BOTS` on Railway sets how many (default 100); fewer removes the extra ones, `0` takes them all
   off the boards. Tests leave it out: no bots.
-- **Kept out of everything else**: they can't sign in (their secret hash is no sha256), friends search,
-  friend requests and reports skip them ([versus/store.ts](../server/src/versus/store.ts)), they never write
-  `word_days` (word statistics) and never play Versus (that has its own bots: [versus.md](versus.md), Bots).
+- **Friends** (owner's call, 2026-10-26: "so it feels like the game is actually alive even more"): players
+  find them in friends search and can send them a request, block or report them, as anyone. **A bot never
+  answers**: the request waits in the player's Sent list, like one to a player who doesn't open the app (it
+  counts toward `requestsMax`, and the player can cancel it). A bot that leaves the crowd takes its requests
+  with it (cascade).
+- **Kept out of the rest**: they can't sign in (their secret hash is no sha256), never write `word_days` (word
+  statistics) and never play Versus (that has its own bots: [versus.md](versus.md), Bots).
 - What it looks like with 100 (simulated on PGlite, a Monday evening): all time, #1 about 1,500 words, #50
   about 90; this week, #1 about 60 and #50 about 5 on the Monday, about 7 times that by Sunday. A new player
   who plays every day reaches the weekly top 50 within a day or two. All PLACEHOLDER in `CROWD`.

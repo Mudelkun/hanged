@@ -164,8 +164,8 @@ follow the same game rules as real players and never have unfair advantages."
   lists as onboarding (moved to the shared [names.ts](../server/src/names.ts)); characters from the whole
   rig, the free three most often (`BOT_CHARACTERS`: a test checks it against `design/characters/rig.js`).
   The app gets nothing that says "bot": bot ids are random UUIDs with no row in `players`, so friends,
-  search and reports never meet one. (The leaderboard's bots do have rows, `bot = true`, and the friends
-  queries skip them: [leaderboard.md](leaderboard.md), Leaderboard bots.)
+  search and reports never meet one. (The leaderboard's bots do have rows, `bot = true`: they can be found
+  and asked, and never answer: [leaderboard.md](leaderboard.md), Leaderboard bots.)
 - **Leaving**: a player who leaves (or is away too long) with only bots left ends the match at once
   (`forfeit`: placed last, ranked loss, as against people). Bots never leave.
 - **Counting**: `saveResult` writes only the real players (bots have no rows); `versus_days.bot_matches`
