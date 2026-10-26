@@ -36,9 +36,10 @@ import {
   VERSUS_PROTOCOL,
   type VersusStatus,
 } from '../versus-contract.ts';
+import { type Bot, botsFor } from './bots.ts';
 import { type LobbyError, type Lobby, Lobbies } from './lobbies.ts';
 import { type Clock, createMatch, type Match, type MatchHost, type Seat } from './match.ts';
-import { Matchmaker } from './matchmaker.ts';
+import { botWait, Matchmaker } from './matchmaker.ts';
 import { blockIds, friendIds, saveResult, stats, type VersusPlayer, versusPlayer } from './store.ts';
 import { type Role, roleCan } from '../roles.ts';
 import type { WordSource } from './words.ts';
@@ -75,6 +76,8 @@ export interface HubOptions {
   status: VersusStatus;
   clock?: Clock;
   rng?: () => number;
+  /** Bots fill a quick match nobody else fits (bots.ts). On unless false (VERSUS_BOTS=0). */
+  bots?: boolean;
   log?: { warn(o: object, msg: string): void; error(o: object, msg: string): void };
 }
 
@@ -100,6 +103,9 @@ export class Hub {
   private readonly lobbies = new Lobbies();
   private readonly queue: Matchmaker;
   private readonly invites = new Map<string, Map<string, Invite>>();
+  /** Bots seated in a match, by id: the match's messages to them go to them, not to a socket. */
+  private readonly bots = new Map<string, Bot>();
+  private readonly botsOn: boolean;
   private readonly matchHost: MatchHost;
   private ticking: ReturnType<typeof setInterval> | null = null;
   private readonly heartbeat: ReturnType<typeof setInterval>;
@@ -111,12 +117,17 @@ export class Hub {
     this.status = opts.status;
     this.clock = opts.clock ?? realClock;
     this.log = opts.log;
+    this.botsOn = opts.bots ?? true;
     this.queue = new Matchmaker((a, b) => this.blocked(a, b));
     this.matchHost = {
       clock: this.clock,
       rng: opts.rng ?? Math.random,
       words: this.words,
-      send: (id, msg) => this.send(id, msg),
+      send: (id, msg) => {
+        const bot = this.bots.get(id);
+        if (bot) bot.receive(msg);
+        else this.send(id, msg);
+      },
       left: (match, id) => this.released(match, id),
       ended: (match, result) => this.ended(match, result),
     };
@@ -361,7 +372,7 @@ export class Hub {
     if (!this.words.has(language)) return this.raw(conn, { t: 'error', code: 'noWords' });
     if (this.lobbies.find(id)) this.leaveLobby(id, 'left');
     const since = this.clock.now();
-    this.queue.join(mode, language, { id, rating: conn.player.rating, since });
+    this.queue.join(mode, language, { id, rating: conn.player.rating, since, ...(this.botsOn && { botAt: since + botWait(this.matchHost.rng) }) });
     this.raw(conn, { t: 'queued', mode, since });
     this.ensureTicking();
   }
@@ -387,7 +398,9 @@ export class Hub {
       }
       // A developer account (unranked role) is matched like anyone, but nobody's rating moves.
       const ranked = !conns.some((c) => roleCan(c!.player.role, 'unranked'));
-      this.startMatch(group.mode, group.language, conns.map((c) => this.seat(c!)), ranked);
+      // A match with bots is ranked like any: they play at the player's rating, so it's an even game
+      const bots = group.bots ? botsFor(group.mode, group.language, conns[0]!.player, this.matchHost) : [];
+      this.startMatch(group.mode, group.language, [...conns.map((c) => this.seat(c!)), ...bots.map((b) => b.seat)], ranked, bots);
     }
     this.ensureTicking();
   }
@@ -509,10 +522,15 @@ export class Hub {
 
   // ---- matches ----
 
-  private startMatch(mode: ModeId, language: string, seats: Seat[], ranked: boolean): Match {
+  private startMatch(mode: ModeId, language: string, seats: Seat[], ranked: boolean, bots: Bot[] = []): Match {
     const match = createMatch(this.matchHost, mode, seats, ranked, language);
     this.matches.add(match);
+    for (const bot of bots) {
+      this.bots.set(bot.seat.id, bot);
+      bot.sit(match);
+    }
     for (const s of seats) {
+      if (s.bot) continue;
       this.matchOf.set(s.id, match);
       this.results.delete(s.id);
       this.queue.leave(s.id);
@@ -542,6 +560,11 @@ export class Hub {
 
   private ended(match: Match, result: MatchResult) {
     this.matches.delete(match);
+    const botIds = match.botIds;
+    for (const id of botIds) {
+      this.bots.get(id)?.stop();
+      this.bots.delete(id);
+    }
     const at = this.clock.now();
     for (const id of match.playerIds) {
       if (this.matchOf.get(id) !== match) continue;
@@ -563,7 +586,7 @@ export class Hub {
     }
     // Off while it was played: its players go now
     if (!this.status.enabled) for (const id of match.playerIds) this.dismissIdle(id);
-    saveResult(this.db, result)
+    saveResult(this.db, result, botIds)
       .then(() => this.refreshStats(result.standings.map((s) => s.id)))
       .catch((err) => this.log?.error({ err, matchId: result.matchId }, 'versus result not saved'));
   }
@@ -688,8 +711,14 @@ export class Hub {
   }
 
   counts() {
-    let inMatches = 0;
-    for (const m of this.matches) inMatches += m.playerIds.length;
-    return { online: this.conns.size, queued: this.queue.size, lobbies: this.lobbies.size, matches: this.matches.size, inMatches, words: this.words.sizes() };
+    return {
+      online: this.conns.size,
+      queued: this.queue.size,
+      lobbies: this.lobbies.size,
+      matches: this.matches.size,
+      inMatches: this.matchOf.size,
+      bots: this.bots.size,
+      words: this.words.sizes(),
+    };
   }
 }

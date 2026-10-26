@@ -179,7 +179,8 @@ Expo Go on a phone can't reach `localhost`: use the computer's LAN address, or t
    No manual seeding: a deploy is enough. (Until 2026-10-23 this was a manual `npm run seed:words`; forgetting
    it after migration 004 left Versus with no words: "isn't ready in this language". The script still exists.)
    Versus variables: `ADMIN_TOKEN` (24+ characters: the `/admin` page and its switch exist only with it),
-   `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
+   `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_BOTS=0` (no bots fill quick matches: [versus.md](versus.md), Bots),
+   `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
    redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`). Invite links: `APPLE_APP_ID`, `APP_STORE_ID`,
    `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256`, and `PUBLIC_URL` = `https://<domain>` (the page builds its link from it, not from
    the request's Host, which a caller can forge) ([versus.md](versus.md), Invite links). `TRUST_PROXY_HOPS` (default 1:

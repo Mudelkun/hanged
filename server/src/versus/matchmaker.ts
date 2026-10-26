@@ -4,7 +4,10 @@
  * close rating, and the window widens the longer someone waits, so nobody
  * waits forever. A mode for 2-4 players waits FILL_WAIT_MS for a full table,
  * then starts with whoever fits. Players who blocked each other are never
- * matched. Pure: `tick` returns the groups and the hub starts them.
+ * matched. Nobody fits a waiter by their `botAt`: bots take the other seats
+ * (bots.ts), so a quick match always starts. Real players always come first:
+ * a waiter is only given bots once this tick found no one for them.
+ * Pure: `tick` returns the groups and the hub starts them.
  *
  * Each tick scans every queue once. A waiter looks only at its rating
  * neighbours (sorted array, two pointers), and never past MAX_WINDOW, so a
@@ -16,12 +19,16 @@ export interface Waiting {
   id: string;
   rating: number;
   since: number;
+  /** When bots fill their match if no player fits them by then; none: wait for players only. */
+  botAt?: number;
 }
 
 export interface Group {
   mode: ModeId;
   language: string;
   ids: string[];
+  /** One waiter nobody fitted: the hub seats bots with them. */
+  bots?: boolean;
 }
 
 /** PLACEHOLDER tuning. Rating gap accepted at first, how fast it widens, and its cap. */
@@ -30,6 +37,13 @@ const WIDEN_PER_SECOND = 20;
 const MAX_WINDOW = 1_000;
 /** A 2-4 player mode waits this long for a full table before starting with fewer. */
 export const FILL_WAIT_MS = 8_000;
+/**
+ * PLACEHOLDER. How long a waiter waits for players before bots fill their
+ * match: drawn per wait in this range, so it's never the same beat. Longer
+ * than FILL_WAIT_MS, so two players who fit always get a real table first.
+ */
+export const BOT_WAIT_MS = { min: 9_000, max: 15_000 } as const;
+export const botWait = (rng: () => number) => BOT_WAIT_MS.min + rng() * (BOT_WAIT_MS.max - BOT_WAIT_MS.min);
 
 const keyOf = (mode: ModeId, language: string) => `${mode}:${language}`;
 
@@ -119,6 +133,11 @@ export class Matchmaker {
           for (const g of group) taken.add(g.id);
           groups.push({ mode, language, ids: group.map((g) => g.id) });
         }
+      }
+      for (const w of waiting) {
+        if (taken.has(w.id) || w.botAt === undefined || now < w.botAt) continue;
+        taken.add(w.id);
+        groups.push({ mode, language, ids: [w.id], bots: true });
       }
       for (const id of taken) this.leave(id);
     }

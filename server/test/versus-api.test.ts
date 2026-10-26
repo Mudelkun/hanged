@@ -9,7 +9,7 @@ import type { RegisterResponse } from '../src/contract.ts';
 import { embedded, type Db } from '../src/db.ts';
 import { migrate } from '../src/migrate.ts';
 import { type FriendsResponse, type InviteAcceptResponse, type InviteResponse, MODES, type SearchResponse, type ServerMessage, VERSUS_LIMITS, VERSUS_PROTOCOL } from '../src/versus-contract.ts';
-import { FILL_WAIT_MS } from '../src/versus/matchmaker.ts';
+import { BOT_WAIT_MS, FILL_WAIT_MS } from '../src/versus/matchmaker.ts';
 import { loadWords } from '../src/versus/words.ts';
 import { readFile } from 'node:fs/promises';
 
@@ -351,6 +351,42 @@ describe('developer accounts', () => {
     clock.advance(FILL_WAIT_MS);
     app.hub.tick();
     assert.equal((await lb.next('match')).match.ranked, false);
+  });
+});
+
+describe('bots', () => {
+  it('seat bots with a player nobody fits, play a ranked match, and only the player is counted', async () => {
+    const a = await newPlayer('Ada');
+    const la = await live(a);
+    await la.next('hello');
+    la.send({ t: 'queue', mode: 'rush', language: 'en' });
+    await la.next('queued');
+    clock.advance(FILL_WAIT_MS);
+    app.hub.tick();
+    assert.equal(app.hub.counts().queued, 1, 'still looking for a player');
+    clock.advance(BOT_WAIT_MS.max - FILL_WAIT_MS);
+    app.hub.tick();
+    const { match } = await la.next('match');
+    assert.equal(match.ranked, true);
+    const bots = match.players.filter((p) => p.id !== a.id);
+    assert.ok(bots.length >= 1 && bots.length < MODES.rush.maxPlayers);
+    assert.ok(bots.every((b) => b.name && !('bot' in b)), 'a bot looks like any player');
+    assert.equal(app.hub.counts().bots, bots.length);
+    assert.equal(app.hub.presence(a.id), 'playing');
+
+    // The bots guess on their own
+    clock.advance(VERSUS_LIMITS.countdownMs + 15_000);
+    await la.next('player', (m) => m.player.id !== a.id && m.player.found + m.player.misses > 0);
+
+    // Leaving with only bots left ends the match at once
+    la.send({ t: 'forfeit' });
+    const stats = await la.next('stats');
+    assert.equal(stats.stats.played, 1);
+    assert.equal(stats.stats.won, 0);
+    assert.ok(stats.stats.rating < 1000);
+    assert.equal(app.hub.counts().bots, 0);
+    const { rows } = await db.query('SELECT matches, players, forfeits, bot_matches FROM versus_days');
+    assert.deepEqual(rows, [{ matches: 1, players: 1, forfeits: 1, bot_matches: 1 }]);
   });
 });
 

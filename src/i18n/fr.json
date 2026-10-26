@@ -571,5 +571,5 @@
   "invite.onboarding.paste": "Un ami t'a envoyé un lien d'invitation ?",
   "invite.onboarding.notInvite": "Ce n'est pas un lien d'invitation Hanged.",
   "rules.versus.title": "Duel",
-  "rules.versus.body": "Joue en ligne contre des amis ou des joueurs au hasard : Course aux mots, Bataille de ballons et Face-à-face. Les règles de chaque mode sont sur sa carte, dans l'onglet Duel. Les duels ont leur propre classement : ils ne comptent pas pour le classement général et ne rapportent pas de jetons."
+  "rules.versus.body": "Joue en ligne contre des amis ou des joueurs au hasard : Course aux mots, Bataille de ballons et Face-à-face. Les règles de chaque mode sont sur sa carte, dans l'onglet Duel. Les duels ont leur propre classement : ils ne comptent pas pour le classement général et ne rapportent pas de jetons. Quand personne n'est libre, le jeu complète la partie avec des joueurs virtuels de ton niveau, pour qu'une partie commence toujours."
 }

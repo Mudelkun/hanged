@@ -280,11 +280,12 @@ export async function report(db: Sql, me: string, other: string, reason: ReportR
 /**
  * A finished match, counted: every player played one, the winners (place 1)
  * won one, ranked matches move ratings. One transaction, players in id order.
- * A cancelled match counts nothing.
+ * A cancelled match counts nothing. Bots (`botIds`) have no row: only the
+ * day's count of matches with bots notes them.
  */
-export async function saveResult(db: Db, result: MatchResult): Promise<void> {
+export async function saveResult(db: Db, result: MatchResult, botIds: readonly string[] = []): Promise<void> {
   if (result.reason === 'cancelled') return;
-  const rows = [...result.standings].sort((a, b) => a.id.localeCompare(b.id));
+  const rows = result.standings.filter((s) => !botIds.includes(s.id)).sort((a, b) => a.id.localeCompare(b.id));
   await db.tx(async (sql) => {
     await sql.query(
       `UPDATE players p SET
@@ -296,13 +297,14 @@ export async function saveResult(db: Db, result: MatchResult): Promise<void> {
       [rows.map((s) => s.id), rows.map((s) => (s.place === 1 && !s.left ? 1 : 0)), rows.map((s) => s.ratingDelta ?? 0)],
     );
     await sql.query(
-      `INSERT INTO versus_days (day, mode, matches, players, forfeits)
-       VALUES ((now() AT TIME ZONE 'UTC')::date, $1, 1, $2, $3)
+      `INSERT INTO versus_days (day, mode, matches, players, forfeits, bot_matches)
+       VALUES ((now() AT TIME ZONE 'UTC')::date, $1, 1, $2, $3, $4)
        ON CONFLICT (day, mode) DO UPDATE SET
          matches = versus_days.matches + 1,
          players = versus_days.players + excluded.players,
-         forfeits = versus_days.forfeits + excluded.forfeits`,
-      [result.mode, rows.length, result.reason === 'forfeit' ? 1 : 0],
+         forfeits = versus_days.forfeits + excluded.forfeits,
+         bot_matches = versus_days.bot_matches + excluded.bot_matches`,
+      [result.mode, rows.length, result.reason === 'forfeit' ? 1 : 0, botIds.length ? 1 : 0],
     );
   });
 }
@@ -325,8 +327,8 @@ export async function writeSwitch(db: Sql, status: VersusStatus): Promise<void> 
 
 /** For the admin page: the last 7 days of matches, and the most reported players. */
 export async function adminTotals(db: Sql) {
-  const days = await db.query<{ day: string; mode: string; matches: number; players: number; forfeits: number }>(
-    `SELECT to_char(day, 'YYYY-MM-DD') AS day, mode, matches, players, forfeits FROM versus_days
+  const days = await db.query<{ day: string; mode: string; matches: number; players: number; forfeits: number; botMatches: number }>(
+    `SELECT to_char(day, 'YYYY-MM-DD') AS day, mode, matches, players, forfeits, bot_matches AS "botMatches" FROM versus_days
      WHERE day > (now() AT TIME ZONE 'UTC')::date - 7 ORDER BY day DESC, mode`,
   );
   const reported = await db.query<{ id: string; name: string | null; reports: number }>(

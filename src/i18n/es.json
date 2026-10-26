@@ -571,5 +571,5 @@
   "invite.onboarding.paste": "¿Un amigo te mandó un enlace de invitación?",
   "invite.onboarding.notInvite": "Ese no es un enlace de invitación de Hanged.",
   "rules.versus.title": "Duelo",
-  "rules.versus.body": "Juega en línea contra amigos o jugadores al azar: Carrera de palabras, Batalla de globos y Cara a cara. Las reglas de cada modo están en su carta, en la pestaña Duelo. Los duelos tienen su propia puntuación: no cuentan para la clasificación y no dan fichas."
+  "rules.versus.body": "Juega en línea contra amigos o jugadores al azar: Carrera de palabras, Batalla de globos y Cara a cara. Las reglas de cada modo están en su carta, en la pestaña Duelo. Los duelos tienen su propia puntuación: no cuentan para la clasificación y no dan fichas. Cuando no hay nadie libre, el juego completa la partida con jugadores virtuales de tu nivel, para que siempre empiece una partida."
 }

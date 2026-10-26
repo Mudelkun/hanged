@@ -1,45 +1,22 @@
 /*
  * Player names. The rules and the filter are shared with the server
  * (server/src/names.ts), which checks every name again on sync. A new player
- * gets a random friendly name; the Profile page lets them change it.
+ * gets a random friendly name (listed there too: Versus bots wear them); the
+ * Profile page lets them change it.
  */
-import { checkName, NAME_MAX, NameRules } from '../../server/src/names';
+import { checkName, NameRules } from '../../server/src/names';
 
-export { checkName, NAME_MAX, NAME_MIN, type NameCheck, type NameProblem, type NameRules } from '../../server/src/names';
-
-// Words that are never a character's name (Mochi, Bun…), so a name never reads as the character.
-const ADJECTIVES = [
-  'Sunny', 'Bubbly', 'Brave', 'Cozy', 'Dizzy', 'Fluffy', 'Giggly', 'Happy', 'Jolly', 'Lucky', 'Merry', 'Peppy',
-  'Plucky', 'Snappy', 'Sparkly', 'Speedy', 'Sleepy', 'Swift', 'Witty', 'Zippy', 'Clever', 'Cheery', 'Breezy',
-  'Bouncy', 'Curious', 'Daring', 'Gentle', 'Mighty', 'Quirky', 'Rosy', 'Tiny', 'Wobbly', 'Fuzzy', 'Nifty',
-  'Sweet', 'Twinkly', 'Wise', 'Chirpy', 'Dapper', 'Jazzy',
-] as const;
-const NOUNS = [
-  'Otter', 'Comet', 'Muffin', 'Pebble', 'Pickle', 'Waffle', 'Acorn', 'Balloon', 'Bubble', 'Cloud', 'Cookie',
-  'Cupcake', 'Daisy', 'Dumpling', 'Feather', 'Gecko', 'Hedgehog', 'Kiwi', 'Koala', 'Lemon', 'Maple', 'Meadow',
-  'Noodle', 'Owl', 'Peanut', 'Penguin', 'Pretzel', 'Puffin', 'Quokka', 'Raccoon', 'Robin', 'Sparrow', 'Sprout',
-  'Squirrel', 'Sunflower', 'Tadpole', 'Teacup', 'Toucan', 'Walrus', 'Wombat', 'Pancake', 'Pudding',
-] as const;
-
-/** Random names stay short, so they show big in the Play header. */
-const RANDOM_NAME_MAX = Math.min(10, NAME_MAX);
-
-/** Every name randomName can give: "SunnyOtter", one word, only the pairs that fit in RANDOM_NAME_MAX. */
-export const RANDOM_NAMES: readonly string[] = ADJECTIVES.flatMap((a) => NOUNS.map((n) => a + n)).filter(
-  (name) => name.length <= RANDOM_NAME_MAX,
-);
-
-/** A new player's name until they pick one. Names don't have to be unique. */
-const LOCAL_NAMES: Record<string, readonly string[]> = {
-  fr: ['RenardSouriant', 'PetitNuage', 'PandaJoyeux', 'LapinAgile', 'OursCurieux', 'LutinMalin', 'HibouRieur', 'KoalaCalme', 'ChatSerein', 'SoleilDoux'],
-  es: ['ZorroFeliz', 'PandaAlegre', 'ConejoVeloz', 'OsoCurioso', 'GatoSereno', 'KoalaAmable', 'SolBrillante', 'BúhoSabio', 'DelfínValiente', 'PingüinoRisueño'],
-  de: ['FroherFuchs', 'MutigerBär', 'KleinerPanda', 'FlinkerHase', 'LustigerIgel', 'SanfterKoala', 'KlugerDelfin', 'WacherSpatz', 'BunterFalter', 'StillerOtter'],
-};
-export const namesForLanguage = (language: string): readonly string[] => LOCAL_NAMES[language] ?? RANDOM_NAMES;
-export const randomName = (rng: () => number = Math.random, language = 'en') => {
-  const names = namesForLanguage(language);
-  return names[Math.floor(rng() * names.length)];
-};
+export {
+  checkName,
+  NAME_MAX,
+  NAME_MIN,
+  namesForLanguage,
+  RANDOM_NAMES,
+  randomName,
+  type NameCheck,
+  type NameProblem,
+  type NameRules,
+} from '../../server/src/names';
 
 /**
  * A saved name the rules no longer take (the limit went from 20 to 15, or a

@@ -19,6 +19,7 @@ const app = await buildApp(db, {
   proxyHops: Number(process.env.TRUST_PROXY_HOPS ?? 1),
   adminToken: process.env.ADMIN_TOKEN,
   versusForcedOff: process.env.VERSUS_DISABLED === '1',
+  versus: { bots: process.env.VERSUS_BOTS !== '0' },
   links: {
     appleAppId: process.env.APPLE_APP_ID,
     appStoreId: process.env.APP_STORE_ID,

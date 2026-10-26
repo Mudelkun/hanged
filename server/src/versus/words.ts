@@ -30,6 +30,8 @@ export interface WordSource {
   /** `count` different words of `language` not in `exclude`, in random order (fewer if the pool runs out). */
   deal(language: string, count: number, rng: () => number, exclude?: ReadonlySet<string>): VersusWord[];
   has(language: string): boolean;
+  /** The language's dealing pool itself: a bot matches what a word shows against it (bots.ts). */
+  pool(language: string): readonly VersusWord[];
   /** Words in each language's dealing pool (the admin page shows them: 0 means Versus can't start there). */
   sizes(): Record<string, number>;
   /** A typed word (Word Duel), if it's a word of the language's pack. */
@@ -58,6 +60,8 @@ export async function loadWords(db: Db): Promise<WordSource> {
       if (!ok && Date.now() - loadedAt > RETRY_MS) load().catch(() => {});
       return ok;
     },
+
+    pool: (language) => pools.get(language) ?? [],
 
     sizes: () => Object.fromEntries([...pools].map(([language, pool]) => [language, pool.length])),
 

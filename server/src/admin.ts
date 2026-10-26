@@ -167,7 +167,7 @@ const PAGE = `<!doctype html>
     <div class="stats" id="counts"></div>
 
     <h2>Last 7 days</h2>
-    <table><thead><tr><th>Day</th><th>Mode</th><th>Matches</th><th>Players</th><th>Forfeits</th></tr></thead><tbody id="days"></tbody></table>
+    <table><thead><tr><th>Day</th><th>Mode</th><th>Matches</th><th>Players</th><th>Forfeits</th><th>With bots</th></tr></thead><tbody id="days"></tbody></table>
 
     <h2>Most reported players</h2>
     <table><thead><tr><th>Name</th><th>Id</th><th>Reports</th></tr></thead><tbody id="reported"></tbody></table>
@@ -214,10 +214,10 @@ const PAGE = `<!doctype html>
     $('forced').hidden = !s.forcedOff;
     if (document.activeElement !== $('message')) $('message').value = s.status.message || '';
     const c = s.counts;
-    const stats = [['Online', c.online], ['In matches', c.inMatches], ['Matches', c.matches], ['Queued', c.queued], ['Lobbies', c.lobbies]];
+    const stats = [['Online', c.online], ['In matches', c.inMatches], ['Matches', c.matches], ['Bots playing', c.bots], ['Queued', c.queued], ['Lobbies', c.lobbies]];
     const words = ['en', 'fr', 'es', 'de'].map((l) => ['Words · ' + l, (c.words || {})[l] || 0]);
     $('counts').replaceChildren(...stats.concat(words).map(([label, n]) => { const d = document.createElement('div'); d.className = 'stat' + (String(label).startsWith('Words') && !n ? ' empty' : ''); const b = document.createElement('b'); b.textContent = n; const sp = document.createElement('span'); sp.textContent = label; d.append(b, sp); return d; }));
-    rows($('days'), s.days, ['day', 'mode', 'matches', 'players', 'forfeits']);
+    rows($('days'), s.days, ['day', 'mode', 'matches', 'players', 'forfeits', 'botMatches']);
     rows($('reported'), s.reported, ['name', 'id', 'reports']);
   }
 

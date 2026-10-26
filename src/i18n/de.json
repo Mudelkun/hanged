@@ -571,5 +571,5 @@
   "invite.onboarding.paste": "Hast du einen Einladungslink von einem Freund?",
   "invite.onboarding.notInvite": "Das ist kein Hanged-Einladungslink.",
   "rules.versus.title": "Duell",
-  "rules.versus.body": "Spiel online gegen Freunde oder zufällige Spieler: Wortrennen, Ballonschlacht und Kopf an Kopf. Die Regeln jedes Modus stehen auf seiner Karte im Duell-Tab. Duelle haben eine eigene Wertung: Sie zählen nicht für die Rangliste und bringen keine Marken."
+  "rules.versus.body": "Spiel online gegen Freunde oder zufällige Spieler: Wortrennen, Ballonschlacht und Kopf an Kopf. Die Regeln jedes Modus stehen auf seiner Karte im Duell-Tab. Duelle haben eine eigene Wertung: Sie zählen nicht für die Rangliste und bringen keine Marken. Wenn gerade niemand frei ist, füllt das Spiel die Runde mit Computerspielern auf deinem Niveau auf, damit immer ein Spiel startet."
 }

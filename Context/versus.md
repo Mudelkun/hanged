@@ -17,6 +17,8 @@ needs the internet.
 | **Matches live in memory**; only their outcome is written (one transaction) | A match lasts minutes. Writing every guess would cost database load for nothing. Like the solo rounds: storage grows with players, not with matches. |
 | **Same engine as solo** (`server/src/engine.ts`, shared like `contract.ts`) | One set of rules: clue letters, accents, judging. The engine moved from `src/game/` (which re-exports it) because Railway deploys only `server/`. |
 | **Ranked = matchmade only**; friend matches never move ratings | Friends can't trade wins to climb. |
+| **Bots fill a quick match nobody else fits** (after 9-15 s), on the server, in every mode | The owner's request (2026-10-26): Versus must feel alive at any hour, never broken. See Bots below. |
+| **A match with bots is ranked**, and bots look like any player to the app | They play at the player's rating, so it's a fair game; flagging them would make the match feel like practice. The in-app Game rules say computer players fill in when nobody's free. |
 | **A matchmade match with a developer account is unrated** for everyone in it | A developer can test matchmaking without moving anyone's rating ([dev-accounts.md](dev-accounts.md)). |
 | **Versus doesn't count toward the leaderboard or pay tokens** | Still an open question for the owner (CLAUDE.md). It has its own rating instead. Changing it is a server-side decision (the reducer must still be the only place that adds score/tokens). |
 | **REST for friends, socket for live things** | Friends change rarely and want a plain answer; the socket pushes `friends` so open lists refresh without polling. |
@@ -55,6 +57,7 @@ language). The server fills the `words` table itself at start from its own copy 
 | [hub.ts](../server/src/versus/hub.ts) | One per process: sockets (auth, rate limit, heartbeat, one socket per player), presence, invites, routing to lobbies/matchmaker/matches, results, the switch, draining. |
 | [match.ts](../server/src/versus/match.ts) | `Match` (phases, deadlines, dedupe, away/forfeit, standings) and `RushMatch`, `BattleMatch` (both `RaceMatch`) and `DuelMatch`. Pure apart from an injected clock, so tests drive time. |
 | [lobbies.ts](../server/src/versus/lobbies.ts), [matchmaker.ts](../server/src/versus/matchmaker.ts) | Pure data: the hub sends the messages. |
+| [bots.ts](../server/src/versus/bots.ts) | Bots: who they are (name, character, rating, style) and how they play a seat (below, Bots). |
 | [puzzle.ts](../server/src/versus/puzzle.ts) | A round → what its player may see (`PuzzleView`: shown letters only) and what others may see (found/to find counts). |
 | [rating.ts](../server/src/versus/rating.ts) | Elo (K 32, PLACEHOLDER), pairwise for 3-4 players with K shared. |
 | [store.ts](../server/src/versus/store.ts) | Friends, requests, blocks, reports, results, the switch. |
@@ -126,6 +129,49 @@ an account cascades through all of it.
 `PUT|DELETE /v1/blocks/:id`, `POST /v1/players/:id/report {reason}`, `POST /v1/invites` (my code),
 `POST /v1/invites/:code/accept`. Public: `GET /v1/invites/:code` (whose link it is), `GET /i/:code` (the page).
 
+## Bots (owner's request, 2026-10-26)
+
+"Make multiplayer feel active and enjoyable, even when there aren't enough real players online… bots must
+follow the same game rules as real players and never have unfair advantages."
+
+- **When**: only in quick match (friend lobbies are for friends). Each wait draws its own bot time,
+  `BOT_WAIT_MS` 9-15 s (PLACEHOLDER, [matchmaker.ts](../server/src/versus/matchmaker.ts)), so it's never the
+  same beat. **Real players always come first**: a tick pairs players before it gives anyone bots, and the bot
+  time is longer than `FILL_WAIT_MS`, so two players who fit always get a real table. Then the hub seats one
+  bot for a duel, one to three for Rush and Battle (`tableWeights`), and the match starts like any other.
+- **Same rules, no advantage**: a bot is a `Seat` (`bot: true`) of an ordinary `Match` and plays through the
+  calls a device makes (`guess`, `skip`, `pick`, its own `n`), so the referee, the clocks, the dealing and the
+  dedupe are the same. The match's messages to it go to `Bot.receive` instead of a socket (`matchHost.send` in
+  the hub), so it sees **exactly a device's view** (`PuzzleView`: shown letters only) and never the word.
+- **How it plays**: like someone who knows everyday words. It tries likely letters by the language's letter
+  frequencies (each bot with its own taste for vowels; stronger bots stick to the commonest), and the more of
+  the word shows, the likelier it **recognises** it: then it plays the letter most of the fitting words share
+  (the dealing pool matched against the tiles, indexed by length once per pool). That's the description and
+  the player's vocabulary, as a probability. It slips now and then (an odd letter), gives up a lost-looking
+  Rush word (skip), rarely skips in Battle, and in a duel gives one of its cards (a hard one, if it's cunning).
+  A word typed by the player (not in the pool) is guessed on frequencies alone, as a person would.
+- **Skill and level**: a bot's rating is the player's, give or take 40; its skill (0-1) comes from that rating
+  (`skillPerPoint`), with a spread so two bots of one rating differ, and gentler bots for a player's first 5
+  matches. All PLACEHOLDER in `BOT_TUNING`. Ratings move against bots as against anyone, so the system settles
+  where the player wins about half their bot matches: harder as they climb, easier after a slump.
+  Simulated on the real English pool (bots against bots, 2:00 Rush): skill 0.2 guesses about 3 words, 0.5
+  about 7, 0.9 about 12; a 0.1 skill gap wins Rush about 3 times in 4, Battle and Duel about 3 in 5.
+- **Human pace**: every action waits a drawn think time: an ordinary guess (2.6 s for the weakest, 1.1 s for
+  the strongest, ±35%), reading each new word first, typing faster once it knows the word, a long pause now
+  and then (5%), never under 380 ms. Duel cards take 3-7 s.
+- **Who they look like**: names as players have them (the random name many keep, sometimes its "2" variant,
+  a first name in some form, a nickname; all pass `checkName`, never the player's own), the same random-name
+  lists as onboarding (moved to the shared [names.ts](../server/src/names.ts)); characters from the whole
+  rig, the free three most often (`BOT_CHARACTERS`: a test checks it against `design/characters/rig.js`).
+  The app gets nothing that says "bot": bot ids are random UUIDs with no row in `players`, so friends,
+  search and reports never meet one.
+- **Leaving**: a player who leaves (or is away too long) with only bots left ends the match at once
+  (`forfeit`: placed last, ranked loss, as against people). Bots never leave.
+- **Counting**: `saveResult` writes only the real players (bots have no rows); `versus_days.bot_matches`
+  (migration 008) counts the day's matches with bots, shown on the admin page with "Bots playing" now.
+- **Off**: `VERSUS_BOTS=0` on Railway (the hub's `bots: false`): queues wait for players only.
+- **Cost**: a bot is a few timers and a shrinking list of fitting words; no database, no socket.
+
 ## Invite links (owner's request, 2026-10-24)
 
 "Allow players to invite people who haven't downloaded the app yet… as simple and seamless as
@@ -178,7 +224,7 @@ A build also needs `ios.bundleIdentifier` and `android.package` in `app.json` (n
 
 - **`/admin`** on the server (set `ADMIN_TOKEN`, 24+ characters, on Railway; without it the page doesn't
   exist). It asks for the token, then shows the switch, an optional message for players, "also stop
-  running matches now", live counts (online, in matches, queued, lobbies) and the last 7 days.
+  running matches now", live counts (online, in matches, bots playing, queued, lobbies) and the last 7 days (with the matches bots filled).
   The token is compared in constant time; tries are rate limited (30/min).
 - **Off**: queues, lobbies and invites close at once; sockets not in a match close (`bye: 'disabled'`);
   running matches finish, or stop at once (counting nothing) with the checkbox. Friends routes answer 503.
@@ -231,7 +277,7 @@ the background (iOS would freeze it anyway). Players who never open Versus never
 ## Running and testing
 
 ```bash
-cd server && npm test     # versus-match.test.ts (modes, fake clock), versus-api.test.ts (real sockets, REST, switch, invite links)
+cd server && npm test     # versus-match.test.ts (modes, fake clock), versus-bots.test.ts (bots, matchmaking with bots), versus-api.test.ts (real sockets, REST, switch, invite links, a match with bots)
 npm test                  # app: src/state/__tests__/versus.test.ts (reducer), src/invite/__tests__/link.test.ts
 cd server && ADMIN_TOKEN=<24+ chars> npm run dev   # then http://localhost:3000/admin
 ```

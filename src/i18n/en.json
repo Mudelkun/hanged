@@ -571,5 +571,5 @@
   "invite.onboarding.paste": "Got an invite link from a friend?",
   "invite.onboarding.notInvite": "That's not a Hanged invite link.",
   "rules.versus.title": "Versus",
-  "rules.versus.body": "Play online against friends or random players: Word Rush, Balloon Battle and Word Duel. Each mode's rules are on its card in the Versus tab. Versus has its own rating: its matches don't count toward the leaderboard and don't pay tokens."
+  "rules.versus.body": "Play online against friends or random players: Word Rush, Balloon Battle and Word Duel. Each mode's rules are on its card in the Versus tab. Versus has its own rating: its matches don't count toward the leaderboard and don't pay tokens. When nobody's free to play, the game fills the match with computer players at your level, so a match always starts."
 }

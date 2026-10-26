@@ -46,8 +46,8 @@ export interface AppOptions extends FastifyServerOptions {
   adminToken?: string;
   /** VERSUS_DISABLED: Versus stays off whatever the switch says. */
   versusForcedOff?: boolean;
-  /** For tests: Versus's clock and dice. */
-  versus?: Pick<HubOptions, 'clock' | 'rng'>;
+  /** Versus's clock and dice (tests), and VERSUS_BOTS=0: no bots fill quick matches. */
+  versus?: Pick<HubOptions, 'clock' | 'rng' | 'bots'>;
   /** Invite links: the stores and the app ids the phone checks before opening the app. */
   links?: LinkOptions;
   /** TRUST_PROXY_HOPS: proxies in front of the server (Railway: 1, its edge). */

@@ -47,6 +47,8 @@ import type { VersusWord, WordSource } from './words.ts';
 
 export interface Seat extends PlayerCard {
   rating: number;
+  /** Played by the server (bots.ts). Never sent: a device sees a bot as any other player. */
+  bot?: boolean;
 }
 
 export interface Clock {
@@ -118,6 +120,10 @@ export abstract class Match {
     return this.players.map((p) => p.seat.id);
   }
 
+  get botIds(): string[] {
+    return this.players.filter((p) => p.seat.bot).map((p) => p.seat.id);
+  }
+
   start() {
     this.enter('countdown', VERSUS_LIMITS.countdownMs, () => this.begin());
   }
@@ -170,7 +176,7 @@ export abstract class Match {
     this.snapshot(p);
   }
 
-  /** Left on purpose (or away too long): placed last. */
+  /** Left on purpose (or away too long): placed last. With only bots left, nobody is there to play for: it ends. */
   forfeit(id: string) {
     const p = this.player(id);
     if (!p || p.link === 'left' || this.phase === 'over') return;
@@ -180,7 +186,8 @@ export abstract class Match {
     p.cancelAway = null;
     this.host.left(this, id);
     this.touch(p);
-    if (this.active().length <= 1) this.finish('forfeit');
+    const active = this.active();
+    if (active.length <= 1 || active.every((x) => x.seat.bot)) this.finish('forfeit');
     else this.afterLeave(p);
   }
 
