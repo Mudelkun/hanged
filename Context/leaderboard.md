@@ -30,6 +30,39 @@ every player is a row, and the player's own row is the one that stands out.
 - The **server** ranks; the device only sends its data. A player shows up once they have one word in the
   period.
 
+## Leaderboard bots (owner's request, 2026-10-26)
+
+"Simulate about 100 active players in the game to make the classement look alive even though it's just bots."
+The owner also had the test accounts SunnyOtter4–8 (42 words each from 0 rounds: the first-sync hole closed on
+2026-10-25) deleted from the live database the same day.
+
+- **What they are**: ordinary `players` rows with `bot = true` (migration 009), made and played by
+  [crowd.ts](../server/src/crowd.ts). So both boards, their indexes and a real player's rank need nothing new:
+  a bot ranks, ties and fills a week exactly like a person. The app gets nothing that says "bot".
+- **Who they look like**: names and characters from the Versus bots' generators (`botName`, `botCharacter`
+  in [versus/bots.ts](../server/src/versus/bots.ts): the random names many keep, first names, nicknames; the
+  free characters most often), each name free at the time (names are unique: a player who later wants a bot's
+  name gets a variant, as with anyone).
+- **How they play**: each has a **persona drawn from its id** (`persona`): time zone, words won on a day it
+  plays (log-normal, median 9), the share of days it plays, win rate, misses, and the highest level it holds
+  (its skill; otherwise a level every 10 words). It plays **hour by hour on a day's curve** (`DAY_CURVE`:
+  evenings most, nights hardly; weekends a bit more), so bots in different time zones keep the board moving
+  all day. Whether it plays on a day is drawn from its id and the day, so it holds all day.
+- **One step does everything** (`advanceCrowd`): it plays every bot from its `synced_at` to now and writes the
+  totals and the weeks (as a sync's `addRounds`). A new bot is inserted with `synced_at` weeks back (it
+  "joined" 2–60 days ago, recent ones more often), so its first step builds its past; after a restart the
+  next step catches up (90 days at most). Moving to a moment already reached adds nothing. Both steps take an
+  advisory lock, because a redeploy briefly runs two servers.
+- **Timer**: started by `buildApp` when the server is ready, every 5 min (`CROWD.tickMs`), stopped on close.
+  `LEADERBOARD_BOTS` on Railway sets how many (default 100); fewer removes the extra ones, `0` takes them all
+  off the boards. Tests leave it out: no bots.
+- **Kept out of everything else**: they can't sign in (their secret hash is no sha256), friends search,
+  friend requests and reports skip them ([versus/store.ts](../server/src/versus/store.ts)), they never write
+  `word_days` (word statistics) and never play Versus (that has its own bots: [versus.md](versus.md), Bots).
+- What it looks like with 100 (simulated on PGlite, a Monday evening): all time, #1 about 1,500 words, #50
+  about 90; this week, #1 about 60 and #50 about 5 on the Monday, about 7 times that by Sunday. A new player
+  who plays every day reaches the weekly top 50 within a day or two. All PLACEHOLDER in `CROWD`.
+
 ## Screen
 
 - Header: `TitleHeader` ([GameHeader.tsx](../src/components/GameHeader.tsx)): avatar (opens Profile),

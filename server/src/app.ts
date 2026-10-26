@@ -7,6 +7,7 @@
  *   GET  /v1/leaderboard  ?period=week|all[&me=<player id>]
  *   GET  /v1/names/available ?name=<name>[&me=<player id>] → { available }
  *   GET  /health          for Railway
+ * Leaderboard bots (crowd.ts) play on a timer while the server runs.
  * Versus (online multiplayer): its socket and friends routes (versus/routes.ts),
  * friend invite links (versus/links.ts: /i/<code> and the .well-known files),
  * and the admin page with its on/off switch (admin.ts).
@@ -20,6 +21,7 @@ import { adminRoutes } from './admin.ts';
 
 import { LIMITS, type NameAvailableResponse, type Period, type SyncRequest } from './contract.ts';
 import type { Db } from './db.ts';
+import { startCrowd } from './crowd.ts';
 import { createLeaderboard } from './leaderboard.ts';
 import { NAME_SENT_MAX } from './names.ts';
 import { credentials, deletePlayer, nameAvailable, register, signedIn, sync } from './players.ts';
@@ -52,6 +54,8 @@ export interface AppOptions extends FastifyServerOptions {
   links?: LinkOptions;
   /** TRUST_PROXY_HOPS: proxies in front of the server (Railway: 1, its edge). */
   proxyHops?: number;
+  /** LEADERBOARD_BOTS: simulated players kept on the boards (crowd.ts); 0 removes them. Left out (tests): bots left alone. */
+  crowd?: number;
 }
 
 const int = (minimum: number, maximum: number) => ({ type: 'integer', minimum, maximum });
@@ -117,7 +121,7 @@ const nameQuery = {
 };
 
 export async function buildApp(db: Db, opts: AppOptions = {}) {
-  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, links = {}, proxyHops = 1, ...fastifyOpts } = opts;
+  const { boardTtlMs, newPlayersPerHour = 20, words, adminToken, versusForcedOff = false, versus, links = {}, proxyHops = 1, crowd, ...fastifyOpts } = opts;
   // Railway sits behind a proxy: rate limits must see the caller's address, not the proxy's. Trust
   // exactly `proxyHops` hops, so req.ip is the address our own proxy wrote: `true` would take the
   // leftmost X-Forwarded-For, which the caller writes, and let anyone dodge every per-IP limit with
@@ -181,6 +185,11 @@ export async function buildApp(db: Db, opts: AppOptions = {}) {
     }),
   );
   app.addHook('preClose', async () => hub.close());
+  if (crowd !== undefined) {
+    let stopCrowd: (() => Promise<void>) | undefined;
+    app.addHook('onReady', async () => void (stopCrowd = startCrowd(db, crowd, app.log)));
+    app.addHook('preClose', async () => stopCrowd?.());
+  }
   versusRoutes(app, db, hub);
   linkRoutes(app, db, links);
   adminRoutes(app, db, hub, { token: adminToken, forcedOff: versusForcedOff });

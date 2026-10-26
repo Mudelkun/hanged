@@ -136,7 +136,7 @@ in name order, each once (`schema_migrations`). **Never edit an applied migratio
 
 | Table | |
 |---|---|
-| `players` | id, secret hash, `role` (null, or a staff role: [dev-accounts.md](dev-accounts.md)), name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced) |
+| `players` | id, secret hash, `role` (null, or a staff role: [dev-accounts.md](dev-accounts.md)), name, `name_key` (unique: `nameKey(name)`; rows from before migration 003 get it on their next sync), character, language, `words_guessed` (the score), level, tokens (the balance, never ranked), `tokens_earned`, `misses`, rounds played/won, `last_seq`, `score_at` (when the score last rose), `synced_at` (null = never synced; a bot's: how far it has played), `bot` (a leaderboard bot, [leaderboard.md](leaderboard.md)) |
 | `player_weeks` | `(player_id, week)` → words guessed, highest level played, tokens earned and misses that week |
 | `words` | a copy of `data/words.json` and the `data/words/<language>.json` packs, filled by the server itself (below), to show words in the statistics, and since migration 004 with each word's description, subject, rarity and difficulty, because **Versus deals its words from it**. **Not a foreign key**: a newer app may report a word the server hasn't seeded yet. Its check allows each language's own letters (accents, ñ, ß), the same sets as `wordId` in `app.ts`, so **a new language needs a migration** that widens it |
 | `word_days` | `(word_id, day)` → played, won, wrong guesses, descriptions shown during play (always shown on current clients), letters bought |
@@ -179,7 +179,7 @@ Expo Go on a phone can't reach `localhost`: use the computer's LAN address, or t
    No manual seeding: a deploy is enough. (Until 2026-10-23 this was a manual `npm run seed:words`; forgetting
    it after migration 004 left Versus with no words: "isn't ready in this language". The script still exists.)
    Versus variables: `ADMIN_TOKEN` (24+ characters: the `/admin` page and its switch exist only with it),
-   `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_BOTS=0` (no bots fill quick matches: [versus.md](versus.md), Bots),
+   `VERSUS_DISABLED=1` (forces Versus off), `VERSUS_BOTS=0` (no bots fill quick matches: [versus.md](versus.md), Bots), `LEADERBOARD_BOTS` (simulated players on the boards, default 100, `0` removes them: [leaderboard.md](leaderboard.md), Leaderboard bots),
    `VERSUS_DRAIN_SECONDS` (how long running matches get to finish on a
    redeploy; keep it under `RAILWAY_DEPLOYMENT_DRAINING_SECONDS`). Invite links: `APPLE_APP_ID`, `APP_STORE_ID`,
    `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256`, and `PUBLIC_URL` = `https://<domain>` (the page builds its link from it, not from

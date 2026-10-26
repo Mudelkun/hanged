@@ -91,7 +91,7 @@ export async function friendsOf(db: Sql, id: string, presence: (id: string) => P
 
 export const likeEscape = (s: string) => s.replace(/[\\%_]/g, '\\$&');
 
-/** Players whose name starts with `q` (case, accents and punctuation aside), not blocked either way. */
+/** Players whose name starts with `q` (case, accents and punctuation aside), not blocked either way. Never a leaderboard bot (crowd.ts). */
 export async function search(db: Sql, me: string, q: string): Promise<SearchResponse> {
   const key = nameKey(q);
   if (key.length < VERSUS_LIMITS.searchMin) return { players: [] };
@@ -102,7 +102,7 @@ export async function search(db: Sql, me: string, q: string): Promise<SearchResp
             WHEN EXISTS (SELECT 1 FROM friend_requests r WHERE r.from_id = $1 AND r.to_id = p.id) THEN 'outgoing'
             ELSE 'none' END AS relation
      FROM players p
-     WHERE p.name_key LIKE $2 || '%' AND p.id <> $1
+     WHERE p.name_key LIKE $2 || '%' AND p.id <> $1 AND NOT p.bot
        AND NOT EXISTS (SELECT 1 FROM blocks b WHERE (b.player_id = $1 AND b.blocked_id = p.id) OR (b.player_id = p.id AND b.blocked_id = $1))
      ORDER BY p.name_key = $3 DESC, p.name_key
      LIMIT $4`,
@@ -127,10 +127,10 @@ const full = async (sql: Sql, a: string, b: string) =>
 const areFriends = async (sql: Sql, a: string, b: string) =>
   (await sql.query('SELECT 1 FROM friends WHERE player_id = $1 AND friend_id = $2', [a, b])).rows.length > 0;
 
-/** Locks both players' rows, in id order so two players acting on each other at once can't deadlock. Their cards, the ones that exist. */
+/** Locks both players' rows, in id order so two players acting on each other at once can't deadlock. Their cards, the ones that exist (a leaderboard bot doesn't: it never answers). */
 async function lockPair(sql: Sql, a: string, b: string): Promise<PlayerCard[]> {
   const { rows } = await sql.query<PlayerCard>(
-    `SELECT id, name, character_id AS "characterId" FROM players WHERE id = ANY($1) ORDER BY id FOR UPDATE`,
+    `SELECT id, name, character_id AS "characterId" FROM players WHERE id = ANY($1) AND NOT bot ORDER BY id FOR UPDATE`,
     [[a, b]],
   );
   return rows;
@@ -267,10 +267,10 @@ export function acceptInvite(db: Db, me: string, code: string): Promise<InviteOu
   });
 }
 
-/** One report per pair: reporting again replaces the reason. */
+/** One report per pair: reporting again replaces the reason. A leaderboard bot (crowd.ts) can't be reported. */
 export async function report(db: Sql, me: string, other: string, reason: ReportReason): Promise<boolean> {
   const { rows } = await db.query(
-    `INSERT INTO player_reports (reporter_id, reported_id, reason) SELECT $1, id, $3 FROM players WHERE id = $2
+    `INSERT INTO player_reports (reporter_id, reported_id, reason) SELECT $1, id, $3 FROM players WHERE id = $2 AND NOT bot
      ON CONFLICT (reporter_id, reported_id) DO UPDATE SET reason = excluded.reason, created_at = now() RETURNING 1`,
     [me, other, reason],
   );

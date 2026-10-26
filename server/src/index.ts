@@ -4,6 +4,7 @@
  * copied in from server/data/ whenever it changed (Versus deals from it).
  */
 import { buildApp } from './app.ts';
+import { CROWD } from './crowd.ts';
 import { embedded, postgres } from './db.ts';
 import { migrate } from './migrate.ts';
 import { syncWords } from './words.ts';
@@ -20,6 +21,7 @@ const app = await buildApp(db, {
   adminToken: process.env.ADMIN_TOKEN,
   versusForcedOff: process.env.VERSUS_DISABLED === '1',
   versus: { bots: process.env.VERSUS_BOTS !== '0' },
+  crowd: Number(process.env.LEADERBOARD_BOTS ?? CROWD.size),
   links: {
     appleAppId: process.env.APPLE_APP_ID,
     appStoreId: process.env.APP_STORE_ID,

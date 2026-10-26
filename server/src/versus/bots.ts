@@ -64,7 +64,7 @@ type Range = readonly [number, number];
 const between = ([a, b]: Range, t: number) => a + (b - a) * t;
 const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
 /** A standard normal draw (Box-Muller). */
-const gauss = (rng: () => number) => Math.sqrt(-2 * Math.log(1 - rng())) * Math.cos(2 * Math.PI * rng());
+export const gauss = (rng: () => number) => Math.sqrt(-2 * Math.log(1 - rng())) * Math.cos(2 * Math.PI * rng());
 const pick = <T>(list: readonly T[], rng: () => number): T => list[Math.floor(rng() * list.length)];
 function weighted(weights: readonly number[], rng: () => number): number {
   let r = rng() * weights.reduce((a, b) => a + b, 0);
@@ -106,6 +106,9 @@ export const BOT_CHARACTERS = {
   paid: ['biscuit', 'pip', 'bao', 'koa', 'lolo', 'rocco', 'ember', 'sage', 'rexy', 'vesper', 'button', 'ribbit'],
 } as const;
 
+/** A character as players pick them: the free ones most often (leaderboard bots too: crowd.ts). */
+export const botCharacter = (rng: () => number): string => pick(rng() < 0.55 ? BOT_CHARACTERS.free : BOT_CHARACTERS.paid, rng);
+
 const FIRST_NAMES = [
   'Maya', 'Leo', 'Zoe', 'Sam', 'Noah', 'Lina', 'Theo', 'Ava', 'Kai', 'Mila', 'Eli', 'Nora', 'Finn', 'Ruby', 'Omar',
   'Iris', 'Jonas', 'Sofia', 'Hugo', 'Lea', 'Max', 'Aria', 'Ben', 'Chloe', 'Dani', 'Emma', 'Felix', 'Gabi', 'Ivy',
@@ -115,7 +118,7 @@ const FIRST_NAMES = [
 const NICKNAMES = ['WordNerd', 'PuzzleFox', 'LetterBee', 'QuizKid', 'Bookworm', 'NightOwl', 'Spelly', 'Wordsmith', 'VowelHunter', 'Lexi', 'Riddler', 'Scrabbler'];
 const INITIALS = 'ABCDEFGHJKLMNPRSTVW';
 
-/** A name like players have: the random one many keep (or its "2" variant), a first name in some form, a nickname. */
+/** A name like players have (leaderboard bots too: crowd.ts): the random one many keep (or its "2" variant), a first name in some form, a nickname. */
 export function botName(language: string, rng: () => number): string {
   const r = rng();
   if (r < 0.35) {
@@ -149,8 +152,7 @@ export function botsFor(mode: ModeId, language: string, player: { name: string |
     for (let tries = 0; names.has(nameKey(name)) && tries < 20; tries++) name = botName(language, rng);
     names.add(nameKey(name));
     const rating = Math.max(100, Math.round(player.rating + gauss(rng) * t.ratingSpread));
-    const characterId = pick(rng() < 0.55 ? BOT_CHARACTERS.free : BOT_CHARACTERS.paid, rng);
-    return new Bot({ id: randomUUID(), name, characterId, rating, bot: true }, botStyle(rating, player.played, rng), host);
+    return new Bot({ id: randomUUID(), name, characterId: botCharacter(rng), rating, bot: true }, botStyle(rating, player.played, rng), host);
   });
 }
 

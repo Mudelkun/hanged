@@ -218,7 +218,8 @@ const earned = (r: RoundReport) => r.tokens ?? 0;
 const sum = (reports: RoundReport[], of: (r: RoundReport) => number) => reports.reduce((n, r) => n + of(r), 0);
 
 /** Week (Monday, UTC) and day (UTC) of an epoch-ms column. */
-const WEEK = `date_trunc('week', to_timestamp(at / 1000.0) AT TIME ZONE 'UTC')::date`;
+/** The Monday (UTC) of a row's `at` (ms): the week it counts in (crowd.ts too). */
+export const WEEK = `date_trunc('week', to_timestamp(at / 1000.0) AT TIME ZONE 'UTC')::date`;
 const DAY = `(to_timestamp(at / 1000.0) AT TIME ZONE 'UTC')::date`;
 
 async function addRounds(sql: Sql, playerId: string, reports: RoundReport[]) {
