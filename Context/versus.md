@@ -218,7 +218,8 @@ the page instead of the app): `APPLE_APP_ID` (`<team id>.<bundle id>`), `APP_STO
 App Store URL), `ANDROID_PACKAGE`, `ANDROID_CERT_SHA256` (comma separated, from Play Console's App signing),
 `PUBLIC_URL` (`https://<domain>`: the page's link, the one iOS copies, is built from it; without it the
 request's Host is used, which a caller can forge, so the page is only ever cached `private`).
-A build also needs `ios.bundleIdentifier` and `android.package` in `app.json` (not chosen yet).
+The iOS bundle id is `com.mudelkun.hanged` (its App ID has the Associated Domains capability); `android.package`
+isn't chosen yet.
 
 ## The switch (kill switch) and the admin page
 

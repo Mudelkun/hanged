@@ -132,3 +132,17 @@ events). Add tagged logs, ask the owner to reload (`r`) and play, then read that
 (`CFBundleDisplayName`) **"Hanged"**, slug/scheme `hanged`, portrait only. iPad is supported
 (`supportsTablet`, with `requireFullScreen` since the app is portrait only): see [responsive.md](responsive.md).
 Never "Hangman".
+
+## iOS builds (EAS, no Mac needed)
+
+- Bundle id **`com.mudelkun.hanged`**. Its App ID on developer.apple.com has only **Associated Domains** (the
+  invite links); no Push Notifications, since the reminder is local. `infoPlist.ITSAppUsesNonExemptEncryption:
+  false` (HTTPS only) skips Apple's encryption question on every upload.
+- **`eas.json`**, profile `production`: the build number is kept by EAS (`appVersionSource: remote`,
+  `autoIncrement`), so never set `ios.buildNumber`; raise `version` in `app.json` for a new store version.
+- **The server URL is in `eas.json`'s `env`, not `.env`**: `.env` is git-ignored, so the cloud build never
+  sees it. Without it the build has no leaderboard, Versus or invite links (and no `associatedDomains`).
+  Change both if the server moves.
+- EAS creates and keeps the distribution certificate and provisioning profile (answer Yes on the first build).
+- `eas build -p ios --profile production`, then `eas submit -p ios --latest` (finds the App Store Connect app
+  by the bundle id; the first run offers to make the API key). Builds land in TestFlight's `Hanged Team` group.

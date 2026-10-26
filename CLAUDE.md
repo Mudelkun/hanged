@@ -50,7 +50,7 @@ This file holds the owner's spec (the rules below) and what applies to almost ev
 | Versus (online multiplayer): the modes, the live socket, friends and **invite links**, lobbies, matchmaking, fairness, disconnections, the admin switch, costs and scaling | [Context/versus.md](Context/versus.md) |
 | Developer accounts: staff roles and their permissions (all characters, any level, free spending, dev tools, the reserved name "Admin"), granting them from the admin page, keeping them off the boards and Versus ratings | [Context/dev-accounts.md](Context/dev-accounts.md) |
 | Screen sizes: how every screen adapts from a 320×568 phone to a 13" iPad (`useLayout`, the tablet column), and the screenshots of every screen at every size (`scripts/screenshots.js`) | [Context/responsive.md](Context/responsive.md) |
-| Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json` | [Context/dev-setup.md](Context/dev-setup.md) |
+| Stack, commands, lint/TypeScript traps, previewing without a Mac, app name in `app.json`, iOS builds and TestFlight (EAS, the bundle id) | [Context/dev-setup.md](Context/dev-setup.md) |
 
 ### Code layout
 

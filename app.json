@@ -8,10 +8,12 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.mudelkun.hanged",
       "supportsTablet": true,
       "requireFullScreen": true,
       "infoPlist": {
-        "CFBundleDisplayName": "Hanged"
+        "CFBundleDisplayName": "Hanged",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
