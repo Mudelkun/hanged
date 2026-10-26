@@ -7,12 +7,13 @@
  */
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../../characters/rig';
 import { useSoundScope } from '../../audio/AudioProvider';
 import { CharacterGrid, CharacterInfo, Cheer, Ownership, SHOP, Showcase } from '../../components/CharacterShop';
+import { Column } from '../../components/Column';
 import { TitleHeader } from '../../components/GameHeader';
 import { PaperBackground } from '../../components/PaperBackground';
 import { PayButton, useRefusal } from '../../components/PayButton';
@@ -23,16 +24,14 @@ import { canAfford, canBuyCharacter, characterPrice, ownsCharacter } from '../..
 import { useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { colors } from '../../theme';
-
-const GUTTER = 16;
+import { useLayout } from '../../theme/layout';
 
 export default function CharactersScreen() {
   const t = useTranslation();
   const audio = useSoundScope();
   const { state, dispatch } = useGame();
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
-  const compact = height < 760;
+  const { gutter, compact, tight, room } = useLayout();
 
   // The page opens on the character being played, and keeps what was looked at while it stays mounted
   const [viewedId, setViewedId] = useState(state.characterId);
@@ -89,44 +88,47 @@ export default function CharactersScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <TitleHeader title={t('chars.title')} character={characterById(state.characterId)} tokens={state.tokens} live />
-      <View style={styles.body}>
-        <Showcase
-          character={viewed}
-          cheer={cheer}
-          onPrev={() => step(-1)}
-          onNext={() => step(1)}
-          style={[styles.stage, { minHeight: compact ? 130 : 170 }]}
-        />
-        <CharacterInfo character={viewed} ownership={status} price={price} note={note} />
-        <CharacterGrid ownership={ownership} viewedId={viewedId} width={width - GUTTER * 2} gutter={GUTTER} compact={compact} onPress={viewCharacter} />
-        <View style={styles.action}>
-          {status === 'locked' ? (
-            <PayButton
-              big
-              label={t('chars.unlock', { name: viewed.name, price })}
-              a11yLabel={t('chars.a11y.unlock', { name: viewed.name, price })}
-              canAfford={canAfford(state, price)}
-              onPay={onBuy}
-              onRefuse={onRefuse}
-            />
-          ) : status === 'owned' ? (
-            <BigButton cue={false} label={t('chars.choose', { name: viewed.name })} onPress={onPick} />
-          ) : (
-            <BigButton ghost label={t('chars.play', { name: viewed.name })} onPress={() => router.navigate('/')} />
-          )}
+      <Column>
+        <View style={{ height: insets.top }} />
+        <TitleHeader title={t('chars.title')} character={characterById(state.characterId)} tokens={state.tokens} live />
+        <View style={[styles.body, { paddingHorizontal: gutter }]}>
+          <Showcase
+            character={viewed}
+            cheer={cheer}
+            onPrev={() => step(-1)}
+            onNext={() => step(1)}
+            // A tall screen gives its spare room to the stage, so the grid and button stay low, like Play's keyboard
+            style={[styles.stage, { minHeight: tight ? 112 : compact ? 130 : 170, maxHeight: 300 + Math.max(0, room - 760) }]}
+          />
+          <CharacterInfo character={viewed} ownership={status} price={price} note={note} />
+          <CharacterGrid ownership={ownership} viewedId={viewedId} onPress={viewCharacter} />
+          <View style={styles.action}>
+            {status === 'locked' ? (
+              <PayButton
+                big
+                label={t('chars.unlock', { name: viewed.name, price })}
+                a11yLabel={t('chars.a11y.unlock', { name: viewed.name, price })}
+                canAfford={canAfford(state, price)}
+                onPay={onBuy}
+                onRefuse={onRefuse}
+              />
+            ) : status === 'owned' ? (
+              <BigButton cue={false} label={t('chars.choose', { name: viewed.name })} onPress={onPick} />
+            ) : (
+              <BigButton ghost label={t('chars.play', { name: viewed.name })} onPress={() => router.navigate('/')} />
+            )}
+          </View>
         </View>
-      </View>
-      <TabBar active="characters" compact={compact} />
+        <TabBar active="characters" />
+      </Column>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: GUTTER, minHeight: 0 },
+  body: { flex: 1, minHeight: 0 },
   // The mockup's stage is 222 tall; it grows on tall phones so the grid and button sit low, like Play's keyboard
-  stage: { flexGrow: 1, flexShrink: 1, maxHeight: 300, marginTop: 4 },
+  stage: { flexGrow: 1, flexShrink: 1, marginTop: 4 },
   action: { marginTop: 'auto', paddingTop: 6 },
 });

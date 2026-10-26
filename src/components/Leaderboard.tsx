@@ -12,6 +12,7 @@ import { Character } from '../characters/rig';
 import { useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Avatar } from './GameHeader';
 import { arrowXml, cloudXml, crownXml, Icon, medalXml, sparkXml } from './icons';
 import { Raised } from './Raised';
@@ -57,10 +58,10 @@ export function PeriodSwitch({ period, onChange }: { period: Period; onChange: (
   );
 }
 
-function Score({ words, me }: { words: number; me: boolean }) {
+function Score({ words, me, narrow }: { words: number; me: boolean; narrow: boolean }) {
   const t = useTranslation();
   return (
-    <Text style={[styles.rowScore, me && styles.rowScoreMe]}>
+    <Text style={[styles.rowScore, me && styles.rowScoreMe, narrow && (me ? styles.rowScoreMeNarrow : styles.rowScoreNarrow)]}>
       {words}
       <Text style={[styles.rowUnit, me && styles.rowUnitMe]}> {t(words === 1 ? 'board.word' : 'board.words')}</Text>
     </Text>
@@ -168,6 +169,8 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
     ]).start();
   }, [flash, scale]);
   const { me } = entry;
+  // A narrow phone: the name keeps its room, the avatar and score give a little
+  const { narrow } = useLayout();
   const r = sizeOf(entry);
   const medal = MEDALS[entry.rank - 1];
   return (
@@ -191,6 +194,7 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
             { height: r.height },
             medal && [styles.rowTop, { backgroundColor: medal.card, borderColor: medal.edge }],
             me && styles.rowMe,
+            narrow && styles.rowNarrow,
           ]}
         >
           {me && !medal && (
@@ -209,14 +213,14 @@ export const RankRow = memo(function RankRow({ entry, flash = 0 }: { entry: Rank
             </View>
           )}
           {!medal && <RankChip rank={entry.rank} me={me} />}
-          <Avatar character={entry.character} size={me ? 52 : medal ? 48 : 44} plain={!me} />
+          <Avatar character={entry.character} size={(me ? 52 : medal ? 48 : 44) - (narrow ? 8 : 0)} plain={!me} />
           <View style={styles.rowName}>
-            <Text style={[styles.rowNameText, me && styles.rowNameMe]} numberOfLines={1}>
+            <Text style={[styles.rowNameText, me && styles.rowNameMe, narrow && styles.rowNameNarrow]} numberOfLines={1}>
               {entry.name}
             </Text>
             {me && <You />}
           </View>
-          <Score words={entry.words} me={me} />
+          <Score words={entry.words} me={me} narrow={narrow} />
         </Raised>
         {medal && <Medal rank={entry.rank} rowHeight={r.height} />}
       </Animated.View>
@@ -336,12 +340,16 @@ const styles = StyleSheet.create({
   // Room on the left for the medal, drawn over the row
   rowTop: { borderWidth: 2.5, paddingLeft: MEDAL_W + 12 },
   rowMe: { backgroundColor: colors.coral, borderWidth: 3, borderColor: '#fff', gap: 10 },
+  rowNarrow: { gap: 7, paddingRight: 10 },
   rank: { width: 32, textAlign: 'center', ...display('700', 18, '#c4ad9b') },
   rowName: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7 },
   rowNameText: { ...display('700', 17.5), flexShrink: 1 },
   rowNameMe: display('700', 19, '#fff'),
   rowScore: display('700', 25),
   rowScoreMe: { color: '#fff', fontSize: 27 },
+  rowNameNarrow: { fontSize: 16 },
+  rowScoreNarrow: { fontSize: 21 },
+  rowScoreMeNarrow: { fontSize: 23 },
   rowUnit: display('600', 13, colors.muted),
   rowUnitMe: { color: 'rgba(255,255,255,0.85)' },
 

@@ -12,14 +12,15 @@
  */
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Animated, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { characterById } from '../../characters/rig';
 import { sound } from '../../audio';
 import { useSoundScope } from '../../audio/AudioProvider';
 import { GameHeader } from '../../components/GameHeader';
-import { GameScene, Stamp } from '../../components/GameScene';
+import { Column } from '../../components/Column';
+import { GameScene, Stamp, useSceneRange, useStampWidth } from '../../components/GameScene';
 import { LetterKeyboard } from '../../components/LetterKeyboard';
 import { LevelChange } from '../../components/LevelChange';
 import { LevelMap } from '../../components/LevelMap';
@@ -30,7 +31,7 @@ import { ReminderSheet } from '../../components/ReminderSheet';
 import { BigButton, DescriptionCard, LetterShopPill, MissesBar, TileLook, WordTiles } from '../../components/RoundParts';
 import { STREAK_SHOWN_FROM, StreakTakeover } from '../../components/StreakTakeover';
 import { TabBar } from '../../components/TabBar';
-import { useTokenOrigin } from '../../components/TokenFlight';
+import { MEASURABLE, useTokenOrigin } from '../../components/TokenFlight';
 import { WelcomeToast } from '../../components/WelcomeToast';
 import { LETTER_BUY_COST } from '../../game/config';
 import { dailyDays, dailyStatus } from '../../game/daily';
@@ -44,6 +45,7 @@ import { askForReview } from '../../review/storeReview';
 import { useGame } from '../../state/GameContext';
 import { useToday } from '../../state/useDaily';
 import { colors, fonts, levelColor } from '../../theme';
+import { useLayout } from '../../theme/layout';
 
 // Lost waits for the last balloon to pop and the character to hit the ground (stage 10 is 2200 ms)
 const RESULT_DELAY = { lost: 2600, won: 700 };
@@ -60,9 +62,9 @@ export default function PlayScreen() {
   const round = state.round!;
   const status = roundStatus(round);
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
-  const available = width - 32;
-  const compact = height < 760;
+  const layout = useLayout();
+  // The scene grows into the room the rest leaves: the mockup's 230 tall on a phone
+  const sceneRange = useSceneRange(130, 230);
   const character = characterById(state.characterId);
   const playerName = state.playerName ?? t('player.defaultName');
 
@@ -162,82 +164,74 @@ export default function PlayScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <GameHeader
-        name={playerName}
-        character={character}
-        wordsGuessed={state.wordsGuessed}
-        level={levelMoved && landedFor !== round.id ? round.level : level}
-        tokens={state.tokens}
-        dailyDays={dailyDays(state.daily, today)}
-        dailyDone={dailyStatus(state.daily, today) === 'done'}
-        onLevelPress={levelChanging ? undefined : openMap}
-      />
-      <View style={styles.body}>
-        {showResult ? (
-          <ResultView
-            round={round}
-            status={status === 'won' ? 'won' : 'lost'}
-            characterName={character.name}
-            character={character}
-            tokensEarned={state.lastTokensEarned}
-            rewardFlown={streakShown}
-            streak={streak}
-            dailyDays={state.dailyCountedBy === round.id ? state.daily.days : 0}
-            level={level}
-            available={available}
-            compact={compact}
-            onNext={() => { audio.cancel(); startNextRound(); audio.sequence([{ cue: 'deal', at: 100 }]); }}
-          />
-        ) : (
-          <>
-            <GameScene
-              key={round.id}
+      <Column>
+        <View style={{ height: insets.top }} />
+        <GameHeader
+          name={playerName}
+          character={character}
+          wordsGuessed={state.wordsGuessed}
+          level={levelMoved && landedFor !== round.id ? round.level : level}
+          tokens={state.tokens}
+          dailyDays={dailyDays(state.daily, today)}
+          dailyDone={dailyStatus(state.daily, today) === 'done'}
+          onLevelPress={levelChanging ? undefined : openMap}
+        />
+        <View style={[styles.body, { paddingHorizontal: layout.gutter }]}>
+          {showResult ? (
+            <ResultView
+              round={round}
+              status={status === 'won' ? 'won' : 'lost'}
+              characterName={character.name}
               character={character}
-              stage={sceneStage(round)}
-              gone={balloonsGone(round)}
-              mode="play"
-              entering={welcomePending}
-              style={[styles.playScene, { minHeight: compact ? 96 : 130 }]}
-              accessibilityLabel={t('play.a11y.scene', { name: character.name, left: balloonsLeft(round) })}
+              tokensEarned={state.lastTokensEarned}
+              rewardFlown={streakShown}
+              streak={streak}
+              dailyDays={state.dailyCountedBy === round.id ? state.daily.days : 0}
+              level={level}
+              onNext={() => { audio.cancel(); startNextRound(); audio.sequence([{ cue: 'deal', at: 100 }]); }}
             />
-            <MissesBar wrong={wrongCount(round)} max={round.maxWrong} />
-            <WordTiles
-              letters={round.word.split('').map((c) => ({ letter: c, look: tileState(round, c) as TileLook }))}
-              available={available}
-              compact={compact}
-            />
-            {lettersForSale(state) && (
-              <LetterShopPill
-                canAfford={canAfford(state, LETTER_BUY_COST)}
-                onBuy={onBuyLetters}
-                compact={compact}
+          ) : (
+            <>
+              <GameScene
+                key={round.id}
+                character={character}
+                stage={sceneStage(round)}
+                gone={balloonsGone(round)}
+                mode="play"
+                entering={welcomePending}
+                style={[styles.playScene, sceneRange]}
+                accessibilityLabel={t('play.a11y.scene', { name: character.name, left: balloonsLeft(round) })}
               />
-            )}
-            <DescriptionCard text={round.description} subject={round.subject} compact={compact} />
-            <LetterKeyboard language={round.language}
-              keyState={(c) => keyState(round, c)}
-              locked={status !== 'playing'}
-              onPress={onKey}
-              available={available}
-              compact={compact}
+              <MissesBar wrong={wrongCount(round)} max={round.maxWrong} />
+              <WordTiles letters={round.word.split('').map((c) => ({ letter: c, look: tileState(round, c) as TileLook }))} />
+              {lettersForSale(state) && (
+                <LetterShopPill
+                  canAfford={canAfford(state, LETTER_BUY_COST)}
+                  onBuy={onBuyLetters}
+                />
+              )}
+              <DescriptionCard text={round.description} subject={round.subject} />
+              <LetterKeyboard language={round.language}
+                keyState={(c) => keyState(round, c)}
+                locked={status !== 'playing'}
+                onPress={onKey}
+              />
+            </>
+          )}
+          {welcomePending && <WelcomeToast name={playerName} character={character} onDone={dismissWelcome} />}
+          {streakShown && streakGone !== round.id && (
+            <StreakTakeover
+              key={round.id}
+              streak={streak}
+              tokens={state.lastTokensEarned}
+              character={character}
+              onReveal={revealResult}
+              onDone={onStreakGone}
             />
-          </>
-        )}
-        {welcomePending && <WelcomeToast name={playerName} character={character} onDone={dismissWelcome} />}
-        {streakShown && streakGone !== round.id && (
-          <StreakTakeover
-            key={round.id}
-            streak={streak}
-            tokens={state.lastTokensEarned}
-            character={character}
-            compact={compact}
-            onReveal={revealResult}
-            onDone={onStreakGone}
-          />
-        )}
-      </View>
-      <TabBar active="play" compact={compact} />
+          )}
+        </View>
+        <TabBar active="play" />
+      </Column>
       {showResult && levelChanging && (
         <LevelChange
           key={round.id}
@@ -245,8 +239,6 @@ export default function PlayScreen() {
           to={level}
           best={state.bestLevel}
           character={character}
-          width={available}
-          compact={compact}
           onLanded={onLevelLanded}
           onClose={onLevelGone}
         />
@@ -257,7 +249,7 @@ export default function PlayScreen() {
   );
 }
 
-function ResultView({ round, status, character, characterName, tokensEarned, rewardFlown, streak, dailyDays, level, available, compact, onNext }: {
+function ResultView({ round, status, character, characterName, tokensEarned, rewardFlown, streak, dailyDays, level, onNext }: {
   round: Round;
   status: 'won' | 'lost';
   character: ReturnType<typeof characterById>;
@@ -270,11 +262,14 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
   dailyDays: number;
   /** The player's level now: not the round's level when this round moved it. */
   level: number;
-  available: number;
-  compact: boolean;
   onNext: () => void;
 }) {
   const t = useTranslation();
+  const layout = useLayout();
+  const [onSceneLayout, stampWidth] = useStampWidth();
+  // Taller than the mockup's 282: the result has less below it
+  const sceneRange = useSceneRange(180, 340);
+  const lineSize = { fontSize: Math.round(15 * layout.type) };
   const used = usedLetters(round);
   const wrong = wrongCount(round);
   const won = status === 'won';
@@ -292,7 +287,7 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
 
   return (
     <>
-      <View style={[styles.resultScene, { minHeight: compact ? 140 : 180 }]}>
+      <View style={[styles.resultScene, sceneRange]} onLayout={onSceneLayout}>
         <GameScene
           character={character}
           stage={sceneStage(round)}
@@ -302,20 +297,20 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
           accessibilityLabel={won ? t('result.won.stamp') : t('result.lost.stamp')}
         />
         <Stamp
-          visible
+          visible={stampWidth > 0}
           text={won ? t('result.won.stamp') : t('result.lost.stamp')}
           color={won ? colors.stampGreen : colors.stampRed}
-          width={Math.min(372, available + 26)}
+          width={stampWidth}
         />
       </View>
-      <View style={styles.over}>
-        <Text style={styles.overText}>
+      <View style={[styles.over, layout.tight && styles.overTight]}>
+        <Text style={[styles.overText, lineSize]}>
           {won
             ? t('result.won.line', { name: characterName, wrong, max: round.maxWrong })
             : t('result.lost.line', { wrong, max: round.maxWrong })}
         </Text>
         {paid && (
-          <View ref={badgeRef} collapsable={false} style={styles.earned}>
+          <View ref={badgeRef} {...MEASURABLE} style={styles.earned}>
             <Text style={styles.earnedText}>
               {tokensEarned === 1 ? t('result.tokenEarned') : t('result.tokensEarned', { count: tokensEarned })}
               {streak > 1 && ` · ${t('result.streak', { count: streak })}`}
@@ -324,13 +319,13 @@ function ResultView({ round, status, character, characterName, tokensEarned, rew
         )}
       </View>
       {level !== round.level && (
-        <Text style={[styles.levelLine, { color: levelColor(level).dark }]}>
+        <Text style={[styles.levelLine, { color: levelColor(level).dark, fontSize: Math.round(14 * layout.type) }]}>
           {t(level > round.level ? 'result.levelUp' : 'result.levelDown', { level })}
         </Text>
       )}
       {dailyDays > 0 && <DailyLine days={dailyDays} />}
-      <WordTiles letters={letters} available={available} compact={compact} />
-      <DescriptionCard text={round.description} subject={round.subject} compact={compact} />
+      <WordTiles letters={letters} />
+      <DescriptionCard text={round.description} subject={round.subject} />
       <View style={styles.actions}>
         <BigButton label={t('result.nextWord')} onPress={onNext} />
         <BigButton ghost label={t('result.changeCharacter')} onPress={() => router.navigate('/characters')} />
@@ -354,10 +349,12 @@ function DailyLine({ days }: { days: number }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
-  playScene: { flexGrow: 1, flexShrink: 1, maxHeight: 230 },
-  resultScene: { flexGrow: 1, flexShrink: 1, maxHeight: 340 },
-  over: { marginTop: 14, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
+  body: { flex: 1, minHeight: 0 },
+  playScene: { flexGrow: 1, flexShrink: 1 },
+  resultScene: { flexGrow: 1, flexShrink: 1 },
+  // The badge goes under the line when they don't fit side by side
+  over: { marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', columnGap: 8, rowGap: 4 },
+  overTight: { marginTop: 9 },
   overText: { fontFamily: fonts.display500, fontSize: 15, color: colors.muted, textAlign: 'center' },
   earned: { backgroundColor: colors.butterL, borderColor: '#ffe39a', borderWidth: 2, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 1 },
   earnedText: { fontFamily: fonts.display600, fontSize: 13, color: colors.butterT },

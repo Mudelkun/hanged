@@ -16,6 +16,7 @@ import { avatarRing, avatarXml, Character } from '../characters/rig';
 import { LEVELS } from '../game/levels';
 import { useTranslation } from '../i18n';
 import { colors, fonts, levelColor } from '../theme';
+import { Layout, useLayout } from '../theme/layout';
 import { sound } from '../audio';
 import { chevXml, crownXml, flameXml, Icon, starXml } from './icons';
 import { popFrom } from './motion';
@@ -68,6 +69,7 @@ const CROWN = crownXml();
  */
 const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; onPress?: () => void }) {
   const t = useTranslation();
+  const { narrow, type } = useLayout();
   const [pop] = useState(() => new Animated.Value(1));
   const prev = useRef(level);
   useEffect(() => {
@@ -88,12 +90,13 @@ const LevelPill = memo(function LevelPill({ level, onPress }: { level: number; o
         <Animated.View
           style={[
             styles.level,
+            narrow && styles.levelNarrow,
             { backgroundColor: c.light, borderColor: `${c.main}80`, transform: [{ scale: pop }] },
             pressed && styles.levelPressed,
           ]}
         >
-          {level >= LEVELS.length ? <Icon xml={CROWN} size={17} height={13} /> : <Icon xml={starXml(c.main)} size={15} />}
-          <Text style={[styles.levelText, { color: c.dark }]}>{t('header.level', { level })}</Text>
+          {level >= LEVELS.length ? <Icon xml={CROWN} size={Math.round(17 * type)} height={Math.round(13 * type)} /> : <Icon xml={starXml(c.main)} size={Math.round(15 * type)} />}
+          <Text style={[styles.levelText, narrow && styles.levelTextNarrow, type > 1 && { fontSize: Math.round(14 * type) }, { color: c.dark }]}>{t('header.level', { level })}</Text>
         </Animated.View>
       )}
     </Pressable>
@@ -123,6 +126,7 @@ const DailyBadge = memo(function DailyBadge({ days, done }: { days: number; done
 
 function ProfileButton({ character, badge }: { character: Character; badge?: ReactNode }) {
   const t = useTranslation();
+  const { narrow, tight, type } = useLayout();
   return (
     <Pressable
       onPress={() => { sound.unlock(); sound.play('panel-open'); router.push('/profile'); }}
@@ -131,11 +135,19 @@ function ProfileButton({ character, badge }: { character: Character; badge?: Rea
       accessibilityLabel={t('header.a11y.avatar')}
       style={({ pressed }) => pressed && styles.levelPressed}
     >
-      <Avatar character={character} size={46} />
+      <Avatar character={character} size={narrow || tight ? 40 : Math.round(46 * type)} />
       {badge}
     </Pressable>
   );
 }
+
+/** The header bar: the column's gutter, and shorter on a very short phone. */
+const headStyle = ({ gutter, tight, type }: Layout) => [
+  styles.head,
+  { paddingHorizontal: gutter },
+  tight && styles.headTight,
+  type > 1 && { height: Math.round(60 * type) },
+];
 
 /** Back to where the page was opened from (Play, if it was opened straight from a link). */
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
@@ -143,8 +155,9 @@ const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 /** A pushed page's header: back button (or `onBack`, e.g. leaving a lobby), title, and the token balance when the page shows it. */
 export function BackHeader({ title, tokens, onBack = goBack }: { title: string; tokens?: number; onBack?: () => void }) {
   const t = useTranslation();
+  const layout = useLayout();
   return (
-    <View style={styles.head}>
+    <View style={headStyle(layout)}>
       <Pressable onPress={() => { sound.play('back'); onBack(); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
         {({ pressed }) => (
           <Raised depth={3} shadowColor={colors.shadow} radius={15} pressed={pressed} style={styles.back}>
@@ -152,7 +165,7 @@ export function BackHeader({ title, tokens, onBack = goBack }: { title: string; 
           </Raised>
         )}
       </Pressable>
-      <Text style={[styles.title, styles.backTitle]} accessibilityRole="header" numberOfLines={1}>
+      <Text style={[styles.title, styles.backTitle, layout.narrow ? styles.titleNarrow : { fontSize: Math.round(25 * layout.type) }]} accessibilityRole="header" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
         {title}
       </Text>
       {tokens === undefined ? <View style={styles.backSpacer} /> : <StillTokenPill tokens={tokens} />}
@@ -161,10 +174,11 @@ export function BackHeader({ title, tokens, onBack = goBack }: { title: string; 
 }
 
 export function TitleHeader({ title, character, tokens, live }: { title: string; character: Character; tokens: number; live?: boolean }) {
+  const layout = useLayout();
   return (
-    <View style={styles.head}>
+    <View style={[headStyle(layout), styles.titleHead]}>
       <ProfileButton character={character} />
-      <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+      <Text style={[styles.title, styles.titleGrow, layout.narrow ? styles.titleNarrow : { fontSize: Math.round(25 * layout.type) }]} accessibilityRole="header" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
         {title}
       </Text>
       {live ? <TokenPill tokens={tokens} /> : <StillTokenPill tokens={tokens} />}
@@ -180,27 +194,28 @@ const LETTER_WIDTH = 0.62;
  * level and tokens, 27 at most and 14 at least. A 15-character name (NAME_MAX)
  * fits on a small iPhone; one of very wide letters is cut with "…".
  */
-const nameSize = (name: string, width: number) =>
-  Math.max(14, Math.min(27, Math.floor(width / ([...name].length * LETTER_WIDTH))));
+const nameSize = (name: string, width: number, type: number) =>
+  Math.max(13, Math.min(Math.round(27 * type), Math.floor(width / ([...name].length * LETTER_WIDTH))));
 
 export function GameHeader({ name, character, wordsGuessed, level, tokens, dailyDays, dailyDone, onLevelPress }: Props) {
   const t = useTranslation();
   // The name's room, measured: it changes with the phone and with the pills' widths
   const [nameWidth, setNameWidth] = useState(0);
+  const layout = useLayout();
   return (
-    <View style={styles.head}>
-      <View style={[styles.side, styles.grow]}>
+    <View style={headStyle(layout)}>
+      <View style={[styles.side, styles.grow, layout.narrow && styles.sideNarrow]}>
         <ProfileButton character={character} badge={dailyDays > 0 && <DailyBadge days={dailyDays} done={dailyDone} />} />
         <View style={styles.nameBlock} onLayout={(e) => setNameWidth(e.nativeEvent.layout.width)}>
-          <Text style={[styles.name, nameWidth > 0 && { fontSize: nameSize(name, nameWidth) }]} numberOfLines={1}>
+          <Text style={[styles.name, nameWidth > 0 && { fontSize: nameSize(name, nameWidth, layout.type), lineHeight: Math.round(30 * layout.type) }]} numberOfLines={1}>
             {name}
           </Text>
-          <Text style={styles.sub} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+          <Text style={[styles.sub, { fontSize: 11.5 * layout.type }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
             {wordsGuessed === 1 ? t('header.wordGuessed') : t('header.wordsGuessed', { count: wordsGuessed })}
           </Text>
         </View>
       </View>
-      <View style={[styles.side, styles.fixed]}>
+      <View style={[styles.side, styles.fixed, layout.narrow && styles.sideNarrow]}>
         <LevelPill level={level} onPress={onLevelPress} />
         <TokenPill tokens={tokens} />
       </View>
@@ -221,7 +236,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  headTight: { height: 52, paddingBottom: 6 },
   side: { flexDirection: 'row', alignItems: 'center', gap: 9, flexShrink: 1 },
+  sideNarrow: { gap: 6, marginRight: 6 },
   // The level and tokens never shrink: the name gives way (and is cut with "…" if it's very wide)
   fixed: { flexShrink: 0 },
   grow: { flex: 1, marginRight: 9 },
@@ -239,6 +256,10 @@ const styles = StyleSheet.create({
   avatar: { borderWidth: AVATAR_BORDER, borderColor: '#fff', backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { fontFamily: fonts.display700, fontSize: 27, lineHeight: 30, color: colors.ink },
   title: { flexShrink: 1, fontFamily: fonts.display700, fontSize: 25, color: colors.ink },
+  titleNarrow: { fontSize: 22 },
+  // Avatar, title, tokens: the title takes the room between them
+  titleHead: { gap: 10 },
+  titleGrow: { flex: 1, minWidth: 0, textAlign: 'center' },
   back: {
     width: 44,
     height: 41,
@@ -280,4 +301,6 @@ const styles = StyleSheet.create({
   },
   levelPressed: { opacity: 0.7 },
   levelText: { fontFamily: fonts.display600, fontSize: 14 },
+  levelNarrow: { gap: 3, paddingLeft: 5, paddingRight: 7 },
+  levelTextNarrow: { fontSize: 13 },
 });

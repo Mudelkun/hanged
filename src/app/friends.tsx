@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { PlayerCard, Relation, ReportReason, SearchResponse } from '../../server/src/versus-contract';
 import { VERSUS_LIMITS } from '../../server/src/versus-contract';
+import { Column } from '../components/Column';
 import { BackHeader } from '../components/GameHeader';
 import { BoardNote } from '../components/Leaderboard';
 import { PaperBackground } from '../components/PaperBackground';
@@ -20,12 +21,14 @@ import { Label, PillButton, Sheet, VersusToast, versusStyles } from '../componen
 import { useTranslation } from '../i18n';
 import { useFriends, useLiveWhileFocused, useVersus } from '../state/VersusContext';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 
 const SEARCH_DELAY_MS = 300;
 
 export default function FriendsScreen() {
   const t = useTranslation();
   const insets = useSafeAreaInsets();
+  const { column, gutter } = useLayout();
   const { state, actions } = useVersus();
   const f = useFriends();
   const [query, setQuery] = useState('');
@@ -82,9 +85,15 @@ export default function FriendsScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <BackHeader title={t('friends.title')} />
-      <ScrollView contentContainerStyle={[styles.body, { paddingBottom: insets.bottom + 24 }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <Column fill={false}>
+        <View style={{ height: insets.top }} />
+        <BackHeader title={t('friends.title')} />
+      </Column>
+      <ScrollView
+        contentContainerStyle={[styles.body, { width: column, paddingHorizontal: gutter, paddingBottom: insets.bottom + 24 }]}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         {!searching && <InviteShareCard onResult={setMessage} />}
         <TextInput
           value={query}
@@ -217,7 +226,7 @@ export default function FriendsScreen() {
         ))}
         <PillButton label={t('versus.cancel')} cue="panel-close" onPress={() => setReporting(null)} />
       </Sheet>
-      {message && (
+      {!!message && (
         <View pointerEvents="none" style={[styles.message, { bottom: insets.bottom + 24 }]}>
           <Text style={styles.messageText}>{message}</Text>
         </View>
@@ -229,7 +238,8 @@ export default function FriendsScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { paddingHorizontal: 16, paddingTop: 4 },
+  // Centred on a tablet; the scroll view itself spans the screen, so the sides scroll too
+  body: { alignSelf: 'center', paddingTop: 4 },
   search: {
     fontFamily: fonts.body800,
     fontSize: 16,

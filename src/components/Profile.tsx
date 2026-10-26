@@ -156,7 +156,7 @@ export function NameCard({ name, takenName, character, onRename, isNameFree, onC
         </View>
       </View>
 
-      {takenName && !editing && !saved && (
+      {!!takenName && !editing && !saved && (
         <Text style={[styles.note, styles.noteBad]} accessibilityLiveRegion="polite">
           {t('profile.name.wasTaken', { taken: takenName, name })}
         </Text>
@@ -322,7 +322,7 @@ export function ListGroup({ title, items }: { title: string; items: ListItem[] }
             <Text style={styles.rowLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
               {item.label}
             </Text>
-            {item.value && <Text style={styles.rowValue}>{item.value}</Text>}
+            {!!item.value && <Text style={styles.rowValue}>{item.value}</Text>}
             {item.onPress && <Icon xml={chevXml('r', colors.xMark)} size={15} />}
           </Pressable>
         ))}

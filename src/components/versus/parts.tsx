@@ -165,14 +165,14 @@ export function Sheet({ visible, onClose, title, children }: { visible: boolean;
 /** A section's small capitals title. */
 export const Label = ({ children }: { children: ReactNode }) => <Text style={styles.label}>{children}</Text>;
 
-/** One player in the match's score row: face, name, score, and how they're doing. */
-export const ScoreChip = memo(function ScoreChip({ player, mode, me, flash }: { player: MatchPlayer; mode: ModeId; me: boolean; flash?: boolean }) {
+/** One player in the match's score row: face, name, score, and how they're doing. `half`: two to a row. */
+export const ScoreChip = memo(function ScoreChip({ player, mode, me, flash, half }: { player: MatchPlayer; mode: ModeId; me: boolean; flash?: boolean; half?: boolean }) {
   const t = useTranslation();
   const gone = player.link === 'left';
   const status = gone ? t('versus.match.left') : player.link === 'away' ? t('versus.match.away') : mode === 'battle' && player.out ? t('versus.match.out') : null;
   return (
     <View
-      style={[styles.score, me && styles.scoreMe, flash && styles.scoreHit, (gone || (mode === 'battle' && player.out)) && styles.scoreGone]}
+      style={[styles.score, half && styles.scoreHalf, me && styles.scoreMe, flash && styles.scoreHit, (gone || (mode === 'battle' && player.out)) && styles.scoreGone]}
       accessible
       accessibilityLabel={t('versus.a11y.player', { name: displayName(t, player.name), score: player.score })}
     >
@@ -265,6 +265,8 @@ const styles = StyleSheet.create({
   label: { fontFamily: fonts.display600, fontSize: 12.5, letterSpacing: 1, color: colors.muted, marginTop: 14, marginBottom: 6, marginLeft: 4 },
 
   score: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#fff', borderRadius: 16, borderWidth: 2, borderColor: colors.line, paddingVertical: 5, paddingLeft: 5, paddingRight: 8 },
+  // Two to a row (the row wraps): the gap between them is the row's 6
+  scoreHalf: { flexBasis: '40%' },
   scoreMe: { backgroundColor: colors.coral, borderColor: '#fff' },
   scoreHit: { borderColor: colors.coralD, backgroundColor: colors.coralL },
   scoreGone: { opacity: 0.45 },

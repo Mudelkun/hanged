@@ -188,7 +188,7 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 | `Confetti.tsx` | A party-popper burst driven by one value, native driver only. `seed` and `aim` per popper. Reuse it for any big celebration. Pieces flutter with a flat `scaleY`, **never `rotateX`** (see the 3D trap in [dev-setup.md](dev-setup.md)). |
 | `SparkBurst.tsx` | The sparkle ring thrown out as a value runs 0 → 1. Shared by the token pill's gain and a level-up; reuse it for any new celebration. |
 | `TokenPill.tsx` | The header's token counter, live on Play and Characters (where tokens move). Its number only changes when a **token flight** lands, then counts one token at a time (about 700 ms in total, whatever the amount). **Gain**: the coin flips once per token, the pill pops and sparkles burst. **Spend**: the pill squishes and the coin wobbles. A change that no origin claims within 4 s is counted in place (a slow phone can take over a second to show the win badge). The balance it mounts with never animates; this is safe because Play only mounts after the save loads. **Several live pills**: flights land on the focused screen's pill (it sets the hub's target on focus), and a pill shows a change as is when its screen isn't focused or another pill already showed it (`claim` / `isClaimed`), so coming back to Play after buying a character doesn't count the spend again. |
-| `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `collapsable={false}`, so iOS/Android keep the view measurable) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens only needs an origin, and a live `TokenPill` in its screen's header (the Characters page: `TitleHeader live`). |
+| `TokenFlight.tsx` | **Every token change flies from where it happened into the counter**, so the player sees exactly what they gain or spend (owner's call). A "+N" or "−N" chip pops out at the origin, holds for a moment and arcs up into the counter's coin. The flights are drawn by `TokenFlightProvider` (root layout), above every screen. An origin uses `useTokenOrigin()`: put its `ref` (and `{...MEASURABLE}`: `collapsable={false}` so iOS/Android keep the view measurable, left out on web where it reaches the DOM) on the view and call `send(+1 \| -1)`. **A spend awaits `send` before dispatching**, because the view can disappear right after (the Unlock button does). **A gain sends when its badge appears**: the result's "+N tokens" badge, about 700 ms after the reducer paid. The counter holds the change until then. An origin with no change to carry expires after 800 ms, so a result restored on launch doesn't fly. Any new way to earn or spend tokens only needs an origin, and a live `TokenPill` in its screen's header (the Characters page: `TitleHeader live`). |
 | `motion.ts` | `popFrom(value, from)`: the shared pop spring (tiles, token pill). Use it for any new pop so they all feel the same. |
 | `GameScene.tsx` | Scene card: sky, sun, the balloon scene seen through its camera ([characters-and-animation.md](characters-and-animation.md)), and the `Stamp`. |
 | `RoundParts.tsx` | `MissesBar` (one pip per allowed miss, so 6 pips at level 8), `WordTiles`, `LetterShopPill`, `DescriptionCard`, `BigButton` (`ghost`: white). |
@@ -202,31 +202,35 @@ On a loss, tiles the player found turn **mint**, and letters they missed turn
 ## Sizing
 
 - Tiles: the word is **always one row, never wrapped** (owner's call: a split word
-  reads as two words). Tile width = what fits, capped at the mockup's 50; the gap
+  reads as two words). Tile width = what fits, capped at the mockup's 50 (× `scale` on a tablet); the gap
   shrinks too (8 → 6 over 6 letters → 3 over 10). A 15-letter word is about 20 pt
   tiles on a 375 pt phone. Font and the clue sparkle scale with the tile width.
-- Keys: 10 fit across the widest row, so width = what fits (max 48, about 33-35 on a phone). The
+- Keys: 10 fit across the widest row, so width = what fits (max 48 × `scale`, about 33-35 on a phone). The
   keyboard reaches 10 pt past the screen's side padding (like the iOS one) for wider keys. Taller
-  than wide like iOS keys: height up to 1.6 × width (max 58), radius 30% of width.
+  than wide like iOS keys: height up to 1.6 × width (max 58), radius 30% of width. A tablet's keys are
+  closer to square (1.2 × width), like the iPad keyboard.
 - **The keyboard shrinks before anything overflows** (owner, 2026-10-22: bigger keys, but leave
   room for features to come). It asks for its full size as a flex basis, may shrink, and sizes its
-  keys from the height it is given (`onLayout`), down to 38 pt (34 compact). The scene is the only
+  keys from the height it is given (`onLayout`), down to 38 pt (34 compact, 30 tight). The scene is the only
   part that grows, so anything new on the Play screen takes the scene's spare room first, then the
   keys'. Don't give the keyboard a fixed height or wrap it in a sized view.
-- **Compact mode** (`height < 760`, e.g. iPhone SE 375×667): keys up to 1.45 × width (max 48) tall,
-  tiles 48 tall, tab bar 60, smaller scene minimum. The scene is the flexible part
-  (`flexGrow` between a minimum and the mockup's height), so every layout fits
-  without scrolling. Checked at 393×852 and 375×667.
-- Result scene max height is **340**, taller than the mockup's 282. Under "Next word" sits the
-  mockup's ghost **"Change character"** button, which opens the Characters page
-  ([characters-shop.md](characters-shop.md)). The scene absorbs its height: checked at 393×852 and
-  375×667 without scrolling.
+- **Every size** comes from `useLayout()` ([responsive.md](responsive.md)): `compact` (iPhone SE, mini):
+  keys up to 1.45 × width (max 48) tall, tiles 48 tall, tab bar 60, smaller scene minimum; `tight`
+  (320×568): header 52, tab bar 54, tiles 42, keys down to 30, the clue at 13 pt (all 4 lines still show);
+  a tablet: the app in a centred column, pieces × `scale`. The scene is the flexible part
+  (`useSceneRange`: between a minimum and the mockup's 230, plus a tall phone's spare room), so every
+  layout fits without scrolling. Checked on all 11 sizes of `scripts/screenshots.js`.
+- Result scene max height is **340** (plus a tall phone's spare room), taller than the mockup's 282. Under
+  "Next word" sits the mockup's ghost **"Change character"** button, which opens the Characters page
+  ([characters-shop.md](characters-shop.md)). The scene absorbs its height. The result's line and its
+  token badge wrap onto two rows when they don't fit side by side. The stamp is sized to its scene
+  (`useStampWidth`), never past the screen's edges or over the header.
 
 ## Free description clue (owner, 2026-10-22)
 
 Hint words are removed. The dictionary description is always visible in its card, from the start
 of every round and on results, including restored rounds. There is no reveal button, hidden prompt,
-payment or token flight. `DescriptionCard` takes only the text and compact-layout flag; it has no
+payment or token flight. `DescriptionCard` takes only the text and the subject; it has no
 visibility state. Rewards are unchanged; shop prices follow the steady pace in [characters-shop.md](characters-shop.md).
 
 ## Letter shop pill (not in the mockup)

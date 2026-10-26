@@ -17,10 +17,11 @@ import { Animated, Easing, StyleSheet, Text, View, ViewInstance } from 'react-na
 import { useTranslation } from '../i18n';
 import { useSoundScope } from '../audio/AudioProvider';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { coinXml, Icon } from './icons';
 import { popFrom } from './motion';
 import { SparkBurst } from './SparkBurst';
-import { useTokenFlights } from './TokenFlight';
+import { MEASURABLE, useTokenFlights } from './TokenFlight';
 
 /** A change waits this long for its origin (a win's badge appears ~700 ms after the guess, later on a slow phone). */
 const WAIT_ORIGIN_MS = 4000;
@@ -139,18 +140,19 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
   }, [change, fx, flights, audio]);
 
   const spending = !!change && change.delta < 0;
+  const { narrow, type } = useLayout();
 
   return (
     <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })}>
       <Animated.View style={[styles.pillShadow, fx.pill]}>
-        <View style={styles.pill}>
-          <View ref={coin} collapsable={false} style={styles.coin}>
+        <View style={[styles.pill, narrow && styles.pillNarrow]}>
+          <View ref={coin} {...MEASURABLE} style={[styles.coin, narrow && styles.coinNarrow, type > 1 && { width: Math.round(COIN * type), height: Math.round(COIN * type) }]}>
             {change && !spending && <SparkBurst burst={fx.burst} reach={27} />}
             <Animated.View style={spending ? fx.coinSpend : fx.coinGain}>
-              <Icon xml={coinXml} size={24} />
+              <Icon xml={coinXml} size={narrow ? COIN_NARROW : Math.round(COIN * type)} />
             </Animated.View>
           </View>
-          <Text style={styles.pillText}>{shown}</Text>
+          <Text style={[styles.pillText, narrow && styles.pillTextNarrow, type > 1 && { fontSize: Math.round(19 * type) }]}>{shown}</Text>
         </View>
       </Animated.View>
     </View>
@@ -160,15 +162,19 @@ export const TokenPill = memo(function TokenPill({ tokens }: { tokens: number })
 /** The same pill without flights or counting, for screens where tokens never move (Leaderboard). */
 export const StillTokenPill = memo(function StillTokenPill({ tokens }: { tokens: number }) {
   const t = useTranslation();
+  const { narrow, type } = useLayout();
   return (
     <View accessible accessibilityLabel={t('header.a11y.tokens', { count: tokens })} style={styles.pillShadow}>
-      <View style={styles.pill}>
-        <Icon xml={coinXml} size={24} />
-        <Text style={styles.pillText}>{tokens}</Text>
+      <View style={[styles.pill, narrow && styles.pillNarrow]}>
+        <Icon xml={coinXml} size={narrow ? COIN_NARROW : Math.round(COIN * type)} />
+        <Text style={[styles.pillText, narrow && styles.pillTextNarrow, type > 1 && { fontSize: Math.round(19 * type) }]}>{tokens}</Text>
       </View>
     </View>
   );
 });
+
+const COIN = 24;
+const COIN_NARROW = 20;
 
 const styles = StyleSheet.create({
   pillShadow: { borderRadius: 17, backgroundColor: '#f6dc9c', paddingBottom: 3 },
@@ -185,5 +191,9 @@ const styles = StyleSheet.create({
     paddingRight: 11,
   },
   pillText: { fontFamily: fonts.display700, fontSize: 19, color: colors.butterT },
-  coin: { width: 24, height: 24 },
+  coin: { width: COIN, height: COIN },
+  // A narrow phone (theme/layout.ts): the header's name needs the room
+  pillNarrow: { gap: 3, paddingLeft: 4, paddingRight: 8 },
+  pillTextNarrow: { fontSize: 16 },
+  coinNarrow: { width: COIN_NARROW, height: COIN_NARROW },
 });

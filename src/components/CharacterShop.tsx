@@ -14,6 +14,7 @@ import { Character, CHARACTERS, signatureXml } from '../characters/rig';
 import { characterPrice } from '../game/progress';
 import { t, Translator, TranslationKey, useTranslation } from '../i18n';
 import { characterTint, colors, confettiColors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { checkXml, chevXml, coinXml, Icon, lockXml, sparkXml } from './icons';
 import { Confetti } from './Confetti';
 import { popFrom } from './motion';
@@ -197,7 +198,7 @@ export function Showcase({ character, cheer, onPrev, onNext, style }: ShowcasePr
             <SvgXml xml={xml} width={figH * FIG_RATIO} height={figH} />
           </Animated.View>
         )}
-        {quote && (
+        {!!quote && (
           // The character's line, in a bubble over its head; it steps aside for the purchase ribbon
           <Animated.View
             pointerEvents="none"
@@ -255,9 +256,10 @@ export function CharacterInfo({ character, ownership, price, note }: {
   note?: string | null;
 }) {
   const t = useTranslation();
+  const { tight } = useLayout();
   const species = speciesOf(character, t);
   return (
-    <View style={styles.info}>
+    <View style={[styles.info, tight && styles.infoTight]}>
       <View style={styles.infoText}>
         <Text style={styles.name} numberOfLines={1}>{character.name}</Text>
         <Text style={[styles.species, note ? styles.note : null]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
@@ -279,7 +281,8 @@ export function CharacterInfo({ character, ownership, price, note }: {
 
 /** Two rows that scroll sideways: 5 cards fit across, and a slice of the next one hints at more. */
 const ROWS = 2;
-const VISIBLE = 5.4;
+/** About this wide a card: as many fit as the screen allows, plus a slice of the next (it scrolls). */
+const CARD_TARGET = 64;
 const GAP = 7;
 /** Room around the cards inside the scroller: the playing check sticks out, the raised edge hangs below. */
 const PAD_TOP = 9;
@@ -349,18 +352,18 @@ const Card = memo(function Card({ character, ownership, viewed, width, height, o
 const COLUMN_LIST = Array.from({ length: Math.ceil(SHOP.length / ROWS) }, (_, i) => SHOP.slice(i * ROWS, i * ROWS + ROWS));
 const columnOf = (id: string) => Math.floor(SHOP.findIndex((c) => c.id === id) / ROWS);
 
-export function CharacterGrid({ ownership, viewedId, width, gutter, compact, onPress }: {
+export function CharacterGrid({ ownership, viewedId, onPress }: {
   ownership: (id: string) => Ownership;
   viewedId: string;
-  /** The page's content width: 5 cards and a slice of the next share it. */
-  width: number;
-  /** The page's side padding: the scroller bleeds into it to reach the screen edges. */
-  gutter: number;
-  compact: boolean;
   onPress: (id: string) => void;
 }) {
-  const cardW = Math.floor((width - GAP * (Math.ceil(VISIBLE) - 1)) / VISIBLE);
-  const cardH = compact ? 96 : 116;
+  // The page's content width (the scroller bleeds into its side padding to reach the screen edges):
+  // whole cards and a slice of the next share it, or every card when they all fit (a tablet).
+  const { available: width, gutter, compact, tight } = useLayout();
+  const fits = width / CARD_TARGET;
+  const visible = fits >= COLUMN_LIST.length ? COLUMN_LIST.length : Math.max(4, Math.floor(fits)) + 0.4;
+  const cardW = Math.floor((width - GAP * (Math.ceil(visible) - 1)) / visible);
+  const cardH = tight ? 80 : compact ? 96 : 116;
   const step = cardW + GAP;
 
   // Keep the viewed card in sight when the stage's arrows move past the edge (at once on the first layout)
@@ -450,6 +453,7 @@ const styles = StyleSheet.create({
   arrowFace: { width: 42, height: 42, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
 
   info: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 12, marginBottom: 10, marginHorizontal: 4 },
+  infoTight: { marginTop: 8, marginBottom: 6 },
   infoText: { flexShrink: 1 },
   name: { fontFamily: fonts.display700, fontSize: 26, lineHeight: 30, color: colors.ink },
   species: { fontFamily: fonts.display500, fontSize: 14, color: colors.muted, marginTop: 1 },

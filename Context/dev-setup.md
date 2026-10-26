@@ -114,6 +114,8 @@ actual module loader. It also accepts a saved development bundle path after `--`
 `--remote-debugging-port`. Pass an **absolute** `--user-data-dir`: with a relative
 one, the port never opens. Then drive it over the DevTools protocol (set the device
 metrics to 393×852 / 375×667, tap keys by their `aria-label`, e.g. `Letter A`).
+**`node scripts/screenshots.js` does all of that for every screen at 11 device sizes**, safe areas
+included ([responsive.md](responsive.md)): use it after any layout change.
 On web, haptics do nothing and `Animated` falls back to JS. Neither is a bug.
 **`CI=1` turns off Metro's file watching**: a server started with it keeps serving the
 bundle it first built. Use it only for one-off captures, and restart after edits. To check
@@ -127,5 +129,6 @@ events). Add tagged logs, ask the owner to reload (`r`) and play, then read that
 ## App identity
 
 `app.json` (extended by `app.config.ts`, above): name **"Hanged: word guessing game"**, iOS home-screen label
-(`CFBundleDisplayName`) **"Hanged"**, slug/scheme `hanged`, portrait only, no
-tablet layout yet. Never "Hangman".
+(`CFBundleDisplayName`) **"Hanged"**, slug/scheme `hanged`, portrait only. iPad is supported
+(`supportsTablet`, with `requireFullScreen` since the app is portrait only): see [responsive.md](responsive.md).
+Never "Hangman".

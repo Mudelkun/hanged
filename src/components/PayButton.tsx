@@ -10,7 +10,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { colors, fonts } from '../theme';
 import { coinXml, Icon } from './icons';
 import { Raised } from './Raised';
-import { useTokenOrigin } from './TokenFlight';
+import { MEASURABLE, useTokenOrigin } from './TokenFlight';
 import { sound } from '../audio';
 
 /** True for 2.2 s after `refuse()`: a press without enough tokens shows "Not enough tokens yet". */
@@ -49,7 +49,7 @@ export function PayButton({ label, a11yLabel, canAfford, onPay, onRefuse, icon, 
   return (
     <Pressable
       ref={ref}
-      collapsable={false}
+      {...MEASURABLE}
       onPress={press}
       hitSlop={small ? 6 : undefined}
       accessibilityRole="button"

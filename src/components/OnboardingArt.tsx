@@ -6,6 +6,7 @@ import { BalloonAnim, characterById, structureKey } from '../characters/rig';
 import { LIFT_OFF_MS } from '../game/onboarding';
 import { useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { cloudXml, Icon } from './icons';
 import { WoodenSign } from './WoodenSign';
 
@@ -80,9 +81,11 @@ export function NameStage({ id, name, bad, compact, active = true }: { id: strin
   useEffect(() => {
     Animated.spring(tilt, { toValue: bad ? 1 : 0, friction: 5, tension: 90, useNativeDriver: true }).start();
   }, [bad, tilt]);
-  const signWidth = Math.min(width * 0.59, Math.max(120, name.length * 15 + 34));
-  const scale = (compact ? 180 : 226) / 226;
-  return <View style={[styles.stage, { height: compact ? 186 : 232 }]} onLayout={e => setWidth(e.nativeEvent.layout.width - 6)}>
+  // A tablet's wider column: the scene, its sign and the name grow with the game pieces (theme/layout.ts)
+  const { scale: grow } = useLayout();
+  const signWidth = Math.min(width * 0.59, Math.max(120 * grow, name.length * 15 * grow + 34));
+  const scale = ((compact ? 180 : 226) / 226) * grow;
+  return <View style={[styles.stage, { height: Math.round((compact ? 186 : 232) * grow) }]} onLayout={e => setWidth(e.nativeEvent.layout.width - 6)}>
     <OnboardingSky />
     <View style={{ position: 'absolute', left: 0, top: -4 }}><OnboardingSun size={40} /></View>
     <View style={{ position: 'absolute', left: '28%', top: 30 }}><OnboardingCloud width={70} /></View>
@@ -94,7 +97,7 @@ export function NameStage({ id, name, bad, compact, active = true }: { id: strin
       transformOrigin: '12px 10px', transform: [{ rotate: tilt.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '-13deg'] }) }] }}>
       <WoodenSign radius={14} style={styles.sign}>
         <View style={[styles.nail, { left: 6 }]} /><View style={[styles.nail, { right: 6 }]} />
-        <Text style={[styles.signText, { fontSize: Math.min(25, (signWidth - 28) / Math.max(1, name.length) / .62) }, bad && { color: '#b4573f' }]}
+        <Text style={[styles.signText, { fontSize: Math.min(25 * grow, (signWidth - 28) / Math.max(1, name.length) / .62) }, bad && { color: '#b4573f' }]}
           numberOfLines={1}>{name || ' '}</Text>
       </WoodenSign>
     </Animated.View>

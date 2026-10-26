@@ -8,13 +8,14 @@
  */
 import { router, useFocusEffect } from 'expo-router';
 import { ReactNode, useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MODE_IDS } from '../../../server/src/versus-contract';
 import { characterById } from '../../characters/rig';
 import { TitleHeader } from '../../components/GameHeader';
 import { BoardNote } from '../../components/Leaderboard';
+import { Column } from '../../components/Column';
 import { PaperBackground } from '../../components/PaperBackground';
 import { TabBar } from '../../components/TabBar';
 import { CodeSheet, ModeCard, SocialRow, StatsStrip, VersusNote } from '../../components/versus/Hub';
@@ -23,6 +24,7 @@ import { LIVE_URL } from '../../net/api';
 import { useGame } from '../../state/GameContext';
 import { useFriends, useLiveWhileFocused, useVersus } from '../../state/VersusContext';
 import { colors } from '../../theme';
+import { useLayout } from '../../theme/layout';
 
 export default function VersusScreen() {
   const t = useTranslation();
@@ -30,7 +32,7 @@ export default function VersusScreen() {
   const { state, actions, refreshStatus } = useVersus();
   const { data: friends } = useFriends();
   const insets = useSafeAreaInsets();
-  const compact = useWindowDimensions().height < 760;
+  const { gutter } = useLayout();
   const character = characterById(game.characterId);
   const [reachable, setReachable] = useState<boolean | null>(null);
   const [codeOpen, setCodeOpen] = useState(false);
@@ -59,20 +61,22 @@ export default function VersusScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <TitleHeader title={t('versus.title')} character={character} tokens={game.tokens} />
-      <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
-        {note ?? (
-          <>
-            {state.stats && <StatsStrip stats={state.stats} />}
-            {MODE_IDS.map((mode) => (
-              <ModeCard key={mode} mode={mode} onQuick={() => actions.queue(mode)} onFriends={() => actions.host(mode)} />
-            ))}
-            <SocialRow requests={friends?.incoming.length ?? 0} onCode={() => setCodeOpen(true)} onFriends={() => router.push('/friends')} />
-          </>
-        )}
-      </ScrollView>
-      <TabBar active="versus" compact={compact} />
+      <Column>
+        <View style={{ height: insets.top }} />
+        <TitleHeader title={t('versus.title')} character={character} tokens={game.tokens} />
+        <ScrollView contentContainerStyle={[styles.body, { paddingHorizontal: gutter }]} showsVerticalScrollIndicator={false}>
+          {note ?? (
+            <>
+              {state.stats && <StatsStrip stats={state.stats} />}
+              {MODE_IDS.map((mode) => (
+                <ModeCard key={mode} mode={mode} onQuick={() => actions.queue(mode)} onFriends={() => actions.host(mode)} />
+              ))}
+              <SocialRow requests={friends?.incoming.length ?? 0} onCode={() => setCodeOpen(true)} onFriends={() => router.push('/friends')} />
+            </>
+          )}
+        </ScrollView>
+        <TabBar active="versus" />
+      </Column>
       <CodeSheet
         visible={codeOpen}
         onClose={() => setCodeOpen(false)}
@@ -87,5 +91,5 @@ export default function VersusScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { paddingHorizontal: 16, paddingTop: 4, paddingBottom: 24 },
+  body: { paddingTop: 4, paddingBottom: 24 },
 });

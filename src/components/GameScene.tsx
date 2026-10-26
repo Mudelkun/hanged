@@ -23,6 +23,7 @@ import { BalloonAnim, Character, Frame, HangedRig, structureKey } from '../chara
 import { useSoundScope } from '../audio/AudioProvider';
 import { balloonSounds } from '../audio/scenes';
 import { colors } from '../theme';
+import { useLayout } from '../theme/layout';
 import { cloudXml, Icon } from './icons';
 import { Raised } from './Raised';
 
@@ -209,7 +210,43 @@ export function GameScene({ character, stage, gone, mode, style, accessibilityLa
   );
 }
 
+/**
+ * A scene's height range, for a scene that grows (the keyboard and the rest shrink before anything
+ * overflows): from `min` (the regular phone's) down to half of it on a very short phone, up to `max`
+ * plus whatever a tall phone has spare, so that room goes to the sky instead of a gap. On a tablet
+ * it fills the room left.
+ */
+export function useSceneRange(min: number, max: number) {
+  const { compact, tight, tablet, room, scale } = useLayout();
+  // A tablet's column already has a phone's shape: its scene takes all the room left
+  if (tablet) return { minHeight: Math.round(min * scale) };
+  return { minHeight: Math.round(min * (tight ? 0.5 : compact ? 0.74 : 1)), maxHeight: max + Math.max(0, room - 760) };
+}
+
 // ---- the rubber stamp ("DROPPED !!" / "HANGING !!") ----
+
+/** The stamp's drawing (viewBox), and its box once tilted -11°, per unit of width. */
+const STAMP_W = 372;
+const STAMP_H = 156;
+const TILT = (11 * Math.PI) / 180;
+const TILTED_W = Math.cos(TILT) + (STAMP_H / STAMP_W) * Math.sin(TILT);
+const TILTED_H = Math.sin(TILT) + (STAMP_H / STAMP_W) * Math.cos(TILT);
+/** How far the tilted stamp may hang over its scene, and the room it keeps from the screen's edges. */
+const OVERHANG = 14;
+const EDGE = 4;
+
+/**
+ * The stamp's width for the scene it's pressed on: the mockup's size (grown on a tablet), but
+ * smaller when the scene is short or the screen narrow, so the tilted frame never runs off the
+ * screen or over the header. Put `onLayout` on the scene's box; the width is 0 until it's measured.
+ */
+export function useStampWidth(): [(e: LayoutChangeEvent) => void, number] {
+  const { column, scale } = useLayout();
+  const [height, setHeight] = useState(0);
+  const onLayout = (e: LayoutChangeEvent) => setHeight(e.nativeEvent.layout.height);
+  const width = height && Math.min(STAMP_W * scale, (column - 2 * EDGE) / TILTED_W, (height + 2 * OVERHANG) / TILTED_H);
+  return [onLayout, Math.floor(width)];
+}
 
 // Deterministic specks knocked out of the ink, like a stamp pressed by hand
 // (the mockup uses an feTurbulence filter, which react-native-svg cannot draw).
@@ -228,7 +265,7 @@ export function Stamp({ text, color, width, visible }: { text: string; color: st
   }, [visible, pop]);
   if (!visible) return null;
   const scale = pop.interpolate({ inputRange: [0, 1], outputRange: [1.9, 1] });
-  const height = (width * 156) / 372;
+  const height = (width * STAMP_H) / STAMP_W;
   return (
     <Animated.View
       pointerEvents="none"

@@ -11,7 +11,7 @@
  * guessed up there).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, Easing, LayoutChangeEvent, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Character } from '../characters/rig';
@@ -19,6 +19,7 @@ import { LEVELS, levelByNumber, LevelProgress, wordsToNextLevel } from '../game/
 import { Translator, useTranslation } from '../i18n';
 import { sound } from '../audio';
 import { colors, fonts, levelColor, worldColors } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Avatar } from './GameHeader';
 import { closeXml, crownXml, Icon, leafXml, starXml } from './icons';
 import { LevelStop, MARKER, MARKER_BOX, MARKER_LIFT, NODE, PathFog, pathLayout, PathWorld } from './LevelPath';
@@ -54,7 +55,8 @@ function nextLine(progress: LevelProgress, best: number, t: Translator) {
 export function LevelMap({ progress, best, character, onClose }: Props) {
   const t = useTranslation();
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
+  // The world spans the screen; the card under it keeps to the column (centred on a tablet)
+  const { width, column, gutter } = useLayout();
   const level = progress.level;
   const top = level >= LEVELS.length;
   // The world runs under the sign and the card; the player's stop sits in the middle of what's between them
@@ -170,7 +172,7 @@ export function LevelMap({ progress, best, character, onClose }: Props) {
         </View>
       </View>
 
-      <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]} onLayout={onFootLayout}>
+      <View style={[styles.footer, { paddingHorizontal: (width - column) / 2 + gutter, paddingBottom: Math.max(insets.bottom, 16) }]} onLayout={onFootLayout}>
         <Raised depth={5} shadowColor={colors.shadow} radius={22} style={styles.card}>
           <View style={styles.cardRow}>
             <Raised depth={3} shadowColor={c.dark} radius={14} style={[styles.level, { backgroundColor: c.main }]}>
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
   marker: { position: 'absolute' },
   // On the character's head, tilted like a hat worn at an angle (a flat 2D rotate)
   crown: { position: 'absolute', top: -15, left: MARKER_BOX / 2 - 13, transform: [{ rotate: '-12deg' }] },
-  footer: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 16 },
+  footer: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   card: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, padding: 14, gap: 10 },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   level: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 5, paddingLeft: 9, paddingRight: 13 },

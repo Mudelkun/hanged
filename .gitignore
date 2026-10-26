@@ -46,3 +46,6 @@ scripts/.cache/
 
 # Python
 __pycache__/
+
+# Screenshots of every screen (scripts/screenshots.js): regenerate, never commit
+screenshots/

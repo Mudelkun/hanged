@@ -7,13 +7,16 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 
 export function Sheet({ onClose, closeLabel, children }: { onClose: () => void; closeLabel: string; children: ReactNode }) {
   const insets = useSafeAreaInsets();
+  // As wide as the screen's column: the whole width on a phone, centred on a tablet
+  const { column } = useLayout();
   return <Modal transparent animationType="slide" onRequestClose={onClose}>
     <View style={[styles.dim, { paddingTop: insets.top + 24 }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel={closeLabel} />
-      <View style={[styles.sheet, { paddingBottom: Math.max(20, insets.bottom) }]} accessibilityViewIsModal>
+      <View style={[styles.sheet, { width: column, paddingBottom: Math.max(20, insets.bottom) }]} accessibilityViewIsModal>
         <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
       </View>
     </View>
@@ -28,6 +31,6 @@ export const sheetText = StyleSheet.create({
 
 const styles = StyleSheet.create({
   dim: { flex: 1, backgroundColor: 'rgba(75,58,53,.42)', justifyContent: 'flex-end' },
-  sheet: { maxHeight: '100%', borderTopLeftRadius: 28, borderTopRightRadius: 28, backgroundColor: colors.paper },
+  sheet: { maxHeight: '100%', alignSelf: 'center', borderTopLeftRadius: 28, borderTopRightRadius: 28, backgroundColor: colors.paper },
   content: { padding: 22 },
 });

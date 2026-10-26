@@ -7,11 +7,12 @@
  */
 import { router, useIsFocused } from 'expo-router';
 import { ReactNode, useEffect } from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMatchMusic } from '../audio/AudioProvider';
 import { characterById } from '../characters/rig';
+import { Column } from '../components/Column';
 import { BackHeader } from '../components/GameHeader';
 import { PaperBackground } from '../components/PaperBackground';
 import { MatchPlay } from '../components/versus/MatchPlay';
@@ -23,16 +24,15 @@ import { useGame } from '../state/GameContext';
 import { inRoom } from '../state/versus';
 import { useLiveWhileFocused, useVersus } from '../state/VersusContext';
 import { colors } from '../theme';
+import { useLayout } from '../theme/layout';
 
 export default function MatchScreen() {
   const t = useTranslation();
   const { state: game } = useGame();
   const { state, actions } = useVersus();
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
+  const { gutter } = useLayout();
   const focused = useIsFocused();
-  const compact = height < 760;
-  const available = width - 32;
   const character = characterById(game.characterId);
   useLiveWhileFocused();
   // The match plays its mode's loop from the countdown; lobby, queue and result keep the solo playlist.
@@ -48,22 +48,24 @@ export default function MatchScreen() {
 
   let body: ReactNode = null;
   let header: ReactNode = null;
-  if (state.result) body = <MatchResult result={state.result} character={character} available={available} compact={compact} />;
-  else if (state.match) body = <MatchPlay match={state.match} character={character} available={available} compact={compact} />;
+  if (state.result) body = <MatchResult result={state.result} character={character} />;
+  else if (state.match) body = <MatchPlay match={state.match} character={character} />;
   else if (state.lobby) {
     header = <BackHeader title={t('versus.lobby.title')} onBack={actions.leaveLobby} />;
     body = <LobbyRoom lobby={state.lobby} />;
-  } else if (state.queue) body = <QueueView character={character} compact={compact} />;
+  } else if (state.queue) body = <QueueView character={character} />;
 
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      {header}
-      <View style={[styles.body, { paddingBottom: Math.max(insets.bottom, 10) }]}>
-        {body}
-        {state.conn !== 'online' && !state.match && body && <Text style={styles.reconnecting}>{t('versus.reconnecting')}</Text>}
-      </View>
+      <Column>
+        <View style={{ height: insets.top }} />
+        {header}
+        <View style={[styles.body, { paddingHorizontal: gutter, paddingBottom: Math.max(insets.bottom, 10) }]}>
+          {body}
+          {state.conn !== 'online' && !state.match && body && <Text style={styles.reconnecting}>{t('versus.reconnecting')}</Text>}
+        </View>
+      </Column>
       <VersusToast bottom={insets.bottom + 90} />
     </View>
   );
@@ -71,6 +73,6 @@ export default function MatchScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
+  body: { flex: 1, minHeight: 0 },
   reconnecting: { ...display('600', 13, colors.coralD), textAlign: 'center', marginTop: 6 },
 });

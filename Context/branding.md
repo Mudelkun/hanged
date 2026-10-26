@@ -36,7 +36,9 @@ a copy.** It needs rig.js and balloons.js loaded first.
 
 - **Native splash** (app.json, `expo-splash-screen`): background `#dff1ff` (`SPLASH.bg`) and
   `assets/splash-icon.png`, the blank wordmark (six dashed tiles under their balloons, no pill) exported by
-  `design/brand/export.html?asset=splash` at 3 × 336 points. `imageWidth: 336` is `BOX` width × `SPLASH.scale`.
+  `design/brand/export.html?asset=splash` at 3 × 336 points. `imageWidth: 336` is `BOX` width × `SPLASH.scale`. The loading screen draws the wordmark at that size too (the
+  hand-over), except on a screen under 360 points wide (a small Android phone, never an iPhone), where it shrinks
+  to keep 12 points a side.
   Change either and the first animated frame no longer matches: re-export, and keep them equal.
 - **Loading screen** (`src/components/LaunchScreen.tsx`): the root `Gate` mounts the app once the fonts and
   the save are ready, with the loading screen over it, **once per launch** (state in `Gate`: coming back

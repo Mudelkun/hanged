@@ -7,7 +7,7 @@
  * the Find-me pill scrolls to it.
  */
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { FlatList, ListRenderItem, RefreshControl, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { FlatList, ListRenderItem, RefreshControl, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { Period } from '../../../server/src/contract';
@@ -15,6 +15,7 @@ import { characterById } from '../../characters/rig';
 import { TitleHeader } from '../../components/GameHeader';
 import { sound } from '../../audio';
 import { BoardNote, CROWN_RISE, FindMe, PeriodSwitch, Ranked, RankRow, rowSpan } from '../../components/Leaderboard';
+import { Column } from '../../components/Column';
 import { PaperBackground } from '../../components/PaperBackground';
 import { TabBar } from '../../components/TabBar';
 import { can, GameState } from '../../game/progress';
@@ -22,6 +23,7 @@ import { Translator, useTranslation } from '../../i18n';
 import { useGame } from '../../state/GameContext';
 import { Board, useLeaderboard } from '../../state/useLeaderboard';
 import { colors } from '../../theme';
+import { useLayout } from '../../theme/layout';
 
 // Room above the first row for its crown
 const LIST_TOP = 4 + CROWN_RISE;
@@ -60,7 +62,7 @@ export default function LeaderboardScreen() {
   // A developer account is on no board (dev-accounts.md): its notes say so instead.
   const unranked = can(state, 'unranked');
   const insets = useSafeAreaInsets();
-  const compact = useWindowDimensions().height < 760;
+  const { gutter } = useLayout();
   const [period, setPeriod] = useState<Period>('week');
   const { view, refreshing, refresh } = useLeaderboard(period);
   const board = view.status === 'ready' ? view.board : null;
@@ -100,50 +102,52 @@ export default function LeaderboardScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <TitleHeader title={t('board.title')} character={characterById(state.characterId)} tokens={state.tokens} />
-      <View style={styles.body}>
-        <PeriodSwitch period={period} onChange={setPeriod} />
-        {ranked ? (
-          <View style={styles.board}>
-            <FlatList
-              ref={list}
-              data={ranked.rows}
-              keyExtractor={keyOf}
-              renderItem={renderItem}
-              getItemLayout={getItemLayout}
-              onViewableItemsChanged={onViewable}
-              viewabilityConfig={VIEWABILITY}
-              ListEmptyComponent={<BoardNote body={t(unranked ? 'board.unranked' : period === 'week' ? 'board.empty.week' : 'board.empty.all')} />}
-              ListFooterComponent={!ranked.rows.length ? undefined : unranked ? <BoardNote body={t('board.unranked')} />
-                : !board?.me ? <BoardNote body={t('board.notRanked')} /> : undefined}
-              contentContainerStyle={styles.list}
-              showsVerticalScrollIndicator={false}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.coral} />}
+      <Column>
+        <View style={{ height: insets.top }} />
+        <TitleHeader title={t('board.title')} character={characterById(state.characterId)} tokens={state.tokens} />
+        <View style={[styles.body, { paddingHorizontal: gutter }]}>
+          <PeriodSwitch period={period} onChange={setPeriod} />
+          {ranked ? (
+            <View style={styles.board}>
+              <FlatList
+                ref={list}
+                data={ranked.rows}
+                keyExtractor={keyOf}
+                renderItem={renderItem}
+                getItemLayout={getItemLayout}
+                onViewableItemsChanged={onViewable}
+                viewabilityConfig={VIEWABILITY}
+                ListEmptyComponent={<BoardNote body={t(unranked ? 'board.unranked' : period === 'week' ? 'board.empty.week' : 'board.empty.all')} />}
+                ListFooterComponent={!ranked.rows.length ? undefined : unranked ? <BoardNote body={t('board.unranked')} />
+                  : !board?.me ? <BoardNote body={t('board.notRanked')} /> : undefined}
+                contentContainerStyle={styles.list}
+                showsVerticalScrollIndicator={false}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.coral} />}
+              />
+              {ranked.me && (
+                <FindMe entry={ranked.me} visible={meOff} direction={seen && meIndex < seen.first ? 'up' : 'down'} onPress={findMe} />
+              )}
+            </View>
+          ) : view.status === 'offline' ? (
+            <BoardNote
+              title={t('board.offline.title')}
+              body={t('board.offline.body')}
+              action={refreshing ? t('board.loading') : t('board.retry')}
+              onAction={refresh}
             />
-            {ranked.me && (
-              <FindMe entry={ranked.me} visible={meOff} direction={seen && meIndex < seen.first ? 'up' : 'down'} onPress={findMe} />
-            )}
-          </View>
-        ) : view.status === 'offline' ? (
-          <BoardNote
-            title={t('board.offline.title')}
-            body={t('board.offline.body')}
-            action={refreshing ? t('board.loading') : t('board.retry')}
-            onAction={refresh}
-          />
-        ) : (
-          <BoardNote body={t('board.loading')} />
-        )}
-      </View>
-      <TabBar active="leaderboard" compact={compact} />
+          ) : (
+            <BoardNote body={t('board.loading')} />
+          )}
+        </View>
+        <TabBar active="leaderboard" />
+      </Column>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: 16, minHeight: 0 },
+  body: { flex: 1, minHeight: 0 },
   board: { flex: 1, minHeight: 0 },
   // Room under the last row for the Find-me pill
   list: { paddingTop: LIST_TOP, paddingBottom: 72 },

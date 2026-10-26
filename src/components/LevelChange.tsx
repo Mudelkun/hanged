@@ -22,6 +22,7 @@ import { worldBands } from '../world/world';
 import { useTranslation } from '../i18n';
 import { LEVELS } from '../game/levels';
 import { colors, confettiColors, fonts, levelColor, worldColors } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Confetti } from './Confetti';
 import { Avatar } from './GameHeader';
 import { crownXml, Icon } from './icons';
@@ -119,20 +120,19 @@ interface Props {
   /** The highest level ever reached: the path shows every stop up to it, then fog. */
   best: number;
   character: Character;
-  width: number;
-  compact: boolean;
   onLanded: () => void;
   /** After the card has faded out by itself. The Play screen unmounts it here. */
   onClose: () => void;
 }
 
-export function LevelChange({ from, to, best, character, width, compact, onLanded, onClose }: Props) {
+export function LevelChange({ from, to, best, character, onLanded, onClose }: Props) {
   const t = useTranslation();
   const audio = useSoundScope();
+  const { available, compact, tight, scale, type } = useLayout();
   const up = to > from;
-  const cardW = Math.min(width, 360);
+  const cardW = Math.min(available, Math.round(CARD_W * scale));
   const pathW = cardW - 32;
-  const viewH = compact ? 220 : 280;
+  const viewH = Math.round((tight ? 180 : compact ? 220 : 280) * scale);
   const geo = useMemo(() => geometry(pathW, viewH, from, to, best), [pathW, viewH, from, to, best]);
   const top = geo.top;
   const [fx] = useState(() => ({
@@ -231,8 +231,8 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
     <Animated.View style={[styles.backdrop, { opacity: fx.show }]} accessibilityViewIsModal>
       <Animated.View style={{ transform: [{ scale: fx.show.interpolate({ inputRange: [0, 1], outputRange: [0.85, 1] }) }] }}>
         <Raised depth={6} shadowColor={colors.shadow} radius={28} style={[styles.card, { width: cardW }]}>
-          <Text style={[styles.title, { color: c.dark }]}>{t(`level.${word}.title`, { level: to })}</Text>
-          <Text style={styles.body}>{t(`level.${word}.body`, { level: to })}</Text>
+          <Text style={[styles.title, { color: c.dark, fontSize: Math.round(30 * type) }]}>{t(`level.${word}.title`, { level: to })}</Text>
+          <Text style={[styles.body, { fontSize: Math.round(14 * type) }]}>{t(`level.${word}.body`, { level: to })}</Text>
           <View
             style={[styles.window, { height: viewH }]}
             accessible
@@ -297,6 +297,9 @@ export function LevelChange({ from, to, best, character, width, compact, onLande
     </Animated.View>
   );
 }
+
+/** The card's width on a phone (the mockup's); a tablet's grows with the layout's scale. */
+const CARD_W = 360;
 
 const styles = StyleSheet.create({
   // iOS turns zIndex into a layer depth that ignores stacking order: the result's

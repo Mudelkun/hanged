@@ -160,7 +160,9 @@
    * Motion's single frame, the word shown and centred, nothing moving.
    */
   function splashLayers({ w = 390, h = 844, character = null, word = 'HANGED', tagline = 'WORD GUESSING GAME', fonts = FONTS, still = false } = {}) {
-    const S = SPLASH, k = S.scale, letters = [...word], n = letters.length, solved = S.letterAt(n - 1) + S.flip;
+    // The native splash's size (SPLASH.scale), so the hand-over is seamless; smaller only on a screen too
+    // narrow for its 336 points with 12 to spare a side (under 360: never an iPhone, whose narrowest is 375)
+    const S = SPLASH, k = Math.min(S.scale, (w - 24) / BOX[2]), letters = [...word], n = letters.length, solved = S.letterAt(n - 1) + S.flip;
     const layers = [];
     const add = (svg, box, unit, at, zoom = 1) => {
       const m = still && at(solved + 0.5);

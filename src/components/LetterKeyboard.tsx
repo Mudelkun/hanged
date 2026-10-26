@@ -15,10 +15,13 @@ import { KeyState, Letter } from '../game/engine';
 import { displayLetter, isLanguage, KEYBOARD_ROWS } from '../game/languages';
 import { useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Raised } from './Raised';
 
 // Same letter order as the iPhone keyboard (QWERTY), rows centred like iOS.
 const GAP = 5;
+/** The widest a key gets on a phone; a tablet's grow with the layout's scale. */
+const KEY_W = 48;
 
 const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string; shadow: string; text: string }> = {
   idle: { bg: '#fff', border: colors.line, shadow: colors.shadow, text: colors.ink },
@@ -26,12 +29,11 @@ const LOOK: Record<Exclude<KeyState, 'no' | 'off'>, { bg: string; border: string
   clue: { bg: colors.butter, border: colors.butter, shadow: colors.butterD, text: '#7a5300' },
 };
 
-const Key = memo(function Key({ letter, state, locked, pending, w, h, onPress }: {
-  letter: Letter; state: KeyState; locked: boolean; pending: boolean; w: number; h: number; onPress: (c: Letter) => void;
+const Key = memo(function Key({ letter, state, locked, pending, w, h, radius, onPress }: {
+  letter: Letter; state: KeyState; locked: boolean; pending: boolean; w: number; h: number; radius: number; onPress: (c: Letter) => void;
 }) {
   const t = useTranslation();
   const used = state !== 'idle';
-  const radius = Math.min(14, Math.round(w * 0.3));
   const fontSize = Math.round(Math.min(h * 0.46, w * 0.68));
   const label = t(state === 'off' ? 'play.a11y.key.off' : used ? 'play.a11y.key.used' : 'play.a11y.key', {
     letter: displayLetter(letter),
@@ -80,8 +82,6 @@ interface Props {
   pending?: (c: Letter) => boolean;
   locked: boolean;
   onPress: (c: Letter) => void;
-  available: number;
-  compact: boolean;
 }
 
 // The keyboard reaches a little past the screen's side padding, like the iOS one, for wider keys.
@@ -98,16 +98,20 @@ let lastHeight = 0;
  * (it is the only part that grows), so anything added to the Play screen later
  * takes the scene's spare room, then the keys', and nothing ever overflows.
  */
-export function LetterKeyboard({ keyState, pending, locked, onPress, available, compact, language = 'en' }: Props) {
+export function LetterKeyboard({ keyState, pending, locked, onPress, language = 'en' }: Props) {
   const [height, setHeight] = useState(lastHeight);
+  const { available, compact, tight, tablet, scale } = useLayout();
   const rows = KEYBOARD_ROWS[isLanguage(language) ? language : 'en'];
   const perRow = Math.max(...rows.map(row => row.length));
-  const w = Math.floor(Math.min(48, (available + 2 * BLEED - GAP * (perRow - 1)) / perRow));
-  // iOS keys are taller than wide; 10 keys per row makes them narrow.
-  const maxH = compact ? Math.min(48, Math.round(w * 1.45)) : Math.min(58, Math.round(w * 1.6));
-  const minH = compact ? 34 : 38;
-  const rowGap = compact ? 6 : 8;
-  const padTop = compact ? 8 : 12;
+  const gap = Math.round(GAP * scale);
+  const w = Math.floor(Math.min(KEY_W * scale, (available + 2 * BLEED - gap * (perRow - 1)) / perRow));
+  // Phone keys are taller than wide (10 keys per row makes them narrow); a tablet's wide keys are
+  // closer to square, like the iPad keyboard.
+  const maxH = tablet ? Math.round(w * 1.2) : compact ? Math.min(48, Math.round(w * 1.45)) : Math.min(58, Math.round(w * 1.6));
+  const minH = Math.round((tight ? 30 : compact ? 34 : 38) * scale);
+  const rowGap = tight ? 5 : compact ? 6 : Math.round(8 * scale);
+  const padTop = tight ? 6 : compact ? 8 : 12;
+  const radius = Math.round(Math.min(14 * scale, w * 0.3));
   const chrome = padTop + PAD_BOTTOM + 2 * rowGap + 3 * DEPTH;
   const fits = height ? Math.floor((height - chrome) / 3) : maxH;
   const h = Math.max(minH, Math.min(maxH, fits));
@@ -121,9 +125,9 @@ export function LetterKeyboard({ keyState, pending, locked, onPress, available, 
       style={[styles.kb, { gap: rowGap, paddingTop: padTop, flexBasis: chrome + 3 * maxH, minHeight: chrome + 3 * minH }]}
     >
       {rows.map((row) => (
-        <View key={row} style={styles.row}>
+        <View key={row} style={[styles.row, { gap }]}>
           {row.split('').map((c) => (
-            <Key key={c} letter={c} state={keyState(c)} locked={locked} pending={!!pending?.(c)} w={w} h={h} onPress={onPress} />
+            <Key key={c} letter={c} state={keyState(c)} locked={locked} pending={!!pending?.(c)} w={w} h={h} radius={radius} onPress={onPress} />
           ))}
         </View>
       ))}
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 1,
   },
-  row: { flexDirection: 'row', gap: GAP },
+  row: { flexDirection: 'row' },
   key: { borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   keyNo: { backgroundColor: colors.keyUsed, borderColor: colors.keyUsed },
   keyOff: { borderStyle: 'dashed', borderColor: colors.line },

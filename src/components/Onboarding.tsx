@@ -1,7 +1,7 @@
 import { router, Stack, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInputInstance, useWindowDimensions, View } from 'react-native';
+import { Animated, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInputInstance, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { sound } from '../audio';
 import { useSoundScope } from '../audio/AudioProvider';
@@ -14,6 +14,7 @@ import { useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { useOnboarding } from '../state/OnboardingContext';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { speciesOf } from './CharacterShop';
 import { Avatar } from './GameHeader';
 import { checkXml, chevXml, diceXml, Icon, profileIconXml } from './icons';
@@ -35,7 +36,7 @@ function StepDots({ step }: { step: 1 | 2 | 3 }) {
   </View>;
 }
 
-function FloatingChoice({ id, selected, scale, onPress }: { id: string; selected: boolean; scale: number; onPress: () => void }) {
+function FloatingChoice({ id, selected, scale, top, onPress }: { id: string; selected: boolean; scale: number; top: number; onPress: () => void }) {
   const t = useTranslation();
   const [front] = useState(() => new Animated.Value(selected ? 1 : 0));
   useEffect(() => {
@@ -43,7 +44,7 @@ function FloatingChoice({ id, selected, scale, onPress }: { id: string; selected
   }, [front, selected]);
   const left = id === 'coco';
   const character = characterById(id);
-  return <Animated.View style={{ position: 'absolute', left: left ? '5.82%' : '52.91%', top: 160 * scale,
+  return <Animated.View style={{ position: 'absolute', left: left ? '5.82%' : '52.91%', top,
     width: 164 * scale, height: 300 * scale, zIndex: selected ? 3 : 2, transformOrigin: 'top left',
     opacity: selected ? 1 : .92, transform: [
       { translateY: front.interpolate({ inputRange: [0, 1], outputRange: [36 * scale, 0] }) },
@@ -66,34 +67,43 @@ export function BuddyScreen() {
   const { characterId, setCharacterId } = useOnboarding();
   const audio = useSoundScope();
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
-  const compact = height < 760;
+  const { width, column, gutter, compact, tight, narrow, type } = useLayout();
   const [heroHeight, setHeroHeight] = useState(478);
-  const scale = Math.min(width / 378, heroHeight / 478);
+  // The sky is full-bleed; the wordmark and the buddies are drawn for a 378 × 478 stage, scaled into
+  // the column (centred on a tablet) and the hero's height
+  const scale = Math.min(column / 378, heroHeight / 478);
+  const logoTop = Math.max(insets.top + 8, (compact ? 42 : 58) * scale);
+  const logoW = Math.round(Math.min(280 * type, Math.max(180, (compact ? 250 : 280) * Math.min(1, scale))));
+  // The buddies float under the wordmark, never over it (their speech bubble is at their top)
+  const choiceTop = Math.max(160 * scale, logoTop + logoW / 3 + 2);
+  // A tablet's deck keeps its cards and button in the column
+  const side = (width - column) / 2;
   const choose = (id: string) => {
     if (id === characterId) return;
     sound.unlock(); audio.cancel(); audio.play('choose'); audio.voice(id, 'hello');
     feedback.characterPicked(); setCharacterId(id);
   };
-  return <View style={styles.screen}>
-    <View style={styles.hero} onLayout={e => setHeroHeight(e.nativeEvent.layout.height)}>
+  return <ScrollView style={styles.screen} contentContainerStyle={styles.grow} bounces={false} showsVerticalScrollIndicator={false}>
+    <View style={[styles.hero, tight && styles.heroTight]} onLayout={e => e.nativeEvent.layout.height > 0 && setHeroHeight(e.nativeEvent.layout.height)}>
       <OnboardingSky />
       <View style={{ position: 'absolute', right: -36, top: 110 * scale }}><OnboardingSun /></View>
       <View style={{ position: 'absolute', left: -14, top: 148 * scale, opacity: .85 }}><OnboardingCloud width={92} /></View>
       <View style={{ position: 'absolute', right: -18, top: 250 * scale, opacity: .9 }}><OnboardingCloud width={110} /></View>
       <View style={{ position: 'absolute', left: '40%', bottom: 24, opacity: .7 }}><OnboardingCloud width={70} /></View>
-      <View style={[styles.logo, { top: Math.max(insets.top + 8, (compact ? 42 : 58) * scale) }]} accessible accessibilityLabel={t('app.name')}>
-        <Wordmark width={compact ? 250 : 280} />
+      <View style={[styles.stage, { left: side, width: column }]} pointerEvents="box-none">
+        <View style={[styles.logo, { top: logoTop }]} accessible accessibilityLabel={t('app.name')}>
+          <Wordmark width={logoW} />
+        </View>
+        {STARTER_CHARACTERS.map(id => <FloatingChoice key={id} id={id} selected={id === characterId} scale={scale} top={choiceTop} onPress={() => choose(id)} />)}
       </View>
-      {STARTER_CHARACTERS.map(id => <FloatingChoice key={id} id={id} selected={id === characterId} scale={scale} onPress={() => choose(id)} />)}
       <View style={styles.heroClouds} pointerEvents="none">
         {[150, 140, 170, 130].map((w, i) => <View key={i} style={{ position: 'absolute', left: [-10, 96, 210, 300][i], top: [38, 52, 30, 48][i] }}><OnboardingCloud width={w} /></View>)}
       </View>
     </View>
-    <View style={[styles.deck, { minHeight: compact ? 300 : 360, paddingBottom: Math.max(24, insets.bottom + 8) }]}>
+    <View style={[styles.deck, { minHeight: tight ? 0 : compact ? 300 : 360, paddingHorizontal: side + gutter, paddingBottom: Math.max(tight ? 16 : 24, insets.bottom + 8) }, tight && styles.deckTight]}>
       <View style={styles.deckPaper}><PaperBackground /></View>
-      <View style={styles.floatingTile} pointerEvents="none"><Tile letter={t('onboarding.decorativeLetter')} look="clue" w={44} h={50} /></View>
-      <Text style={styles.question}>{t('onboarding.buddy.title')}</Text>
+      <View style={[styles.floatingTile, { right: side + 14 }]} pointerEvents="none"><Tile letter={t('onboarding.decorativeLetter')} look="clue" w={44} h={50} /></View>
+      <Text style={[styles.question, tight && styles.questionTight]}>{t('onboarding.buddy.title')}</Text>
       <Text style={styles.subtitle}>{t('onboarding.buddy.subtitle')}</Text>
       <View style={styles.picks}>
         {STARTER_CHARACTERS.map(id => {
@@ -102,9 +112,13 @@ export function BuddyScreen() {
             accessibilityLabel={t('onboarding.choose', { name: character.name })} style={styles.fill}>
             {({ pressed }) => <>
               <Raised depth={selected ? 5 : 4} shadowColor={selected ? colors.coralD : colors.shadow} radius={22} pressed={pressed}
-                style={[styles.pick, { height: compact ? 82 : 96 }, selected && styles.pickOn]}>
-                <Avatar character={character} size={width < 370 ? 46 : 51} />
-                <View style={styles.fill}><Text style={styles.pickName}>{character.name}</Text><Text style={styles.species}>{speciesOf(character, t)}</Text></View>
+                style={[styles.pick, { height: tight ? 74 : compact ? 82 : 96 }, selected && styles.pickOn]}>
+                <Avatar character={character} size={narrow ? 40 : width < 370 ? 46 : 51} />
+                {/* Clear of the radio in the corner (the picked one has its check outside the card) */}
+                <View style={[styles.fill, !selected && styles.pickText]}>
+                  <Text style={[styles.pickName, narrow && styles.pickNameNarrow]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{character.name}</Text>
+                  <Text style={styles.species} numberOfLines={2}>{speciesOf(character, t)}</Text>
+                </View>
                 {!selected && <View style={styles.radio} />}
               </Raised>
               {selected && <View style={styles.check}><Icon xml={checkXml} size={13} /></View>}
@@ -121,17 +135,17 @@ export function BuddyScreen() {
       </Pressable>
       <Text style={[styles.foot, { marginTop: 9 }]}>{t('onboarding.buddy.footer')}</Text>
     </View>
-  </View>;
+  </ScrollView>;
 }
 
 function LegalSheet({ page, onSelect, onClose }: { page: LegalPage; onSelect: (page: LegalPage) => void; onClose: () => void }) {
   const t = useTranslation();
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
+  const { height, column } = useLayout();
   return <Modal transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
     <View style={styles.dim}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityLabel={t('onboarding.legal.close')} />
-      <View style={[styles.sheet, { height: Math.min(560 + insets.bottom, height - insets.top - 24), paddingBottom: Math.max(28, insets.bottom + 8) }]} accessibilityViewIsModal>
+      <View style={[styles.sheet, { width: column, height: Math.min(560 + insets.bottom, height - insets.top - 24), paddingBottom: Math.max(28, insets.bottom + 8) }]} accessibilityViewIsModal>
         <View style={styles.grab} />
         <View style={styles.sheetHead}><View style={styles.sheetIcon}><Icon xml={profileIconXml.terms} size={22} /></View>
           <Text style={styles.sheetTitle}>{t(INFO_PAGES[page].title)}</Text></View>
@@ -156,8 +170,7 @@ export function NameScreen() {
   const audio = useSoundScope();
   const focused = useIsFocused();
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
-  const compact = height < 760;
+  const { column, gutter, compact } = useLayout();
   const input = useRef<TextInputInstance>(null);
   const [tried, setTried] = useState(false);
   const [nudged, setNudged] = useState(false);
@@ -203,7 +216,7 @@ export function NameScreen() {
     {focused && <StatusBar style={lifting ? 'light' : 'dark'} />}
     <PaperBackground />
     <KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={[styles.namePage, { paddingTop: insets.top, paddingBottom: Math.max(30, insets.bottom + 8) }]}
+      <ScrollView contentContainerStyle={[styles.namePage, { width: column, paddingHorizontal: gutter, paddingTop: insets.top, paddingBottom: Math.max(30, insets.bottom + 8) }]}
         keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={styles.bar}>
           {!returning && <Pressable onPress={() => { audio.play('back'); router.back(); }} accessibilityRole="button" accessibilityLabel={t('profile.back')}>
@@ -263,21 +276,29 @@ export function NameScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper }, fill: { flex: 1 }, spacer: { flex: 1, minHeight: 12 },
+  grow: { flexGrow: 1 },
   hero: { flex: 1, minHeight: 270, overflow: 'hidden' },
+  heroTight: { minHeight: 250 },
+  // The wordmark and buddies' stage: the column, centred in the full-bleed sky
+  stage: { position: 'absolute', top: 0, bottom: 0 },
   logo: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 5 },
   glow: { position: 'absolute', width: 240, height: 240, left: -38, top: 80 },
   bubble: { position: 'absolute', top: 4, backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, borderBottomWidth: 3, borderRadius: 15, paddingVertical: 5, paddingHorizontal: 11 },
   bubbleText: { fontFamily: fonts.display600, fontSize: 14.5, color: colors.ink },
   bubbleTail: { position: 'absolute', bottom: -7, width: 11, height: 11, backgroundColor: '#fff', borderRightWidth: 2, borderBottomWidth: 2, borderColor: colors.line, transform: [{ rotate: '45deg' }] },
   heroClouds: { position: 'absolute', left: -20, right: -20, bottom: -12, height: 110 },
-  deck: { marginTop: -1, paddingTop: 22, paddingHorizontal: 16, borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: colors.paper },
+  deck: { marginTop: -1, paddingTop: 22, borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: colors.paper },
   deckPaper: { ...StyleSheet.absoluteFill, borderTopLeftRadius: 30, borderTopRightRadius: 30, overflow: 'hidden' },
-  floatingTile: { position: 'absolute', right: 14, top: -42, transform: [{ rotate: '10deg' }], zIndex: 4 },
+  floatingTile: { position: 'absolute', top: -42, transform: [{ rotate: '10deg' }], zIndex: 4 },
   question: { fontFamily: fonts.display700, fontSize: 28, lineHeight: 31, color: colors.ink, textAlign: 'center' },
+  deckTight: { paddingTop: 16 },
+  questionTight: { fontSize: 24, lineHeight: 27 },
   subtitle: { fontFamily: fonts.body800, fontSize: 14.5, color: colors.muted, textAlign: 'center', marginTop: 5 },
   picks: { flexDirection: 'row', gap: 12, marginTop: 16 },
   pick: { backgroundColor: '#fff', borderWidth: 2, borderColor: colors.line, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10 },
   pickOn: { borderColor: colors.coral, borderWidth: 3 },
+  pickText: { paddingRight: 16 },
+  pickNameNarrow: { fontSize: 18 },
   pickName: { fontFamily: fonts.display700, fontSize: 21, lineHeight: 24, color: colors.ink },
   species: { fontFamily: fonts.display500, fontSize: 13, color: colors.muted, marginTop: 3 },
   radio: { position: 'absolute', top: 10, right: 10, width: 20, height: 20, borderRadius: 10, borderWidth: 2.5, borderColor: '#e6d5c4' },
@@ -285,7 +306,8 @@ const styles = StyleSheet.create({
   dots: { flexDirection: 'row', gap: 7, justifyContent: 'center', alignItems: 'center' },
   dot: { width: 9, height: 9, borderRadius: 5, backgroundColor: '#ead9c4' }, dotOn: { width: 26, backgroundColor: colors.coral }, dotDone: { backgroundColor: colors.mint },
   foot: { fontFamily: fonts.body800, fontSize: 12.5, color: colors.muted, textAlign: 'center' },
-  namePage: { flexGrow: 1, paddingHorizontal: 16 },
+  // Centred on a tablet
+  namePage: { flexGrow: 1, alignSelf: 'center' },
   bar: { height: 56, flexDirection: 'row', alignItems: 'center', gap: 12 },
   back: { width: 44, height: 44, borderWidth: 1.5, borderColor: colors.line, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   headerDots: { flex: 1, marginRight: 56 },
@@ -308,7 +330,7 @@ const styles = StyleSheet.create({
   nudgeText: { marginTop: 8, marginHorizontal: 4, fontFamily: fonts.display600, fontSize: 13.5, color: colors.coralD, textAlign: 'center' },
   playAction: { marginTop: 8 },
   dim: { flex: 1, backgroundColor: 'rgba(75,58,53,.42)', justifyContent: 'flex-end' },
-  sheet: { borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: colors.paper, paddingTop: 10, paddingHorizontal: 18 },
+  sheet: { alignSelf: 'center', borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: colors.paper, paddingTop: 10, paddingHorizontal: 18 },
   grab: { width: 44, height: 5, borderRadius: 3, backgroundColor: '#e2d2c1', alignSelf: 'center', marginBottom: 14 },
   sheetHead: { flexDirection: 'row', alignItems: 'center', gap: 11 },
   sheetIcon: { width: 42, height: 42, borderRadius: 14, backgroundColor: colors.skyL, alignItems: 'center', justifyContent: 'center' },

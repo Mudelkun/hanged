@@ -21,12 +21,13 @@ import { STREAK_BONUS_AT } from '../game/config';
 import { StreakMeter, streakMeter } from '../game/progress';
 import { useTranslation } from '../i18n';
 import { colors, confettiColors, fonts, streakColor } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Confetti } from './Confetti';
 import { coinXml, Icon, sparkXml, starXml } from './icons';
 import { popFrom } from './motion';
 import { Raised } from './Raised';
 import { SparkBurst } from './SparkBurst';
-import { useTokenOrigin } from './TokenFlight';
+import { MEASURABLE, useTokenOrigin } from './TokenFlight';
 
 /** A streak this long or longer gets the takeover; a single win isn't a streak yet. */
 export const STREAK_SHOWN_FROM = 2;
@@ -180,14 +181,29 @@ function Cell({ look, state, fx, w, h }: { look: Look; state: CellState; fx: Fx;
   );
 }
 
-/** Sizes for a stage `h` tall holding `cells` cells: the meter and the character grow to fill it. */
-function stageSizes(h: number, cells: number) {
-  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+/** The cheering character's width per unit of height (its drawing is 220 × 260). */
+const CHAR_W = 220 / 260;
+/** The room between the character and the meter. */
+const STAGE_GAP = 16;
+
+/**
+ * Sizes for a stage `w` × `h` holding `cells` cells: the meter and the character grow to fill its
+ * height, and give way when side by side they'd be wider than the stage (a narrow phone): the
+ * character first, then the cells.
+ */
+function stageSizes(w: number, h: number, cells: number, scale: number) {
+  // A tablet's bigger card lets everything grow past a phone's limits
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi * scale, Math.max(lo, v));
   const goal = clamp(h * 0.17, 46, 78);
   // The tube's padding, border and raised bottom, plus the gaps between cells
   const chrome = 12 + 3 + 8 + (cells - 1) * CELL_GAP;
   const cellH = clamp((h - 16 - goal * 0.7 - chrome) / cells, 30, 74);
-  return { goal, cellH, cellW: clamp(cellH * 1.4, 56, 96), charH: clamp(h * 0.52, 92, 220) };
+  let cellW = clamp(cellH * 1.4, 56, 96);
+  // The tube is its cells plus 6 of padding and 3 of border a side
+  const meterW = () => Math.max(cellW + 18, goal);
+  const charH = clamp(Math.min(h * 0.52, (w - meterW() - STAGE_GAP) / CHAR_W), 64, 220);
+  cellW = Math.max(44, Math.min(cellW, w - charH * CHAR_W - STAGE_GAP - 18));
+  return { goal, cellH, cellW, charH };
 }
 type Sizes = ReturnType<typeof stageSizes>;
 
@@ -241,15 +257,15 @@ interface Props {
   /** Tokens the win paid: they fly from the count into the counter. */
   tokens: number;
   character: Character;
-  compact: boolean;
   /** As the takeover starts fading out: the Play screen puts the result underneath. */
   onReveal: () => void;
   /** Faded out: the Play screen unmounts it. */
   onDone: () => void;
 }
 
-export function StreakTakeover({ streak, tokens, character, compact, onReveal, onDone }: Props) {
+export function StreakTakeover({ streak, tokens, character, onReveal, onDone }: Props) {
   const t = useTranslation();
+  const { compact, gutter, scale, type } = useLayout();
   const audio = useSoundScope();
   const meter = streakMeter(streak);
   const maxed = meter.tier >= STREAK_BONUS_AT.length;
@@ -258,7 +274,7 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
   const [phase, setPhase] = useState<Phase>('filling');
   const [tappable, setTappable] = useState(false);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
-  const [stageH, setStageH] = useState(0);
+  const [stage, setStage] = useState<{ w: number; h: number } | null>(null);
   const [countRef, sendToken] = useTokenOrigin();
   const sent = useRef(false);
   const closing = useRef(false);
@@ -367,12 +383,13 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
       ? t(meter.bonus === 1 ? 'streak.bonus.one' : 'streak.bonus.other', { bonus: meter.bonus })
       : t(left === 1 ? 'streak.next.one' : 'streak.next.other', { count: left, bonus: meter.bonus + 1 });
   const bonusNote = maxed || meter.full;
-  const sizes = stageH > 0 ? stageSizes(stageH, meter.to - meter.from) : null;
+  const sizes = stage && stage.h > 0 ? stageSizes(stage.w, stage.h, meter.to - meter.from, scale) : null;
 
   return (
     <Animated.View
       style={[
         styles.wrap,
+        { left: gutter, right: gutter },
         {
           // Grows in as it appears, and keeps growing a little as it dissolves (never shrinks onto a gap)
           opacity: Animated.multiply(fx.show, fx.hide.interpolate({ inputRange: [0, 1], outputRange: [1, 0] })),
@@ -398,17 +415,17 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
 
           <Animated.View style={[styles.signWrap, { transform: [{ scale: fx.title }] }]}>
             <Raised depth={5} shadowColor={look.dark} radius={24} style={styles.sign}>
-              <Text style={[styles.title, compact && styles.titleCompact]}>{title}</Text>
-              <View ref={countRef} collapsable={false} style={styles.countRow}>
-                <Animated.Text style={[styles.count, { color: look.main, transform: [{ scale: fx.count }] }, compact && styles.countCompact]}>
+              <Text style={[styles.title, compact ? styles.titleCompact : { fontSize: Math.round(32 * type) }]}>{title}</Text>
+              <View ref={countRef} {...MEASURABLE} style={styles.countRow}>
+                <Animated.Text style={[styles.count, { color: look.main, transform: [{ scale: fx.count }] }, compact ? styles.countCompact : { fontSize: Math.round(44 * type) }]}>
                   {phase === 'filling' ? streak - 1 : streak}
                 </Animated.Text>
-                <Text style={styles.inARow}>{t('streak.inARow')}</Text>
+                <Text style={[styles.inARow, { fontSize: Math.round(19 * type) }]}>{t('streak.inARow')}</Text>
               </View>
             </Raised>
           </Animated.View>
 
-          <View style={styles.stage} onLayout={(e) => setStageH(e.nativeEvent.layout.height)}>
+          <View style={styles.stage} onLayout={(e) => setStage({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
             {sizes && (
               <View style={styles.stageRow}>
                 <Cheering character={character} height={sizes.charH} hop={fx.hop} />
@@ -431,7 +448,7 @@ export function StreakTakeover({ streak, tokens, character, compact, onReveal, o
             ]}
           >
             {bonusNote && <Icon xml={coinXml} size={20} />}
-            <Text style={[styles.noteText, { color: bonusNote ? colors.butterT : colors.ink }]}>{note}</Text>
+            <Text style={[styles.noteText, { color: bonusNote ? colors.butterT : colors.ink, fontSize: Math.round(15 * type) }]}>{note}</Text>
           </Animated.View>
           <Text style={[styles.tap, { color: look.hint }]}>{t('streak.tap')}</Text>
 
@@ -448,7 +465,7 @@ const styles = StyleSheet.create({
   // Over the Play screen's body: it fades in over the round and out over the result. The header
   // stays, so the reward can fly into it. zIndex above the result stamp's 2: iOS turns zIndex
   // into a layer depth that ignores stacking order (see LevelChange)
-  wrap: { position: 'absolute', left: 16, right: 16, top: 4, bottom: 0, zIndex: 10 },
+  wrap: { position: 'absolute', top: 4, bottom: 0, zIndex: 10 },
   press: { flex: 1 },
   card: { flex: 1, borderWidth: 3, borderColor: '#fff', alignItems: 'center', paddingHorizontal: 14, paddingTop: 14, paddingBottom: 10 },
   rays: { position: 'absolute', width: RAY_R * 2, height: RAY_R * 2 },
@@ -461,7 +478,7 @@ const styles = StyleSheet.create({
   countCompact: { fontSize: 36 },
   inARow: { fontFamily: fonts.display600, fontSize: 19, color: colors.muted },
   stage: { flex: 1, alignSelf: 'stretch', justifyContent: 'center', minHeight: 0 },
-  stageRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 16 },
+  stageRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: STAGE_GAP },
   shadow: { height: 12, borderRadius: 6, backgroundColor: 'rgba(75,58,53,0.14)' },
   halo: { position: 'absolute', top: '25%', width: 220, height: 220, borderRadius: 110, backgroundColor: '#fff' },
   goal: { zIndex: 1, alignItems: 'center', justifyContent: 'center' },

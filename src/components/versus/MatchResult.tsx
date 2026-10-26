@@ -14,7 +14,8 @@ import { SCENE_STAGES } from '../../game/config';
 import { Translator, useTranslation } from '../../i18n';
 import { useVersus } from '../../state/VersusContext';
 import { colors, fonts } from '../../theme';
-import { GameScene, Stamp } from '../GameScene';
+import { useLayout } from '../../theme/layout';
+import { GameScene, Stamp, useSceneRange, useStampWidth } from '../GameScene';
 import { display, displayName, Face, Label, MODE_LOOK, ModeChip, PillButton, versusStyles } from './parts';
 
 const MEDALS = ['#ffc93c', '#c9d3dd', '#e3a46f'];
@@ -23,8 +24,11 @@ function scoreText(t: Translator, r: Result, s: Standing) {
   return r.mode === 'duel' ? t('versus.result.rounds', { count: s.score }) : t(s.score === 1 ? 'versus.result.word' : 'versus.result.words', { count: s.score });
 }
 
-export function MatchResult({ result, character, available, compact }: { result: Result; character: Character; available: number; compact: boolean }) {
+export function MatchResult({ result, character }: { result: Result; character: Character }) {
   const t = useTranslation();
+  const sceneRange = useSceneRange(160, 220);
+  const [onSceneLayout, stampWidth] = useStampWidth();
+  const { scale } = useLayout();
   const audio = useSoundScope();
   const { state, actions } = useVersus();
   const me = result.standings.find((s) => s.id === state.me);
@@ -51,14 +55,14 @@ export function MatchResult({ result, character, available, compact }: { result:
 
   return (
     <View style={styles.fill}>
-      <View style={[styles.scene, { minHeight: compact ? 120 : 160 }]}>
+      <View style={[styles.scene, sceneRange]} onLayout={onSceneLayout}>
         <GameScene character={character} stage={won ? 0 : SCENE_STAGES} gone={won ? 0 : SCENE_STAGES} mode={won ? 'won' : 'lost'} style={styles.fill} />
         {!cancelled && (
           <Stamp
-            visible
+            visible={stampWidth > 0}
             text={won ? (tie ? t('versus.result.tie') : t('versus.result.won')) : t('versus.result.lost')}
             color={won ? colors.stampGreen : colors.stampRed}
-            width={Math.min(330, available)}
+            width={Math.min(stampWidth, Math.round(330 * scale))}
           />
         )}
       </View>
@@ -122,7 +126,7 @@ export function MatchResult({ result, character, available, compact }: { result:
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
-  scene: { flexShrink: 1, maxHeight: 220 },
+  scene: { flexShrink: 1 },
   list: { paddingTop: 10, paddingBottom: 8, gap: 8 },
   meta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   metaText: { fontFamily: fonts.body800, fontSize: 12.5, color: colors.muted },

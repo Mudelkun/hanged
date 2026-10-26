@@ -14,7 +14,10 @@ jest.mock('../../audio/AudioProvider', () => ({ useSoundScope: () => mockAudio }
 jest.mock('../../audio', () => ({ sound: { play: jest.fn(), unlock: jest.fn() } }));
 jest.mock('../../feedback', () => ({ feedback: { refused: jest.fn(), characterPicked: jest.fn(), unlock: jest.fn() } }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useIsFocused: () => true, Stack: { Screen: () => null } }));
-jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) }));
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
+  SafeAreaInsetsContext: jest.requireActual('react').createContext(null),
+}));
 jest.mock('../OnboardingArt', () => ({ BuddyGlow: () => null, LiftOff: () => null, NameStage: () => null,
   OnboardingBalloon: () => null, OnboardingCloud: () => null, OnboardingSky: () => null, OnboardingSun: () => null }));
 

@@ -121,7 +121,8 @@ export const PathFog = memo(function PathFog({ id, layout }: { id: string; layou
         </Defs>
         <Rect width={layout.width} height={fogH} fill={`url(#${id})`} />
       </Svg>
-      {mountain && <SvgXml xml={mountain} style={styles.fogTop} />}
+      {/* farMountain() is '' in a window too short for it: a bare '' in a View crashes iOS */}
+      {!!mountain && <SvgXml xml={mountain} style={styles.fogTop} />}
       {spots.map((s, i) => (
         <Animated.View
           key={i}

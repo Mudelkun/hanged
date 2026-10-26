@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import appConfig from '../../app.json';
 import { characterById } from '../characters/rig';
 import { sound } from '../audio';
+import { Column } from '../components/Column';
 import { DevToolsGroup } from '../components/DevTools';
 import { BackHeader } from '../components/GameHeader';
 import { profileIconXml } from '../components/icons';
@@ -30,6 +31,7 @@ import { Translator, useTranslation } from '../i18n';
 import { useGame } from '../state/GameContext';
 import { useToday } from '../state/useDaily';
 import { colors } from '../theme';
+import { useLayout } from '../theme/layout';
 
 /** The info & legal rows, in the mockup's order. */
 const infoItems = (t: Translator): ListItem[] =>
@@ -46,6 +48,7 @@ export default function ProfileScreen() {
   const { state, dispatch, deleteAccount, nameIsFree, setReminders } = useGame();
   const today = useToday();
   const insets = useSafeAreaInsets();
+  const { column, gutter } = useLayout();
   const [deleting, setDeleting] = useState(false);
   const [choosingLanguage, setChoosingLanguage] = useState(false);
   const character = characterById(state.characterId);
@@ -78,10 +81,12 @@ export default function ProfileScreen() {
   return (
     <View style={styles.screen}>
       <PaperBackground />
-      <View style={{ height: insets.top }} />
-      <BackHeader title={t('profile.title')} tokens={state.tokens} />
+      <Column fill={false}>
+        <View style={{ height: insets.top }} />
+        <BackHeader title={t('profile.title')} tokens={state.tokens} />
+      </Column>
       <ScrollView
-        contentContainerStyle={[styles.body, { paddingBottom: insets.bottom + 20 }]}
+        contentContainerStyle={[styles.body, { width: column, paddingHorizontal: gutter, paddingBottom: insets.bottom + 20 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -109,5 +114,6 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
-  body: { paddingHorizontal: 16, paddingTop: 2 },
+  // Centred on a tablet; the scroll view itself spans the screen, so the sides scroll too
+  body: { alignSelf: 'center', paddingTop: 2 },
 });

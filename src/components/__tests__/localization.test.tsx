@@ -17,7 +17,10 @@ jest.mock('../../state/GameContext', () => ({ useGame: () => mockGame }));
 jest.mock('../../audio/AudioProvider', () => ({ useSoundScope: () => mockAudio }));
 jest.mock('../../audio', () => ({ sound: { play: jest.fn(), unlock: jest.fn() } }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0 }) }));
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, bottom: 0 }),
+  SafeAreaInsetsContext: jest.requireActual('react').createContext(null),
+}));
 jest.mock('../versus/InviteLink', () => ({ OnboardingInvite: () => null }));
 
 let view: ReactTestRenderer;
@@ -27,7 +30,7 @@ beforeEach(() => { setLanguage('en'); mockGame.state = initialState(); jest.clea
 afterEach(async () => { await act(async () => view?.unmount()); setLanguage('en'); });
 
 test('already mounted text and memoized keys update immediately when the language changes', async () => {
-  await act(async () => { view = create(<><MissesBar wrong={0} max={10} /><LetterKeyboard locked={false} keyState={() => 'idle'} onPress={() => {}} compact available={343} /></>); });
+  await act(async () => { view = create(<><MissesBar wrong={0} max={10} /><LetterKeyboard locked={false} keyState={() => 'idle'} onPress={() => {}} /></>); });
   expect(pressable('Letter A') !== undefined).toBe(true);
   await act(async () => setLanguage('fr'));
   expect(pressable('Lettre A') !== undefined).toBe(true);
@@ -49,11 +52,11 @@ test('the first onboarding page has all native language names and continues to b
 
 test('German ß is a single usable key and Spanish Ñ appears on the keyboard', async () => {
   const press = jest.fn();
-  await act(async () => { view = create(<LetterKeyboard language="de" locked={false} keyState={() => 'idle'} onPress={press} compact available={343} />); });
+  await act(async () => { view = create(<LetterKeyboard language="de" locked={false} keyState={() => 'idle'} onPress={press} />); });
   const key = pressable('Letter ß');
   await act(async () => key.props.onPress());
   expect(press).toHaveBeenCalledWith('ß');
-  await act(async () => view.update(<LetterKeyboard language="es" locked={false} keyState={() => 'idle'} onPress={press} compact available={343} />));
+  await act(async () => view.update(<LetterKeyboard language="es" locked={false} keyState={() => 'idle'} onPress={press} />));
   expect(pressable('Letter Ñ') !== undefined).toBe(true);
 });
 

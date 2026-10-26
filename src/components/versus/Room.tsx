@@ -6,7 +6,7 @@
  */
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { LobbyView } from '../../../server/src/versus-contract';
 import { MODE_IDS, MODES } from '../../../server/src/versus-contract';
@@ -15,20 +15,21 @@ import { Character } from '../../characters/rig';
 import { useTranslation } from '../../i18n';
 import { useFriends, useVersus } from '../../state/VersusContext';
 import { colors, fonts } from '../../theme';
-import { GameScene } from '../GameScene';
+import { GameScene, useSceneRange } from '../GameScene';
 import { checkXml, closeXml, crownXml, Icon } from '../icons';
 import { Raised } from '../Raised';
 import { Tile } from '../RoundParts';
 import { display, displayName, Face, formatClock, Label, MODE_LOOK, ModeChip, ModeIcon, modeName, modeTagline, PillButton, Sheet, useSecondsSince, versusStyles } from './parts';
 
-export function QueueView({ character, compact }: { character: Character; compact: boolean }) {
+export function QueueView({ character }: { character: Character }) {
   const t = useTranslation();
+  const sceneRange = useSceneRange(220, 300);
   const { state, actions } = useVersus();
   const queue = state.queue!;
   const waited = useSecondsSince(queue.since);
   return (
     <View style={styles.fill}>
-      <GameScene character={character} stage={0} gone={0} mode="play" style={[styles.scene, { minHeight: compact ? 150 : 220 }]} />
+      <GameScene character={character} stage={0} gone={0} mode="play" style={[styles.scene, sceneRange]} />
       <View style={styles.queueText}>
         <ModeChip mode={queue.mode} />
         <Text style={[versusStyles.title, versusStyles.center]} accessibilityLiveRegion="polite">{t('versus.queue.title')}</Text>
@@ -53,73 +54,76 @@ export function LobbyRoom({ lobby }: { lobby: LobbyView }) {
   const allReady = lobby.members.every((m) => m.ready);
   const look = MODE_LOOK[lobby.mode];
 
+  // The code, mode and players scroll on a short phone; the buttons stay pinned under them
   return (
     <View style={styles.fill}>
-      <Raised depth={4} shadowColor={colors.shadow} radius={22} style={[versusStyles.card, styles.codeCard]}>
-        <Label>{t('versus.lobby.code')}</Label>
-        <View style={styles.codeTiles} accessible accessibilityLabel={`${t('versus.lobby.code')}: ${lobby.code.split('').join(' ')}`}>
-          {lobby.code.split('').map((c, i) => (
-            <Tile key={i} letter={c} look="ok" w={38} h={44} sparkle={false} />
+      <ScrollView style={styles.fill} contentContainerStyle={styles.lobbyScroll} showsVerticalScrollIndicator={false}>
+        <Raised depth={4} shadowColor={colors.shadow} radius={22} style={[versusStyles.card, styles.codeCard]}>
+          <Label>{t('versus.lobby.code')}</Label>
+          <View style={styles.codeTiles} accessible accessibilityLabel={`${t('versus.lobby.code')}: ${lobby.code.split('').join(' ')}`}>
+            {lobby.code.split('').map((c, i) => (
+              <Tile key={i} letter={c} look="ok" w={38} h={44} sparkle={false} />
+            ))}
+          </View>
+          <Text style={[versusStyles.body, versusStyles.center]}>{t('versus.lobby.codeHint')}</Text>
+        </Raised>
+
+        <Label>{t('versus.lobby.mode')}</Label>
+        <View style={styles.modes}>
+          {MODE_IDS.map((mode) => {
+            const on = mode === lobby.mode;
+            const fits = lobby.members.length <= MODES[mode].maxPlayers;
+            return (
+              <Pressable
+                key={mode}
+                disabled={!host || on || !fits}
+                onPress={() => { sound.play('choose'); actions.setMode(mode); }}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: on, disabled: !host || !fits }}
+                style={[styles.mode, on && { backgroundColor: MODE_LOOK[mode].light, borderColor: MODE_LOOK[mode].main }, !on && (!host || !fits) && styles.modeOff]}
+              >
+                <ModeIcon mode={mode} size={22} />
+                <Text style={[styles.modeText, on && { color: MODE_LOOK[mode].dark }]} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>{modeName(t, mode)}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Label>{t('versus.lobby.players', { count: lobby.members.length, max: maxPlayers })}</Label>
+        <View style={styles.members}>
+          {lobby.members.map((m) => (
+            <View key={m.id} style={[styles.member, m.id === me && styles.memberMe]}>
+              <Face characterId={m.characterId} size={36} />
+              <View style={styles.memberText}>
+                <View style={styles.memberName}>
+                  <Text style={styles.memberNameText} numberOfLines={1}>{displayName(t, m.name)}</Text>
+                  {m.id === lobby.hostId && <Icon xml={crownXml()} size={18} height={14} />}
+                </View>
+                <Text style={styles.memberSub}>{t('versus.lobby.rating', { rating: m.rating })}</Text>
+              </View>
+              <View style={[styles.ready, m.ready && styles.readyOn]}>
+                {m.ready && <Icon xml={checkXml} size={13} />}
+                <Text style={[styles.readyText, m.ready && styles.readyTextOn]}>{m.ready ? t('versus.lobby.ready') : t('versus.lobby.notReady')}</Text>
+              </View>
+              {host && m.id !== me && (
+                <Pressable
+                  onPress={() => { sound.play('tap'); actions.kick(m.id); }}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('versus.lobby.kick', { name: displayName(t, m.name) })}
+                >
+                  <Icon xml={closeXml(colors.muted)} size={18} />
+                </Pressable>
+              )}
+            </View>
+          ))}
+          {Array.from({ length: maxPlayers - lobby.members.length }, (_, i) => (
+            <View key={`empty${i}`} style={styles.empty}>
+              <Text style={styles.emptyText}>{t('versus.lobby.empty')}</Text>
+            </View>
           ))}
         </View>
-        <Text style={[versusStyles.body, versusStyles.center]}>{t('versus.lobby.codeHint')}</Text>
-      </Raised>
-
-      <Label>{t('versus.lobby.mode')}</Label>
-      <View style={styles.modes}>
-        {MODE_IDS.map((mode) => {
-          const on = mode === lobby.mode;
-          const fits = lobby.members.length <= MODES[mode].maxPlayers;
-          return (
-            <Pressable
-              key={mode}
-              disabled={!host || on || !fits}
-              onPress={() => { sound.play('choose'); actions.setMode(mode); }}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: on, disabled: !host || !fits }}
-              style={[styles.mode, on && { backgroundColor: MODE_LOOK[mode].light, borderColor: MODE_LOOK[mode].main }, !on && (!host || !fits) && styles.modeOff]}
-            >
-              <ModeIcon mode={mode} size={22} />
-              <Text style={[styles.modeText, on && { color: MODE_LOOK[mode].dark }]} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>{modeName(t, mode)}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
-
-      <Label>{t('versus.lobby.players', { count: lobby.members.length, max: maxPlayers })}</Label>
-      <View style={styles.members}>
-        {lobby.members.map((m) => (
-          <View key={m.id} style={[styles.member, m.id === me && styles.memberMe]}>
-            <Face characterId={m.characterId} size={36} />
-            <View style={styles.memberText}>
-              <View style={styles.memberName}>
-                <Text style={styles.memberNameText} numberOfLines={1}>{displayName(t, m.name)}</Text>
-                {m.id === lobby.hostId && <Icon xml={crownXml()} size={18} height={14} />}
-              </View>
-              <Text style={styles.memberSub}>{t('versus.lobby.rating', { rating: m.rating })}</Text>
-            </View>
-            <View style={[styles.ready, m.ready && styles.readyOn]}>
-              {m.ready && <Icon xml={checkXml} size={13} />}
-              <Text style={[styles.readyText, m.ready && styles.readyTextOn]}>{m.ready ? t('versus.lobby.ready') : t('versus.lobby.notReady')}</Text>
-            </View>
-            {host && m.id !== me && (
-              <Pressable
-                onPress={() => { sound.play('tap'); actions.kick(m.id); }}
-                hitSlop={8}
-                accessibilityRole="button"
-                accessibilityLabel={t('versus.lobby.kick', { name: displayName(t, m.name) })}
-              >
-                <Icon xml={closeXml(colors.muted)} size={18} />
-              </Pressable>
-            )}
-          </View>
-        ))}
-        {Array.from({ length: maxPlayers - lobby.members.length }, (_, i) => (
-          <View key={`empty${i}`} style={styles.empty}>
-            <Text style={styles.emptyText}>{t('versus.lobby.empty')}</Text>
-          </View>
-        ))}
-      </View>
+      </ScrollView>
 
       <View style={styles.bottom}>
         {lobby.playing ? (
@@ -208,11 +212,12 @@ function InviteSheet({ visible, onClose, lobby }: { visible: boolean; onClose: (
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
-  scene: { flexGrow: 1, flexShrink: 1, maxHeight: 300 },
+  scene: { flexGrow: 1, flexShrink: 1 },
   queueText: { alignItems: 'center', gap: 6, marginTop: 16 },
   waited: { ...display('700', 34, colors.coral), marginTop: 6 },
   hint: { marginTop: 4, fontSize: 13 },
   bottom: { marginTop: 'auto', paddingTop: 12, paddingBottom: 6 },
+  lobbyScroll: { paddingBottom: 4 },
 
   codeCard: { alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12 },
   codeTiles: { flexDirection: 'row', gap: 6, marginVertical: 4 },

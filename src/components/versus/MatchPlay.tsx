@@ -22,24 +22,25 @@ import { displayLetter, guessLetter } from '../../game/languages';
 import { useTranslation } from '../../i18n';
 import { useVersus } from '../../state/VersusContext';
 import { colors, fonts } from '../../theme';
-import { GameScene, SceneMode } from '../GameScene';
+import { useLayout } from '../../theme/layout';
+import { GameScene, SceneMode, useSceneRange } from '../GameScene';
 import { balloonXml, closeXml, Icon } from '../icons';
 import { LetterKeyboard } from '../LetterKeyboard';
 import { Raised } from '../Raised';
 import { DescriptionCard, MissesBar, TileLook, WordTiles } from '../RoundParts';
 import { display, displayName, Face, formatClock, MODE_LOOK, ModeChip, modeTagline, PillButton, ScoreChip, Sheet, useSecondsLeft, versusStyles } from './parts';
 
+/** The narrowest a score chip gets in one row; narrower, the row wraps two to a row. */
+const CHIP_MIN = 120;
 const FLASH_MS = 1_100;
 const HIT_MS = 1_600;
 
 interface Props {
   match: MatchView;
   character: Character;
-  available: number;
-  compact: boolean;
 }
 
-export function MatchPlay({ match, character, available, compact }: Props) {
+export function MatchPlay({ match, character }: Props) {
   const t = useTranslation();
   const { state, actions } = useVersus();
   const [leaving, setLeaving] = useState(false);
@@ -47,26 +48,29 @@ export function MatchPlay({ match, character, available, compact }: Props) {
   const mine = match.players.find((p) => p.id === me);
   const rival = match.players.find((p) => p.id !== me);
   const hitShown = useRecent(state.hit?.at, HIT_MS);
+  // Three or four players on a phone: two chips to a row, so every name still shows
+  const { available } = useLayout();
+  const half = match.players.length > 2 && available / match.players.length < CHIP_MIN;
 
   return (
     <View style={styles.fill}>
       <MatchHeader match={match} onLeave={() => setLeaving(true)} />
-      <View style={styles.scores}>
+      <View style={[styles.scores, half && styles.scoresWrap]}>
         {match.players.map((p) => (
-          <ScoreChip key={p.id} player={p} mode={match.mode} me={p.id === me} flash={hitShown && state.hit?.to === p.id} />
+          <ScoreChip key={p.id} player={p} mode={match.mode} me={p.id === me} half={half} flash={hitShown && state.hit?.to === p.id} />
         ))}
       </View>
       {state.conn !== 'online' && <Text style={styles.reconnecting}>{t('versus.reconnecting')}</Text>}
       {match.phase === 'countdown' ? (
-        <Countdown match={match} character={character} compact={compact} />
+        <Countdown match={match} character={character} />
       ) : match.phase === 'pick' ? (
         <PickView match={match} rival={rival} />
       ) : match.phase === 'reveal' && match.last ? (
         <RevealView match={match} />
       ) : match.you && mine ? (
-        <WordPlay match={match} you={match.you} mine={mine} rival={rival} character={character} available={available} compact={compact} />
+        <WordPlay match={match} you={match.you} mine={mine} rival={rival} character={character} />
       ) : (
-        <Landed character={character} compact={compact} />
+        <Landed character={character} />
       )}
       <Sheet visible={leaving} onClose={() => setLeaving(false)} title={t('versus.match.leaveTitle')}>
         <Text style={[versusStyles.body, versusStyles.center]}>{t(match.ranked ? 'versus.match.leaveRanked' : 'versus.match.leaveBody')}</Text>
@@ -120,8 +124,9 @@ function MatchHeader({ match, onLeave }: { match: MatchView; onLeave: () => void
   );
 }
 
-function Countdown({ match, character, compact }: { match: MatchView; character: Character; compact: boolean }) {
+function Countdown({ match, character }: { match: MatchView; character: Character }) {
   const t = useTranslation();
+  const sceneRange = useSceneRange(200, 300);
   const audio = useSoundScope();
   const left = useSecondsLeft(match.endsAt);
   useEffect(() => {
@@ -129,7 +134,7 @@ function Countdown({ match, character, compact }: { match: MatchView; character:
   }, [left, audio]);
   return (
     <View style={styles.fill}>
-      <GameScene character={character} stage={0} gone={match.mode === 'battle' ? 0 : SCENE_STAGES - (match.mode === 'rush' ? MODES.rush.maxWrong : MODES.duel.maxWrong)} mode="play" style={[styles.scene, { minHeight: compact ? 140 : 200 }]} />
+      <GameScene character={character} stage={0} gone={match.mode === 'battle' ? 0 : SCENE_STAGES - (match.mode === 'rush' ? MODES.rush.maxWrong : MODES.duel.maxWrong)} mode="play" style={[styles.scene, sceneRange]} />
       <View style={styles.countdown}>
         <Text style={styles.countNumber} accessibilityLiveRegion="assertive">{left ? left : t('versus.match.go')}</Text>
         <Text style={[versusStyles.body, versusStyles.center]}>{modeTagline(t, match.mode)}</Text>
@@ -145,16 +150,15 @@ function tileLooks(you: PuzzleView): { letter: string; look: TileLook }[] {
   }));
 }
 
-function WordPlay({ match, you, mine, rival, character, available, compact }: {
+function WordPlay({ match, you, mine, rival, character }: {
   match: MatchView;
   you: PuzzleView;
   mine: MatchPlayer;
   rival?: MatchPlayer;
   character: Character;
-  available: number;
-  compact: boolean;
 }) {
   const t = useTranslation();
+  const sceneRange = useSceneRange(130, 220);
   const audio = useSoundScope();
   const { state, actions } = useVersus();
   const battle = match.mode === 'battle';
@@ -219,7 +223,7 @@ function WordPlay({ match, you, mine, rival, character, available, compact }: {
 
   return (
     <>
-      <View style={[styles.sceneWrap, { minHeight: compact ? 96 : 130 }]}>
+      <View style={[styles.sceneWrap, sceneRange]}>
         <GameScene
           key={battle ? 'battle' : you.index}
           character={character}
@@ -259,18 +263,18 @@ function WordPlay({ match, you, mine, rival, character, available, compact }: {
         )}
       </View>
       <View>
-        <WordTiles letters={tileLooks(you)} available={available} compact={compact} />
+        <WordTiles letters={tileLooks(you)} />
         {flashing && flash && !duel && (
           <View style={[styles.flash, flash.won ? styles.flashWon : styles.flashLost]} pointerEvents="none" accessibilityLiveRegion="polite">
             <Text style={styles.flashText}>{flash.won ? t('versus.match.solved') : t('versus.match.wasWord', { word: flash.word.toUpperCase() })}</Text>
           </View>
         )}
       </View>
-      <DescriptionCard text={you.description} subject={you.subject} compact={compact} />
+      <DescriptionCard text={you.description} subject={you.subject} />
       {done ? (
         <DoneCard won={you.status === 'won'} word={flash?.index === you.index ? flash.word : null} misses={you.wrong} rival={rival} />
       ) : (
-        <LetterKeyboard language={you.language} keyState={keyState} pending={pending} locked={locked} onPress={onKey} available={available} compact={compact} />
+        <LetterKeyboard language={you.language} keyState={keyState} pending={pending} locked={locked} onPress={onKey} />
       )}
     </>
   );
@@ -290,11 +294,12 @@ function DoneCard({ won, word, misses, rival }: { won: boolean; word: string | n
 }
 
 /** Balloon Battle: no balloons left. The others play on. */
-function Landed({ character, compact }: { character: Character; compact: boolean }) {
+function Landed({ character }: { character: Character }) {
   const t = useTranslation();
+  const sceneRange = useSceneRange(230, 300);
   return (
     <View style={styles.fill}>
-      <GameScene character={character} stage={SCENE_STAGES} gone={SCENE_STAGES} mode="lost" style={[styles.scene, { minHeight: compact ? 160 : 230 }]} />
+      <GameScene character={character} stage={SCENE_STAGES} gone={SCENE_STAGES} mode="lost" style={[styles.scene, sceneRange]} />
       <Text style={[versusStyles.title, versusStyles.center, styles.landedTitle]}>{t('versus.match.landed')}</Text>
       <Text style={[versusStyles.body, versusStyles.center]}>{t('versus.match.landedBody')}</Text>
     </View>
@@ -419,10 +424,11 @@ const styles = StyleSheet.create({
   timerText: { ...display('700', 19), fontVariant: ['tabular-nums'] },
   timerTextHurry: { color: '#fff' },
   scores: { flexDirection: 'row', gap: 6, marginBottom: 8 },
+  scoresWrap: { flexWrap: 'wrap' },
   reconnecting: { ...display('600', 13, colors.coralD), textAlign: 'center', marginBottom: 6 },
 
-  scene: { flexGrow: 1, flexShrink: 1, maxHeight: 300 },
-  sceneWrap: { flexGrow: 1, flexShrink: 1, maxHeight: 220 },
+  scene: { flexGrow: 1, flexShrink: 1 },
+  sceneWrap: { flexGrow: 1, flexShrink: 1 },
   countdown: { alignItems: 'center', marginTop: 14, gap: 4 },
   countNumber: display('700', 72, colors.coral),
   underScene: { flexDirection: 'row', alignItems: 'center', gap: 10 },

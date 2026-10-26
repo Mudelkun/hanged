@@ -34,6 +34,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 
 import { TranslationKey, useTranslation } from '../i18n';
 import { colors, fonts } from '../theme';
+import { useLayout } from '../theme/layout';
 import { Icon, tabIconXml } from './icons';
 import { sound } from '../audio';
 
@@ -86,9 +87,13 @@ function open(i: number, from: number) {
   router.navigate(href);
 }
 
-export function TabBar({ active, compact }: { active: TabId; compact: boolean }) {
+/** The bar's height: shorter on short phones (theme/layout.ts). */
+const BAR_H = { tight: 54, compact: 60, regular: 68 };
+
+export function TabBar({ active }: { active: TabId }) {
   const t = useTranslation();
   const insets = useSafeAreaInsets();
+  const { compact, tight, narrow, type } = useLayout();
   const focused = useIsFocused();
   const [size, setSize] = useState({ w: 0, h: 0 });
   const slot = size.w / TABS.length;
@@ -195,13 +200,19 @@ export function TabBar({ active, compact }: { active: TabId; compact: boolean })
           },
         })}
       >
-        <Icon xml={tabIconXml[tab.id](on ? colors.coral : colors.tabIdle)} size={28} height={24} />
-        <Text style={[styles.label, on && { color: colors.coralD }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{t(tab.label)}</Text>
+        <Icon xml={tabIconXml[tab.id](on ? colors.coral : colors.tabIdle)} size={Math.round((tight ? 25 : 28) * type)} height={Math.round((tight ? 21 : 24) * type)} />
+        <Text style={[styles.label, narrow && styles.labelNarrow, type > 1 && { fontSize: Math.round(12 * type) }, on && { color: colors.coralD }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{t(tab.label)}</Text>
       </View>
     ));
 
   return (
-    <View style={[styles.bar, { height: compact ? 60 : 68, marginBottom: Math.max(insets.bottom - 8, 10) }]}>
+    <View
+      style={[
+        styles.bar,
+        narrow && styles.barNarrow,
+        { height: Math.round(BAR_H[tight ? 'tight' : compact ? 'compact' : 'regular'] * type), marginBottom: Math.max(insets.bottom - 8, tight ? 6 : 10) },
+      ]}
+    >
       <GestureDetector gesture={gesture}>
         <View style={styles.row} onLayout={onLayout}>
           {row(false)}
@@ -239,9 +250,12 @@ const styles = StyleSheet.create({
     shadowRadius: 11,
     shadowOffset: { width: 0, height: 10 },
   },
+  barNarrow: { marginHorizontal: 8, paddingHorizontal: 3 },
   row: { flex: 1, flexDirection: 'row' },
   tab: { flex: 1, minWidth: 0, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 3 },
   label: { fontFamily: fonts.display600, fontSize: 12, color: colors.tabLabel },
+  // "Leaderboard" in a quarter of a 320 pt bar (the web preview can't shrink a label to fit)
+  labelNarrow: { fontSize: 10.5 },
   lens: { position: 'absolute', left: INSET, top: INSET },
   glass: {
     backgroundColor: '#fff',

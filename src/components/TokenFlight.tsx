@@ -20,7 +20,7 @@
  * counted (`claim`) as is, without counting it again.
  */
 import { createContext, ReactNode, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View, ViewInstance } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, Text, View, ViewInstance } from 'react-native';
 
 import { useTranslation } from '../i18n';
 import { sound } from '../audio';
@@ -123,8 +123,14 @@ const TokenFlightContext = createContext<Hub>(createHub(null));
 export const useTokenFlights = () => useContext(TokenFlightContext);
 
 /**
- * For a view tokens come from or go to: put `ref` on it, plus `collapsable={false}` so the
- * native side keeps it measurable, and call `send` around the change (see top).
+ * Spread on a view tokens come from or go to, with its `ref`: `collapsable={false}`, so the native side
+ * keeps it measurable. Not on web, where the DOM takes it for an attribute (React warns on every render).
+ */
+export const MEASURABLE = Platform.OS === 'web' ? {} : { collapsable: false };
+
+/**
+ * For a view tokens come from or go to: put `ref` and `{...MEASURABLE}` on it, and call `send`
+ * around the change (see top).
  */
 export function useTokenOrigin() {
   const hub = useTokenFlights();

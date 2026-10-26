@@ -13,6 +13,7 @@ import { sound } from '../../audio';
 import { useTranslation } from '../../i18n';
 import { useVersus } from '../../state/VersusContext';
 import { colors, fonts } from '../../theme';
+import { useLayout } from '../../theme/layout';
 import { closeXml, Icon, moreXml } from '../icons';
 import { Raised } from '../Raised';
 import { display, displayName, Face, MODE_LOOK, ModeIcon, modeName, PillButton } from './parts';
@@ -53,12 +54,13 @@ export function InviteBanner() {
   const t = useTranslation();
   const { state, actions } = useVersus();
   const insets = useSafeAreaInsets();
+  const { width, column } = useLayout();
   const pathname = usePathname();
   const invite = state.invites.at(-1);
   if (!invite || state.match || pathname === '/onboarding' || pathname.startsWith('/onboarding/')) return null;
   const look = MODE_LOOK[invite.mode];
   return (
-    <View style={[styles.banner, { top: insets.top + 6 }]} accessibilityLiveRegion="polite">
+    <View style={[styles.banner, { top: insets.top + 6, left: (width - column) / 2 + 12, right: (width - column) / 2 + 12 }]} accessibilityLiveRegion="polite">
       <Raised depth={5} shadowColor={look.dark} radius={22} style={[styles.card, { borderColor: look.light }]}>
         <Face characterId={invite.from.characterId} size={40} />
         <View style={styles.text}>
@@ -90,7 +92,8 @@ const styles = StyleSheet.create({
   presence: { fontFamily: fonts.body700, fontSize: 12.5, color: colors.muted },
   more: { paddingHorizontal: 2 },
 
-  banner: { position: 'absolute', left: 12, right: 12, zIndex: 30 },
+  // Across the column (centred on a tablet)
+  banner: { position: 'absolute', zIndex: 30 },
   card: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#fff', borderWidth: 2, paddingVertical: 8, paddingLeft: 8, paddingRight: 12 },
   title: display('700', 16),
   mode: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 1 },
